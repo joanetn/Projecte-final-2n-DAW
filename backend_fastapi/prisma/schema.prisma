@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RolGlobal { 
+  JUGADOR 
+  ENTRENADOR 
+  ADMIN_EQUIP 
+  ADMIN_WEB 
+  ARBITRE 
+  SUPERADMIN 
+}
+enum RolEquip { 
+  JUGADOR 
+  ENTRENADOR 
+  ADMIN_EQUIP 
+}
+
+model Usuario {
+  id            Int            @id @default(autoincrement())
+  nombre        String
+  email         String         @unique
+  password      String
+  activo        Boolean        @default(true)
+  roles         UsuarioRol[]
+  equipos       EquipoUsuario[]
+  notificaciones Notificacion[]
+  puntuacions   Puntuacio[]
+  compras       Compra[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model UsuarioRol {
+  id        Int       @id @default(autoincrement())
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+  rol       RolGlobal
+}
+
+model Club {
+  id       Int       @id @default(autoincrement())
+  nombre   String
+  equipos  Equipo[]
+}
+
+model Equipo {
+  id        Int           @id @default(autoincrement())
+  nombre    String
+  categoria String
+  club      Club          @relation(fields: [clubId], references: [id])
+  clubId    Int
+  usuarios  EquipoUsuario[]
+  local_partits     Partit[] @relation("local_partits")
+  visitante_partits Partit[] @relation("visitante_partits")
+  ligas            Liga[]    // si equipo puede estar en varias ligas, o usar tabla intermedia
+}
+
+model EquipoUsuario {
+  id        Int       @id @default(autoincrement())
+  equipo    Equipo    @relation(fields: [equipoId], references: [id])
+  equipoId  Int
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+  rolEquipo RolEquip
+}
+
+model Liga {
+  id        Int       @id @default(autoincrement())
+  nombre    String
+  categoria String
+  jornadas  Jornada[]
+  equipos   Equipo[]  // si 1:n
+}
+
+model Jornada {
+  id     Int       @id @default(autoincrement())
+  nombre String
+  fecha  DateTime
+  liga   Liga      @relation(fields: [ligaId], references: [id])
+  ligaId Int
+  partits Partit[]
+}
+
+model Partit {
+  id           Int       @id @default(autoincrement())
+  jornada      Jornada   @relation(fields: [jornadaId], references: [id])
+  jornadaId    Int
+  local        Equipo    @relation("local_partits", fields: [localId], references: [id])
+  localId      Int
+  visitante    Equipo    @relation("visitante_partits", fields: [visitanteId], references: [id])
+  visitanteId  Int
+  puntuaciones Puntuacio[]
+}
+
+model Puntuacio {
+  id         Int       @id @default(autoincrement())
+  partit     Partit    @relation(fields: [partitId], references: [id])
+  partitId   Int
+  jugador    Usuario   @relation(fields: [jugadorId], references: [id])
+  jugadorId  Int
+  punts      Int       @default(0)
+}
+
+model Notificacion {
+  id          Int       @id @default(autoincrement())
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id])
+  usuarioId   Int
+  titol       String
+  missatge    String
+  llegit      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+}
+
+model Merch {
+  id      Int       @id @default(autoincrement())
+  nom     String
+  marca   String
+  preu    Float
+  stock   Int
+  compres Compra[]
+}
+
+model Compra {
+  id        Int       @id @default(autoincrement())
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+  merch     Merch     @relation(fields: [merchId], references: [id])
+  merchId   Int
+  quantitat Int
+  total     Float
+  createdAt DateTime  @default(now())
+  pagat     Boolean   @default(false)
+}

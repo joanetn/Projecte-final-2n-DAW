@@ -1,14 +1,16 @@
 from fastapi import FastAPI
 from app.api.v1.router import api_router
 from app.core.config import settings
+from app.db import db
+from contextlib import asynccontextmanager
 
-app = FastAPI(
-    tittle=settings.PROJECT_NAME,
-    version=settings.VERSION
-)
-
-app.include_router(api_router)
-
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await db.connect()
+    yield
+    await db.disconnect()
+    
+app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION, lifespan=lifespan)
 @app.get("/")
 def root():
-    return {"status": "ok"}
+    return {"status": "ok", "NOM": app.title, "VERSION": app.version}
