@@ -6,6 +6,7 @@ BASE_DIR = Path(__file__).parent
 class Settings(BaseSettings):
     PROJECT_NAME: str
     VERSION: str
+    DATABASE_URL: str
 
     class Config:
         env_file = BASE_DIR / ".env"
