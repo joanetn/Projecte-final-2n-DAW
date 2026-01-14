@@ -5,19 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticable;
 
-class Usuario extends Authenticable
+class Usuaris extends Authenticable
 {
-    protected $table = 'usuarios';
+    protected $table = 'Usuari';
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'nom',
         'email',
-        'password',
-        'rol',
+        'contrasenya',
     ];
 
     protected $hidden = [
-        'password', 
+        'contrasenya',
     ];
+
+    protected $with = ['rols'];
+
+    public function rols()
+    {
+        return $this->hasMany(UsuariRol::class, 'usuariId', 'id');
+    }
 }
