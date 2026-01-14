@@ -1,0 +1,3413 @@
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "nombre": "Joan Nácher",
+      "email": "joan@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "2",
+      "nombre": "Pere Garcia",
+      "email": "pere@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "3",
+      "nombre": "Marc Vidal",
+      "email": "marc@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "4",
+      "nombre": "Anna López",
+      "email": "anna@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "5",
+      "nombre": "Carlos Ruiz",
+      "email": "carlos@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "6",
+      "nombre": "Laura Martín",
+      "email": "laura@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "7",
+      "nombre": "David Sánchez",
+      "email": "david@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "8",
+      "nombre": "Elena Gómez",
+      "email": "elena@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "9",
+      "nombre": "Miguel Torres",
+      "email": "miguel@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "10",
+      "nombre": "Sofia Ramírez",
+      "email": "sofia@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "11",
+      "nombre": "Javier Fernández",
+      "email": "javier@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "12",
+      "nombre": "Isabel Díaz",
+      "email": "isabel@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "13",
+      "nombre": "Pablo Moreno",
+      "email": "pablo@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "14",
+      "nombre": "Carmen Jiménez",
+      "email": "carmen@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "15",
+      "nombre": "Alejandro Álvarez",
+      "email": "alejandro@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "16",
+      "nombre": "Lucía Romero",
+      "email": "lucia@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "17",
+      "nombre": "Sergio Navarro",
+      "email": "sergio@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "18",
+      "nombre": "Marina Herrera",
+      "email": "marina@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "19",
+      "nombre": "Roberto Castro",
+      "email": "roberto@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "20",
+      "nombre": "Natalia Ortega",
+      "email": "natalia@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "21",
+      "nombre": "Entrenador 1",
+      "email": "entrenador1@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "22",
+      "nombre": "Entrenador 2",
+      "email": "entrenador2@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "23",
+      "nombre": "Entrenador 3",
+      "email": "entrenador3@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "24",
+      "nombre": "Entrenador 4",
+      "email": "entrenador4@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "25",
+      "nombre": "Entrenador 5",
+      "email": "entrenador5@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "26",
+      "nombre": "Jugador 21",
+      "email": "jugador21@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "27",
+      "nombre": "Jugador 22",
+      "email": "jugador22@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "28",
+      "nombre": "Jugador 23",
+      "email": "jugador23@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "29",
+      "nombre": "Jugador 24",
+      "email": "jugador24@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "30",
+      "nombre": "Jugador 25",
+      "email": "jugador25@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "31",
+      "nombre": "Jugador 26",
+      "email": "jugador26@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "32",
+      "nombre": "Jugador 27",
+      "email": "jugador27@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "33",
+      "nombre": "Jugador 28",
+      "email": "jugador28@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "34",
+      "nombre": "Jugador 29",
+      "email": "jugador29@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "35",
+      "nombre": "Jugador 30",
+      "email": "jugador30@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "36",
+      "nombre": "Jugador 31",
+      "email": "jugador31@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "37",
+      "nombre": "Jugador 32",
+      "email": "jugador32@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "38",
+      "nombre": "Jugador 33",
+      "email": "jugador33@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "39",
+      "nombre": "Jugador 34",
+      "email": "jugador34@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "40",
+      "nombre": "Jugador 35",
+      "email": "jugador35@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "41",
+      "nombre": "Jugador 36",
+      "email": "jugador36@test.com",
+      "password": "1234",
+      "activo": true,
+      "createdAt": "2025-01-01",
+      "updatedAt": "2025-01-01"
+    },
+    {
+      "id": "84c9",
+      "nombre": "Test User",
+      "email": "test@test.com",
+      "password": "1234",
+      "activo": true
+    },
+    {
+      "id": "cc6c",
+      "nombre": "Test User",
+      "email": "test@test.com",
+      "password": "1234",
+      "activo": true
+    },
+    {
+      "id": "3b42",
+      "nombre": "Test User",
+      "email": "test@test.com",
+      "password": "1234",
+      "activo": true
+    }
+  ],
+  "usuarioRoles": [
+    {
+      "id": "1",
+      "usuarioId": 1,
+      "rol": "SUPERADMIN"
+    },
+    {
+      "id": "2",
+      "usuarioId": 1,
+      "rol": "ADMIN_WEB"
+    },
+    {
+      "id": "3",
+      "usuarioId": 2,
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "4",
+      "usuarioId": 3,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "5",
+      "usuarioId": 4,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "6",
+      "usuarioId": 5,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "7",
+      "usuarioId": 6,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "8",
+      "usuarioId": 7,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "9",
+      "usuarioId": 8,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "10",
+      "usuarioId": 9,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "11",
+      "usuarioId": 10,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "12",
+      "usuarioId": 11,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "13",
+      "usuarioId": 12,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "14",
+      "usuarioId": 13,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "15",
+      "usuarioId": 14,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "16",
+      "usuarioId": 15,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "17",
+      "usuarioId": 16,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "18",
+      "usuarioId": 17,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "19",
+      "usuarioId": 18,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "20",
+      "usuarioId": 19,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "21",
+      "usuarioId": 20,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "22",
+      "usuarioId": 21,
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "23",
+      "usuarioId": 22,
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "24",
+      "usuarioId": 23,
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "25",
+      "usuarioId": 24,
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "26",
+      "usuarioId": 25,
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "27",
+      "usuarioId": 26,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "28",
+      "usuarioId": 27,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "29",
+      "usuarioId": 28,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "30",
+      "usuarioId": 29,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "31",
+      "usuarioId": 30,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "32",
+      "usuarioId": 31,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "33",
+      "usuarioId": 32,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "34",
+      "usuarioId": 33,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "35",
+      "usuarioId": 34,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "36",
+      "usuarioId": 35,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "37",
+      "usuarioId": 36,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "38",
+      "usuarioId": 37,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "39",
+      "usuarioId": 38,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "40",
+      "usuarioId": 39,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "41",
+      "usuarioId": 40,
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "42",
+      "usuarioId": 41,
+      "rol": "JUGADOR"
+    }
+  ],
+  "clubs": [
+    {
+      "id": "1",
+      "nombre": "Ontinyent CF"
+    },
+    {
+      "id": "2",
+      "nombre": "Atzeneta UE"
+    },
+    {
+      "id": "3",
+      "nombre": "Valencia CF"
+    },
+    {
+      "id": "4",
+      "nombre": "Levante UD"
+    },
+    {
+      "id": "5",
+      "nombre": "Villarreal CF"
+    },
+    {
+      "id": "6",
+      "nombre": "Elche CF"
+    }
+  ],
+  "equipos": [
+    {
+      "id": "1",
+      "nombre": "Ontinyent Padel A",
+      "categoria": "Padel",
+      "clubId": 1
+    },
+    {
+      "id": "2",
+      "nombre": "Atzeneta Padel A",
+      "categoria": "Padel",
+      "clubId": 2
+    },
+    {
+      "id": "3",
+      "nombre": "Valencia Padel A",
+      "categoria": "Padel",
+      "clubId": 3
+    },
+    {
+      "id": "4",
+      "nombre": "Levante Padel A",
+      "categoria": "Padel",
+      "clubId": 4
+    },
+    {
+      "id": "5",
+      "nombre": "Villarreal Padel A",
+      "categoria": "Padel",
+      "clubId": 5
+    },
+    {
+      "id": "6",
+      "nombre": "Elche Padel A",
+      "categoria": "Padel",
+      "clubId": 6
+    }
+  ],
+  "equipoUsuarios": [
+    {
+      "id": "1",
+      "equipoId": 1,
+      "usuarioId": 2,
+      "rolEquipo": "ENTRENADOR"
+    },
+    {
+      "id": "2",
+      "equipoId": 1,
+      "usuarioId": 3,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "3",
+      "equipoId": 1,
+      "usuarioId": 4,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "4",
+      "equipoId": 1,
+      "usuarioId": 5,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "5",
+      "equipoId": 1,
+      "usuarioId": 6,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "6",
+      "equipoId": 1,
+      "usuarioId": 7,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "7",
+      "equipoId": 1,
+      "usuarioId": 8,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "8",
+      "equipoId": 2,
+      "usuarioId": 21,
+      "rolEquipo": "ENTRENADOR"
+    },
+    {
+      "id": "9",
+      "equipoId": 2,
+      "usuarioId": 9,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "10",
+      "equipoId": 2,
+      "usuarioId": 10,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "11",
+      "equipoId": 2,
+      "usuarioId": 11,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "12",
+      "equipoId": 2,
+      "usuarioId": 12,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "13",
+      "equipoId": 2,
+      "usuarioId": 13,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "14",
+      "equipoId": 2,
+      "usuarioId": 14,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "15",
+      "equipoId": 3,
+      "usuarioId": 22,
+      "rolEquipo": "ENTRENADOR"
+    },
+    {
+      "id": "16",
+      "equipoId": 3,
+      "usuarioId": 15,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "17",
+      "equipoId": 3,
+      "usuarioId": 16,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "18",
+      "equipoId": 3,
+      "usuarioId": 17,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "19",
+      "equipoId": 3,
+      "usuarioId": 18,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "20",
+      "equipoId": 3,
+      "usuarioId": 19,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "21",
+      "equipoId": 3,
+      "usuarioId": 20,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "22",
+      "equipoId": 4,
+      "usuarioId": 23,
+      "rolEquipo": "ENTRENADOR"
+    },
+    {
+      "id": "23",
+      "equipoId": 4,
+      "usuarioId": 26,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "24",
+      "equipoId": 4,
+      "usuarioId": 27,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "25",
+      "equipoId": 4,
+      "usuarioId": 28,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "26",
+      "equipoId": 4,
+      "usuarioId": 29,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "27",
+      "equipoId": 4,
+      "usuarioId": 30,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "28",
+      "equipoId": 4,
+      "usuarioId": 31,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "29",
+      "equipoId": 5,
+      "usuarioId": 24,
+      "rolEquipo": "ENTRENADOR"
+    },
+    {
+      "id": "30",
+      "equipoId": 5,
+      "usuarioId": 32,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "31",
+      "equipoId": 5,
+      "usuarioId": 33,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "32",
+      "equipoId": 5,
+      "usuarioId": 34,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "33",
+      "equipoId": 5,
+      "usuarioId": 35,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "34",
+      "equipoId": 5,
+      "usuarioId": 36,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "35",
+      "equipoId": 5,
+      "usuarioId": 37,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "36",
+      "equipoId": 6,
+      "usuarioId": 25,
+      "rolEquipo": "ENTRENADOR"
+    },
+    {
+      "id": "37",
+      "equipoId": 6,
+      "usuarioId": 38,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "38",
+      "equipoId": 6,
+      "usuarioId": 39,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "39",
+      "equipoId": 6,
+      "usuarioId": 40,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "40",
+      "equipoId": 6,
+      "usuarioId": 41,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "41",
+      "equipoId": 6,
+      "usuarioId": 42,
+      "rolEquipo": "JUGADOR"
+    },
+    {
+      "id": "42",
+      "equipoId": 6,
+      "usuarioId": 43,
+      "rolEquipo": "JUGADOR"
+    }
+  ],
+  "ligas": [
+    {
+      "id": "1",
+      "nombre": "Liga Padel 2024/2025",
+      "categoria": "Padel"
+    },
+    {
+      "id": "2",
+      "nombre": "Liga Padel 2025/2026",
+      "categoria": "Padel"
+    }
+  ],
+  "jornadas": [
+    {
+      "id": "1",
+      "nombre": "Jornada 1",
+      "fecha": "2025-02-01",
+      "ligaId": 1
+    },
+    {
+      "id": "2",
+      "nombre": "Jornada 2",
+      "fecha": "2025-02-08",
+      "ligaId": 1
+    },
+    {
+      "id": "3",
+      "nombre": "Jornada 3",
+      "fecha": "2025-02-15",
+      "ligaId": 1
+    },
+    {
+      "id": "4",
+      "nombre": "Jornada 1",
+      "fecha": "2026-02-01",
+      "ligaId": 2
+    },
+    {
+      "id": "5",
+      "nombre": "Jornada 2",
+      "fecha": "2026-02-08",
+      "ligaId": 2
+    }
+  ],
+  "partits": [
+    {
+      "id": "1",
+      "jornadaId": 1,
+      "localId": 1,
+      "visitanteId": 2
+    },
+    {
+      "id": "2",
+      "jornadaId": 1,
+      "localId": 1,
+      "visitanteId": 3
+    },
+    {
+      "id": "3",
+      "jornadaId": 1,
+      "localId": 2,
+      "visitanteId": 4
+    },
+    {
+      "id": "4",
+      "jornadaId": 1,
+      "localId": 2,
+      "visitanteId": 5
+    },
+    {
+      "id": "5",
+      "jornadaId": 1,
+      "localId": 3,
+      "visitanteId": 6
+    },
+    {
+      "id": "6",
+      "jornadaId": 1,
+      "localId": 4,
+      "visitanteId": 6
+    },
+    {
+      "id": "7",
+      "jornadaId": 2,
+      "localId": 1,
+      "visitanteId": 4
+    },
+    {
+      "id": "8",
+      "jornadaId": 2,
+      "localId": 1,
+      "visitanteId": 5
+    },
+    {
+      "id": "9",
+      "jornadaId": 2,
+      "localId": 2,
+      "visitanteId": 3
+    },
+    {
+      "id": "10",
+      "jornadaId": 2,
+      "localId": 2,
+      "visitanteId": 6
+    },
+    {
+      "id": "11",
+      "jornadaId": 2,
+      "localId": 3,
+      "visitanteId": 5
+    },
+    {
+      "id": "12",
+      "jornadaId": 2,
+      "localId": 4,
+      "visitanteId": 5
+    },
+    {
+      "id": "13",
+      "jornadaId": 3,
+      "localId": 1,
+      "visitanteId": 6
+    },
+    {
+      "id": "14",
+      "jornadaId": 3,
+      "localId": 2,
+      "visitanteId": 3
+    },
+    {
+      "id": "15",
+      "jornadaId": 3,
+      "localId": 3,
+      "visitanteId": 4
+    },
+    {
+      "id": "16",
+      "jornadaId": 3,
+      "localId": 4,
+      "visitanteId": 5
+    },
+    {
+      "id": "17",
+      "jornadaId": 3,
+      "localId": 5,
+      "visitanteId": 6
+    },
+    {
+      "id": "18",
+      "jornadaId": 3,
+      "localId": 6,
+      "visitanteId": 1
+    },
+    {
+      "id": "19",
+      "jornadaId": 4,
+      "localId": 1,
+      "visitanteId": 2
+    },
+    {
+      "id": "20",
+      "jornadaId": 4,
+      "localId": 1,
+      "visitanteId": 3
+    },
+    {
+      "id": "21",
+      "jornadaId": 4,
+      "localId": 2,
+      "visitanteId": 4
+    },
+    {
+      "id": "22",
+      "jornadaId": 4,
+      "localId": 2,
+      "visitanteId": 5
+    },
+    {
+      "id": "23",
+      "jornadaId": 4,
+      "localId": 3,
+      "visitanteId": 6
+    },
+    {
+      "id": "24",
+      "jornadaId": 4,
+      "localId": 4,
+      "visitanteId": 6
+    },
+    {
+      "id": "25",
+      "jornadaId": 5,
+      "localId": 1,
+      "visitanteId": 4
+    },
+    {
+      "id": "26",
+      "jornadaId": 5,
+      "localId": 1,
+      "visitanteId": 5
+    },
+    {
+      "id": "27",
+      "jornadaId": 5,
+      "localId": 2,
+      "visitanteId": 3
+    },
+    {
+      "id": "28",
+      "jornadaId": 5,
+      "localId": 2,
+      "visitanteId": 6
+    },
+    {
+      "id": "29",
+      "jornadaId": 5,
+      "localId": 3,
+      "visitanteId": 5
+    },
+    {
+      "id": "30",
+      "jornadaId": 5,
+      "localId": 4,
+      "visitanteId": 5
+    }
+  ],
+  "puntuaciones": [
+    {
+      "id": "1",
+      "partitId": 1,
+      "jugadorId": 3,
+      "punts": 2
+    },
+    {
+      "id": "2",
+      "partitId": 1,
+      "jugadorId": 4,
+      "punts": 1
+    },
+    {
+      "id": "3",
+      "partitId": 1,
+      "jugadorId": 5,
+      "punts": 3
+    },
+    {
+      "id": "4",
+      "partitId": 1,
+      "jugadorId": 6,
+      "punts": 0
+    },
+    {
+      "id": "5",
+      "partitId": 1,
+      "jugadorId": 7,
+      "punts": 1
+    },
+    {
+      "id": "6",
+      "partitId": 1,
+      "jugadorId": 8,
+      "punts": 2
+    },
+    {
+      "id": "7",
+      "partitId": 1,
+      "jugadorId": 9,
+      "punts": 4
+    },
+    {
+      "id": "8",
+      "partitId": 1,
+      "jugadorId": 10,
+      "punts": 2
+    },
+    {
+      "id": "9",
+      "partitId": 1,
+      "jugadorId": 11,
+      "punts": 1
+    },
+    {
+      "id": "10",
+      "partitId": 1,
+      "jugadorId": 12,
+      "punts": 3
+    },
+    {
+      "id": "11",
+      "partitId": 1,
+      "jugadorId": 13,
+      "punts": 0
+    },
+    {
+      "id": "12",
+      "partitId": 1,
+      "jugadorId": 14,
+      "punts": 1
+    },
+    {
+      "id": "13",
+      "partitId": 2,
+      "jugadorId": 3,
+      "punts": 2
+    },
+    {
+      "id": "14",
+      "partitId": 2,
+      "jugadorId": 4,
+      "punts": 3
+    },
+    {
+      "id": "15",
+      "partitId": 2,
+      "jugadorId": 5,
+      "punts": 1
+    },
+    {
+      "id": "16",
+      "partitId": 2,
+      "jugadorId": 6,
+      "punts": 2
+    },
+    {
+      "id": "17",
+      "partitId": 2,
+      "jugadorId": 7,
+      "punts": 0
+    },
+    {
+      "id": "18",
+      "partitId": 2,
+      "jugadorId": 8,
+      "punts": 1
+    },
+    {
+      "id": "19",
+      "partitId": 2,
+      "jugadorId": 15,
+      "punts": 2
+    },
+    {
+      "id": "20",
+      "partitId": 2,
+      "jugadorId": 16,
+      "punts": 0
+    },
+    {
+      "id": "21",
+      "partitId": 2,
+      "jugadorId": 17,
+      "punts": 1
+    },
+    {
+      "id": "22",
+      "partitId": 2,
+      "jugadorId": 18,
+      "punts": 3
+    },
+    {
+      "id": "23",
+      "partitId": 2,
+      "jugadorId": 19,
+      "punts": 2
+    },
+    {
+      "id": "24",
+      "partitId": 2,
+      "jugadorId": 20,
+      "punts": 1
+    },
+    {
+      "id": "25",
+      "partitId": 3,
+      "jugadorId": 9,
+      "punts": 3
+    },
+    {
+      "id": "26",
+      "partitId": 3,
+      "jugadorId": 10,
+      "punts": 2
+    },
+    {
+      "id": "27",
+      "partitId": 3,
+      "jugadorId": 11,
+      "punts": 1
+    },
+    {
+      "id": "28",
+      "partitId": 3,
+      "jugadorId": 12,
+      "punts": 0
+    },
+    {
+      "id": "29",
+      "partitId": 3,
+      "jugadorId": 13,
+      "punts": 2
+    },
+    {
+      "id": "30",
+      "partitId": 3,
+      "jugadorId": 14,
+      "punts": 1
+    },
+    {
+      "id": "31",
+      "partitId": 3,
+      "jugadorId": 26,
+      "punts": 4
+    },
+    {
+      "id": "32",
+      "partitId": 3,
+      "jugadorId": 27,
+      "punts": 2
+    },
+    {
+      "id": "33",
+      "partitId": 3,
+      "jugadorId": 28,
+      "punts": 3
+    },
+    {
+      "id": "34",
+      "partitId": 3,
+      "jugadorId": 29,
+      "punts": 1
+    },
+    {
+      "id": "35",
+      "partitId": 3,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "36",
+      "partitId": 3,
+      "jugadorId": 31,
+      "punts": 2
+    },
+    {
+      "id": "37",
+      "partitId": 4,
+      "jugadorId": 9,
+      "punts": 2
+    },
+    {
+      "id": "38",
+      "partitId": 4,
+      "jugadorId": 10,
+      "punts": 3
+    },
+    {
+      "id": "39",
+      "partitId": 4,
+      "jugadorId": 11,
+      "punts": 1
+    },
+    {
+      "id": "40",
+      "partitId": 4,
+      "jugadorId": 12,
+      "punts": 2
+    },
+    {
+      "id": "41",
+      "partitId": 4,
+      "jugadorId": 13,
+      "punts": 0
+    },
+    {
+      "id": "42",
+      "partitId": 4,
+      "jugadorId": 14,
+      "punts": 1
+    },
+    {
+      "id": "43",
+      "partitId": 4,
+      "jugadorId": 32,
+      "punts": 3
+    },
+    {
+      "id": "44",
+      "partitId": 4,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "45",
+      "partitId": 4,
+      "jugadorId": 34,
+      "punts": 1
+    },
+    {
+      "id": "46",
+      "partitId": 4,
+      "jugadorId": 35,
+      "punts": 0
+    },
+    {
+      "id": "47",
+      "partitId": 4,
+      "jugadorId": 36,
+      "punts": 2
+    },
+    {
+      "id": "48",
+      "partitId": 4,
+      "jugadorId": 37,
+      "punts": 1
+    },
+    {
+      "id": "49",
+      "partitId": 5,
+      "jugadorId": 15,
+      "punts": 4
+    },
+    {
+      "id": "50",
+      "partitId": 5,
+      "jugadorId": 16,
+      "punts": 2
+    },
+    {
+      "id": "51",
+      "partitId": 5,
+      "jugadorId": 17,
+      "punts": 3
+    },
+    {
+      "id": "52",
+      "partitId": 5,
+      "jugadorId": 18,
+      "punts": 1
+    },
+    {
+      "id": "53",
+      "partitId": 5,
+      "jugadorId": 19,
+      "punts": 0
+    },
+    {
+      "id": "54",
+      "partitId": 5,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "55",
+      "partitId": 5,
+      "jugadorId": 38,
+      "punts": 1
+    },
+    {
+      "id": "56",
+      "partitId": 5,
+      "jugadorId": 39,
+      "punts": 3
+    },
+    {
+      "id": "57",
+      "partitId": 5,
+      "jugadorId": 40,
+      "punts": 2
+    },
+    {
+      "id": "58",
+      "partitId": 5,
+      "jugadorId": 41,
+      "punts": 0
+    },
+    {
+      "id": "59",
+      "partitId": 5,
+      "jugadorId": 42,
+      "punts": 1
+    },
+    {
+      "id": "60",
+      "partitId": 5,
+      "jugadorId": 43,
+      "punts": 2
+    },
+    {
+      "id": "61",
+      "partitId": 6,
+      "jugadorId": 26,
+      "punts": 2
+    },
+    {
+      "id": "62",
+      "partitId": 6,
+      "jugadorId": 27,
+      "punts": 1
+    },
+    {
+      "id": "63",
+      "partitId": 6,
+      "jugadorId": 28,
+      "punts": 3
+    },
+    {
+      "id": "64",
+      "partitId": 6,
+      "jugadorId": 29,
+      "punts": 0
+    },
+    {
+      "id": "65",
+      "partitId": 6,
+      "jugadorId": 30,
+      "punts": 2
+    },
+    {
+      "id": "66",
+      "partitId": 6,
+      "jugadorId": 31,
+      "punts": 1
+    },
+    {
+      "id": "67",
+      "partitId": 6,
+      "jugadorId": 38,
+      "punts": 4
+    },
+    {
+      "id": "68",
+      "partitId": 6,
+      "jugadorId": 39,
+      "punts": 2
+    },
+    {
+      "id": "69",
+      "partitId": 6,
+      "jugadorId": 40,
+      "punts": 3
+    },
+    {
+      "id": "70",
+      "partitId": 6,
+      "jugadorId": 41,
+      "punts": 1
+    },
+    {
+      "id": "71",
+      "partitId": 6,
+      "jugadorId": 42,
+      "punts": 0
+    },
+    {
+      "id": "72",
+      "partitId": 6,
+      "jugadorId": 43,
+      "punts": 2
+    },
+    {
+      "id": "73",
+      "partitId": 7,
+      "jugadorId": 3,
+      "punts": 3
+    },
+    {
+      "id": "74",
+      "partitId": 7,
+      "jugadorId": 4,
+      "punts": 1
+    },
+    {
+      "id": "75",
+      "partitId": 7,
+      "jugadorId": 5,
+      "punts": 2
+    },
+    {
+      "id": "76",
+      "partitId": 7,
+      "jugadorId": 6,
+      "punts": 0
+    },
+    {
+      "id": "77",
+      "partitId": 7,
+      "jugadorId": 7,
+      "punts": 1
+    },
+    {
+      "id": "78",
+      "partitId": 7,
+      "jugadorId": 8,
+      "punts": 2
+    },
+    {
+      "id": "79",
+      "partitId": 7,
+      "jugadorId": 26,
+      "punts": 4
+    },
+    {
+      "id": "80",
+      "partitId": 7,
+      "jugadorId": 27,
+      "punts": 2
+    },
+    {
+      "id": "81",
+      "partitId": 7,
+      "jugadorId": 28,
+      "punts": 3
+    },
+    {
+      "id": "82",
+      "partitId": 7,
+      "jugadorId": 29,
+      "punts": 1
+    },
+    {
+      "id": "83",
+      "partitId": 7,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "84",
+      "partitId": 7,
+      "jugadorId": 31,
+      "punts": 2
+    },
+    {
+      "id": "85",
+      "partitId": 8,
+      "jugadorId": 3,
+      "punts": 2
+    },
+    {
+      "id": "86",
+      "partitId": 8,
+      "jugadorId": 4,
+      "punts": 3
+    },
+    {
+      "id": "87",
+      "partitId": 8,
+      "jugadorId": 5,
+      "punts": 1
+    },
+    {
+      "id": "88",
+      "partitId": 8,
+      "jugadorId": 6,
+      "punts": 2
+    },
+    {
+      "id": "89",
+      "partitId": 8,
+      "jugadorId": 7,
+      "punts": 0
+    },
+    {
+      "id": "90",
+      "partitId": 8,
+      "jugadorId": 8,
+      "punts": 1
+    },
+    {
+      "id": "91",
+      "partitId": 8,
+      "jugadorId": 32,
+      "punts": 3
+    },
+    {
+      "id": "92",
+      "partitId": 8,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "93",
+      "partitId": 8,
+      "jugadorId": 34,
+      "punts": 1
+    },
+    {
+      "id": "94",
+      "partitId": 8,
+      "jugadorId": 35,
+      "punts": 0
+    },
+    {
+      "id": "95",
+      "partitId": 8,
+      "jugadorId": 36,
+      "punts": 2
+    },
+    {
+      "id": "96",
+      "partitId": 8,
+      "jugadorId": 37,
+      "punts": 1
+    },
+    {
+      "id": "97",
+      "partitId": 9,
+      "jugadorId": 9,
+      "punts": 4
+    },
+    {
+      "id": "98",
+      "partitId": 9,
+      "jugadorId": 10,
+      "punts": 2
+    },
+    {
+      "id": "99",
+      "partitId": 9,
+      "jugadorId": 11,
+      "punts": 3
+    },
+    {
+      "id": "100",
+      "partitId": 9,
+      "jugadorId": 12,
+      "punts": 1
+    },
+    {
+      "id": "101",
+      "partitId": 9,
+      "jugadorId": 13,
+      "punts": 0
+    },
+    {
+      "id": "102",
+      "partitId": 9,
+      "jugadorId": 14,
+      "punts": 2
+    },
+    {
+      "id": "103",
+      "partitId": 9,
+      "jugadorId": 15,
+      "punts": 1
+    },
+    {
+      "id": "104",
+      "partitId": 9,
+      "jugadorId": 16,
+      "punts": 3
+    },
+    {
+      "id": "105",
+      "partitId": 9,
+      "jugadorId": 17,
+      "punts": 2
+    },
+    {
+      "id": "106",
+      "partitId": 9,
+      "jugadorId": 18,
+      "punts": 0
+    },
+    {
+      "id": "107",
+      "partitId": 9,
+      "jugadorId": 19,
+      "punts": 1
+    },
+    {
+      "id": "108",
+      "partitId": 9,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "109",
+      "partitId": 10,
+      "jugadorId": 9,
+      "punts": 2
+    },
+    {
+      "id": "110",
+      "partitId": 10,
+      "jugadorId": 10,
+      "punts": 1
+    },
+    {
+      "id": "111",
+      "partitId": 10,
+      "jugadorId": 11,
+      "punts": 3
+    },
+    {
+      "id": "112",
+      "partitId": 10,
+      "jugadorId": 12,
+      "punts": 0
+    },
+    {
+      "id": "113",
+      "partitId": 10,
+      "jugadorId": 13,
+      "punts": 2
+    },
+    {
+      "id": "114",
+      "partitId": 10,
+      "jugadorId": 14,
+      "punts": 1
+    },
+    {
+      "id": "115",
+      "partitId": 10,
+      "jugadorId": 38,
+      "punts": 4
+    },
+    {
+      "id": "116",
+      "partitId": 10,
+      "jugadorId": 39,
+      "punts": 2
+    },
+    {
+      "id": "117",
+      "partitId": 10,
+      "jugadorId": 40,
+      "punts": 3
+    },
+    {
+      "id": "118",
+      "partitId": 10,
+      "jugadorId": 41,
+      "punts": 1
+    },
+    {
+      "id": "119",
+      "partitId": 10,
+      "jugadorId": 42,
+      "punts": 0
+    },
+    {
+      "id": "120",
+      "partitId": 10,
+      "jugadorId": 43,
+      "punts": 2
+    },
+    {
+      "id": "121",
+      "partitId": 11,
+      "jugadorId": 15,
+      "punts": 3
+    },
+    {
+      "id": "122",
+      "partitId": 11,
+      "jugadorId": 16,
+      "punts": 1
+    },
+    {
+      "id": "123",
+      "partitId": 11,
+      "jugadorId": 17,
+      "punts": 2
+    },
+    {
+      "id": "124",
+      "partitId": 11,
+      "jugadorId": 18,
+      "punts": 0
+    },
+    {
+      "id": "125",
+      "partitId": 11,
+      "jugadorId": 19,
+      "punts": 1
+    },
+    {
+      "id": "126",
+      "partitId": 11,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "127",
+      "partitId": 11,
+      "jugadorId": 32,
+      "punts": 4
+    },
+    {
+      "id": "128",
+      "partitId": 11,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "129",
+      "partitId": 11,
+      "jugadorId": 34,
+      "punts": 3
+    },
+    {
+      "id": "130",
+      "partitId": 11,
+      "jugadorId": 35,
+      "punts": 1
+    },
+    {
+      "id": "131",
+      "partitId": 11,
+      "jugadorId": 36,
+      "punts": 0
+    },
+    {
+      "id": "132",
+      "partitId": 11,
+      "jugadorId": 37,
+      "punts": 2
+    },
+    {
+      "id": "133",
+      "partitId": 12,
+      "jugadorId": 26,
+      "punts": 2
+    },
+    {
+      "id": "134",
+      "partitId": 12,
+      "jugadorId": 27,
+      "punts": 3
+    },
+    {
+      "id": "135",
+      "partitId": 12,
+      "jugadorId": 28,
+      "punts": 1
+    },
+    {
+      "id": "136",
+      "partitId": 12,
+      "jugadorId": 29,
+      "punts": 2
+    },
+    {
+      "id": "137",
+      "partitId": 12,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "138",
+      "partitId": 12,
+      "jugadorId": 31,
+      "punts": 1
+    },
+    {
+      "id": "139",
+      "partitId": 12,
+      "jugadorId": 32,
+      "punts": 4
+    },
+    {
+      "id": "140",
+      "partitId": 12,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "141",
+      "partitId": 12,
+      "jugadorId": 34,
+      "punts": 3
+    },
+    {
+      "id": "142",
+      "partitId": 12,
+      "jugadorId": 35,
+      "punts": 1
+    },
+    {
+      "id": "143",
+      "partitId": 12,
+      "jugadorId": 36,
+      "punts": 0
+    },
+    {
+      "id": "144",
+      "partitId": 12,
+      "jugadorId": 37,
+      "punts": 2
+    },
+    {
+      "id": "145",
+      "partitId": 13,
+      "jugadorId": 3,
+      "punts": 3
+    },
+    {
+      "id": "146",
+      "partitId": 13,
+      "jugadorId": 4,
+      "punts": 1
+    },
+    {
+      "id": "147",
+      "partitId": 13,
+      "jugadorId": 5,
+      "punts": 2
+    },
+    {
+      "id": "148",
+      "partitId": 13,
+      "jugadorId": 6,
+      "punts": 0
+    },
+    {
+      "id": "149",
+      "partitId": 13,
+      "jugadorId": 7,
+      "punts": 1
+    },
+    {
+      "id": "150",
+      "partitId": 13,
+      "jugadorId": 8,
+      "punts": 2
+    },
+    {
+      "id": "151",
+      "partitId": 13,
+      "jugadorId": 38,
+      "punts": 4
+    },
+    {
+      "id": "152",
+      "partitId": 13,
+      "jugadorId": 39,
+      "punts": 2
+    },
+    {
+      "id": "153",
+      "partitId": 13,
+      "jugadorId": 40,
+      "punts": 3
+    },
+    {
+      "id": "154",
+      "partitId": 13,
+      "jugadorId": 41,
+      "punts": 1
+    },
+    {
+      "id": "155",
+      "partitId": 13,
+      "jugadorId": 42,
+      "punts": 0
+    },
+    {
+      "id": "156",
+      "partitId": 13,
+      "jugadorId": 43,
+      "punts": 2
+    },
+    {
+      "id": "157",
+      "partitId": 14,
+      "jugadorId": 9,
+      "punts": 2
+    },
+    {
+      "id": "158",
+      "partitId": 14,
+      "jugadorId": 10,
+      "punts": 3
+    },
+    {
+      "id": "159",
+      "partitId": 14,
+      "jugadorId": 11,
+      "punts": 1
+    },
+    {
+      "id": "160",
+      "partitId": 14,
+      "jugadorId": 12,
+      "punts": 2
+    },
+    {
+      "id": "161",
+      "partitId": 14,
+      "jugadorId": 13,
+      "punts": 0
+    },
+    {
+      "id": "162",
+      "partitId": 14,
+      "jugadorId": 14,
+      "punts": 1
+    },
+    {
+      "id": "163",
+      "partitId": 14,
+      "jugadorId": 15,
+      "punts": 4
+    },
+    {
+      "id": "164",
+      "partitId": 14,
+      "jugadorId": 16,
+      "punts": 2
+    },
+    {
+      "id": "165",
+      "partitId": 14,
+      "jugadorId": 17,
+      "punts": 3
+    },
+    {
+      "id": "166",
+      "partitId": 14,
+      "jugadorId": 18,
+      "punts": 1
+    },
+    {
+      "id": "167",
+      "partitId": 14,
+      "jugadorId": 19,
+      "punts": 0
+    },
+    {
+      "id": "168",
+      "partitId": 14,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "169",
+      "partitId": 15,
+      "jugadorId": 15,
+      "punts": 3
+    },
+    {
+      "id": "170",
+      "partitId": 15,
+      "jugadorId": 16,
+      "punts": 1
+    },
+    {
+      "id": "171",
+      "partitId": 15,
+      "jugadorId": 17,
+      "punts": 2
+    },
+    {
+      "id": "172",
+      "partitId": 15,
+      "jugadorId": 18,
+      "punts": 0
+    },
+    {
+      "id": "173",
+      "partitId": 15,
+      "jugadorId": 19,
+      "punts": 1
+    },
+    {
+      "id": "174",
+      "partitId": 15,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "175",
+      "partitId": 15,
+      "jugadorId": 26,
+      "punts": 4
+    },
+    {
+      "id": "176",
+      "partitId": 15,
+      "jugadorId": 27,
+      "punts": 2
+    },
+    {
+      "id": "177",
+      "partitId": 15,
+      "jugadorId": 28,
+      "punts": 3
+    },
+    {
+      "id": "178",
+      "partitId": 15,
+      "jugadorId": 29,
+      "punts": 1
+    },
+    {
+      "id": "179",
+      "partitId": 15,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "180",
+      "partitId": 15,
+      "jugadorId": 31,
+      "punts": 2
+    },
+    {
+      "id": "181",
+      "partitId": 16,
+      "jugadorId": 26,
+      "punts": 2
+    },
+    {
+      "id": "182",
+      "partitId": 16,
+      "jugadorId": 27,
+      "punts": 3
+    },
+    {
+      "id": "183",
+      "partitId": 16,
+      "jugadorId": 28,
+      "punts": 1
+    },
+    {
+      "id": "184",
+      "partitId": 16,
+      "jugadorId": 29,
+      "punts": 2
+    },
+    {
+      "id": "185",
+      "partitId": 16,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "186",
+      "partitId": 16,
+      "jugadorId": 31,
+      "punts": 1
+    },
+    {
+      "id": "187",
+      "partitId": 16,
+      "jugadorId": 32,
+      "punts": 4
+    },
+    {
+      "id": "188",
+      "partitId": 16,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "189",
+      "partitId": 16,
+      "jugadorId": 34,
+      "punts": 3
+    },
+    {
+      "id": "190",
+      "partitId": 16,
+      "jugadorId": 35,
+      "punts": 1
+    },
+    {
+      "id": "191",
+      "partitId": 16,
+      "jugadorId": 36,
+      "punts": 0
+    },
+    {
+      "id": "192",
+      "partitId": 16,
+      "jugadorId": 37,
+      "punts": 2
+    },
+    {
+      "id": "193",
+      "partitId": 17,
+      "jugadorId": 32,
+      "punts": 3
+    },
+    {
+      "id": "194",
+      "partitId": 17,
+      "jugadorId": 33,
+      "punts": 1
+    },
+    {
+      "id": "195",
+      "partitId": 17,
+      "jugadorId": 34,
+      "punts": 2
+    },
+    {
+      "id": "196",
+      "partitId": 17,
+      "jugadorId": 35,
+      "punts": 0
+    },
+    {
+      "id": "197",
+      "partitId": 17,
+      "jugadorId": 36,
+      "punts": 1
+    },
+    {
+      "id": "198",
+      "partitId": 17,
+      "jugadorId": 37,
+      "punts": 2
+    },
+    {
+      "id": "199",
+      "partitId": 17,
+      "jugadorId": 38,
+      "punts": 4
+    },
+    {
+      "id": "200",
+      "partitId": 17,
+      "jugadorId": 39,
+      "punts": 2
+    },
+    {
+      "id": "201",
+      "partitId": 17,
+      "jugadorId": 40,
+      "punts": 3
+    },
+    {
+      "id": "202",
+      "partitId": 17,
+      "jugadorId": 41,
+      "punts": 1
+    },
+    {
+      "id": "203",
+      "partitId": 17,
+      "jugadorId": 42,
+      "punts": 0
+    },
+    {
+      "id": "204",
+      "partitId": 17,
+      "jugadorId": 43,
+      "punts": 2
+    },
+    {
+      "id": "205",
+      "partitId": 18,
+      "jugadorId": 38,
+      "punts": 2
+    },
+    {
+      "id": "206",
+      "partitId": 18,
+      "jugadorId": 39,
+      "punts": 3
+    },
+    {
+      "id": "207",
+      "partitId": 18,
+      "jugadorId": 40,
+      "punts": 1
+    },
+    {
+      "id": "208",
+      "partitId": 18,
+      "jugadorId": 41,
+      "punts": 2
+    },
+    {
+      "id": "209",
+      "partitId": 18,
+      "jugadorId": 42,
+      "punts": 0
+    },
+    {
+      "id": "210",
+      "partitId": 18,
+      "jugadorId": 43,
+      "punts": 1
+    },
+    {
+      "id": "211",
+      "partitId": 18,
+      "jugadorId": 3,
+      "punts": 4
+    },
+    {
+      "id": "212",
+      "partitId": 18,
+      "jugadorId": 4,
+      "punts": 2
+    },
+    {
+      "id": "213",
+      "partitId": 18,
+      "jugadorId": 5,
+      "punts": 3
+    },
+    {
+      "id": "214",
+      "partitId": 18,
+      "jugadorId": 6,
+      "punts": 1
+    },
+    {
+      "id": "215",
+      "partitId": 18,
+      "jugadorId": 7,
+      "punts": 0
+    },
+    {
+      "id": "216",
+      "partitId": 18,
+      "jugadorId": 8,
+      "punts": 2
+    },
+    {
+      "id": "217",
+      "partitId": 19,
+      "jugadorId": 3,
+      "punts": 3
+    },
+    {
+      "id": "218",
+      "partitId": 19,
+      "jugadorId": 4,
+      "punts": 1
+    },
+    {
+      "id": "219",
+      "partitId": 19,
+      "jugadorId": 5,
+      "punts": 2
+    },
+    {
+      "id": "220",
+      "partitId": 19,
+      "jugadorId": 6,
+      "punts": 0
+    },
+    {
+      "id": "221",
+      "partitId": 19,
+      "jugadorId": 7,
+      "punts": 1
+    },
+    {
+      "id": "222",
+      "partitId": 19,
+      "jugadorId": 8,
+      "punts": 2
+    },
+    {
+      "id": "223",
+      "partitId": 19,
+      "jugadorId": 9,
+      "punts": 4
+    },
+    {
+      "id": "224",
+      "partitId": 19,
+      "jugadorId": 10,
+      "punts": 2
+    },
+    {
+      "id": "225",
+      "partitId": 19,
+      "jugadorId": 11,
+      "punts": 3
+    },
+    {
+      "id": "226",
+      "partitId": 19,
+      "jugadorId": 12,
+      "punts": 1
+    },
+    {
+      "id": "227",
+      "partitId": 19,
+      "jugadorId": 13,
+      "punts": 0
+    },
+    {
+      "id": "228",
+      "partitId": 19,
+      "jugadorId": 14,
+      "punts": 2
+    },
+    {
+      "id": "229",
+      "partitId": 20,
+      "jugadorId": 3,
+      "punts": 2
+    },
+    {
+      "id": "230",
+      "partitId": 20,
+      "jugadorId": 4,
+      "punts": 3
+    },
+    {
+      "id": "231",
+      "partitId": 20,
+      "jugadorId": 5,
+      "punts": 1
+    },
+    {
+      "id": "232",
+      "partitId": 20,
+      "jugadorId": 6,
+      "punts": 2
+    },
+    {
+      "id": "233",
+      "partitId": 20,
+      "jugadorId": 7,
+      "punts": 0
+    },
+    {
+      "id": "234",
+      "partitId": 20,
+      "jugadorId": 8,
+      "punts": 1
+    },
+    {
+      "id": "235",
+      "partitId": 20,
+      "jugadorId": 15,
+      "punts": 4
+    },
+    {
+      "id": "236",
+      "partitId": 20,
+      "jugadorId": 16,
+      "punts": 2
+    },
+    {
+      "id": "237",
+      "partitId": 20,
+      "jugadorId": 17,
+      "punts": 3
+    },
+    {
+      "id": "238",
+      "partitId": 20,
+      "jugadorId": 18,
+      "punts": 1
+    },
+    {
+      "id": "239",
+      "partitId": 20,
+      "jugadorId": 19,
+      "punts": 0
+    },
+    {
+      "id": "240",
+      "partitId": 20,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "241",
+      "partitId": 21,
+      "jugadorId": 9,
+      "punts": 3
+    },
+    {
+      "id": "242",
+      "partitId": 21,
+      "jugadorId": 10,
+      "punts": 1
+    },
+    {
+      "id": "243",
+      "partitId": 21,
+      "jugadorId": 11,
+      "punts": 2
+    },
+    {
+      "id": "244",
+      "partitId": 21,
+      "jugadorId": 12,
+      "punts": 0
+    },
+    {
+      "id": "245",
+      "partitId": 21,
+      "jugadorId": 13,
+      "punts": 1
+    },
+    {
+      "id": "246",
+      "partitId": 21,
+      "jugadorId": 14,
+      "punts": 2
+    },
+    {
+      "id": "247",
+      "partitId": 21,
+      "jugadorId": 26,
+      "punts": 4
+    },
+    {
+      "id": "248",
+      "partitId": 21,
+      "jugadorId": 27,
+      "punts": 2
+    },
+    {
+      "id": "249",
+      "partitId": 21,
+      "jugadorId": 28,
+      "punts": 3
+    },
+    {
+      "id": "250",
+      "partitId": 21,
+      "jugadorId": 29,
+      "punts": 1
+    },
+    {
+      "id": "251",
+      "partitId": 21,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "252",
+      "partitId": 21,
+      "jugadorId": 31,
+      "punts": 2
+    },
+    {
+      "id": "253",
+      "partitId": 22,
+      "jugadorId": 9,
+      "punts": 2
+    },
+    {
+      "id": "254",
+      "partitId": 22,
+      "jugadorId": 10,
+      "punts": 3
+    },
+    {
+      "id": "255",
+      "partitId": 22,
+      "jugadorId": 11,
+      "punts": 1
+    },
+    {
+      "id": "256",
+      "partitId": 22,
+      "jugadorId": 12,
+      "punts": 2
+    },
+    {
+      "id": "257",
+      "partitId": 22,
+      "jugadorId": 13,
+      "punts": 0
+    },
+    {
+      "id": "258",
+      "partitId": 22,
+      "jugadorId": 14,
+      "punts": 1
+    },
+    {
+      "id": "259",
+      "partitId": 22,
+      "jugadorId": 32,
+      "punts": 4
+    },
+    {
+      "id": "260",
+      "partitId": 22,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "261",
+      "partitId": 22,
+      "jugadorId": 34,
+      "punts": 3
+    },
+    {
+      "id": "262",
+      "partitId": 22,
+      "jugadorId": 35,
+      "punts": 1
+    },
+    {
+      "id": "263",
+      "partitId": 22,
+      "jugadorId": 36,
+      "punts": 0
+    },
+    {
+      "id": "264",
+      "partitId": 22,
+      "jugadorId": 37,
+      "punts": 2
+    },
+    {
+      "id": "265",
+      "partitId": 23,
+      "jugadorId": 15,
+      "punts": 3
+    },
+    {
+      "id": "266",
+      "partitId": 23,
+      "jugadorId": 16,
+      "punts": 1
+    },
+    {
+      "id": "267",
+      "partitId": 23,
+      "jugadorId": 17,
+      "punts": 2
+    },
+    {
+      "id": "268",
+      "partitId": 23,
+      "jugadorId": 18,
+      "punts": 0
+    },
+    {
+      "id": "269",
+      "partitId": 23,
+      "jugadorId": 19,
+      "punts": 1
+    },
+    {
+      "id": "270",
+      "partitId": 23,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "271",
+      "partitId": 23,
+      "jugadorId": 38,
+      "punts": 4
+    },
+    {
+      "id": "272",
+      "partitId": 23,
+      "jugadorId": 39,
+      "punts": 2
+    },
+    {
+      "id": "273",
+      "partitId": 23,
+      "jugadorId": 40,
+      "punts": 3
+    },
+    {
+      "id": "274",
+      "partitId": 23,
+      "jugadorId": 41,
+      "punts": 1
+    },
+    {
+      "id": "275",
+      "partitId": 23,
+      "jugadorId": 42,
+      "punts": 0
+    },
+    {
+      "id": "276",
+      "partitId": 23,
+      "jugadorId": 43,
+      "punts": 2
+    },
+    {
+      "id": "277",
+      "partitId": 24,
+      "jugadorId": 26,
+      "punts": 2
+    },
+    {
+      "id": "278",
+      "partitId": 24,
+      "jugadorId": 27,
+      "punts": 3
+    },
+    {
+      "id": "279",
+      "partitId": 24,
+      "jugadorId": 28,
+      "punts": 1
+    },
+    {
+      "id": "280",
+      "partitId": 24,
+      "jugadorId": 29,
+      "punts": 2
+    },
+    {
+      "id": "281",
+      "partitId": 24,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "282",
+      "partitId": 24,
+      "jugadorId": 31,
+      "punts": 1
+    },
+    {
+      "id": "283",
+      "partitId": 24,
+      "jugadorId": 38,
+      "punts": 4
+    },
+    {
+      "id": "284",
+      "partitId": 24,
+      "jugadorId": 39,
+      "punts": 2
+    },
+    {
+      "id": "285",
+      "partitId": 24,
+      "jugadorId": 40,
+      "punts": 3
+    },
+    {
+      "id": "286",
+      "partitId": 24,
+      "jugadorId": 41,
+      "punts": 1
+    },
+    {
+      "id": "287",
+      "partitId": 24,
+      "jugadorId": 42,
+      "punts": 0
+    },
+    {
+      "id": "288",
+      "partitId": 24,
+      "jugadorId": 43,
+      "punts": 2
+    },
+    {
+      "id": "289",
+      "partitId": 25,
+      "jugadorId": 3,
+      "punts": 3
+    },
+    {
+      "id": "290",
+      "partitId": 25,
+      "jugadorId": 4,
+      "punts": 1
+    },
+    {
+      "id": "291",
+      "partitId": 25,
+      "jugadorId": 5,
+      "punts": 2
+    },
+    {
+      "id": "292",
+      "partitId": 25,
+      "jugadorId": 6,
+      "punts": 0
+    },
+    {
+      "id": "293",
+      "partitId": 25,
+      "jugadorId": 7,
+      "punts": 1
+    },
+    {
+      "id": "294",
+      "partitId": 25,
+      "jugadorId": 8,
+      "punts": 2
+    },
+    {
+      "id": "295",
+      "partitId": 25,
+      "jugadorId": 26,
+      "punts": 4
+    },
+    {
+      "id": "296",
+      "partitId": 25,
+      "jugadorId": 27,
+      "punts": 2
+    },
+    {
+      "id": "297",
+      "partitId": 25,
+      "jugadorId": 28,
+      "punts": 3
+    },
+    {
+      "id": "298",
+      "partitId": 25,
+      "jugadorId": 29,
+      "punts": 1
+    },
+    {
+      "id": "299",
+      "partitId": 25,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "300",
+      "partitId": 25,
+      "jugadorId": 31,
+      "punts": 2
+    },
+    {
+      "id": "301",
+      "partitId": 26,
+      "jugadorId": 3,
+      "punts": 2
+    },
+    {
+      "id": "302",
+      "partitId": 26,
+      "jugadorId": 4,
+      "punts": 3
+    },
+    {
+      "id": "303",
+      "partitId": 26,
+      "jugadorId": 5,
+      "punts": 1
+    },
+    {
+      "id": "304",
+      "partitId": 26,
+      "jugadorId": 6,
+      "punts": 2
+    },
+    {
+      "id": "305",
+      "partitId": 26,
+      "jugadorId": 7,
+      "punts": 0
+    },
+    {
+      "id": "306",
+      "partitId": 26,
+      "jugadorId": 8,
+      "punts": 1
+    },
+    {
+      "id": "307",
+      "partitId": 26,
+      "jugadorId": 32,
+      "punts": 4
+    },
+    {
+      "id": "308",
+      "partitId": 26,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "309",
+      "partitId": 26,
+      "jugadorId": 34,
+      "punts": 3
+    },
+    {
+      "id": "310",
+      "partitId": 26,
+      "jugadorId": 35,
+      "punts": 1
+    },
+    {
+      "id": "311",
+      "partitId": 26,
+      "jugadorId": 36,
+      "punts": 0
+    },
+    {
+      "id": "312",
+      "partitId": 26,
+      "jugadorId": 37,
+      "punts": 2
+    },
+    {
+      "id": "313",
+      "partitId": 27,
+      "jugadorId": 9,
+      "punts": 3
+    },
+    {
+      "id": "314",
+      "partitId": 27,
+      "jugadorId": 10,
+      "punts": 1
+    },
+    {
+      "id": "315",
+      "partitId": 27,
+      "jugadorId": 11,
+      "punts": 2
+    },
+    {
+      "id": "316",
+      "partitId": 27,
+      "jugadorId": 12,
+      "punts": 0
+    },
+    {
+      "id": "317",
+      "partitId": 27,
+      "jugadorId": 13,
+      "punts": 1
+    },
+    {
+      "id": "318",
+      "partitId": 27,
+      "jugadorId": 14,
+      "punts": 2
+    },
+    {
+      "id": "319",
+      "partitId": 27,
+      "jugadorId": 15,
+      "punts": 4
+    },
+    {
+      "id": "320",
+      "partitId": 27,
+      "jugadorId": 16,
+      "punts": 2
+    },
+    {
+      "id": "321",
+      "partitId": 27,
+      "jugadorId": 17,
+      "punts": 3
+    },
+    {
+      "id": "322",
+      "partitId": 27,
+      "jugadorId": 18,
+      "punts": 1
+    },
+    {
+      "id": "323",
+      "partitId": 27,
+      "jugadorId": 19,
+      "punts": 0
+    },
+    {
+      "id": "324",
+      "partitId": 27,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "325",
+      "partitId": 28,
+      "jugadorId": 9,
+      "punts": 2
+    },
+    {
+      "id": "326",
+      "partitId": 28,
+      "jugadorId": 10,
+      "punts": 3
+    },
+    {
+      "id": "327",
+      "partitId": 28,
+      "jugadorId": 11,
+      "punts": 1
+    },
+    {
+      "id": "328",
+      "partitId": 28,
+      "jugadorId": 12,
+      "punts": 2
+    },
+    {
+      "id": "329",
+      "partitId": 28,
+      "jugadorId": 13,
+      "punts": 0
+    },
+    {
+      "id": "330",
+      "partitId": 28,
+      "jugadorId": 14,
+      "punts": 1
+    },
+    {
+      "id": "331",
+      "partitId": 28,
+      "jugadorId": 38,
+      "punts": 4
+    },
+    {
+      "id": "332",
+      "partitId": 28,
+      "jugadorId": 39,
+      "punts": 2
+    },
+    {
+      "id": "333",
+      "partitId": 28,
+      "jugadorId": 40,
+      "punts": 3
+    },
+    {
+      "id": "334",
+      "partitId": 28,
+      "jugadorId": 41,
+      "punts": 1
+    },
+    {
+      "id": "335",
+      "partitId": 28,
+      "jugadorId": 42,
+      "punts": 0
+    },
+    {
+      "id": "336",
+      "partitId": 28,
+      "jugadorId": 43,
+      "punts": 2
+    },
+    {
+      "id": "337",
+      "partitId": 29,
+      "jugadorId": 15,
+      "punts": 3
+    },
+    {
+      "id": "338",
+      "partitId": 29,
+      "jugadorId": 16,
+      "punts": 1
+    },
+    {
+      "id": "339",
+      "partitId": 29,
+      "jugadorId": 17,
+      "punts": 2
+    },
+    {
+      "id": "340",
+      "partitId": 29,
+      "jugadorId": 18,
+      "punts": 0
+    },
+    {
+      "id": "341",
+      "partitId": 29,
+      "jugadorId": 19,
+      "punts": 1
+    },
+    {
+      "id": "342",
+      "partitId": 29,
+      "jugadorId": 20,
+      "punts": 2
+    },
+    {
+      "id": "343",
+      "partitId": 29,
+      "jugadorId": 32,
+      "punts": 4
+    },
+    {
+      "id": "344",
+      "partitId": 29,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "345",
+      "partitId": 29,
+      "jugadorId": 34,
+      "punts": 3
+    },
+    {
+      "id": "346",
+      "partitId": 29,
+      "jugadorId": 35,
+      "punts": 1
+    },
+    {
+      "id": "347",
+      "partitId": 29,
+      "jugadorId": 36,
+      "punts": 0
+    },
+    {
+      "id": "348",
+      "partitId": 29,
+      "jugadorId": 37,
+      "punts": 2
+    },
+    {
+      "id": "349",
+      "partitId": 30,
+      "jugadorId": 26,
+      "punts": 2
+    },
+    {
+      "id": "350",
+      "partitId": 30,
+      "jugadorId": 27,
+      "punts": 3
+    },
+    {
+      "id": "351",
+      "partitId": 30,
+      "jugadorId": 28,
+      "punts": 1
+    },
+    {
+      "id": "352",
+      "partitId": 30,
+      "jugadorId": 29,
+      "punts": 2
+    },
+    {
+      "id": "353",
+      "partitId": 30,
+      "jugadorId": 30,
+      "punts": 0
+    },
+    {
+      "id": "354",
+      "partitId": 30,
+      "jugadorId": 31,
+      "punts": 1
+    },
+    {
+      "id": "355",
+      "partitId": 30,
+      "jugadorId": 32,
+      "punts": 4
+    },
+    {
+      "id": "356",
+      "partitId": 30,
+      "jugadorId": 33,
+      "punts": 2
+    },
+    {
+      "id": "357",
+      "partitId": 30,
+      "jugadorId": 34,
+      "punts": 3
+    },
+    {
+      "id": "358",
+      "partitId": 30,
+      "jugadorId": 35,
+      "punts": 1
+    },
+    {
+      "id": "359",
+      "partitId": 30,
+      "jugadorId": 36,
+      "punts": 0
+    },
+    {
+      "id": "360",
+      "partitId": 30,
+      "jugadorId": 37,
+      "punts": 2
+    }
+  ],
+  "notificaciones": [
+    {
+      "id": "1",
+      "usuarioId": 3,
+      "titol": "Convocatoria",
+      "missatge": "Estás convocado para el partido del sábado",
+      "llegit": false,
+      "createdAt": "2025-02-01"
+    },
+    {
+      "id": "2",
+      "usuarioId": 4,
+      "titol": "Convocatoria",
+      "missatge": "Estás convocado para el partido del sábado",
+      "llegit": false,
+      "createdAt": "2025-02-01"
+    },
+    {
+      "id": "3",
+      "usuarioId": 5,
+      "titol": "Convocatoria",
+      "missatge": "Estás convocado para el partido del sábado",
+      "llegit": false,
+      "createdAt": "2025-02-01"
+    },
+    {
+      "id": "4",
+      "usuarioId": 6,
+      "titol": "Resultado",
+      "missatge": "Tu equipo ganó el partido",
+      "llegit": true,
+      "createdAt": "2025-02-02"
+    },
+    {
+      "id": "5",
+      "usuarioId": 7,
+      "titol": "Resultado",
+      "missatge": "Tu equipo ganó el partido",
+      "llegit": true,
+      "createdAt": "2025-02-02"
+    }
+  ],
+  "merch": [
+    {
+      "id": "1",
+      "nom": "Camiseta Oficial",
+      "marca": "Nike",
+      "preu": 29.99,
+      "stock": 50
+    },
+    {
+      "id": "2",
+      "nom": "Bufanda",
+      "marca": "Adidas",
+      "preu": 14.99,
+      "stock": 30
+    },
+    {
+      "id": "3",
+      "nom": "Pantalones Cortos",
+      "marca": "Puma",
+      "preu": 19.99,
+      "stock": 40
+    },
+    {
+      "id": "4",
+      "nom": "Calcetines",
+      "marca": "Reebok",
+      "preu": 9.99,
+      "stock": 60
+    }
+  ],
+  "compras": [
+    {
+      "id": "1",
+      "usuarioId": 3,
+      "merchId": 1,
+      "quantitat": 1,
+      "total": 29.99,
+      "pagat": true,
+      "createdAt": "2025-02-02"
+    },
+    {
+      "id": "2",
+      "usuarioId": 4,
+      "merchId": 2,
+      "quantitat": 2,
+      "total": 29.98,
+      "pagat": true,
+      "createdAt": "2025-02-03"
+    },
+    {
+      "id": "3",
+      "usuarioId": 5,
+      "merchId": 3,
+      "quantitat": 1,
+      "total": 19.99,
+      "pagat": false,
+      "createdAt": "2025-02-04"
+    }
+  ]
+}
