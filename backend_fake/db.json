@@ -161,6 +161,72 @@
       "activo": true,
       "createdAt": "2026-01-14T18:14:05.085Z",
       "updatedAt": "2026-01-14T18:14:05.085Z"
+    },
+    {
+      "id": "be2e",
+      "nom": "jairo boot",
+      "email": "jairo@gmail.com",
+      "contrasenya": "socjario"
+    },
+    {
+      "id": "27ba",
+      "nom": "jairo boot",
+      "email": "jairo2@gmail.com",
+      "contrasenya": "socjario"
+    },
+    {
+      "id": "5ae6",
+      "nom": "jairo boot",
+      "email": "jairo3@gmail.com",
+      "contrasenya": "socjario"
+    },
+    {
+      "id": "4dbe",
+      "nom": "fdbbb",
+      "email": "bfdbdbff2sbfbdfb@cvcv.com",
+      "contrasenya": "dfdfsfsdf"
+    },
+    {
+      "id": "1166",
+      "nom": "fhghgh",
+      "email": "ghghgf+@fdbfb.com",
+      "contrasenya": "dfdsfdsf"
+    },
+    {
+      "id": "1e30",
+      "nom": "gjkjklkjkhk",
+      "email": "jhkjh@fdfvbgbg.com",
+      "contrasenya": "bfdfbbdf"
+    },
+    {
+      "id": "da78",
+      "nom": "gjkjklkjkhk",
+      "email": "jhkjh2@fdfvbgbg.com",
+      "contrasenya": "bfdfbbdf"
+    },
+    {
+      "id": "9732",
+      "nom": "gjkjklkjkhk",
+      "email": "jhkjh2343@fdfvbgbg.com",
+      "contrasenya": "bfdfbbdf"
+    },
+    {
+      "id": "76df",
+      "nom": "gjkjklkjkhk",
+      "email": "jhkjh2343gfdgdf@fdfvbgbg.com",
+      "contrasenya": "bfdfbbdf"
+    },
+    {
+      "id": "4d55",
+      "nom": "gjkjklkjkhk",
+      "email": "jhkjh2343gfdgdfghgfh@fdfvbgbg.com",
+      "contrasenya": "bfdfbbdf"
+    },
+    {
+      "id": "341e",
+      "nom": "vhbubhkbhk",
+      "email": "vvhjvjvhvhj@bhbhb.com",
+      "contrasenya": "hjhbhbhjbj"
     }
   ],
   "UsuariRol": [
@@ -277,6 +343,66 @@
       "usuariId": "0f41",
       "rol": "ENTRENADOR",
       "isActive": true
+    },
+    {
+      "id": "dfb3",
+      "usuariId": "be2e",
+      "rol": "ARBITRE"
+    },
+    {
+      "id": "4926",
+      "usuariId": "27ba",
+      "rol": "ARBITRE"
+    },
+    {
+      "id": "9b64",
+      "usuariId": "5ae6",
+      "rol": "ARBITRE"
+    },
+    {
+      "id": "9603",
+      "usuariId": "4dbe",
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "cfab",
+      "usuariId": "1166",
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "5ad9",
+      "usuariId": "1e30",
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "a8c9",
+      "usuariId": "da78",
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "c4a9",
+      "usuariId": "9732",
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "0673",
+      "usuariId": "76df",
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "3354",
+      "usuariId": "4d55",
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "1ada",
+      "usuariId": "341e",
+      "rol": "JUGADOR"
+    },
+    {
+      "id": "3c6f",
+      "usuariId": "341e",
+      "rol": "ENTRENADOR"
     }
   ],
   "Club": [

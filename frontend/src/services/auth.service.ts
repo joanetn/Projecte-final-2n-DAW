@@ -1,8 +1,7 @@
-import { fastapi, laravel, backend_rapid } from '../api/axios';
+import { laravel, backend_rapid } from '../api/axios';
 import { User } from '../types/auth';
 import { clearCurrentUser, getCurrentUser, setCurrentUser } from '@/lib/utils';
 import { RegisterResponse, RegisterData, LoginData, LoginResponse } from '../types/auth';
-import { useAuth } from '@/context/AuthContext';
 
 export const getUsuaris = async (): Promise<User[]> => {
     const res = await laravel.get<User[]>('/usuaris');
@@ -13,7 +12,8 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
     try {
         console.log("DATA DEL REGISTRE", data);
         const res = await backend_rapid.post<RegisterResponse>("/auth/register", data);
-        return res.data;
+        console.log(res.data);
+        return res.data;    
     } catch (err: any) {
         const message = err.response?.data?.message || "Error al registrar l'usuari";
         throw new Error(message);

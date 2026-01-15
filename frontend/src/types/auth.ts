@@ -8,6 +8,7 @@ export interface User {
     nom: string;
     email: string;
     rols: Rol[];
+    token: string;
 }
 
 export interface RegisterData {
@@ -18,10 +19,7 @@ export interface RegisterData {
 }
 
 export interface RegisterResponse {
-    id: number;
-    nom: string;
-    email: string;
-    rols: { id: number; rol: string }[];
+    usuari: User;
 }
 
 export interface LoginData {
@@ -31,4 +29,5 @@ export interface LoginData {
 
 export interface LoginResponse {
     usuari: User;
+    token: string;
 }
