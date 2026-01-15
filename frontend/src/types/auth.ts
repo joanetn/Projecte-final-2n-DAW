@@ -1,13 +1,8 @@
-export interface Rol {
-    id: number;
-    rol: string;
-}
-
 export interface User {
     id: number;
     nom: string;
     email: string;
-    rols: Rol[];
+    rols: string[];
     token: string;
 }
 
@@ -29,5 +24,8 @@ export interface LoginData {
 
 export interface LoginResponse {
     usuari: User;
-    token: string;
+}
+
+export interface CurrentData {
+    usuari: User;
 }

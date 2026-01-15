@@ -1,20 +1,43 @@
-import { createContext, useContext, useState } from "react";
-import { User } from "@/types/auth";
+import { createContext, useContext, useState, useEffect } from "react";
+import { CurrentData, User } from "@/types/auth";
+import { backend_rapid } from "@/api/axios";
 
 interface AuthContextType {
     user: User | null;
-    login: (user: User, token: string) => void;
+    login: (user: User) => void;
     logout: () => void;
+    isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const login = (user: User, token: string) => {
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = localStorage.getItem("token");
+
+            if (token) {
+                try {
+                    const response = await backend_rapid.get<CurrentData>("/auth/me");
+                    setUser(response.data.usuari);
+                } catch (error) {
+                    console.error("Token inválido:", error);
+                    localStorage.removeItem("token");
+                    setUser(null);
+                }
+            }
+
+            setIsLoading(false);
+        };
+        initAuth();
+    }, []);
+
+    const login = (user: User) => {
         setUser(user);
-        localStorage.setItem("token", token);
+        localStorage.setItem("token", user.token);
     };
 
     const logout = () => {
@@ -22,8 +45,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.removeItem("token");
     };
 
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center">
+            <div>Cargando...</div>
+        </div>;
+    }
+
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, isLoading }}>
             {children}
         </AuthContext.Provider>
     );

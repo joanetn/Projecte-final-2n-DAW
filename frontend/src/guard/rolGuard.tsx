@@ -6,7 +6,8 @@ export const RolGuard = ({ children, allowedRoles }: { children: JSX.Element, al
     const { user } = useAuth();
     if (!user) return <Navigate to="/login" replace />;
 
-    const hasRole = user.rols.some(r => allowedRoles.includes(r.rol));
+    const hasRole = user.rols.some(r => allowedRoles.includes(r));
+
     if (!hasRole) return <Navigate to="/" replace />;
 
     return children;

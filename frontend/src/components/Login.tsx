@@ -31,7 +31,7 @@ const Login = () => {
     const onSubmit = (data: LoginData) => {
         mutation.mutate(data, {
             onSuccess: (res) => {
-                login(res.usuari || res, res.token);
+                login(res.usuari);
                 navigate("/");
             },
             onError: (err: any) => {

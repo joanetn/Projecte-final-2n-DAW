@@ -1,7 +1,6 @@
 exports.roleMiddleware = (...allowedRoles) => {
     return (req, res, next) => {
         const userRoles = req.user.rols;
-
         const hasRole = userRoles.some(r =>
             allowedRoles.includes(r)
         );

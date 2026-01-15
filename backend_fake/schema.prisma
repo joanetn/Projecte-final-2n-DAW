@@ -1,0 +1,205 @@
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RolGlobal {
+  JUGADOR
+  ENTRENADOR
+  ADMIN_EQUIP
+  ADMIN_WEB
+  ARBITRE
+  SUPERADMIN
+}
+
+enum RolEquip {
+  JUGADOR
+  ENTRENADOR
+  ADMIN_EQUIP
+}
+
+enum Status {
+  PENDENT
+  COMPLETAT
+  CANCELAT
+}
+
+model Usuari {
+  id            Int             @id @default(autoincrement())
+  nom           String
+  email         String          @unique
+  contrasenya   String
+  rols          UsuariRol[]
+  equips        EquipUsuari[]
+  notificacions Notificacio[]
+  puntuacions   Puntuacio[]
+  compres       Compra[]
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  isActive      Boolean         @default(true)
+  PartitJugador PartitJugador[]
+  Acta          Acta[]
+  Alineacio     Alineacio[]
+}
+
+model UsuariRol {
+  id       Int       @id @default(autoincrement())
+  usuari   Usuari    @relation(fields: [usuariId], references: [id])
+  usuariId Int
+  rol      RolGlobal
+  isActive Boolean   @default(true)
+}
+
+model Club {
+  id       Int     @id @default(autoincrement())
+  nom      String
+  equips   Equip[]
+  isActive Boolean @default(true)
+}
+
+model Equip {
+  id               Int             @id @default(autoincrement())
+  nom              String
+  categoria        String
+  club             Club            @relation(fields: [clubId], references: [id])
+  clubId           Int
+  usuaris          EquipUsuari[]
+  partitsLocals    Partit[]        @relation("local_partits")
+  partitsVisitants Partit[]        @relation("visitante_partits")
+  lligues          Lliga[]
+  isActive         Boolean         @default(true)
+  PartitJugador    PartitJugador[]
+  Alineacio        Alineacio[]
+}
+
+model EquipUsuari {
+  id       Int      @id @default(autoincrement())
+  equip    Equip    @relation(fields: [equipId], references: [id])
+  equipId  Int
+  usuari   Usuari   @relation(fields: [usuariId], references: [id])
+  usuariId Int
+  rolEquip RolEquip
+  isActive Boolean  @default(true)
+}
+
+model Lliga {
+  id        Int       @id @default(autoincrement())
+  nom       String
+  categoria String
+  jornades  Jornada[]
+  equips    Equip[]
+  isActive  Boolean   @default(true)
+}
+
+model Jornada {
+  id       Int      @id @default(autoincrement())
+  nom      String
+  data     DateTime
+  lliga    Lliga    @relation(fields: [lligaId], references: [id])
+  lligaId  Int
+  partits  Partit[]
+  status   Status   @default(PENDENT)
+  isActive Boolean  @default(true)
+}
+
+model Partit {
+  id             Int             @id @default(autoincrement())
+  jornada        Jornada         @relation(fields: [jornadaId], references: [id])
+  jornadaId      Int
+  local          Equip           @relation("local_partits", fields: [localId], references: [id])
+  localId        Int
+  visitant       Equip           @relation("visitante_partits", fields: [visitantId], references: [id])
+  visitantId     Int
+  partitJugadors PartitJugador[]
+  acta           Acta?
+  status         Status          @default(PENDENT)
+  isActive       Boolean         @default(true)
+  Puntuacio      Puntuacio[]
+  Alineacio      Alineacio[]
+}
+
+model Alineacio {
+  id        Int      @id @default(autoincrement())
+  partit    Partit   @relation(fields: [partitId], references: [id])
+  partitId  Int
+  jugador   Usuari   @relation(fields: [jugadorId], references: [id])
+  jugadorId Int
+  equip     Equip    @relation(fields: [equipId], references: [id])
+  equipId   Int
+  isActive  Boolean  @default(true)
+  creada_at DateTime @default(now())
+}
+
+model PartitJugador {
+  id        Int     @id @default(autoincrement())
+  partit    Partit  @relation(fields: [partitId], references: [id])
+  partitId  Int
+  jugador   Usuari  @relation(fields: [jugadorId], references: [id])
+  jugadorId Int
+  equip     Equip   @relation(fields: [equipId], references: [id])
+  equipId   Int
+  punts     Int     @default(0)
+  isActive  Boolean @default(true)
+}
+
+model Acta {
+  id           Int      @id @default(autoincrement())
+  partit       Partit   @relation(fields: [partitId], references: [id])
+  partitId     Int      @unique
+  arbitre      Usuari   @relation(fields: [arbitreId], references: [id])
+  arbitreId    Int
+  observacions String?
+  incidencies  String?
+  resultat     String? // ej: "6-4 3-6 10-8"
+  created_at   DateTime @default(now())
+  isActive     Boolean  @default(true)
+}
+
+model Puntuacio {
+  id        Int     @id @default(autoincrement())
+  partit    Partit  @relation(fields: [partitId], references: [id])
+  partitId  Int
+  jugador   Usuari  @relation(fields: [jugadorId], references: [id])
+  jugadorId Int
+  punts     Int     @default(0)
+  isActive  Boolean @default(true)
+}
+
+model Notificacio {
+  id         Int      @id @default(autoincrement())
+  usuari     Usuari   @relation(fields: [usuariId], references: [id])
+  usuariId   Int
+  titol      String
+  missatge   String
+  llegit     Boolean  @default(false)
+  created_at DateTime @default(now())
+  isActive   Boolean  @default(true)
+}
+
+model Merch {
+  id       Int      @id @default(autoincrement())
+  nom      String
+  marca    String
+  preu     Float
+  stock    Int
+  compres  Compra[]
+  isActive Boolean  @default(true)
+}
+
+model Compra {
+  id         Int      @id @default(autoincrement())
+  usuari     Usuari   @relation(fields: [usuariId], references: [id])
+  usuariId   Int
+  merch      Merch    @relation(fields: [merchId], references: [id])
+  merchId    Int
+  quantitat  Int
+  total      Float
+  created_at DateTime @default(now())
+  pagat      Boolean  @default(false)
+  status     Status   @default(PENDENT)
+  isActive   Boolean  @default(true)
+}

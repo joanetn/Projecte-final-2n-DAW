@@ -227,6 +227,18 @@
       "nom": "vhbubhkbhk",
       "email": "vvhjvjvhvhj@bhbhb.com",
       "contrasenya": "hjhbhbhjbj"
+    },
+    {
+      "id": "c83e",
+      "nom": "Jairo Tecles Vaño",
+      "email": "hola@entrenador.com",
+      "contrasenya": "123456"
+    },
+    {
+      "id": "b0dd",
+      "nom": "vcxvvcx",
+      "email": "cvvxc@gmail.com",
+      "contrasenya": "123456"
     }
   ],
   "UsuariRol": [
@@ -333,6 +345,12 @@
       "isActive": true
     },
     {
+      "id": "dsvvdsvdvd",
+      "usuariId": "3a08",
+      "rol": "ADMIN_WEB",
+      "isActive": true
+    },
+    {
       "id": "fda6",
       "usuariId": "0f41",
       "rol": "JUGADOR",
@@ -402,6 +420,16 @@
     {
       "id": "3c6f",
       "usuariId": "341e",
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "62e3",
+      "usuariId": "c83e",
+      "rol": "ENTRENADOR"
+    },
+    {
+      "id": "fb1a",
+      "usuariId": "b0dd",
       "rol": "ENTRENADOR"
     }
   ],
@@ -582,6 +610,13 @@
       "equipId": 4,
       "usuariId": 5,
       "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": "vjfjvfnj",
+      "equipId": 2,
+      "usuariId": "b0dd",
+      "rolEquip": "ENTRENADOR",
       "isActive": true
     },
     {
