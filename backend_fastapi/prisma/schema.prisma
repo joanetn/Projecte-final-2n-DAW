@@ -23,24 +23,27 @@ enum RolEquip {
 }
 
 enum Status {
-  PENDENT // Acció pendent: jornada, partit o compra encara no processat
-  COMPLETAT // Acció completada: jornada/partit jugat, compra pagada
-  CANCELAT // Acció cancel·lada: jornada/partit anul·lat, compra cancel·lada
+  PENDENT
+  COMPLETAT
+  CANCELAT
 }
 
 model Usuari {
-  id            Int           @id @default(autoincrement())
+  id            Int             @id @default(autoincrement())
   nom           String
-  email         String        @unique
+  email         String          @unique
   contrasenya   String
   rols          UsuariRol[]
   equips        EquipUsuari[]
   notificacions Notificacio[]
   puntuacions   Puntuacio[]
   compres       Compra[]
-  created_at    DateTime      @default(now())
-  updated_at    DateTime      @updatedAt
-  isActive      Boolean       @default(true)
+  created_at    DateTime        @default(now())
+  updated_at    DateTime        @updatedAt
+  isActive      Boolean         @default(true)
+  PartitJugador PartitJugador[]
+  Acta          Acta[]
+  Alineacio     Alineacio[]
 }
 
 model UsuariRol {
@@ -59,16 +62,18 @@ model Club {
 }
 
 model Equip {
-  id               Int           @id @default(autoincrement())
+  id               Int             @id @default(autoincrement())
   nom              String
   categoria        String
-  club             Club          @relation(fields: [clubId], references: [id])
+  club             Club            @relation(fields: [clubId], references: [id])
   clubId           Int
   usuaris          EquipUsuari[]
-  partitsLocals    Partit[]      @relation("local_partits")
-  partitsVisitants Partit[]      @relation("visitante_partits")
+  partitsLocals    Partit[]        @relation("local_partits")
+  partitsVisitants Partit[]        @relation("visitante_partits")
   lligues          Lliga[]
-  isActive         Boolean       @default(true)
+  isActive         Boolean         @default(true)
+  PartitJugador    PartitJugador[]
+  Alineacio        Alineacio[]
 }
 
 model EquipUsuari {
@@ -98,26 +103,60 @@ model Jornada {
   lligaId  Int
   partits  Partit[]
   status   Status   @default(PENDENT)
-  // PENDENT: jornada no jugada
-  // COMPLETAT: jornada finalitzada, tots els partits registrats
-  // CANCELAT: jornada anul·lada
   isActive Boolean  @default(true)
 }
 
 model Partit {
-  id          Int         @id @default(autoincrement())
-  jornada     Jornada     @relation(fields: [jornadaId], references: [id])
-  jornadaId   Int
-  local       Equip       @relation("local_partits", fields: [localId], references: [id])
-  localId     Int
-  visitant    Equip       @relation("visitante_partits", fields: [visitanteId], references: [id])
-  visitanteId Int
-  puntuacions Puntuacio[]
-  status      Status      @default(PENDENT)
-  // PENDENT: partit no jugat
-  // COMPLETAT: partit jugat i puntuacions registrades
-  // CANCELAT: partit anul·lat
-  isActive    Boolean     @default(true)
+  id             Int             @id @default(autoincrement())
+  jornada        Jornada         @relation(fields: [jornadaId], references: [id])
+  jornadaId      Int
+  local          Equip           @relation("local_partits", fields: [localId], references: [id])
+  localId        Int
+  visitant       Equip           @relation("visitante_partits", fields: [visitantId], references: [id])
+  visitantId     Int
+  partitJugadors PartitJugador[]
+  acta           Acta?
+  status         Status          @default(PENDENT)
+  isActive       Boolean         @default(true)
+  Puntuacio      Puntuacio[]
+  Alineacio      Alineacio[]
+}
+
+model Alineacio {
+  id        Int      @id @default(autoincrement())
+  partit    Partit   @relation(fields: [partitId], references: [id])
+  partitId  Int
+  jugador   Usuari   @relation(fields: [jugadorId], references: [id])
+  jugadorId Int
+  equip     Equip    @relation(fields: [equipId], references: [id])
+  equipId   Int
+  isActive  Boolean  @default(true)
+  creada_at DateTime @default(now())
+}
+
+model PartitJugador {
+  id        Int     @id @default(autoincrement())
+  partit    Partit  @relation(fields: [partitId], references: [id])
+  partitId  Int
+  jugador   Usuari  @relation(fields: [jugadorId], references: [id])
+  jugadorId Int
+  equip     Equip   @relation(fields: [equipId], references: [id])
+  equipId   Int
+  punts     Int     @default(0)
+  isActive  Boolean @default(true)
+}
+
+model Acta {
+  id           Int      @id @default(autoincrement())
+  partit       Partit   @relation(fields: [partitId], references: [id])
+  partitId     Int      @unique
+  arbitre      Usuari   @relation(fields: [arbitreId], references: [id])
+  arbitreId    Int
+  observacions String?
+  incidencies  String?
+  resultat     String? // ej: "6-4 3-6 10-8"
+  created_at   DateTime @default(now())
+  isActive     Boolean  @default(true)
 }
 
 model Puntuacio {
@@ -126,7 +165,7 @@ model Puntuacio {
   partitId  Int
   jugador   Usuari  @relation(fields: [jugadorId], references: [id])
   jugadorId Int
-  punts     Int     @default(0) // punts inicials
+  punts     Int     @default(0)
   isActive  Boolean @default(true)
 }
 
@@ -137,9 +176,8 @@ model Notificacio {
   titol      String
   missatge   String
   llegit     Boolean  @default(false)
-  created_at DateTime @default(now()) @map("created_at")
+  created_at DateTime @default(now())
   isActive   Boolean  @default(true)
-  // Opcional: status si vols controlar "PENDENT" / "COMPLETAT" / "CANCELAT"
 }
 
 model Merch {
@@ -163,8 +201,5 @@ model Compra {
   created_at DateTime @default(now())
   pagat      Boolean  @default(false)
   status     Status   @default(PENDENT)
-  // PENDENT: compra iniciada, no pagada
-  // COMPLETAT: compra pagada i processada
-  // CANCELAT: compra cancel·lada
   isActive   Boolean  @default(true)
 }

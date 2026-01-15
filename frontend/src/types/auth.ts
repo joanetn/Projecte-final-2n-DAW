@@ -25,10 +25,10 @@ export interface RegisterResponse {
 }
 
 export interface LoginData {
-    usuari: string;
+    email: string;
     contrasenya: string;
 }
 
 export interface LoginResponse {
-    usuari: Object;
+    usuari: User;
 }

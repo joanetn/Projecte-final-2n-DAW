@@ -1,6 +1,8 @@
-import { fastapi, laravel } from '../api/axios';
+import { fastapi, laravel, backend_rapid } from '../api/axios';
 import { User } from '../types/auth';
+import { clearCurrentUser, getCurrentUser, setCurrentUser } from '@/lib/utils';
 import { RegisterResponse, RegisterData, LoginData, LoginResponse } from '../types/auth';
+import { useAuth } from '@/context/AuthContext';
 
 export const getUsuaris = async (): Promise<User[]> => {
     const res = await laravel.get<User[]>('/usuaris');
@@ -10,7 +12,7 @@ export const getUsuaris = async (): Promise<User[]> => {
 export const registerUser = async (data: RegisterData): Promise<RegisterResponse> => {
     try {
         console.log("DATA DEL REGISTRE", data);
-        const res = await laravel.post<RegisterResponse>("/auth/register", data);
+        const res = await backend_rapid.post<RegisterResponse>("/auth/register", data);
         return res.data;
     } catch (err: any) {
         const message = err.response?.data?.message || "Error al registrar l'usuari";
@@ -20,10 +22,21 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
 
 export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
     try {
-        console.log(data);
-        const res = await laravel.post<LoginResponse>("/auth/login", data);
+        const res = await backend_rapid.post<LoginResponse>("/auth/login", data);
+        const userData = res.data.usuari || res.data;
+        setCurrentUser(userData);
         return res.data;
     } catch (err: any) {
-        throw new Error(err);
+        console.error("Error de login:", err);
+        throw new Error(err.response?.data?.message || err.message || "Error de inicio de sesión");
     }
+}
+
+export const useCurrentUser = () => {
+    const user = getCurrentUser();
+    return user;
+}
+
+export const logoutUser = () => {
+    clearCurrentUser();
 }

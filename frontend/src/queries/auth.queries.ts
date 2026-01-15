@@ -6,4 +6,4 @@ export const useUsers = () =>
     useQuery<User[]>({
         queryKey: ["users"],
         queryFn: getUsuaris,
-    });
+    }); 

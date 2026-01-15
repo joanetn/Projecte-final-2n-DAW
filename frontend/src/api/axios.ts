@@ -8,3 +8,8 @@ export const laravel = axios.create({
 export const fastapi = axios.create({
     baseURL: "http://localhost:8000",
 });
+
+export const backend_rapid = axios.create({
+    baseURL: "http://localhost:3001",
+    withCredentials: true
+})
