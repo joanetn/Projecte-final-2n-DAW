@@ -24,15 +24,50 @@ exports.partitsJugats = async (req, res) => {
         }
 
         const equipId = asignaciones[0].equipId;
-        const partitsLocal = await api.get(`/Partit?localId=${equipId}`);
-        const partitsVisitant = await api.get(`/Partit?visitantId=${equipId}`);
+        const partitsLocal = await api.get(`/Partit?localId=${equipId}&status=COMPLETAT`);
+        const partitsVisitant = await api.get(`/Partit?visitantId=${equipId}&status=COMPLETAT`);
 
-        const partits = {
-            partitsLocal,
-            partitsVisitant
+        const totsElsPartits = [
+            ...(partitsLocal ?? []),
+            ...(partitsVisitant ?? []),
+        ];
+
+        res.json(totsElsPartits);
+    } catch (err) {
+        res.json(err);
+    }
+}
+
+exports.partitsPendents = async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ message: "Token no proporcionado" });
         }
 
-        res.json(partits);
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        const user = await api.get(`/Usuari/${decoded.id}`);
+        if (!user) {
+            return res.status(404).json({ message: "Usuario no encontrado" });
+        }
+
+        const asignaciones = await api.get(`/EquipUsuari?usuariId=${user.id}`);
+        if (!asignaciones.length) {
+            return res.status(404).json({ message: "No tiene equipo asignado" });
+        }
+
+        const equipId = asignaciones[0].equipId;
+        const partitsLocal = await api.get(`/Partit?localId=${equipId}&status=PENDENT`);
+        const partitsVisitant = await api.get(`/Partit?visitantId=${equipId}&status=PENDENT`);
+
+        const totsElsPartits = [
+            ...(partitsLocal ?? []),
+            ...(partitsVisitant ?? []),
+        ];
+
+        res.json(totsElsPartits);
     } catch (err) {
         res.json(err);
     }

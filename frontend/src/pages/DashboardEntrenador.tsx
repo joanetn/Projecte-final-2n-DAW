@@ -1,4 +1,4 @@
-import { usePlantilla } from "@/queries/entrenador.queries";
+import { usePartitsJugats, usePartitsPendents, usePlantilla } from "@/queries/entrenador.queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +6,10 @@ import { Loader2, Users, History, CalendarDays } from "lucide-react";
 
 const DashboardEntrenador = () => {
     const { data, isLoading, isError } = usePlantilla();
+    const partitsJugats = usePartitsJugats();
+    const partitsPendents = usePartitsPendents();
+    console.log(partitsJugats.data);
+    console.log(partitsPendents.data);
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-8">
@@ -99,9 +103,17 @@ const DashboardEntrenador = () => {
                                 Es mostraran resultats, data del partit,
                                 rivals i estadístiques bàsiques.
                             </p>
-                            <p className="text-sm italic">
-                                (Funcionalitat pendent d’implementar)
-                            </p>
+                            {partitsJugats.isError ? (
+                                <p className="text-sm italic">
+                                    (Funcionalitat pendent d’implementar)
+                                </p>
+                            ) : (
+                                <div>
+                                    {partitsJugats.data?.map((partit) => (
+                                        <p>{partit.id}</p>
+                                    ))}
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -122,9 +134,17 @@ const DashboardEntrenador = () => {
                                 Inclourà dates, horaris, rivals i seu del
                                 partit.
                             </p>
-                            <p className="text-sm italic">
-                                (Encara no disponible)
-                            </p>
+                            {partitsPendents.isError ? (
+                                <p className="text-sm italic">
+                                    (Encara no disponible)
+                                </p>
+                            ) : (
+                                <div>
+                                    {partitsPendents.data?.map((partit) => (
+                                        <p>{partit.id}</p>
+                                    ))}
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </TabsContent>

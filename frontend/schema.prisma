@@ -120,6 +120,16 @@ model Partit {
   isActive       Boolean         @default(true)
   Puntuacio      Puntuacio[]
   Alineacio      Alineacio[]
+  SetPartit      SetPartit[]
+}
+
+model SetPartit {
+  id        Int    @id @default(autoincrement())
+  partit    Partit @relation(fields: [partitId], references: [id])
+  partitId  Int
+  numeroSet Int
+  jocsLocal Int
+  jocsVisit Int
 }
 
 model Alineacio {
@@ -154,7 +164,7 @@ model Acta {
   arbitreId    Int
   observacions String?
   incidencies  String?
-  resultat     String? // ej: "6-4 3-6 10-8"
+  resultat     String?
   created_at   DateTime @default(now())
   isActive     Boolean  @default(true)
 }

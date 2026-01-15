@@ -7,7 +7,12 @@ export const getPlantilla = async (): Promise<MembrePlantilla[]> => {
     return res.data;
 }
 
-export const getPartits = async (): Promise<PartitsDashboardEntrenador[]> => {
+export const getPartitsJugats = async (): Promise<PartitsDashboardEntrenador[]> => {
     const res = await backend_rapid.get<PartitsDashboardEntrenador[]>('/entrenador/partitsJugats');
+    return res.data;
+}
+
+export const getPartitsPendents = async (): Promise<PartitsDashboardEntrenador[]> => {
+    const res = await backend_rapid.get<PartitsDashboardEntrenador[]>('/entrenador/partitsPendents');
     return res.data;
 }
