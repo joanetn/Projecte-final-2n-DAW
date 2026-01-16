@@ -1,6 +1,9 @@
 import { backend_rapid } from "@/api/axios";
-import { PlantillaResponse } from "@/types/entrenador";
+import { AlineacioData, AlineacioResponse, PlantillaResponse } from "@/types/entrenador";
 import { PartitsResponse } from "@/types/partits";
+import { useParams } from "react-router-dom";
+
+const params = useParams();
 
 export const getPlantilla = async (): Promise<PlantillaResponse> => {
     try {
@@ -29,5 +32,27 @@ export const getPartitsPendents = async (): Promise<PartitsResponse> => {
     } catch (err: any) {
         console.error("Error obtenint partits pendents:", err);
         throw new Error(err.response?.data?.message || "Error obtenint els partits pendents");
+    }
+}
+
+export const getEnviarAlineacio = async (body: AlineacioData): Promise<AlineacioResponse> => {
+    try {
+        const res = await backend_rapid.post<AlineacioResponse>('/entrenador/enviarAlineacio', body);
+        return res.data;
+    } catch (err: any) {
+        console.error("Error manant la alineació:", err);
+        throw new Error(err.response?.data?.message || "Error manant la alineació");
+    }
+}
+
+export const getComprovarAlineacio = async (): Promise<any> => {
+    try {
+        const partitId = params.partitId;
+        // return partitId;
+        const res = await backend_rapid.get<any>(`/entrenador/${partitId}`);
+        return res.data;
+    } catch (err: any) {
+        console.error("Error manant la alineació:", err);
+        throw new Error(err.response?.data?.message || "Error manant la alineació");
     }
 }

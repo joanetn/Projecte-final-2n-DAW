@@ -30,9 +30,18 @@ export interface PlantillaResponse {
 
 export interface AlineacioData {
     jugadorsId: number[];
-    partitId: number;
+    partitId: string;
+}
+
+export interface Alineacio {
+    id: string;
+    jugadorId: string;
+    partitId: string;
+    isActive: boolean;
+    equipId: number;
+    creada_at: Date;
 }
 
 export interface AlineacioResponse {
-
+    alineacions: Alineacio[];
 }

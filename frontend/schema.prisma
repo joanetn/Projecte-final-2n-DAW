@@ -33,6 +33,11 @@ enum TipusPista {
   DESCOBERTA
 }
 
+enum Posicio {
+  DRETA
+  REVES
+}
+
 model Usuari {
   id            Int             @id @default(autoincrement())
   nom           String
@@ -201,6 +206,7 @@ model Alineacio {
   jugadorId Int
   equip     Equip    @relation(fields: [equipId], references: [id])
   equipId   Int
+  posicio   Posicio
   isActive  Boolean  @default(true)
   creada_at DateTime @default(now())
 }

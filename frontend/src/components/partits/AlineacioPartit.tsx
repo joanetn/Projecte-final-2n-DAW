@@ -4,15 +4,16 @@ import SlotJugador from "./DropPista";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
-import { usePlantilla } from "@/queries/entrenador.queries";
+import { useComprovarAlineacions, usePlantilla } from "@/queries/entrenador.queries";
 import { Button } from "../ui/button";
 import { useParams } from "react-router-dom";
+import { useGuardarAlineacio } from "@/mutations/entrenador.mutations";
 
 const AlineacioPartit = () => {
     const { data: plantillaData } = usePlantilla();
     const plantilla = plantillaData?.plantilla.jugadors || [];
     const params = useParams();
-    const partitId = params.partitId;
+    const partitId = params.partitId!;
     const [alineacio, setAlineacio] = useState<{
         [key: string]: any | null
     }>({
@@ -22,7 +23,30 @@ const AlineacioPartit = () => {
     const [mostrarBoto, setMostrarBoto] = useState(false);
     const [jugadoresUsados, setJugadoresUsados] = useState<number[]>([]);
 
-    // const 
+    const mutation = useGuardarAlineacio();
+    const compAlineacio = useComprovarAlineacions();
+
+    const guardarAlineacio = () => {
+        console.log("holaaaaaaaaaaa");
+        const body = {
+            jugadorsId: jugadoresUsados,
+            partitId
+        };
+
+        mutation.mutate(body, {
+            onSuccess: (res) => {
+                console.log(res);
+            },
+            onError: (err: any) => {
+                console.error("Error de guardar alineacio:", err);
+            },
+        })
+    }
+
+    useEffect(() => {
+        const comp = compAlineacio.data;
+        console.log(comp);
+    }, [])
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -112,7 +136,11 @@ const AlineacioPartit = () => {
                             />
                         </div>
                         {mostrarBoto && (
-                            <Button>Guardar Alineació</Button>
+                            <Button
+                                onClick={() => guardarAlineacio()}
+                            >
+                                Guardar Alineació
+                            </Button>
                         )}
                     </div>
                 </div>

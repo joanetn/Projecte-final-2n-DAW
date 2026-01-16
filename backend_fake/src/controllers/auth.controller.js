@@ -36,8 +36,9 @@ exports.login = async (req, res) => {
 
         // Obtener roles del usuario
         const rolsResponse = await api.get(`/UsuariRol?usuariId=${user.id}`);
-        const rols = rolsResponse.filter(r => r.usuariId === user.id && r.isActive);
-
+        // res.json({ rolsResponse, user });
+        const rols = rolsResponse.filter(r => r.usuariId == user.id && r.isActive);
+        // res.json(rols);
         // Generar token
         const token = jwt.sign(
             {
@@ -218,7 +219,7 @@ exports.me = async (req, res) => {
 
         // Obtener roles del usuario
         const rolsResponse = await api.get(`/UsuariRol?usuariId=${user.id}`);
-        const rols = rolsResponse.filter(r => r.usuariId === user.id && r.isActive);
+        const rols = rolsResponse.filter(r => r.usuariId == user.id && r.isActive);
 
         res.json({
             usuari: {

@@ -49,6 +49,31 @@ const obtenirEquipUsuari = async (usuariId) => {
     return asignacionesActives[0].equipId;
 };
 
+exports.comprovarAlineacio = async (req, res) => {
+    try {
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuari(user.id);
+
+        const { partitId } = req.params;
+
+        res.json(partitId);
+    } catch (err) {
+        console.error("No tens encara alineacio:", err);
+
+        if (err.message === "TOKEN_NO_PROPORCIONAT") return res.status(401).json({ message: "Token no proporcionat" });
+        if (err.message === "USUARI_NO_TROBAT") return res.status(404).json({ message: "Usuari no trobat" });
+        if (err.message === "USUARI_INACTIU") return res.status(403).json({ message: "Usuari inactiu" });
+        if (err.message === "SENSE_EQUIP" || err.message === "SENSE_EQUIP_ACTIU") return res.status(404).json({ message: "No tens cap equip assignat" });
+        if (err.name === "JsonWebTokenError") return res.status(401).json({ message: "Token invàlid" });
+        if (err.name === "TokenExpiredError") return res.status(401).json({ message: "Token expirat" });
+
+        res.status(500).json({
+            message: "No tens encara alineacio",
+            error: err.message
+        });
+    }
+}
+
 exports.crearAlineacio = async (req, res) => {
     try {
         const user = await verificarUsuari(req);
@@ -65,7 +90,7 @@ exports.crearAlineacio = async (req, res) => {
         // Validamos que el partido existe y está activo
         const partitResponse = await api.get(`/Partit?id=${partitId}`);
         const partit = Array.isArray(partitResponse)
-            ? partitResponse.find(p => p.id === partitId && p.isActive)
+            ? partitResponse.find(p => p.id == partitId && p.isActive)
             : partitResponse;
 
         if (!partit) return res.status(404).json({ message: "Partit no trobat o inactiu" });
@@ -74,7 +99,7 @@ exports.crearAlineacio = async (req, res) => {
         const jugadors = await Promise.all(jugadorsId.map(async (id) => {
             const usuariResponse = await api.get(`/Usuari?id=${id}`);
             const usuari = Array.isArray(usuariResponse)
-                ? usuariResponse.find(u => u.id === id && u.isActive)
+                ? usuariResponse.find(u => u.id == id && u.isActive)
                 : (usuariResponse && usuariResponse.isActive ? usuariResponse : null);
 
             if (!usuari) return null;
@@ -100,7 +125,7 @@ exports.crearAlineacio = async (req, res) => {
             return response;
         }));
 
-        res.status(201).json(alineacions);
+        res.status(201).json({ alineacions: alineacions });
 
     } catch (err) {
         console.error("Error en crearAlineacio:", err);
@@ -286,7 +311,7 @@ exports.plantilla = async (req, res) => {
         // Obtener todas las asignaciones del equipo
         const equipoAsignacionesResponse = await api.get(`/EquipUsuari?equipId=${equipId}`);
         const equipoAsignaciones = Array.isArray(equipoAsignacionesResponse)
-            ? equipoAsignacionesResponse.filter(ea => ea.equipId === equipId && ea.isActive)
+            ? equipoAsignacionesResponse.filter(ea => ea.equipId == equipId && ea.isActive)
             : [];
 
         // Obtener detalles de cada miembro de la plantilla
@@ -296,14 +321,14 @@ exports.plantilla = async (req, res) => {
                     try {
                         const usuariResponse = await api.get(`/Usuari?id=${ea.usuariId}`);
                         const usuari = Array.isArray(usuariResponse)
-                            ? usuariResponse.find(u => u.id === ea.usuariId)
+                            ? usuariResponse.find(u => u.id == ea.usuariId)
                             : usuariResponse;
 
                         if (!usuari || !usuari.isActive) return null;
 
                         const rolsResponse = await api.get(`/UsuariRol?usuariId=${usuari.id}`);
                         const rolsFiltrados = Array.isArray(rolsResponse)
-                            ? rolsResponse.filter(r => r.usuariId === usuari.id && r.isActive)
+                            ? rolsResponse.filter(r => r.usuariId == usuari.id && r.isActive)
                             : [];
 
                         return {

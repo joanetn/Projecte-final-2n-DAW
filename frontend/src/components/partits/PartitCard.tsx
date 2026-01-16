@@ -5,7 +5,6 @@ import { Calendar, MapPin } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
-
 interface PartitCardProps {
     partit: any;
     showSets?: boolean;
@@ -13,7 +12,11 @@ interface PartitCardProps {
 
 const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
     const dataFormatejada = format(new Date(partit.dataHora), "d MMMM yyyy - HH:mm", { locale: ca });
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+
+    const comprovarAlineacio = async () => {
+        navigate(`/entrenador/partits/${partit.id}/alineacio`)
+    }
 
     return (
         <Card>
@@ -66,7 +69,7 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
                 <div>
                     <Button
                         size="sm"
-                        onClick={() => navigate(`/entrenador/partits/${partit.id}/alineacio`)}
+                        onClick={() => comprovarAlineacio()}
                     >
                         Alinear
                     </Button>

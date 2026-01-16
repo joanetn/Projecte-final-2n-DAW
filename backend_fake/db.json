@@ -1,7 +1,7 @@
 {
   "Usuari": [
     {
-      "id": 1,
+      "id": "1",
       "nom": "Marc González",
       "email": "marc.gonzalez@email.com",
       "contrasenya": "$2b$10$hash1",
@@ -15,7 +15,7 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "nom": "Laura Martínez",
       "email": "a@a.com",
       "contrasenya": "a",
@@ -29,7 +29,7 @@
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "nom": "Joan Pérez",
       "email": "joan.perez@email.com",
       "contrasenya": "$2b$10$hash3",
@@ -43,7 +43,7 @@
       "isActive": true
     },
     {
-      "id": 4,
+      "id": "4",
       "nom": "Anna Sánchez",
       "email": "a@gmail.com",
       "contrasenya": "$2b$10$hash4",
@@ -57,7 +57,7 @@
       "isActive": true
     },
     {
-      "id": 5,
+      "id": "5",
       "nom": "Carlos Rodríguez",
       "email": "carlos.rodriguez@email.com",
       "contrasenya": "$2b$10$hash5",
@@ -71,7 +71,7 @@
       "isActive": true
     },
     {
-      "id": 6,
+      "id": "6",
       "nom": "Jaume Vaño Belda",
       "email": "jauvanbel@alu.edu.gva.es",
       "contrasenya": "123456",
@@ -87,43 +87,43 @@
   ],
   "UsuariRol": [
     {
-      "id": 1,
+      "id": "1",
       "usuariId": 1,
       "rol": "JUGADOR",
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "usuariId": 2,
       "rol": "ENTRENADOR",
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "usuariId": 3,
       "rol": "ARBITRE",
       "isActive": true
     },
     {
-      "id": 4,
+      "id": "4",
       "usuariId": 4,
       "rol": "JUGADOR",
       "isActive": true
     },
     {
-      "id": 5,
+      "id": "5",
       "usuariId": 5,
       "rol": "ADMIN_EQUIP",
       "isActive": true
     },
     {
-      "id": 4534545,
+      "id": "4534545",
       "usuariId": 2,
       "rol": "JUGADOR",
       "isActive": true
     },
     {
-      "id": 3564567,
+      "id": "3564567",
       "usuariId": 6,
       "rol": "JUGADOR",
       "isActive": true
@@ -131,45 +131,45 @@
   ],
   "Club": [
     {
-      "id": 1,
+      "id": "1",
       "nom": "Club Tennis Valencia",
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "nom": "Real Club Deportivo",
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "nom": "Club Esportiu Mediterrani",
       "isActive": true
     }
   ],
   "Equip": [
     {
-      "id": 1,
+      "id": "1",
       "nom": "Valencia A",
       "categoria": "Senior Masculí",
       "clubId": 1,
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "nom": "Valencia B",
       "categoria": "Senior Femení",
       "clubId": 1,
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "nom": "RCD Júnior",
       "categoria": "Júnior Masculí",
       "clubId": 2,
       "isActive": true
     },
     {
-      "id": 4,
+      "id": "4",
       "nom": "Mediterrani Elite",
       "categoria": "Senior Masculí",
       "clubId": 3,
@@ -178,49 +178,49 @@
   ],
   "EquipUsuari": [
     {
-      "id": 1,
+      "id": "1",
       "equipId": 1,
       "usuariId": 1,
       "rolEquip": "JUGADOR",
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "equipId": 1,
       "usuariId": 2,
       "rolEquip": "ENTRENADOR",
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "equipId": 2,
       "usuariId": 4,
       "rolEquip": "JUGADOR",
       "isActive": true
     },
     {
-      "id": 4,
+      "id": "4",
       "equipId": 3,
       "usuariId": 5,
       "rolEquip": "ADMIN_EQUIP",
       "isActive": true
     },
     {
-      "id": 43545,
+      "id": "43545",
       "equipId": 1,
       "usuariId": 2,
       "rolEquip": "JUGADOR",
       "isActive": true
     },
     {
-      "id": 435456,
+      "id": "435456",
       "equipId": 1,
       "usuariId": 2,
       "rolEquip": "ADMIN_EQUIP",
       "isActive": true
     },
     {
-      "id": 2454254,
+      "id": "2454254",
       "equipId": 1,
       "usuariId": 6,
       "rolEquip": "JUGADOR",
@@ -229,13 +229,13 @@
   ],
   "Lliga": [
     {
-      "id": 1,
+      "id": "1",
       "nom": "Lliga Valenciana 2024",
       "categoria": "Senior Masculí",
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "nom": "Lliga Autonòmica Femení",
       "categoria": "Senior Femení",
       "isActive": true
@@ -243,7 +243,7 @@
   ],
   "Classificacio": [
     {
-      "id": 1,
+      "id": "1",
       "lligaId": 1,
       "equipId": 1,
       "partitsJugats": 8,
@@ -257,7 +257,7 @@
       "punts": 18
     },
     {
-      "id": 2,
+      "id": "2",
       "lligaId": 1,
       "equipId": 4,
       "partitsJugats": 8,
@@ -271,7 +271,7 @@
       "punts": 15
     },
     {
-      "id": 3,
+      "id": "3",
       "lligaId": 2,
       "equipId": 2,
       "partitsJugats": 6,
@@ -287,7 +287,7 @@
   ],
   "Jornada": [
     {
-      "id": 1,
+      "id": "1",
       "nom": "Jornada 1",
       "data": "2024-09-15T00:00:00.000Z",
       "lligaId": 1,
@@ -295,7 +295,7 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "nom": "Jornada 2",
       "data": "2024-09-22T00:00:00.000Z",
       "lligaId": 1,
@@ -303,7 +303,7 @@
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "nom": "Jornada 3",
       "data": "2024-09-29T00:00:00.000Z",
       "lligaId": 1,
@@ -313,7 +313,7 @@
   ],
   "Instalacio": [
     {
-      "id": 1,
+      "id": "1",
       "nom": "Poliesportiu Central",
       "adreca": "Carrer Major 123, Valencia",
       "telefon": "+34961234567",
@@ -321,7 +321,7 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "nom": "Complex Esportiu Nord",
       "adreca": "Avinguda del Nord 456, Valencia",
       "telefon": "+34962345678",
@@ -329,7 +329,7 @@
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "nom": "Centre Tennístic Mediterrani",
       "adreca": "Carrer del Mar 789, Valencia",
       "telefon": "+34963456789",
@@ -339,35 +339,35 @@
   ],
   "Pista": [
     {
-      "id": 1,
+      "id": "1",
       "nom": "Pista Central 1",
       "tipus": "COBERTA",
       "instalacioId": 1,
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "nom": "Pista Central 2",
       "tipus": "COBERTA",
       "instalacioId": 1,
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "nom": "Pista Nord A",
       "tipus": "DESCOBERTA",
       "instalacioId": 2,
       "isActive": true
     },
     {
-      "id": 4,
+      "id": "4",
       "nom": "Pista Nord B",
       "tipus": "DESCOBERTA",
       "instalacioId": 2,
       "isActive": true
     },
     {
-      "id": 5,
+      "id": "5",
       "nom": "Pista Mediterrani 1",
       "tipus": "COBERTA",
       "instalacioId": 3,
@@ -376,7 +376,7 @@
   ],
   "Partit": [
     {
-      "id": 1,
+      "id": "1",
       "jornadaId": 1,
       "localId": 1,
       "visitantId": 4,
@@ -386,7 +386,7 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "jornadaId": 2,
       "localId": 4,
       "visitantId": 1,
@@ -396,7 +396,7 @@
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "jornadaId": 3,
       "localId": 1,
       "visitantId": 3,
@@ -408,7 +408,7 @@
   ],
   "SetPartit": [
     {
-      "id": 1,
+      "id": "1",
       "partitId": 1,
       "numeroSet": 1,
       "jocsLocal": 6,
@@ -418,7 +418,7 @@
       "puntsVisitTiebreak": null
     },
     {
-      "id": 2,
+      "id": "2",
       "partitId": 1,
       "numeroSet": 2,
       "jocsLocal": 7,
@@ -428,7 +428,7 @@
       "puntsVisitTiebreak": 5
     },
     {
-      "id": 3,
+      "id": "3",
       "partitId": 2,
       "numeroSet": 1,
       "jocsLocal": 4,
@@ -438,7 +438,7 @@
       "puntsVisitTiebreak": null
     },
     {
-      "id": 4,
+      "id": "4",
       "partitId": 2,
       "numeroSet": 2,
       "jocsLocal": 6,
@@ -448,7 +448,7 @@
       "puntsVisitTiebreak": null
     },
     {
-      "id": 5,
+      "id": "5",
       "partitId": 2,
       "numeroSet": 3,
       "jocsLocal": 5,
@@ -460,7 +460,7 @@
   ],
   "Alineacio": [
     {
-      "id": 1,
+      "id": "1",
       "partitId": 1,
       "jugadorId": 1,
       "equipId": 1,
@@ -468,7 +468,7 @@
       "creada_at": "2024-09-14T18:00:00.000Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "partitId": 2,
       "jugadorId": 1,
       "equipId": 1,
@@ -476,17 +476,33 @@
       "creada_at": "2024-09-21T18:00:00.000Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "partitId": 3,
       "jugadorId": 1,
       "equipId": 1,
       "isActive": true,
       "creada_at": "2024-09-28T18:00:00.000Z"
+    },
+    {
+      "id": "4e44",
+      "partitId": "3",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-16T19:16:40.774Z"
+    },
+    {
+      "id": "bd0e",
+      "partitId": "3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-16T19:16:40.776Z"
     }
   ],
   "PartitJugador": [
     {
-      "id": 1,
+      "id": "1",
       "partitId": 1,
       "jugadorId": 1,
       "equipId": 1,
@@ -494,7 +510,7 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "partitId": 2,
       "jugadorId": 1,
       "equipId": 1,
@@ -504,7 +520,7 @@
   ],
   "Acta": [
     {
-      "id": 1,
+      "id": "1",
       "partitId": 1,
       "arbitreId": 3,
       "observacions": "Partit sense incidències",
@@ -516,7 +532,7 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "partitId": 2,
       "arbitreId": 3,
       "observacions": "Bon ambient esportiu",
@@ -530,14 +546,14 @@
   ],
   "Puntuacio": [
     {
-      "id": 1,
+      "id": "1",
       "partitId": 1,
       "jugadorId": 1,
       "punts": 13,
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "partitId": 2,
       "jugadorId": 1,
       "punts": 15,
@@ -546,7 +562,7 @@
   ],
   "Notificacio": [
     {
-      "id": 1,
+      "id": "1",
       "usuariId": 1,
       "titol": "Proper partit",
       "missatge": "Tens un partit programat per al proper diumenge a les 10:00h",
@@ -555,7 +571,7 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "usuariId": 1,
       "titol": "Resultat validat",
       "missatge": "L'acta del teu últim partit ha estat validada",
@@ -564,7 +580,7 @@
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "usuariId": 4,
       "titol": "Convocatòria",
       "missatge": "Has estat convocat per al partit de dissabte",
@@ -575,7 +591,7 @@
   ],
   "Merch": [
     {
-      "id": 1,
+      "id": "1",
       "nom": "Samarreta Oficial Valencia A",
       "marca": "Nike",
       "descripcio": "Samarreta oficial de l'equip Valencia A, temporada 2024",
@@ -596,11 +612,11 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "nom": "Pantalons Tècnics",
       "marca": "Adidas",
       "descripcio": "Pantalons tècnics per a entrenament i competició",
-      "preu": 35.50,
+      "preu": 35.5,
       "stock": 30,
       "imatges": [
         "https://picsum.photos/400/400?random=3",
@@ -615,7 +631,7 @@
       "isActive": true
     },
     {
-      "id": 3,
+      "id": "3",
       "nom": "Gorra Club Valencia",
       "marca": "Under Armour",
       "descripcio": "Gorra oficial del Club Tennis Valencia",
@@ -632,7 +648,7 @@
   ],
   "Compra": [
     {
-      "id": 1,
+      "id": "1",
       "usuariId": 1,
       "merchId": 1,
       "quantitat": 1,
@@ -647,7 +663,7 @@
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "usuariId": 4,
       "merchId": 3,
       "quantitat": 2,
