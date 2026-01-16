@@ -1,7 +1,6 @@
 import { laravel, backend_rapid } from '../api/axios';
-import { User } from '../types/auth';
+import { User, RegisterResponse, RegisterData, LoginData, LoginResponse } from '../types/auth';
 import { clearCurrentUser, getCurrentUser, setCurrentUser } from '@/lib/utils';
-import { RegisterResponse, RegisterData, LoginData, LoginResponse } from '../types/auth';
 
 export const getUsuaris = async (): Promise<User[]> => {
     const res = await laravel.get<User[]>('/usuaris');
@@ -12,10 +11,17 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
     try {
         console.log("DATA DEL REGISTRE", data);
         const res = await backend_rapid.post<RegisterResponse>("/auth/register", data);
-        console.log(res.data);
-        return res.data;    
+        console.log("Resposta del backend:", res.data);
+
+        // Guardar el usuario si viene con token
+        if (res.data.usuari?.token) {
+            setCurrentUser(res.data.usuari);
+        }
+
+        return res.data;
     } catch (err: any) {
         const message = err.response?.data?.message || "Error al registrar l'usuari";
+        console.error("Error en registerUser:", err);
         throw new Error(message);
     }
 };
@@ -23,12 +29,36 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
 export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
     try {
         const res = await backend_rapid.post<LoginResponse>("/auth/login", data);
-        const userData = res.data.usuari || res.data;
-        setCurrentUser(userData);
-        return res.data;
+
+        // El backend devuelve { usuari: { ...data, token, rols } }
+        if (res.data.usuari) {
+            setCurrentUser(res.data.usuari);
+            return res.data;
+        }
+
+        throw new Error("Resposta invàlida del servidor");
     } catch (err: any) {
         console.error("Error de login:", err);
-        throw new Error(err.response?.data?.message || err.message || "Error de inicio de sesión");
+        const message = err.response?.data?.message || err.message || "Error d'inici de sessió";
+        throw new Error(message);
+    }
+}
+
+export const getCurrentUserData = async (): Promise<User> => {
+    try {
+        const res = await backend_rapid.get<{ usuari: User }>("/auth/me");
+
+        if (res.data.usuari) {
+            // Actualizar el usuario en localStorage
+            setCurrentUser(res.data.usuari);
+            return res.data.usuari;
+        }
+
+        throw new Error("Resposta invàlida del servidor");
+    } catch (err: any) {
+        console.error("Error obtenint usuari actual:", err);
+        const message = err.response?.data?.message || "Error obtenint dades de l'usuari";
+        throw new Error(message);
     }
 }
 

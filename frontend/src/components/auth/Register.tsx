@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useRegister } from "../mutations/auth.mutations";
-import { RegisterData } from "../types/auth";
+import { useRegister } from "../../mutations/auth.mutations";
+import { RegisterData } from "../../types/auth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

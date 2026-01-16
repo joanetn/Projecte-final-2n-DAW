@@ -5,7 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from './lib/utils'
 import "./styles/index.css";
 import { AuthProvider } from "./context/AuthContext";
-import { ThemeProvider } from "./components/theme-provider";
+import { ThemeProvider } from "./components/theme/theme-provider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

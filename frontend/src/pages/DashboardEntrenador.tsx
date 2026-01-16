@@ -1,15 +1,14 @@
 import { usePartitsJugats, usePartitsPendents, usePlantilla } from "@/queries/entrenador.queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Users, History, CalendarDays } from "lucide-react";
+import PlantillaCard from "@/components/plantilla/PlantillaCard";
+import PartitCard from "@/components/partits/PartitCard";
+import { Loader2, Users } from "lucide-react";
 
 const DashboardEntrenador = () => {
-    const { data, isLoading, isError } = usePlantilla();
+    const plantilla = usePlantilla();
     const partitsJugats = usePartitsJugats();
     const partitsPendents = usePartitsPendents();
-    console.log(partitsJugats.data);
-    console.log(partitsPendents.data);
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-8">
@@ -24,14 +23,20 @@ const DashboardEntrenador = () => {
             <Tabs defaultValue="plantilla" className="w-full">
                 {/* Menu */}
                 <TabsList className="grid w-full grid-cols-3 mb-6">
-                    <TabsTrigger value="plantilla">Plantilla</TabsTrigger>
-                    <TabsTrigger value="jugats">Partits jugats</TabsTrigger>
-                    <TabsTrigger value="futurs">Partits futurs</TabsTrigger>
+                    <TabsTrigger value="plantilla">
+                        Plantilla ({plantilla.data?.total ?? 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="jugats">
+                        Partits jugats ({partitsJugats.data?.total ?? 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="futurs">
+                        Partits futurs ({partitsPendents.data?.total ?? 0})
+                    </TabsTrigger>
                 </TabsList>
 
-                {/* ───────────── Plantilla ───────────── */}
+                {/* ════════════ Plantilla ════════════ */}
                 <TabsContent value="plantilla">
-                    {isLoading && (
+                    {plantilla.isLoading && (
                         <div className="flex items-center justify-center h-[40vh]">
                             <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
                             <span className="ml-2 text-gray-600">
@@ -40,113 +45,149 @@ const DashboardEntrenador = () => {
                         </div>
                     )}
 
-                    {isError && (
+                    {plantilla.isError && (
                         <div className="text-center text-red-600">
                             Error carregant la plantilla
                         </div>
                     )}
 
-                    {!isLoading && data && data.length === 0 && (
+                    {!plantilla.isLoading && plantilla.data && plantilla.data.total === 0 && (
                         <div className="text-center text-gray-500">
                             No hi ha jugadors a la plantilla
                         </div>
                     )}
 
-                    {!isLoading && data && data.length > 0 && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {data.map((usuari) => (
-                                <Card
-                                    key={usuari.id}
-                                    className="hover:shadow-md transition"
-                                >
-                                    <CardHeader className="pb-2">
-                                        <CardTitle className="text-lg">
-                                            {usuari.nom}
+                    {!plantilla.isLoading && plantilla.data && plantilla.data.total > 0 && (
+                        <div className="space-y-8">
+                            {/* Info del equipo */}
+                            {plantilla.data.equip && (
+                                <Card className="bg-blue-50 border-blue-200">
+                                    <CardHeader>
+                                        <CardTitle className="text-xl">
+                                            {plantilla.data.equip.nom}
                                         </CardTitle>
-                                        <p className="text-sm text-gray-500">
-                                            {usuari.email}
+                                        <p className="text-sm text-gray-600">
+                                            Categoria: {plantilla.data.equip.categoria}
                                         </p>
                                     </CardHeader>
-
-                                    <CardContent>
-                                        <div className="flex flex-wrap gap-2">
-                                            {usuari.rols.map((rol) => (
-                                                <Badge
-                                                    key={rol}
-                                                    variant="secondary"
-                                                    className="text-xs"
-                                                >
-                                                    {rol}
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                    </CardContent>
                                 </Card>
+                            )}
+
+                            {/* Entrenadores */}
+                            {plantilla.data.plantilla.entrenadors.length > 0 && (
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-3 text-gray-700">
+                                        Entrenadors ({plantilla.data.plantilla.entrenadors.length})
+                                    </h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {plantilla.data.plantilla.entrenadors.map((usuari) => (
+                                            <PlantillaCard key={usuari.id} usuari={usuari} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Jugadores */}
+                            {plantilla.data.plantilla.jugadors.length > 0 && (
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-3 text-gray-700">
+                                        Jugadors ({plantilla.data.plantilla.jugadors.length})
+                                    </h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {plantilla.data.plantilla.jugadors.map((usuari) => (
+                                            <PlantillaCard key={usuari.id} usuari={usuari} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Administradores */}
+                            {plantilla.data.plantilla.administradors.length > 0 && (
+                                <div>
+                                    <h3 className="text-lg font-semibold mb-3 text-gray-700">
+                                        Administradors ({plantilla.data.plantilla.administradors.length})
+                                    </h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {plantilla.data.plantilla.administradors.map((usuari) => (
+                                            <PlantillaCard key={usuari.id} usuari={usuari} />
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </TabsContent>
+
+                {/* ════════════ Partits jugats ════════════ */}
+                <TabsContent value="jugats">
+                    {partitsJugats.isLoading && (
+                        <div className="flex items-center justify-center h-[40vh]">
+                            <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
+                            <span className="ml-2 text-gray-600">
+                                Carregant partits...
+                            </span>
+                        </div>
+                    )}
+
+                    {partitsJugats.isError && (
+                        <Card>
+                            <CardContent className="pt-6 text-center text-red-600">
+                                Error carregant els partits jugats
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {!partitsJugats.isLoading && partitsJugats.data && partitsJugats.data.total === 0 && (
+                        <Card>
+                            <CardContent className="pt-6 text-center text-gray-500">
+                                No hi ha partits jugats encara
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {!partitsJugats.isLoading && partitsJugats.data && partitsJugats.data.total > 0 && (
+                        <div className="space-y-4">
+                            {partitsJugats.data.partits.map((partit) => (
+                                <PartitCard key={partit.id} partit={partit} showSets />
                             ))}
                         </div>
                     )}
                 </TabsContent>
 
-                {/* ───────────── Partits jugats ───────────── */}
-                <TabsContent value="jugats">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center gap-2">
-                            <History className="h-5 w-5 text-gray-600" />
-                            <CardTitle>Partits jugats</CardTitle>
-                        </CardHeader>
-                        <CardContent className="text-gray-600 space-y-2">
-                            <p>
-                                En aquest apartat podràs consultar tots els
-                                partits ja disputats per l’equip.
-                            </p>
-                            <p>
-                                Es mostraran resultats, data del partit,
-                                rivals i estadístiques bàsiques.
-                            </p>
-                            {partitsJugats.isError ? (
-                                <p className="text-sm italic">
-                                    (Funcionalitat pendent d’implementar)
-                                </p>
-                            ) : (
-                                <div>
-                                    {partitsJugats.data?.map((partit) => (
-                                        <p>{partit.id}</p>
-                                    ))}
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                {/* ───────────── Partits futurs ───────────── */}
+                {/* ════════════ Partits futurs ════════════ */}
                 <TabsContent value="futurs">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center gap-2">
-                            <CalendarDays className="h-5 w-5 text-gray-600" />
-                            <CardTitle>Partits futurs</CardTitle>
-                        </CardHeader>
-                        <CardContent className="text-gray-600 space-y-2">
-                            <p>
-                                Ací podràs veure els pròxims partits programats
-                                de l’equip.
-                            </p>
-                            <p>
-                                Inclourà dates, horaris, rivals i seu del
-                                partit.
-                            </p>
-                            {partitsPendents.isError ? (
-                                <p className="text-sm italic">
-                                    (Encara no disponible)
-                                </p>
-                            ) : (
-                                <div>
-                                    {partitsPendents.data?.map((partit) => (
-                                        <p>{partit.id}</p>
-                                    ))}
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
+                    {partitsPendents.isLoading && (
+                        <div className="flex items-center justify-center h-[40vh]">
+                            <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
+                            <span className="ml-2 text-gray-600">
+                                Carregant partits...
+                            </span>
+                        </div>
+                    )}
+
+                    {partitsPendents.isError && (
+                        <Card>
+                            <CardContent className="pt-6 text-center text-red-600">
+                                Error carregant els partits pendents
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {!partitsPendents.isLoading && partitsPendents.data && partitsPendents.data.total === 0 && (
+                        <Card>
+                            <CardContent className="pt-6 text-center text-gray-500">
+                                No hi ha partits pendents
+                            </CardContent>
+                        </Card>
+                    )}
+
+                    {!partitsPendents.isLoading && partitsPendents.data && partitsPendents.data.total > 0 && (
+                        <div className="space-y-4">
+                            {partitsPendents.data.partits.map((partit) => (
+                                <PartitCard key={partit.id} partit={partit} />
+                            ))}
+                        </div>
+                    )}
                 </TabsContent>
             </Tabs>
         </div>

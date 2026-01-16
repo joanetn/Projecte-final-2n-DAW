@@ -1,1269 +1,665 @@
 {
   "Usuari": [
     {
-      "id": "1",
-      "nom": "Joan Nácher",
-      "email": "joan@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
+      "id": 1,
+      "nom": "Marc González",
+      "email": "marc.gonzalez@email.com",
+      "contrasenya": "$2b$10$hash1",
+      "telefon": "+34612345678",
+      "dataNaixement": "1995-03-15T00:00:00.000Z",
+      "nivell": "Avançat",
+      "avatar": "https://i.pravatar.cc/150?img=1",
+      "dni": "12345678A",
+      "created_at": "2024-01-15T10:00:00.000Z",
+      "updated_at": "2024-01-15T10:00:00.000Z",
+      "isActive": true
     },
     {
-      "id": "2",
-      "nom": "Pere Garcia",
-      "email": "pere@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
+      "id": 2,
+      "nom": "Laura Martínez",
+      "email": "a@a.com",
+      "contrasenya": "a",
+      "telefon": "+34623456789",
+      "dataNaixement": "1998-07-22T00:00:00.000Z",
+      "nivell": "Intermedi",
+      "avatar": "https://i.pravatar.cc/150?img=2",
+      "dni": "23456789B",
+      "created_at": "2024-01-16T11:00:00.000Z",
+      "updated_at": "2024-01-16T11:00:00.000Z",
+      "isActive": true
     },
     {
-      "id": "3",
-      "nom": "Marc Vidal",
-      "email": "marc@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
+      "id": 3,
+      "nom": "Joan Pérez",
+      "email": "joan.perez@email.com",
+      "contrasenya": "$2b$10$hash3",
+      "telefon": "+34634567890",
+      "dataNaixement": "1990-11-08T00:00:00.000Z",
+      "nivell": "Expert",
+      "avatar": "https://i.pravatar.cc/150?img=3",
+      "dni": "34567890C",
+      "created_at": "2024-01-17T09:00:00.000Z",
+      "updated_at": "2024-01-17T09:00:00.000Z",
+      "isActive": true
     },
     {
-      "id": "4",
-      "nom": "Anna López",
-      "email": "anna@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
+      "id": 4,
+      "nom": "Anna Sánchez",
+      "email": "a@gmail.com",
+      "contrasenya": "$2b$10$hash4",
+      "telefon": "+34645678901",
+      "dataNaixement": "2000-05-12T00:00:00.000Z",
+      "nivell": "Principiant",
+      "avatar": "https://i.pravatar.cc/150?img=4",
+      "dni": "45678901D",
+      "created_at": "2024-01-18T14:00:00.000Z",
+      "updated_at": "2024-01-18T14:00:00.000Z",
+      "isActive": true
     },
     {
-      "id": "5",
-      "nom": "Carlos Ruiz",
-      "email": "carlos@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
+      "id": 5,
+      "nom": "Carlos Rodríguez",
+      "email": "carlos.rodriguez@email.com",
+      "contrasenya": "$2b$10$hash5",
+      "telefon": "+34656789012",
+      "dataNaixement": "1988-09-25T00:00:00.000Z",
+      "nivell": "Avançat",
+      "avatar": "https://i.pravatar.cc/150?img=5",
+      "dni": "56789012E",
+      "created_at": "2024-01-19T10:30:00.000Z",
+      "updated_at": "2024-01-19T10:30:00.000Z",
+      "isActive": true
     },
     {
-      "id": "6",
-      "nom": "Laura Martín",
-      "email": "laura@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "7",
-      "nom": "David Sánchez",
-      "email": "david@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "8",
-      "nom": "Elena Gómez",
-      "email": "elena@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "9",
-      "nom": "Miguel Torres",
-      "email": "miguel@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "10",
-      "nom": "Sofia Ramírez",
-      "email": "sofia@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "11",
-      "nom": "Javier Fernández",
-      "email": "javier@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "12",
-      "nom": "Isabel Castro",
-      "email": "isabel@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "13",
-      "nom": "Roberto Díaz",
-      "email": "roberto@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "14",
-      "nom": "Marta Jiménez",
-      "email": "marta@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "15",
-      "nom": "Pablo Moreno",
-      "email": "pablo@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "16",
-      "nom": "Carmen Vázquez",
-      "email": "carmen@test.com",
-      "contrasenya": "1234",
-      "isActive": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "updated_at": "2025-01-01T00:00:00Z"
-    },
-    {
-      "id": "3a08",
-      "nom": "Joan Nácher Parra",
-      "email": "jnacherparra@gmail.com",
-      "contrasenya": "imanigger",
-      "activo": true,
-      "createdAt": "2026-01-14T17:32:39.438Z",
-      "updatedAt": "2026-01-14T17:32:39.438Z"
-    },
-    {
-      "id": "0f41",
+      "id": 6,
       "nom": "Jaume Vaño Belda",
       "email": "jauvanbel@alu.edu.gva.es",
-      "contrasenya": "imautistic",
-      "activo": true,
-      "createdAt": "2026-01-14T18:14:05.085Z",
-      "updatedAt": "2026-01-14T18:14:05.085Z"
-    },
-    {
-      "id": "be2e",
-      "nom": "jairo boot",
-      "email": "jairo@gmail.com",
-      "contrasenya": "socjario"
-    },
-    {
-      "id": "27ba",
-      "nom": "jairo boot",
-      "email": "jairo2@gmail.com",
-      "contrasenya": "socjario"
-    },
-    {
-      "id": "5ae6",
-      "nom": "jairo boot",
-      "email": "jairo3@gmail.com",
-      "contrasenya": "socjario"
-    },
-    {
-      "id": "4dbe",
-      "nom": "fdbbb",
-      "email": "bfdbdbff2sbfbdfb@cvcv.com",
-      "contrasenya": "dfdfsfsdf"
-    },
-    {
-      "id": "1166",
-      "nom": "fhghgh",
-      "email": "ghghgf+@fdbfb.com",
-      "contrasenya": "dfdsfdsf"
-    },
-    {
-      "id": "1e30",
-      "nom": "gjkjklkjkhk",
-      "email": "jhkjh@fdfvbgbg.com",
-      "contrasenya": "bfdfbbdf"
-    },
-    {
-      "id": "da78",
-      "nom": "gjkjklkjkhk",
-      "email": "jhkjh2@fdfvbgbg.com",
-      "contrasenya": "bfdfbbdf"
-    },
-    {
-      "id": "9732",
-      "nom": "gjkjklkjkhk",
-      "email": "jhkjh2343@fdfvbgbg.com",
-      "contrasenya": "bfdfbbdf"
-    },
-    {
-      "id": "76df",
-      "nom": "gjkjklkjkhk",
-      "email": "jhkjh2343gfdgdf@fdfvbgbg.com",
-      "contrasenya": "bfdfbbdf"
-    },
-    {
-      "id": "4d55",
-      "nom": "gjkjklkjkhk",
-      "email": "jhkjh2343gfdgdfghgfh@fdfvbgbg.com",
-      "contrasenya": "bfdfbbdf"
-    },
-    {
-      "id": "341e",
-      "nom": "vhbubhkbhk",
-      "email": "vvhjvjvhvhj@bhbhb.com",
-      "contrasenya": "hjhbhbhjbj"
-    },
-    {
-      "id": "c83e",
-      "nom": "Jairo Tecles Vaño",
-      "email": "hola@entrenador.com",
-      "contrasenya": "123456"
-    },
-    {
-      "id": "b0dd",
-      "nom": "vcxvvcx",
-      "email": "cvvxc@gmail.com",
-      "contrasenya": "123456"
+      "contrasenya": "123456",
+      "telefon": "+34621207655",
+      "dataNaixement": "2006-12-22T22:10:00.000Z",
+      "nivell": "Avançat",
+      "avatar": "https://i.pravatar.cc/150?img=55676798",
+      "dni": "34567890C",
+      "created_at": "2024-01-15T10:00:00.000Z",
+      "updated_at": "2024-01-15T10:00:00.000Z",
+      "isActive": true
     }
   ],
   "UsuariRol": [
     {
-      "id": "1",
+      "id": 1,
       "usuariId": 1,
-      "rol": "SUPERADMIN",
+      "rol": "JUGADOR",
       "isActive": true
     },
     {
-      "id": "2",
+      "id": 2,
       "usuariId": 2,
-      "rol": "ADMIN_EQUIP",
+      "rol": "ENTRENADOR",
       "isActive": true
     },
     {
-      "id": "3",
+      "id": 3,
       "usuariId": 3,
-      "rol": "ADMIN_EQUIP",
+      "rol": "ARBITRE",
       "isActive": true
     },
     {
-      "id": "4",
+      "id": 4,
       "usuariId": 4,
       "rol": "JUGADOR",
       "isActive": true
     },
     {
-      "id": "5",
+      "id": 5,
       "usuariId": 5,
+      "rol": "ADMIN_EQUIP",
+      "isActive": true
+    },
+    {
+      "id": 4534545,
+      "usuariId": 2,
       "rol": "JUGADOR",
       "isActive": true
     },
     {
-      "id": "6",
+      "id": 3564567,
       "usuariId": 6,
       "rol": "JUGADOR",
       "isActive": true
-    },
-    {
-      "id": "7",
-      "usuariId": 7,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "8",
-      "usuariId": 8,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "9",
-      "usuariId": 9,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "10",
-      "usuariId": 10,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "11",
-      "usuariId": 11,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "12",
-      "usuariId": 12,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "13",
-      "usuariId": 13,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "14",
-      "usuariId": 14,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "15",
-      "usuariId": 15,
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "16",
-      "usuariId": 16,
-      "rol": "ARBITRE",
-      "isActive": true
-    },
-    {
-      "id": "c521",
-      "usuariId": "3a08",
-      "rol": "ARBITRE",
-      "isActive": true
-    },
-    {
-      "id": "dsvvdsvdvd",
-      "usuariId": "3a08",
-      "rol": "ADMIN_WEB",
-      "isActive": true
-    },
-    {
-      "id": "fda6",
-      "usuariId": "0f41",
-      "rol": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "8450",
-      "usuariId": "0f41",
-      "rol": "ENTRENADOR",
-      "isActive": true
-    },
-    {
-      "id": "dfb3",
-      "usuariId": "be2e",
-      "rol": "ARBITRE"
-    },
-    {
-      "id": "4926",
-      "usuariId": "27ba",
-      "rol": "ARBITRE"
-    },
-    {
-      "id": "9b64",
-      "usuariId": "5ae6",
-      "rol": "ARBITRE"
-    },
-    {
-      "id": "9603",
-      "usuariId": "4dbe",
-      "rol": "JUGADOR"
-    },
-    {
-      "id": "cfab",
-      "usuariId": "1166",
-      "rol": "ENTRENADOR"
-    },
-    {
-      "id": "5ad9",
-      "usuariId": "1e30",
-      "rol": "JUGADOR"
-    },
-    {
-      "id": "a8c9",
-      "usuariId": "da78",
-      "rol": "JUGADOR"
-    },
-    {
-      "id": "c4a9",
-      "usuariId": "9732",
-      "rol": "JUGADOR"
-    },
-    {
-      "id": "0673",
-      "usuariId": "76df",
-      "rol": "JUGADOR"
-    },
-    {
-      "id": "3354",
-      "usuariId": "4d55",
-      "rol": "JUGADOR"
-    },
-    {
-      "id": "1ada",
-      "usuariId": "341e",
-      "rol": "JUGADOR"
-    },
-    {
-      "id": "3c6f",
-      "usuariId": "341e",
-      "rol": "ENTRENADOR"
-    },
-    {
-      "id": "62e3",
-      "usuariId": "c83e",
-      "rol": "ENTRENADOR"
-    },
-    {
-      "id": "fb1a",
-      "usuariId": "b0dd",
-      "rol": "ENTRENADOR"
     }
   ],
   "Club": [
     {
-      "id": "1",
-      "nom": "Club Tennis Barcelona",
-      "isActive": true
-    },
-    {
-      "id": "2",
+      "id": 1,
       "nom": "Club Tennis Valencia",
       "isActive": true
     },
     {
-      "id": "3",
-      "nom": "Club Tennis Madrid",
+      "id": 2,
+      "nom": "Real Club Deportivo",
       "isActive": true
     },
     {
-      "id": "4",
-      "nom": "Club Tennis Bilbao",
+      "id": 3,
+      "nom": "Club Esportiu Mediterrani",
       "isActive": true
     }
   ],
   "Equip": [
     {
-      "id": "1",
-      "nom": "Barcelona A",
-      "categoria": "Senior",
+      "id": 1,
+      "nom": "Valencia A",
+      "categoria": "Senior Masculí",
       "clubId": 1,
       "isActive": true
     },
     {
-      "id": "2",
-      "nom": "Valencia A",
-      "categoria": "Senior",
+      "id": 2,
+      "nom": "Valencia B",
+      "categoria": "Senior Femení",
+      "clubId": 1,
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "nom": "RCD Júnior",
+      "categoria": "Júnior Masculí",
       "clubId": 2,
       "isActive": true
     },
     {
-      "id": "3",
-      "nom": "Madrid A",
-      "categoria": "Senior",
+      "id": 4,
+      "nom": "Mediterrani Elite",
+      "categoria": "Senior Masculí",
       "clubId": 3,
-      "isActive": true
-    },
-    {
-      "id": "4",
-      "nom": "Bilbao A",
-      "categoria": "Senior",
-      "clubId": 4,
       "isActive": true
     }
   ],
   "EquipUsuari": [
     {
-      "id": "1",
+      "id": 1,
+      "equipId": 1,
+      "usuariId": 1,
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "equipId": 1,
+      "usuariId": 2,
+      "rolEquip": "ENTRENADOR",
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "equipId": 2,
+      "usuariId": 4,
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": 4,
+      "equipId": 3,
+      "usuariId": 5,
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true
+    },
+    {
+      "id": 43545,
+      "equipId": 1,
+      "usuariId": 2,
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": 435456,
       "equipId": 1,
       "usuariId": 2,
       "rolEquip": "ADMIN_EQUIP",
       "isActive": true
     },
     {
-      "id": "2",
-      "equipId": 1,
-      "usuariId": 4,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "3",
-      "equipId": 1,
-      "usuariId": 5,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "4",
+      "id": 2454254,
       "equipId": 1,
       "usuariId": 6,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "5",
-      "equipId": 1,
-      "usuariId": 7,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "6",
-      "equipId": 2,
-      "usuariId": 3,
-      "rolEquip": "ADMIN_EQUIP",
-      "isActive": true
-    },
-    {
-      "id": "7",
-      "equipId": 2,
-      "usuariId": 8,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "8",
-      "equipId": 2,
-      "usuariId": 9,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "9",
-      "equipId": 2,
-      "usuariId": 10,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "10",
-      "equipId": 2,
-      "usuariId": 11,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "11",
-      "equipId": 3,
-      "usuariId": 2,
-      "rolEquip": "ENTRENADOR",
-      "isActive": true
-    },
-    {
-      "id": "12",
-      "equipId": 3,
-      "usuariId": 12,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "13",
-      "equipId": 3,
-      "usuariId": 13,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "14",
-      "equipId": 3,
-      "usuariId": 14,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "15",
-      "equipId": 3,
-      "usuariId": 15,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "16",
-      "equipId": 4,
-      "usuariId": 3,
-      "rolEquip": "ENTRENADOR",
-      "isActive": true
-    },
-    {
-      "id": "17",
-      "equipId": 4,
-      "usuariId": 4,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "18",
-      "equipId": 4,
-      "usuariId": 5,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "vjfjvfnj",
-      "equipId": 2,
-      "usuariId": "b0dd",
-      "rolEquip": "ENTRENADOR",
-      "isActive": true
-    },
-    {
-      "id": "19",
-      "equipId": 4,
-      "usuariId": 6,
-      "rolEquip": "JUGADOR",
-      "isActive": true
-    },
-    {
-      "id": "20",
-      "equipId": 4,
-      "usuariId": 7,
       "rolEquip": "JUGADOR",
       "isActive": true
     }
   ],
   "Lliga": [
     {
-      "id": "1",
-      "nom": "Lliga Senior 2025",
-      "categoria": "Senior",
+      "id": 1,
+      "nom": "Lliga Valenciana 2024",
+      "categoria": "Senior Masculí",
       "isActive": true
     },
     {
-      "id": "2",
-      "nom": "Lliga Junior 2025",
-      "categoria": "Junior",
+      "id": 2,
+      "nom": "Lliga Autonòmica Femení",
+      "categoria": "Senior Femení",
       "isActive": true
+    }
+  ],
+  "Classificacio": [
+    {
+      "id": 1,
+      "lligaId": 1,
+      "equipId": 1,
+      "partitsJugats": 8,
+      "partitsGuanyats": 6,
+      "partitsPerduts": 2,
+      "partitsEmpatats": 0,
+      "setsGuanyats": 18,
+      "setsPerduts": 8,
+      "jocsGuanyats": 120,
+      "jocsPerduts": 85,
+      "punts": 18
+    },
+    {
+      "id": 2,
+      "lligaId": 1,
+      "equipId": 4,
+      "partitsJugats": 8,
+      "partitsGuanyats": 5,
+      "partitsPerduts": 3,
+      "partitsEmpatats": 0,
+      "setsGuanyats": 16,
+      "setsPerduts": 12,
+      "jocsGuanyats": 110,
+      "jocsPerduts": 95,
+      "punts": 15
+    },
+    {
+      "id": 3,
+      "lligaId": 2,
+      "equipId": 2,
+      "partitsJugats": 6,
+      "partitsGuanyats": 4,
+      "partitsPerduts": 2,
+      "partitsEmpatats": 0,
+      "setsGuanyats": 14,
+      "setsPerduts": 10,
+      "jocsGuanyats": 95,
+      "jocsPerduts": 78,
+      "punts": 12
     }
   ],
   "Jornada": [
     {
-      "id": "1",
+      "id": 1,
       "nom": "Jornada 1",
-      "data": "2025-02-01T10:00:00Z",
+      "data": "2024-09-15T00:00:00.000Z",
       "lligaId": 1,
-      "status": "PENDENT",
+      "status": "COMPLETAT",
       "isActive": true
     },
     {
-      "id": "2",
+      "id": 2,
       "nom": "Jornada 2",
-      "data": "2025-02-08T10:00:00Z",
+      "data": "2024-09-22T00:00:00.000Z",
       "lligaId": 1,
-      "status": "PENDENT",
+      "status": "COMPLETAT",
       "isActive": true
     },
     {
-      "id": "3",
-      "nom": "Jornada 1",
-      "data": "2025-02-15T10:00:00Z",
-      "lligaId": 2,
+      "id": 3,
+      "nom": "Jornada 3",
+      "data": "2024-09-29T00:00:00.000Z",
+      "lligaId": 1,
       "status": "PENDENT",
+      "isActive": true
+    }
+  ],
+  "Instalacio": [
+    {
+      "id": 1,
+      "nom": "Poliesportiu Central",
+      "adreca": "Carrer Major 123, Valencia",
+      "telefon": "+34961234567",
+      "clubId": 1,
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "nom": "Complex Esportiu Nord",
+      "adreca": "Avinguda del Nord 456, Valencia",
+      "telefon": "+34962345678",
+      "clubId": 2,
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "nom": "Centre Tennístic Mediterrani",
+      "adreca": "Carrer del Mar 789, Valencia",
+      "telefon": "+34963456789",
+      "clubId": 3,
+      "isActive": true
+    }
+  ],
+  "Pista": [
+    {
+      "id": 1,
+      "nom": "Pista Central 1",
+      "tipus": "COBERTA",
+      "instalacioId": 1,
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "nom": "Pista Central 2",
+      "tipus": "COBERTA",
+      "instalacioId": 1,
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "nom": "Pista Nord A",
+      "tipus": "DESCOBERTA",
+      "instalacioId": 2,
+      "isActive": true
+    },
+    {
+      "id": 4,
+      "nom": "Pista Nord B",
+      "tipus": "DESCOBERTA",
+      "instalacioId": 2,
+      "isActive": true
+    },
+    {
+      "id": 5,
+      "nom": "Pista Mediterrani 1",
+      "tipus": "COBERTA",
+      "instalacioId": 3,
       "isActive": true
     }
   ],
   "Partit": [
     {
-      "id": "1",
+      "id": 1,
       "jornadaId": 1,
       "localId": 1,
-      "visitantId": 2,
-      "status": "PENDENT",
-      "isActive": true
-    },
-    {
-      "id": "2",
-      "jornadaId": 1,
-      "localId": 3,
       "visitantId": 4,
-      "status": "PENDENT",
-      "isActive": true
-    },
-    {
-      "id": "3",
-      "jornadaId": 2,
-      "localId": 2,
-      "visitantId": 3,
+      "dataHora": "2024-09-15T10:00:00.000Z",
+      "pistaId": 1,
       "status": "COMPLETAT",
       "isActive": true
     },
     {
-      "id": "4",
+      "id": 2,
       "jornadaId": 2,
       "localId": 4,
       "visitantId": 1,
+      "dataHora": "2024-09-22T11:00:00.000Z",
+      "pistaId": 3,
       "status": "COMPLETAT",
       "isActive": true
+    },
+    {
+      "id": 3,
+      "jornadaId": 3,
+      "localId": 1,
+      "visitantId": 3,
+      "dataHora": "2024-09-29T10:30:00.000Z",
+      "pistaId": 1,
+      "status": "PENDENT",
+      "isActive": true
+    }
+  ],
+  "SetPartit": [
+    {
+      "id": 1,
+      "partitId": 1,
+      "numeroSet": 1,
+      "jocsLocal": 6,
+      "jocsVisit": 4,
+      "tiebreak": false,
+      "puntsLocalTiebreak": null,
+      "puntsVisitTiebreak": null
+    },
+    {
+      "id": 2,
+      "partitId": 1,
+      "numeroSet": 2,
+      "jocsLocal": 7,
+      "jocsVisit": 6,
+      "tiebreak": true,
+      "puntsLocalTiebreak": 7,
+      "puntsVisitTiebreak": 5
+    },
+    {
+      "id": 3,
+      "partitId": 2,
+      "numeroSet": 1,
+      "jocsLocal": 4,
+      "jocsVisit": 6,
+      "tiebreak": false,
+      "puntsLocalTiebreak": null,
+      "puntsVisitTiebreak": null
+    },
+    {
+      "id": 4,
+      "partitId": 2,
+      "numeroSet": 2,
+      "jocsLocal": 6,
+      "jocsVisit": 3,
+      "tiebreak": false,
+      "puntsLocalTiebreak": null,
+      "puntsVisitTiebreak": null
+    },
+    {
+      "id": 5,
+      "partitId": 2,
+      "numeroSet": 3,
+      "jocsLocal": 5,
+      "jocsVisit": 7,
+      "tiebreak": false,
+      "puntsLocalTiebreak": null,
+      "puntsVisitTiebreak": null
+    }
+  ],
+  "Alineacio": [
+    {
+      "id": 1,
+      "partitId": 1,
+      "jugadorId": 1,
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-14T18:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "partitId": 2,
+      "jugadorId": 1,
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-21T18:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "partitId": 3,
+      "jugadorId": 1,
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-28T18:00:00.000Z"
     }
   ],
   "PartitJugador": [
     {
-      "id": "1",
+      "id": 1,
       "partitId": 1,
-      "jugadorId": 4,
+      "jugadorId": 1,
       "equipId": 1,
-      "punts": 0,
+      "punts": 13,
       "isActive": true
     },
     {
-      "id": "2",
-      "partitId": 1,
-      "jugadorId": 5,
+      "id": 2,
+      "partitId": 2,
+      "jugadorId": 1,
       "equipId": 1,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "3",
-      "partitId": 1,
-      "jugadorId": 6,
-      "equipId": 1,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "4",
-      "partitId": 1,
-      "jugadorId": 7,
-      "equipId": 1,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "5",
-      "partitId": 1,
-      "jugadorId": 8,
-      "equipId": 2,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "6",
-      "partitId": 1,
-      "jugadorId": 9,
-      "equipId": 2,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "7",
-      "partitId": 1,
-      "jugadorId": 10,
-      "equipId": 2,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "8",
-      "partitId": 1,
-      "jugadorId": 11,
-      "equipId": 2,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "9",
-      "partitId": 2,
-      "jugadorId": 12,
-      "equipId": 3,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "10",
-      "partitId": 2,
-      "jugadorId": 13,
-      "equipId": 3,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "11",
-      "partitId": 2,
-      "jugadorId": 14,
-      "equipId": 3,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "12",
-      "partitId": 2,
-      "jugadorId": 15,
-      "equipId": 3,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "13",
-      "partitId": 2,
-      "jugadorId": 4,
-      "equipId": 4,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "14",
-      "partitId": 2,
-      "jugadorId": 5,
-      "equipId": 4,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "15",
-      "partitId": 2,
-      "jugadorId": 6,
-      "equipId": 4,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "16",
-      "partitId": 2,
-      "jugadorId": 7,
-      "equipId": 4,
-      "punts": 0,
-      "isActive": true
-    },
-    {
-      "id": "17",
-      "partitId": 3,
-      "jugadorId": 8,
-      "equipId": 2,
-      "punts": 6,
-      "isActive": true
-    },
-    {
-      "id": "18",
-      "partitId": 3,
-      "jugadorId": 9,
-      "equipId": 2,
-      "punts": 6,
-      "isActive": true
-    },
-    {
-      "id": "19",
-      "partitId": 3,
-      "jugadorId": 10,
-      "equipId": 2,
-      "punts": 6,
-      "isActive": true
-    },
-    {
-      "id": "20",
-      "partitId": 3,
-      "jugadorId": 11,
-      "equipId": 2,
-      "punts": 6,
-      "isActive": true
-    },
-    {
-      "id": "21",
-      "partitId": 3,
-      "jugadorId": 12,
-      "equipId": 3,
-      "punts": 4,
-      "isActive": true
-    },
-    {
-      "id": "22",
-      "partitId": 3,
-      "jugadorId": 13,
-      "equipId": 3,
-      "punts": 4,
-      "isActive": true
-    },
-    {
-      "id": "23",
-      "partitId": 3,
-      "jugadorId": 14,
-      "equipId": 3,
-      "punts": 4,
-      "isActive": true
-    },
-    {
-      "id": "24",
-      "partitId": 3,
-      "jugadorId": 15,
-      "equipId": 3,
-      "punts": 4,
-      "isActive": true
-    },
-    {
-      "id": "25",
-      "partitId": 4,
-      "jugadorId": 4,
-      "equipId": 4,
-      "punts": 7,
-      "isActive": true
-    },
-    {
-      "id": "26",
-      "partitId": 4,
-      "jugadorId": 5,
-      "equipId": 4,
-      "punts": 7,
-      "isActive": true
-    },
-    {
-      "id": "27",
-      "partitId": 4,
-      "jugadorId": 6,
-      "equipId": 4,
-      "punts": 7,
-      "isActive": true
-    },
-    {
-      "id": "28",
-      "partitId": 4,
-      "jugadorId": 7,
-      "equipId": 4,
-      "punts": 7,
-      "isActive": true
-    },
-    {
-      "id": "29",
-      "partitId": 4,
-      "jugadorId": 8,
-      "equipId": 2,
-      "punts": 3,
-      "isActive": true
-    },
-    {
-      "id": "30",
-      "partitId": 4,
-      "jugadorId": 9,
-      "equipId": 2,
-      "punts": 3,
-      "isActive": true
-    },
-    {
-      "id": "31",
-      "partitId": 4,
-      "jugadorId": 10,
-      "equipId": 2,
-      "punts": 3,
-      "isActive": true
-    },
-    {
-      "id": "32",
-      "partitId": 4,
-      "jugadorId": 11,
-      "equipId": 2,
-      "punts": 3,
+      "punts": 15,
       "isActive": true
     }
   ],
   "Acta": [
     {
-      "id": "1",
-      "partitId": 3,
-      "arbitreId": 16,
-      "observacions": "Partit disputat normalment",
+      "id": 1,
+      "partitId": 1,
+      "arbitreId": 3,
+      "observacions": "Partit sense incidències",
       "incidencies": null,
-      "resultat": "6-4 3-6 10-8",
-      "created_at": "2025-02-08T11:30:00Z",
+      "resultat": "2-0",
+      "validada": true,
+      "dataValidacio": "2024-09-15T14:00:00.000Z",
+      "created_at": "2024-09-15T12:30:00.000Z",
       "isActive": true
     },
     {
-      "id": "2",
-      "partitId": 4,
-      "arbitreId": 16,
-      "observacions": "Bon partit, alta intensitat",
-      "incidencies": "Avís a un jugador en el tercer set",
-      "resultat": "7-5 6-3",
-      "created_at": "2025-02-08T14:20:00Z",
+      "id": 2,
+      "partitId": 2,
+      "arbitreId": 3,
+      "observacions": "Bon ambient esportiu",
+      "incidencies": "Retard de 10 minuts en l'inici",
+      "resultat": "1-2",
+      "validada": true,
+      "dataValidacio": "2024-09-22T15:00:00.000Z",
+      "created_at": "2024-09-22T13:45:00.000Z",
       "isActive": true
     }
   ],
   "Puntuacio": [
     {
-      "id": "1",
-      "partitId": 3,
-      "jugadorId": 8,
-      "punts": 6,
+      "id": 1,
+      "partitId": 1,
+      "jugadorId": 1,
+      "punts": 13,
       "isActive": true
     },
     {
-      "id": "2",
-      "partitId": 3,
-      "jugadorId": 9,
-      "punts": 6,
-      "isActive": true
-    },
-    {
-      "id": "3",
-      "partitId": 3,
-      "jugadorId": 10,
-      "punts": 6,
-      "isActive": true
-    },
-    {
-      "id": "4",
-      "partitId": 3,
-      "jugadorId": 11,
-      "punts": 6,
-      "isActive": true
-    },
-    {
-      "id": "5",
-      "partitId": 3,
-      "jugadorId": 12,
-      "punts": 4,
-      "isActive": true
-    },
-    {
-      "id": "6",
-      "partitId": 3,
-      "jugadorId": 13,
-      "punts": 4,
-      "isActive": true
-    },
-    {
-      "id": "7",
-      "partitId": 3,
-      "jugadorId": 14,
-      "punts": 4,
-      "isActive": true
-    },
-    {
-      "id": "8",
-      "partitId": 3,
-      "jugadorId": 15,
-      "punts": 4,
-      "isActive": true
-    },
-    {
-      "id": "9",
-      "partitId": 4,
-      "jugadorId": 4,
-      "punts": 7,
-      "isActive": true
-    },
-    {
-      "id": "10",
-      "partitId": 4,
-      "jugadorId": 5,
-      "punts": 7,
-      "isActive": true
-    },
-    {
-      "id": "11",
-      "partitId": 4,
-      "jugadorId": 6,
-      "punts": 7,
-      "isActive": true
-    },
-    {
-      "id": "12",
-      "partitId": 4,
-      "jugadorId": 7,
-      "punts": 7,
-      "isActive": true
-    },
-    {
-      "id": "13",
-      "partitId": 4,
-      "jugadorId": 11,
-      "punts": 3,
-      "isActive": true
-    },
-    {
-      "id": "14",
-      "partitId": 4,
-      "jugadorId": 8,
-      "punts": 3,
-      "isActive": true
-    },
-    {
-      "id": "15",
-      "partitId": 4,
-      "jugadorId": 9,
-      "punts": 3,
-      "isActive": true
-    },
-    {
-      "id": "16",
-      "partitId": 4,
-      "jugadorId": 10,
-      "punts": 3,
+      "id": 2,
+      "partitId": 2,
+      "jugadorId": 1,
+      "punts": 15,
       "isActive": true
     }
   ],
   "Notificacio": [
     {
-      "id": "1",
+      "id": 1,
       "usuariId": 1,
-      "titol": "Bienvenido",
-      "missatge": "Bienvenido al sistema de gestión de torneos de tenis",
-      "llegit": true,
-      "created_at": "2025-01-01T00:00:00Z",
-      "isActive": true
-    },
-    {
-      "id": "2",
-      "usuariId": 2,
-      "titol": "Partit assignat",
-      "missatge": "Se te ha asignado un partido para el 01/02/2025",
+      "titol": "Proper partit",
+      "missatge": "Tens un partit programat per al proper diumenge a les 10:00h",
       "llegit": false,
-      "created_at": "2025-01-15T10:00:00Z",
+      "created_at": "2024-09-27T09:00:00.000Z",
       "isActive": true
     },
     {
-      "id": "3",
-      "usuariId": 16,
-      "titol": "Acta completada",
-      "missatge": "Ha completado exitosamente el acta del partido",
+      "id": 2,
+      "usuariId": 1,
+      "titol": "Resultat validat",
+      "missatge": "L'acta del teu últim partit ha estat validada",
       "llegit": true,
-      "created_at": "2025-02-08T12:00:00Z",
+      "created_at": "2024-09-22T15:30:00.000Z",
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "usuariId": 4,
+      "titol": "Convocatòria",
+      "missatge": "Has estat convocat per al partit de dissabte",
+      "llegit": false,
+      "created_at": "2024-09-26T12:00:00.000Z",
       "isActive": true
     }
   ],
   "Merch": [
     {
-      "id": "1",
-      "nom": "Camiseta Club",
+      "id": 1,
+      "nom": "Samarreta Oficial Valencia A",
       "marca": "Nike",
-      "preu": 29.99,
+      "descripcio": "Samarreta oficial de l'equip Valencia A, temporada 2024",
+      "preu": 45.99,
       "stock": 50,
+      "imatges": [
+        "https://picsum.photos/400/400?random=1",
+        "https://picsum.photos/400/400?random=2"
+      ],
+      "talles": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
       "isActive": true
     },
     {
-      "id": "2",
-      "nom": "Pantalón Deportivo",
+      "id": 2,
+      "nom": "Pantalons Tècnics",
       "marca": "Adidas",
-      "preu": 39.99,
+      "descripcio": "Pantalons tècnics per a entrenament i competició",
+      "preu": 35.50,
       "stock": 30,
+      "imatges": [
+        "https://picsum.photos/400/400?random=3",
+        "https://picsum.photos/400/400?random=4"
+      ],
+      "talles": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
       "isActive": true
     },
     {
-      "id": "3",
-      "nom": "Gorra",
-      "marca": "Puma",
+      "id": 3,
+      "nom": "Gorra Club Valencia",
+      "marca": "Under Armour",
+      "descripcio": "Gorra oficial del Club Tennis Valencia",
       "preu": 19.99,
-      "stock": 100,
-      "isActive": true
-    },
-    {
-      "id": "4",
-      "nom": "Bolsa de Deporte",
-      "marca": "Nike",
-      "preu": 49.99,
-      "stock": 20,
+      "stock": 75,
+      "imatges": [
+        "https://picsum.photos/400/400?random=5"
+      ],
+      "talles": [
+        "Única"
+      ],
       "isActive": true
     }
   ],
   "Compra": [
     {
-      "id": "1",
+      "id": 1,
       "usuariId": 1,
       "merchId": 1,
-      "quantitat": 2,
-      "total": 59.98,
+      "quantitat": 1,
+      "talla": "L",
+      "total": 45.99,
+      "adrecaEnviament": "CarrerExample 123, Valencia",
+      "dataEnviament": "2024-09-20T00:00:00.000Z",
+      "numeroSeguiment": "ES123456789",
+      "created_at": "2024-09-18T14:30:00.000Z",
       "pagat": true,
       "status": "COMPLETAT",
-      "created_at": "2025-01-10T14:30:00Z",
       "isActive": true
     },
     {
-      "id": "2",
-      "usuariId": 2,
-      "merchId": 3,
-      "quantitat": 1,
-      "total": 19.99,
-      "pagat": false,
-      "status": "PENDENT",
-      "created_at": "2025-01-14T09:15:00Z",
-      "isActive": true
-    },
-    {
-      "id": "3",
+      "id": 2,
       "usuariId": 4,
-      "merchId": 2,
-      "quantitat": 1,
-      "total": 39.99,
+      "merchId": 3,
+      "quantitat": 2,
+      "talla": "Única",
+      "total": 39.98,
+      "adrecaEnviament": "Avinguda del Port 456, Valencia",
+      "dataEnviament": null,
+      "numeroSeguiment": null,
+      "created_at": "2024-09-25T10:15:00.000Z",
       "pagat": true,
-      "status": "COMPLETAT",
-      "created_at": "2025-01-12T16:45:00Z",
+      "status": "PENDENT",
       "isActive": true
-    }
-  ],
-  "Alineacio": [
-    {
-      "id": "1",
-      "partitId": 3,
-      "jugadorId": 8,
-      "equipId": 2,
-      "isActive": true,
-      "creada_at": "2025-02-07T15:00:00Z"
-    },
-    {
-      "id": "2",
-      "partitId": 3,
-      "jugadorId": 9,
-      "equipId": 2,
-      "isActive": true,
-      "creada_at": "2025-02-07T15:00:00Z"
-    },
-    {
-      "id": "3",
-      "partitId": 3,
-      "jugadorId": 12,
-      "equipId": 3,
-      "isActive": true,
-      "creada_at": "2025-02-07T16:30:00Z"
-    },
-    {
-      "id": "4",
-      "partitId": 3,
-      "jugadorId": 13,
-      "equipId": 3,
-      "isActive": true,
-      "creada_at": "2025-02-07T16:30:00Z"
-    },
-    {
-      "id": "5",
-      "partitId": 4,
-      "jugadorId": 4,
-      "equipId": 4,
-      "isActive": true,
-      "creada_at": "2025-02-07T18:00:00Z"
-    },
-    {
-      "id": "6",
-      "partitId": 4,
-      "jugadorId": 5,
-      "equipId": 4,
-      "isActive": true,
-      "creada_at": "2025-02-07T18:00:00Z"
-    },
-    {
-      "id": "b1ec",
-      "partitId": 4,
-      "jugadorId": 4,
-      "equipId": 2,
-      "isActive": true,
-      "creada_at": "2026-01-14T16:00:10.226Z"
-    },
-    {
-      "id": "3e5d",
-      "partitId": 4,
-      "jugadorId": 8,
-      "equipId": 2,
-      "isActive": true,
-      "creada_at": "2026-01-14T16:00:10.248Z"
     }
   ]
 }

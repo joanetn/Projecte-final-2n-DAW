@@ -2,8 +2,15 @@ export interface User {
     id: number;
     nom: string;
     email: string;
+    telefon?: string;
+    dataNaixement?: string;
+    nivell?: string;
+    avatar?: string;
+    dni?: string;
     rols: string[];
-    token: string;
+    token?: string;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface RegisterData {
@@ -11,6 +18,9 @@ export interface RegisterData {
     email: string;
     contrasenya: string;
     rol?: string[];
+    telefon?: string;
+    dataNaixement?: string;
+    nivell?: string;
 }
 
 export interface RegisterResponse {

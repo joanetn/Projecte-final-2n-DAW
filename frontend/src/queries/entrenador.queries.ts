@@ -1,22 +1,25 @@
 import { getPartitsJugats, getPartitsPendents, getPlantilla } from "@/services/entrenador.service"
-import { MembrePlantilla } from "@/types/entrenador"
-import { PartitsDashboardEntrenador } from "@/types/partits"
+import { PlantillaResponse } from "@/types/entrenador"
+import { PartitsResponse } from "@/types/partits"
 import { useQuery } from "@tanstack/react-query"
 
 export const usePlantilla = () =>
-    useQuery<MembrePlantilla[]>({
+    useQuery<PlantillaResponse>({
         queryKey: ["plantilla"],
-        queryFn: getPlantilla
+        queryFn: getPlantilla,
+        staleTime: 1000 * 60 * 5,
     })
 
 export const usePartitsJugats = () =>
-    useQuery<PartitsDashboardEntrenador[]>({
+    useQuery<PartitsResponse>({
         queryKey: ["partitsJugats"],
-        queryFn: getPartitsJugats
+        queryFn: getPartitsJugats,
+        staleTime: 1000 * 60 * 2,
     })
 
 export const usePartitsPendents = () =>
-    useQuery<PartitsDashboardEntrenador[]>({
+    useQuery<PartitsResponse>({
         queryKey: ["partitsPendents"],
-        queryFn: getPartitsPendents
+        queryFn: getPartitsPendents,
+        staleTime: 1000 * 60 * 2,
     })

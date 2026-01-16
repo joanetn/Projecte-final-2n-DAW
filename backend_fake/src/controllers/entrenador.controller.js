@@ -3,127 +3,370 @@ const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+/**
+ * Función auxiliar para verificar token y obtener usuario
+ */
+const verificarUsuari = async (req) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        throw new Error("TOKEN_NO_PROPORCIONAT");
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    const userResponse = await api.get(`/Usuari?id=${decoded.id}`);
+
+    if (!userResponse || userResponse.length === 0) {
+        throw new Error("USUARI_NO_TROBAT");
+    }
+
+    const user = Array.isArray(userResponse) ? userResponse[0] : userResponse;
+
+    if (!user.isActive) {
+        throw new Error("USUARI_INACTIU");
+    }
+
+    return user;
+};
+
+/**
+ * Función auxiliar para obtener el equipo del usuario
+ */
+const obtenirEquipUsuari = async (usuariId) => {
+    const asignaciones = await api.get(`/EquipUsuari?usuariId=${usuariId}`);
+
+    if (!asignaciones || asignaciones.length === 0) {
+        throw new Error("SENSE_EQUIP");
+    }
+
+    const asignacionesActives = asignaciones.filter(a => a.isActive);
+
+    if (asignacionesActives.length === 0) {
+        throw new Error("SENSE_EQUIP_ACTIU");
+    }
+
+    return asignacionesActives[0].equipId;
+};
+
+exports.crearAlineacio = async (req, res) => {
+    try {
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuari(user.id);
+
+        if (!equipId) throw new Error("SENSE_EQUIP_ACTIU");
+
+        const { jugadorsId, partitId } = req.body;
+
+        if (!Array.isArray(jugadorsId) || jugadorsId.length === 0) {
+            return res.status(400).json({ message: "Has d'enviar un array de jugadorsId" });
+        }
+
+        // Validamos que el partido existe y está activo
+        const partitResponse = await api.get(`/Partit?id=${partitId}`);
+        const partit = Array.isArray(partitResponse)
+            ? partitResponse.find(p => p.id === partitId && p.isActive)
+            : partitResponse;
+
+        if (!partit) return res.status(404).json({ message: "Partit no trobat o inactiu" });
+
+        // Validamos los jugadores
+        const jugadors = await Promise.all(jugadorsId.map(async (id) => {
+            const usuariResponse = await api.get(`/Usuari?id=${id}`);
+            const usuari = Array.isArray(usuariResponse)
+                ? usuariResponse.find(u => u.id === id && u.isActive)
+                : (usuariResponse && usuariResponse.isActive ? usuariResponse : null);
+
+            if (!usuari) return null;
+
+            return usuari;
+        }));
+
+        const jugadorsValid = jugadors.filter(Boolean);
+
+        if (jugadorsValid.length !== jugadorsId.length) {
+            return res.status(404).json({ message: "Algún jugador no existe o está inactivo" });
+        }
+
+        // Crear alineaciones
+        const alineacions = await Promise.all(jugadorsValid.map(async (j) => {
+            const response = await api.post("/Alineacio", {
+                partitId,
+                jugadorId: j.id,
+                equipId,
+                isActive: true,
+                creada_at: new Date()
+            });
+            return response;
+        }));
+
+        res.status(201).json(alineacions);
+
+    } catch (err) {
+        console.error("Error en crearAlineacio:", err);
+
+        if (err.message === "TOKEN_NO_PROPORCIONAT") return res.status(401).json({ message: "Token no proporcionat" });
+        if (err.message === "USUARI_NO_TROBAT") return res.status(404).json({ message: "Usuari no trobat" });
+        if (err.message === "USUARI_INACTIU") return res.status(403).json({ message: "Usuari inactiu" });
+        if (err.message === "SENSE_EQUIP" || err.message === "SENSE_EQUIP_ACTIU") return res.status(404).json({ message: "No tens cap equip assignat" });
+        if (err.name === "JsonWebTokenError") return res.status(401).json({ message: "Token invàlid" });
+        if (err.name === "TokenExpiredError") return res.status(401).json({ message: "Token expirat" });
+
+        res.status(500).json({
+            message: "Error al crear alineació",
+            error: err.message
+        });
+    }
+};
+
+
 exports.partitsJugats = async (req, res) => {
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ message: "Token no proporcionado" });
-        }
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuari(user.id);
 
-        const token = authHeader.split(" ")[1];
-        const decoded = jwt.verify(token, JWT_SECRET);
-
-        const user = await api.get(`/Usuari/${decoded.id}`);
-        if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
-        }
-
-        const asignaciones = await api.get(`/EquipUsuari?usuariId=${user.id}`);
-        if (!asignaciones.length) {
-            return res.status(404).json({ message: "No tiene equipo asignado" });
-        }
-
-        const equipId = asignaciones[0].equipId;
-        const partitsLocal = await api.get(`/Partit?localId=${equipId}&status=COMPLETAT`);
-        const partitsVisitant = await api.get(`/Partit?visitantId=${equipId}&status=COMPLETAT`);
+        // Obtener partidos como local y visitante con status COMPLETAT
+        const [partitsLocal, partitsVisitant] = await Promise.all([
+            api.get(`/Partit?localId=${equipId}&status=COMPLETAT`),
+            api.get(`/Partit?visitantId=${equipId}&status=COMPLETAT`)
+        ]);
 
         const totsElsPartits = [
-            ...(partitsLocal ?? []),
-            ...(partitsVisitant ?? []),
-        ];
+            ...(Array.isArray(partitsLocal) ? partitsLocal : []),
+            ...(Array.isArray(partitsVisitant) ? partitsVisitant : []),
+        ].filter(p => p.isActive);
 
-        res.json(totsElsPartits);
+        // Enriquecer con información adicional
+        const partitsEnriquits = await Promise.all(
+            totsElsPartits.map(async (partit) => {
+                const [local, visitant, jornada, pista, sets] = await Promise.all([
+                    api.get(`/Equip?id=${partit.localId}`).then(r => Array.isArray(r) ? r[0] : r),
+                    api.get(`/Equip?id=${partit.visitantId}`).then(r => Array.isArray(r) ? r[0] : r),
+                    api.get(`/Jornada?id=${partit.jornadaId}`).then(r => Array.isArray(r) ? r[0] : r),
+                    partit.pistaId ? api.get(`/Pista?id=${partit.pistaId}`).then(r => Array.isArray(r) ? r[0] : r) : null,
+                    api.get(`/SetPartit?partitId=${partit.id}`)
+                ]);
+
+                return {
+                    ...partit,
+                    local: local ? { id: local.id, nom: local.nom } : null,
+                    visitant: visitant ? { id: visitant.id, nom: visitant.nom } : null,
+                    jornada: jornada ? { id: jornada.id, nom: jornada.nom } : null,
+                    pista: pista ? { id: pista.id, nom: pista.nom } : null,
+                    sets: Array.isArray(sets) ? sets : []
+                };
+            })
+        );
+
+        // Ordenar por fecha descendente
+        partitsEnriquits.sort((a, b) => new Date(b.dataHora) - new Date(a.dataHora));
+
+        res.json({
+            partits: partitsEnriquits,
+            total: partitsEnriquits.length
+        });
+
     } catch (err) {
-        res.json(err);
-    }
-}
+        console.error("Error en partitsJugats:", err);
 
+        if (err.message === "TOKEN_NO_PROPORCIONAT") {
+            return res.status(401).json({ message: "Token no proporcionat" });
+        }
+        if (err.message === "USUARI_NO_TROBAT") {
+            return res.status(404).json({ message: "Usuari no trobat" });
+        }
+        if (err.message === "USUARI_INACTIU") {
+            return res.status(403).json({ message: "Usuari inactiu" });
+        }
+        if (err.message === "SENSE_EQUIP" || err.message === "SENSE_EQUIP_ACTIU") {
+            return res.status(404).json({ message: "No tens cap equip assignat" });
+        }
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ message: "Token invàlid" });
+        }
+        if (err.name === "TokenExpiredError") {
+            return res.status(401).json({ message: "Token expirat" });
+        }
+
+        res.status(500).json({
+            message: "Error del servidor",
+            error: err.message
+        });
+    }
+};
+
+/**
+ * Obtiene los partidos pendientes del equipo del usuario
+ */
 exports.partitsPendents = async (req, res) => {
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ message: "Token no proporcionado" });
-        }
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuari(user.id);
 
-        const token = authHeader.split(" ")[1];
-        const decoded = jwt.verify(token, JWT_SECRET);
-
-        const user = await api.get(`/Usuari/${decoded.id}`);
-        if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
-        }
-
-        const asignaciones = await api.get(`/EquipUsuari?usuariId=${user.id}`);
-        if (!asignaciones.length) {
-            return res.status(404).json({ message: "No tiene equipo asignado" });
-        }
-
-        const equipId = asignaciones[0].equipId;
-        const partitsLocal = await api.get(`/Partit?localId=${equipId}&status=PENDENT`);
-        const partitsVisitant = await api.get(`/Partit?visitantId=${equipId}&status=PENDENT`);
+        // Obtener partidos como local y visitante con status PENDENT
+        const [partitsLocal, partitsVisitant] = await Promise.all([
+            api.get(`/Partit?localId=${equipId}&status=PENDENT`),
+            api.get(`/Partit?visitantId=${equipId}&status=PENDENT`)
+        ]);
 
         const totsElsPartits = [
-            ...(partitsLocal ?? []),
-            ...(partitsVisitant ?? []),
-        ];
+            ...(Array.isArray(partitsLocal) ? partitsLocal : []),
+            ...(Array.isArray(partitsVisitant) ? partitsVisitant : []),
+        ].filter(p => p.isActive);
 
-        res.json(totsElsPartits);
+        // Enriquecer con información adicional
+        const partitsEnriquits = await Promise.all(
+            totsElsPartits.map(async (partit) => {
+                const [local, visitant, jornada, pista] = await Promise.all([
+                    api.get(`/Equip?id=${partit.localId}`).then(r => Array.isArray(r) ? r[0] : r),
+                    api.get(`/Equip?id=${partit.visitantId}`).then(r => Array.isArray(r) ? r[0] : r),
+                    api.get(`/Jornada?id=${partit.jornadaId}`).then(r => Array.isArray(r) ? r[0] : r),
+                    partit.pistaId ? api.get(`/Pista?id=${partit.pistaId}`).then(r => Array.isArray(r) ? r[0] : r) : null
+                ]);
+
+                return {
+                    ...partit,
+                    local: local ? { id: local.id, nom: local.nom } : null,
+                    visitant: visitant ? { id: visitant.id, nom: visitant.nom } : null,
+                    jornada: jornada ? { id: jornada.id, nom: jornada.nom } : null,
+                    pista: pista ? { id: pista.id, nom: pista.nom } : null
+                };
+            })
+        );
+
+        // Ordenar por fecha ascendente (próximos primero)
+        partitsEnriquits.sort((a, b) => new Date(a.dataHora) - new Date(b.dataHora));
+
+        res.json({
+            partits: partitsEnriquits,
+            total: partitsEnriquits.length
+        });
+
     } catch (err) {
-        res.json(err);
-    }
-}
+        console.error("Error en partitsPendents:", err);
 
+        if (err.message === "TOKEN_NO_PROPORCIONAT") {
+            return res.status(401).json({ message: "Token no proporcionat" });
+        }
+        if (err.message === "USUARI_NO_TROBAT") {
+            return res.status(404).json({ message: "Usuari no trobat" });
+        }
+        if (err.message === "USUARI_INACTIU") {
+            return res.status(403).json({ message: "Usuari inactiu" });
+        }
+        if (err.message === "SENSE_EQUIP" || err.message === "SENSE_EQUIP_ACTIU") {
+            return res.status(404).json({ message: "No tens cap equip assignat" });
+        }
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ message: "Token invàlid" });
+        }
+        if (err.name === "TokenExpiredError") {
+            return res.status(401).json({ message: "Token expirat" });
+        }
+
+        res.status(500).json({
+            message: "Error del servidor",
+            error: err.message
+        });
+    }
+};
+
+/**
+ * Obtiene la plantilla (lista de jugadores) del equipo del usuario
+ */
 exports.plantilla = async (req, res) => {
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({ message: "Token no proporcionado" });
-        }
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuari(user.id);
 
-        const token = authHeader.split(" ")[1];
-        const decoded = jwt.verify(token, JWT_SECRET);
+        // Obtener información del equipo
+        const equipResponse = await api.get(`/Equip?id=${equipId}`);
+        const equip = Array.isArray(equipResponse) ? equipResponse[0] : equipResponse;
 
-        const user = await api.get(`/Usuari/${decoded.id}`);
-        if (!user) {
-            return res.status(404).json({ message: "Usuario no encontrado" });
-        }
+        // Obtener todas las asignaciones del equipo
+        const equipoAsignacionesResponse = await api.get(`/EquipUsuari?equipId=${equipId}`);
+        const equipoAsignaciones = Array.isArray(equipoAsignacionesResponse)
+            ? equipoAsignacionesResponse.filter(ea => ea.equipId === equipId && ea.isActive)
+            : [];
 
-        const asignaciones = await api.get(`/EquipUsuari?usuariId=${user.id}`);
-        if (!asignaciones.length) {
-            return res.status(404).json({ message: "No tiene equipo asignado" });
-        }
-
-        const equipId = asignaciones[0].equipId;
-        const equipoAsignaciones = await api.get(`/EquipUsuari?equipId=${equipId}`);
-
+        // Obtener detalles de cada miembro de la plantilla
         const plantilla = (
             await Promise.all(
                 equipoAsignaciones.map(async (ea) => {
-                    const [usuari] = await api.get(`/Usuari?id=${ea.usuariId}`);
-                    if (!usuari) return null;
+                    try {
+                        const usuariResponse = await api.get(`/Usuari?id=${ea.usuariId}`);
+                        const usuari = Array.isArray(usuariResponse)
+                            ? usuariResponse.find(u => u.id === ea.usuariId)
+                            : usuariResponse;
 
-                    const rolsResponse = await api.get(
-                        `/UsuariRol?usuariId=${usuari.id}`
-                    );
+                        if (!usuari || !usuari.isActive) return null;
 
-                    const rols = rolsResponse.map(r => r.rol);
+                        const rolsResponse = await api.get(`/UsuariRol?usuariId=${usuari.id}`);
+                        const rolsFiltrados = Array.isArray(rolsResponse)
+                            ? rolsResponse.filter(r => r.usuariId === usuari.id && r.isActive)
+                            : [];
 
-                    return {
-                        id: usuari.id,
-                        nom: usuari.nom,
-                        email: usuari.email,
-                        rols,
-                    };
+                        return {
+                            id: usuari.id,
+                            nom: usuari.nom,
+                            email: usuari.email,
+                            telefon: usuari.telefon,
+                            nivell: usuari.nivell,
+                            avatar: usuari.avatar,
+                            dataNaixement: usuari.dataNaixement,
+                            rolEquip: ea.rolEquip,
+                            rolsGlobals: rolsFiltrados.map(r => r.rol)
+                        };
+                    } catch (error) {
+                        console.error(`Error obtenint usuari ${ea.usuariId}:`, error);
+                        return null;
+                    }
                 })
             )
         ).filter(Boolean);
 
-        res.json(plantilla);
+        // Agrupar por rol en el equipo
+        const plantillaAgrupada = {
+            entrenadors: plantilla.filter(p => p.rolEquip === "ENTRENADOR"),
+            jugadors: plantilla.filter(p => p.rolEquip === "JUGADOR"),
+            administradors: plantilla.filter(p => p.rolEquip === "ADMIN_EQUIP")
+        };
+
+        res.json({
+            equip: equip ? {
+                id: equip.id,
+                nom: equip.nom,
+                categoria: equip.categoria
+            } : null,
+            plantilla: plantillaAgrupada,
+            total: plantilla.length
+        });
+
     } catch (err) {
-        console.error(err);
+        console.error("Error en plantilla:", err);
+
+        if (err.message === "TOKEN_NO_PROPORCIONAT") {
+            return res.status(401).json({ message: "Token no proporcionat" });
+        }
+        if (err.message === "USUARI_NO_TROBAT") {
+            return res.status(404).json({ message: "Usuari no trobat" });
+        }
+        if (err.message === "USUARI_INACTIU") {
+            return res.status(403).json({ message: "Usuari inactiu" });
+        }
+        if (err.message === "SENSE_EQUIP" || err.message === "SENSE_EQUIP_ACTIU") {
+            return res.status(404).json({ message: "No tens cap equip assignat" });
+        }
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({ message: "Token invàlid" });
+        }
+        if (err.name === "TokenExpiredError") {
+            return res.status(401).json({ message: "Token expirat" });
+        }
+
         res.status(500).json({
-            message: "Error al obtener plantilla",
-            error: err.message,
+            message: "Error al obtenir plantilla",
+            error: err.message
         });
     }
 };

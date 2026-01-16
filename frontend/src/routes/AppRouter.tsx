@@ -1,14 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "../pages/Home";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Register from "../components/Register";
-import Login from "../components/Login";
+import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
+import Register from "../components/auth/Register";
+import Login from "../components/auth/Login";
 import { NoAuthGuard } from "@/guard/noAuthGuard";
 import { RolGuard } from "@/guard/rolGuard";
 import DashboardAdmin from "@/pages/DashboardAdmin";
 import DashboardArbitre from "@/pages/DashboardArbitre";
 import DashboardEntrenador from "@/pages/DashboardEntrenador";
+import AlineacioPartit from "@/components/partits/AlineacioPartit";
 
 const AppRouter = () => {
     return (
@@ -44,6 +45,11 @@ const AppRouter = () => {
                                 </RolGuard>
                             }
                         />
+                        <Route
+                            path="/entrenador/partits/:partitId/alineacio"
+                            element={<AlineacioPartit />}
+                        />
+
                     </Routes>
                 </main>
                 <Footer />
