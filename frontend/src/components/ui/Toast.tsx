@@ -1,4 +1,6 @@
-import React, { createContext, useCallback, useContext, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { io as ioClient, type Socket } from "socket.io-client";
+import { useAuth } from "@/context/AuthContext";
 
 type Toast = {
     id: string;
@@ -18,6 +20,8 @@ const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [toasts, setToasts] = useState<Toast[]>([]);
+    const { user } = useAuth();
+    const [socket, setSocket] = useState<Socket | null>(null);
 
     const removeToast = useCallback((id: string) => {
         setToasts(prev => prev.filter(t => t.id !== id));
@@ -32,6 +36,36 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
         return id;
     }, [removeToast]);
+
+    useEffect(() => {
+        // connect socket when provider mounts
+        const s = ioClient("http://localhost:3001");
+        setSocket(s);
+
+        s.on("connect", () => {
+            // identify if user logged
+            if (user && user.id) {
+                s.emit('identify', user.id);
+            }
+        });
+
+        s.on('notificacio', (data: any) => {
+            const title = data.titol || 'Notificació';
+            const msg = data.missatge || '';
+            showToast({ type: data.tipus || 'info', title, description: msg });
+            try {
+                const ev = new CustomEvent('new-notificacio', { detail: data });
+                window.dispatchEvent(ev as any);
+            } catch (e) {
+                // ignore
+            }
+        });
+
+        return () => {
+            s.disconnect();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     return (
         <ToastContext.Provider value={{ toasts, showToast, removeToast }}>

@@ -52,3 +52,13 @@ export const getComprovarAlineacio = async (partitId?: string): Promise<any> => 
         throw new Error(err.response?.data?.message || "Error manant la alineació");
     }
 }
+
+export const postProposta = async (body: { fromEquipId: any; toEquipId: any; dataHora: string; pistaId?: any; partitId?: any }) => {
+    try {
+        const res = await backend_rapid.post('/propostes', body);
+        return res.data;
+    } catch (err: any) {
+        console.error('Error enviant proposta:', err);
+        throw new Error(err.response?.data?.message || 'Error enviant proposta');
+    }
+}

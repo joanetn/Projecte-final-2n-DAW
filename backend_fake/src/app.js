@@ -15,5 +15,7 @@ app.use("/ranking", require("./routes/ranking.routes"));
 app.use("/equipos", require("./routes/equipos.routes"));
 app.use("/alineacions", require("./routes/alineacio.routes"));
 app.use("/entrenador", require("./routes/entrenador.routes"));
+app.use("/notificacions", require("./routes/notificacions.routes"));
+app.use("/propostes", require("./routes/propostes.routes"));
 
 module.exports = app;

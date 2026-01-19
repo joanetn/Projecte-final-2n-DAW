@@ -10,6 +10,7 @@ import DashboardAdmin from "@/pages/DashboardAdmin";
 import DashboardArbitre from "@/pages/DashboardArbitre";
 import DashboardEntrenador from "@/pages/DashboardEntrenador";
 import AlineacioPartit from "@/components/partits/AlineacioPartit";
+import PropostesTest from "@/pages/PropostesTest";
 
 const AppRouter = () => {
     return (
@@ -49,6 +50,7 @@ const AppRouter = () => {
                             path="/entrenador/partits/:partitId/alineacio"
                             element={<AlineacioPartit />}
                         />
+                        <Route path="/propostes-test" element={<PropostesTest />} />
 
                     </Routes>
                 </main>
