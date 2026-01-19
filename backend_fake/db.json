@@ -152,6 +152,13 @@
       "nom": "Valencia A",
       "categoria": "Senior Masculí",
       "clubId": 1,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
       "isActive": true
     },
     {
@@ -159,6 +166,13 @@
       "nom": "Valencia B",
       "categoria": "Senior Femení",
       "clubId": 1,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
       "isActive": true
     },
     {
@@ -166,6 +180,13 @@
       "nom": "RCD Júnior",
       "categoria": "Júnior Masculí",
       "clubId": 2,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
       "isActive": true
     },
     {
@@ -173,6 +194,13 @@
       "nom": "Mediterrani Elite",
       "categoria": "Senior Masculí",
       "clubId": 3,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
       "isActive": true
     }
   ],
@@ -460,35 +488,12 @@
   ],
   "Alineacio": [
     {
-      "id": "1",
-      "partitId": 1,
-      "jugadorId": 1,
-      "equipId": 1,
-      "isActive": true,
-      "creada_at": "2024-09-14T18:00:00.000Z"
-    },
-    {
-      "id": "2",
-      "partitId": 2,
-      "jugadorId": 1,
-      "equipId": 1,
-      "isActive": true,
-      "creada_at": "2024-09-21T18:00:00.000Z"
-    },
-    {
-      "id": "3",
-      "partitId": 3,
-      "jugadorId": 1,
-      "equipId": 1,
-      "isActive": true,
-      "creada_at": "2024-09-28T18:00:00.000Z"
-    },
-    {
       "id": "4e44",
       "partitId": "3",
       "jugadorId": "2",
       "equipId": 1,
-      "isActive": true,
+      "posicio": "DRETA",
+      "isActive": false,
       "creada_at": "2026-01-16T19:16:40.774Z"
     },
     {
@@ -496,8 +501,169 @@
       "partitId": "3",
       "jugadorId": "1",
       "equipId": 1,
-      "isActive": true,
+      "posicio": "REVES",
+      "isActive": false,
       "creada_at": "2026-01-16T19:16:40.776Z"
+    },
+    {
+      "id": "92d3",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:31:02.081Z"
+    },
+    {
+      "id": "bc4a",
+      "partitId": "3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:31:02.090Z"
+    },
+    {
+      "id": "5629",
+      "partitId": "3",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:38:24.243Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "585a",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:38:24.244Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "b3ed",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:38:36.959Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "6da2",
+      "partitId": "3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:38:36.960Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "8b3a",
+      "partitId": "3",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:38:54.704Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "3ca4",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:38:54.704Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "ed54",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:40:07.589Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "0e12",
+      "partitId": "3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:40:07.590Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "640e",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:46:09.870Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "17eb",
+      "partitId": "3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:46:09.871Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "7158",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:46:17.045Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "382a",
+      "partitId": "3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:46:17.046Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "1fef",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:48:02.657Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "a1a8",
+      "partitId": "3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-19T17:48:02.657Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "054a",
+      "partitId": "3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-19T17:48:10.639Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "e1a8",
+      "partitId": "3",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-19T17:48:10.640Z",
+      "posicio": "DRETA"
     }
   ],
   "PartitJugador": [

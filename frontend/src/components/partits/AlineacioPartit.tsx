@@ -5,9 +5,12 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
 import { useComprovarAlineacions, usePlantilla } from "@/queries/entrenador.queries";
+import { useToast } from "@/components/ui/Toast";
+import { queryClient } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { useParams } from "react-router-dom";
 import { useGuardarAlineacio } from "@/mutations/entrenador.mutations";
+import { CompAlineacioResponse } from "@/types/entrenador";
 
 const AlineacioPartit = () => {
     const { data: plantillaData } = usePlantilla();
@@ -21,10 +24,11 @@ const AlineacioPartit = () => {
         slot2: null
     });
     const [mostrarBoto, setMostrarBoto] = useState(false);
-    const [jugadoresUsados, setJugadoresUsados] = useState<number[]>([]);
+    const [jugadoresUsados, setJugadoresUsados] = useState<string[]>([]);
 
     const mutation = useGuardarAlineacio();
     const compAlineacio = useComprovarAlineacions();
+    const { showToast } = useToast();
 
     const guardarAlineacio = () => {
         console.log("holaaaaaaaaaaa");
@@ -34,19 +38,32 @@ const AlineacioPartit = () => {
         };
 
         mutation.mutate(body, {
-            onSuccess: (res) => {
-                console.log(res);
+            onSuccess: () => {
+                showToast({ type: 'success', title: 'Alineació guardada', description: "S'ha guardat l'alineació correctament." });
             },
             onError: (err: any) => {
                 console.error("Error de guardar alineacio:", err);
+                showToast({ type: 'error', title: 'Error', description: "No s'ha pogut guardar l'alineació." });
             },
         })
     }
 
     useEffect(() => {
-        const comp = compAlineacio.data;
-        console.log(comp);
-    }, [])
+        const comp: CompAlineacioResponse = compAlineacio.data;
+        if (!comp || !plantilla) return;
+
+        const slot1Jugador = plantilla.find(j => j.id === comp.slot1) || null;
+        const slot2Jugador = plantilla.find(j => j.id === comp.slot2) || null;
+
+        setAlineacio(prev => ({
+            ...prev,
+            slot1: slot1Jugador,
+            slot2: slot2Jugador
+        }));
+
+        const usedIds = [slot1Jugador?.id, slot2Jugador?.id].filter(Boolean) as string[];
+        setJugadoresUsados(Array.from(usedIds));
+    }, [compAlineacio.data, plantilla])
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -78,24 +95,22 @@ const AlineacioPartit = () => {
     };
 
     const handleSlotClick = (slotId: string) => {
-        if (alineacio[slotId]) {
-            setAlineacio(prev => ({
-                ...prev,
-                [slotId]: null
-            }));
-            setJugadoresUsados(prev =>
-                prev.filter(id => id !== alineacio[slotId].id)
-            );
-        }
+        const jugadorEnSlot = alineacio[slotId];
+        if (!jugadorEnSlot) return;
+
+        setAlineacio(prev => ({
+            ...prev,
+            [slotId]: null
+        }));
+
+        setJugadoresUsados(prev => prev.filter(id => id !== jugadorEnSlot.id));
     };
 
     useEffect(() => {
-        if (jugadoresUsados.length === 2) {
-            setMostrarBoto(true);
-        } else {
-            setMostrarBoto(false);
-        }
-    }, [jugadoresUsados])
+        const filledSlots = Object.values(alineacio).filter(Boolean).length;
+        const totalSlots = Object.keys(alineacio).length;
+        setMostrarBoto(filledSlots === totalSlots && totalSlots > 0);
+    }, [alineacio, jugadoresUsados])
 
     return (
         <DndContext onDragEnd={handleDragEnd}>

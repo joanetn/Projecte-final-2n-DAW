@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useRegister } from "../../mutations/auth.mutations";
+import { useToast } from "@/components/ui/Toast";
 import { RegisterData } from "../../types/auth";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ const Register = () => {
 
     const mutation = useRegister();
     const { mutate } = mutation;
+    const { showToast } = useToast();
     const isLoading = mutation.status === "pending";
     const isError = mutation.status === "error";
     const error = mutation.error;
@@ -69,11 +71,11 @@ const Register = () => {
 
         mutate(form, {
             onSuccess: () => {
-                alert("Usuari registrat correctament!");
+                showToast({ type: 'success', title: "Registre correcte", description: "Usuari registrat correctament. Ja pots iniciar sessió." });
                 navigate("/login");
             },
             onError: (err: any) => {
-                alert(err.message);
+                showToast({ type: 'error', title: 'Error de registre', description: err?.message || 'No s\'ha pogut registrar l\'usuari.' });
             },
         });
     };

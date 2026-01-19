@@ -2,6 +2,7 @@ import { getComprovarAlineacio, getPartitsJugats, getPartitsPendents, getPlantil
 import { PlantillaResponse } from "@/types/entrenador"
 import { PartitsResponse } from "@/types/partits"
 import { useQuery } from "@tanstack/react-query"
+import { useParams } from "react-router-dom"
 
 export const usePlantilla = () =>
     useQuery<PlantillaResponse>({
@@ -21,8 +22,11 @@ export const usePartitsPendents = () =>
         queryFn: getPartitsPendents
     })
 
-export const useComprovarAlineacions = () =>
-    useQuery<any>({
-        queryKey: ["comprovarAlineacions"],
-        queryFn: getComprovarAlineacio
+export const useComprovarAlineacions = () => {
+    const { partitId } = useParams();
+    return useQuery<any>({
+        queryKey: ["comprovarAlineacions", partitId],
+        queryFn: () => getComprovarAlineacio(partitId as string),
+        // enabled: !!partitId
     })
+}

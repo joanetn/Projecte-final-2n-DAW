@@ -7,5 +7,6 @@ router.get("/plantilla", verifyToken, roleMiddleware("ENTRENADOR"), controller.p
 router.get("/partitsJugats", verifyToken, roleMiddleware("ENTRENADOR"), controller.partitsJugats);
 router.get("/partitsPendents", verifyToken, roleMiddleware("ENTRENADOR"), controller.partitsPendents);
 router.post("/enviarAlineacio", verifyToken, roleMiddleware("ENTRENADOR"), controller.crearAlineacio);
+router.get("/:partitId", verifyToken, roleMiddleware("ENTRENADOR"), controller.comprovarAlineacio);
 
 module.exports = router;

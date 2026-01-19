@@ -56,7 +56,53 @@ exports.comprovarAlineacio = async (req, res) => {
 
         const { partitId } = req.params;
 
-        res.json(partitId);
+        // Buscar alineaciones activas para el partido y el equipo del usuario
+        const alineacionsResponse = await api.get(`/Alineacio?partitId=${partitId}&equipId=${equipId}&isActive=true`);
+        const alineacions = Array.isArray(alineacionsResponse) ? alineacionsResponse : (alineacionsResponse ? [alineacionsResponse] : []);
+
+        if (!alineacions || alineacions.length === 0) {
+            return res.json({ slot1: null, slot2: null, alineacions: [] });
+        }
+
+        // Cargar datos de los jugadores y mapear posiciones
+        const jugadores = await Promise.all(alineacions.map(async (a) => {
+            const usuariResp = await api.get(`/Usuari?id=${a.jugadorId}`);
+            const usuari = Array.isArray(usuariResp) ? usuariResp[0] : usuariResp;
+
+            // Obtener roles globales del usuario
+            const rolsResp = await api.get(`/UsuariRol?usuariId=${a.jugadorId}`);
+            const rolsFiltrados = Array.isArray(rolsResp) ? rolsResp.filter(r => String(r.usuariId) == String(a.jugadorId) && r.isActive) : [];
+
+            // Obtener rol dentro del equipo (si existe)
+            const equipUsuariResp = await api.get(`/EquipUsuari?usuariId=${a.jugadorId}&equipId=${equipId}`);
+            const equipUsuari = Array.isArray(equipUsuariResp) ? equipUsuariResp.find(e => String(e.equipId) == String(equipId) && String(e.usuariId) == String(a.jugadorId) && e.isActive) : (equipUsuariResp && equipUsuariResp.isActive ? equipUsuariResp : null);
+
+            const jugadorObj = usuari ? {
+                ...usuari,
+                rolsGlobals: rolsFiltrados.map(r => r.rol),
+                rolEquip: equipUsuari ? equipUsuari.rolEquip : null
+            } : null;
+
+            return {
+                ...a,
+                jugador: jugadorObj
+            };
+        }));
+
+        // Mapear a slots: si hay campo posicio lo usamos, si no, asignamos por orden (primero -> slot1, segundo -> slot2)
+        const result = { slot1: null, slot2: null, alineacions: jugadores };
+
+        jugadores.forEach((a, idx) => {
+            const pos = a.posicio;
+            if (pos === "REVES") result.slot1 = a.jugador.id;
+            else if (pos === "DRETA") result.slot2 = a.jugador.id;
+            else {
+                if (!result.slot1) result.slot1 = a.jugador.id;
+                else if (!result.slot2) result.slot2 = a.jugador.id;
+            }
+        });
+
+        res.json(result);
     } catch (err) {
         console.error("No tens encara alineacio:", err);
 
@@ -113,19 +159,40 @@ exports.crearAlineacio = async (req, res) => {
             return res.status(404).json({ message: "Algún jugador no existe o está inactivo" });
         }
 
-        // Crear alineaciones
-        const alineacions = await Promise.all(jugadorsValid.map(async (j) => {
-            const response = await api.post("/Alineacio", {
+        // Antes de crear, desactivar alineaciones existentes para este partido y equipo
+        const existents = await api.get(`/Alineacio?partitId=${partitId}&equipId=${equipId}&isActive=true`);
+        const alineacionsExistents = Array.isArray(existents) ? existents : (existents ? [existents] : []);
+
+        if (alineacionsExistents.length > 0) {
+            await Promise.all(alineacionsExistents.map(async (a) => {
+                try {
+                    await api.patch(`/Alineacio/${a.id}`, { isActive: false });
+                } catch (e) {
+                    console.error(`Error desactivant alineacio ${a.id}:`, e);
+                }
+            }));
+        }
+
+        // Crear nuevas alineaciones
+        const alineacions = await Promise.all(jugadorsValid.map(async (j, index) => {
+            const pos = index === 0 ? "REVES" : (index === 1 ? "DRETA" : null);
+            const payload = {
                 partitId,
                 jugadorId: j.id,
                 equipId,
                 isActive: true,
                 creada_at: new Date()
-            });
+            };
+            if (pos) payload.posicio = pos;
+            const response = await api.post("/Alineacio", payload);
             return response;
         }));
 
-        res.status(201).json({ alineacions: alineacions });
+        // Responder con slots para que el frontend pueda actualizar inmediatamente
+        const slot1 = jugadorsValid[0] ? jugadorsValid[0].id : null;
+        const slot2 = jugadorsValid[1] ? jugadorsValid[1].id : null;
+
+        res.status(201).json({ slot1, slot2, alineacions: alineacions });
 
     } catch (err) {
         console.error("Error en crearAlineacio:", err);

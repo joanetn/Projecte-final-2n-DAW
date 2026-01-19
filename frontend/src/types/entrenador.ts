@@ -1,5 +1,5 @@
 export interface MembrePlantilla {
-    id: number;
+    id: string;
     nom: string;
     email: string;
     telefon?: string;
@@ -29,7 +29,7 @@ export interface PlantillaResponse {
 }
 
 export interface AlineacioData {
-    jugadorsId: number[];
+    jugadorsId: string[];
     partitId: string;
 }
 
@@ -44,4 +44,10 @@ export interface Alineacio {
 
 export interface AlineacioResponse {
     alineacions: Alineacio[];
+}
+
+export interface CompAlineacioResponse {
+    slot1: string;
+    slot2: string;
+    alineacions: Object[];
 }

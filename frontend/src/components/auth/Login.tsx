@@ -1,4 +1,5 @@
 import { useLogin } from "../../mutations/auth.mutations";
+import { useToast } from "@/components/ui/Toast";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -23,6 +24,7 @@ const Login = () => {
     const mutation = useLogin();
     const navigate = useNavigate();
     const { login } = useAuth();
+    const { showToast } = useToast();
 
     const isLoading = mutation.status === "pending";
     const isError = mutation.status === "error";
@@ -32,10 +34,12 @@ const Login = () => {
         mutation.mutate(data, {
             onSuccess: (res) => {
                 login(res.usuari);
+                showToast({ type: 'success', title: 'Inici de sessió', description: "S'ha iniciat sessió correctament." });
                 navigate("/");
             },
             onError: (err: any) => {
                 console.error("Error de login:", err);
+                showToast({ type: 'error', title: 'Error d\'inici de sessió', description: "No s'ha pogut iniciar la sessió." });
             },
         });
     };

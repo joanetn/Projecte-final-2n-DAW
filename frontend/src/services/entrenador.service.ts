@@ -1,10 +1,6 @@
 import { backend_rapid } from "@/api/axios";
 import { AlineacioData, AlineacioResponse, PlantillaResponse } from "@/types/entrenador";
 import { PartitsResponse } from "@/types/partits";
-import { useParams } from "react-router-dom";
-
-const params = useParams();
-
 export const getPlantilla = async (): Promise<PlantillaResponse> => {
     try {
         const res = await backend_rapid.get<PlantillaResponse>('/entrenador/plantilla');
@@ -45,11 +41,11 @@ export const getEnviarAlineacio = async (body: AlineacioData): Promise<Alineacio
     }
 }
 
-export const getComprovarAlineacio = async (): Promise<any> => {
+export const getComprovarAlineacio = async (partitId?: string): Promise<any> => {
     try {
-        const partitId = params.partitId;
-        // return partitId;
+        if (!partitId) throw new Error("partitId is required");
         const res = await backend_rapid.get<any>(`/entrenador/${partitId}`);
+        console.log(res.data);
         return res.data;
     } catch (err: any) {
         console.error("Error manant la alineació:", err);

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/components/ui/Toast";
 import { ThemeToggle } from "@/components/theme/theme-toggle"
 
 const Header = () => {
@@ -16,8 +17,11 @@ const Header = () => {
 
     const isActive = (path: string) => location.pathname === path;
 
+    const { showToast } = useToast();
+
     const handleLogout = () => {
         logout();
+        showToast({ type: 'info', title: 'Sessió tancada', description: "S'ha tancat la sessió." });
         navigate("/login");
     };
 
