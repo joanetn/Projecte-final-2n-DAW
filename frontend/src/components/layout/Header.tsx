@@ -1,11 +1,13 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Bell } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/Toast";
-import { ThemeToggle } from "@/components/theme/theme-toggle"
-import { useEffect } from "react";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { useNotificacions } from "@/queries/notificacions.queries";
+import { useAcceptProposta, useRejectProposta } from "@/mutations/notificacions.mutations";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Header = () => {
     const { user, logout, isLoading } = useAuth();
@@ -13,9 +15,12 @@ const Header = () => {
     const navigate = useNavigate();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [notifOpen, setNotifOpen] = useState(false);
-    const [notifs, setNotifs] = useState<any[]>([]);
-    const [loadingNotifs, setLoadingNotifs] = useState(false);
     const [processingId, setProcessingId] = useState<string | null>(null);
+
+    const queryClient = useQueryClient();
+    const { data: notifs = [], isLoading: loadingNotifs, refetch } = useNotificacions(user?.id?.toString());
+    const acceptMutation = useAcceptProposta();
+    const rejectMutation = useRejectProposta();
 
     const isLoggedIn = !!user;
     if (isLoading) return null;
@@ -25,13 +30,26 @@ const Header = () => {
     const { showToast } = useToast();
 
     useEffect(() => {
-        const handler = (e: any) => {
-            const data = e.detail;
-            setNotifs(prev => [{ id: `socket-${Date.now()}`, titol: data.titol, missatge: data.missatge, created_at: data.created_at || new Date().toISOString(), extra: data.extra }, ...prev]);
+        const handler = () => {
+            queryClient.invalidateQueries({ queryKey: ["notificacions"] });
         };
         window.addEventListener('new-notificacio', handler as EventListener);
         return () => window.removeEventListener('new-notificacio', handler as EventListener);
-    }, []);
+    }, [queryClient]);
+
+    useEffect(() => {
+        const handler = () => {
+            queryClient.invalidateQueries({ queryKey: ["notificacions"] });
+            queryClient.invalidateQueries({ queryKey: ["partitsPendents"] });
+            queryClient.invalidateQueries({ queryKey: ["partitsJugats"] });
+        };
+        window.addEventListener('proposta-acceptada', handler as EventListener);
+        window.addEventListener('proposta-rebutjada', handler as EventListener);
+        return () => {
+            window.removeEventListener('proposta-acceptada', handler as EventListener);
+            window.removeEventListener('proposta-rebutjada', handler as EventListener);
+        };
+    }, [queryClient]);
 
     const handleLogout = () => {
         logout();
@@ -41,34 +59,37 @@ const Header = () => {
 
     const handleAcceptProposta = async (notifId: string) => {
         setProcessingId(notifId);
-        try {
-            const res = await fetch(`http://localhost:3001/propostes/${notifId}/accept`, { method: 'POST' });
-            if (!res.ok) throw new Error('Error acceptant proposta');
-            showToast({ type: 'success', title: 'Proposta acceptada', description: "S'ha creat el partit amb la data proposada." });
-            // Update local state to reflect accepted
-            setNotifs(prev => prev.map(n => n.id === notifId ? { ...n, extra: { ...n.extra, estat: 'ACCEPTAT' } } : n));
-        } catch (e) {
-            console.error(e);
-            showToast({ type: 'error', title: 'Error', description: "No s'ha pogut acceptar la proposta." });
-        } finally {
-            setProcessingId(null);
-        }
+        acceptMutation.mutate(notifId, {
+            onSuccess: () => {
+                showToast({ type: 'success', title: 'Proposta acceptada', description: "S'ha creat el partit amb la data proposada." });
+                queryClient.invalidateQueries({ queryKey: ["partitsPendents"] });
+                queryClient.invalidateQueries({ queryKey: ["partitsJugats"] });
+                queryClient.invalidateQueries({ queryKey: ["notificacions"] });
+            },
+            onError: (e) => {
+                console.error(e);
+                showToast({ type: 'error', title: 'Error', description: "No s'ha pogut acceptar la proposta." });
+            },
+            onSettled: () => {
+                setProcessingId(null);
+            }
+        });
     };
 
     const handleRejectProposta = async (notifId: string) => {
         setProcessingId(notifId);
-        try {
-            const res = await fetch(`http://localhost:3001/propostes/${notifId}/reject`, { method: 'POST' });
-            if (!res.ok) throw new Error('Error rebutjant proposta');
-            showToast({ type: 'info', title: 'Proposta rebutjada', description: "S'ha rebutjat la proposta de partit." });
-            // Update local state to reflect rejected
-            setNotifs(prev => prev.map(n => n.id === notifId ? { ...n, extra: { ...n.extra, estat: 'REBUTJAT' } } : n));
-        } catch (e) {
-            console.error(e);
-            showToast({ type: 'error', title: 'Error', description: "No s'ha pogut rebutjar la proposta." });
-        } finally {
-            setProcessingId(null);
-        }
+        rejectMutation.mutate(notifId, {
+            onSuccess: () => {
+                showToast({ type: 'info', title: 'Proposta rebutjada', description: "S'ha rebutjat la proposta de partit." });
+            },
+            onError: (e) => {
+                console.error(e);
+                showToast({ type: 'error', title: 'Error', description: "No s'ha pogut rebutjar la proposta." });
+            },
+            onSettled: () => {
+                setProcessingId(null);
+            }
+        });
     };
 
     const hasRol = (rol: string) => {
@@ -80,11 +101,10 @@ const Header = () => {
     const isEntrenador = hasRol("ENTRENADOR");
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 border-b border-border shadow-sm">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
 
-                    {/* Logo */}
                     <Link to="/" className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-sm">PP</span>
@@ -94,20 +114,18 @@ const Header = () => {
                         </span>
                     </Link>
 
-                    {/* Desktop */}
                     <div className="hidden md:flex items-center gap-8">
                         <Link
                             to="/"
-                            className={`text-sm font-medium ${isActive("/") ? "text-blue-600" : "text-muted-foreground hover:text-foreground"}`}
+                            className={`text-sm font-medium ${isActive("/") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                         >
                             Inici
                         </Link>
 
-                        {/* Dashboards según rol */}
                         {isAdmin && (
                             <Link
                                 to="/dashboardAdmin"
-                                className={`text-sm font-medium ${isActive("/dashboardAdmin") ? "text-blue-600" : "text-muted-foreground hover:text-foreground"}`}
+                                className={`text-sm font-medium ${isActive("/dashboardAdmin") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                             >
                                 Dashboard Admin
                             </Link>
@@ -116,7 +134,7 @@ const Header = () => {
                         {isArbitre && (
                             <Link
                                 to="/dashboardArbitre"
-                                className={`text-sm font-medium ${isActive("/dashboardArbitre") ? "text-blue-600" : "text-muted-foreground hover:text-foreground"}`}
+                                className={`text-sm font-medium ${isActive("/dashboardArbitre") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                             >
                                 Dashboard Àrbitre
                             </Link>
@@ -125,11 +143,18 @@ const Header = () => {
                         {isEntrenador && (
                             <Link
                                 to="/dashboardEntrenador"
-                                className={`text-sm font-medium ${isActive("/dashboardEntrenador") ? "text-blue-600" : "text-muted-foreground hover:text-foreground"}`}
+                                className={`text-sm font-medium ${isActive("/dashboardEntrenador") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                             >
                                 Dashboard Entrenador
                             </Link>
                         )}
+
+                        <Link
+                            to="/ranking"
+                            className={`text-sm font-medium ${isActive("/ranking") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                        >
+                            Ranking
+                        </Link>
 
                         {!isLoggedIn && (
                             <div className="flex items-center gap-3">
@@ -153,42 +178,31 @@ const Header = () => {
                             </div>
                         )}
 
-                        {/* Bell icon (visual only) - only for logged users */}
                         {isLoggedIn && (
                             <div className="relative">
                                 <button
                                     aria-label="Notificacions"
                                     className="relative p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
-                                    onClick={async () => {
+                                    onClick={() => {
                                         setNotifOpen(v => !v);
                                         if (!notifOpen) {
-                                            setLoadingNotifs(true);
-                                            try {
-                                                const res = await fetch(`http://localhost:3001/notificacions?usuariId=${user?.id}&_sort=created_at&_order=desc`);
-                                                const data = await res.json();
-                                                setNotifs(Array.isArray(data) ? data : [data]);
-                                            } catch (e) {
-                                                console.error('Error carregant notificacions', e);
-                                            } finally {
-                                                setLoadingNotifs(false);
-                                            }
+                                            refetch();
                                         }
                                     }}
                                 >
                                     <Bell />
-                                    {/* small red dot */}
-                                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                                    {/* <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" /> */}
                                 </button>
 
                                 {notifOpen && (
-                                    <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded shadow-lg z-50">
-                                        <div className="p-3 border-b">
-                                            <div className="font-medium">Notificacions</div>
+                                    <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-xl z-50">
+                                        <div className="p-3 border-b border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 rounded-t-lg">
+                                            <div className="font-medium text-gray-900 dark:text-gray-100">Notificacions</div>
                                         </div>
-                                        <div className="max-h-64 overflow-auto">
-                                            {loadingNotifs && <div className="p-3 text-sm text-gray-500">Carregant...</div>}
-                                            {!loadingNotifs && notifs.length === 0 && <div className="p-3 text-sm text-gray-500">Cap notificació</div>}
-                                            {!loadingNotifs && notifs.map(n => {
+                                        <div className="max-h-64 overflow-auto bg-white dark:bg-zinc-900">
+                                            {loadingNotifs && <div className="p-3 text-sm text-gray-500 dark:text-gray-400">Carregant...</div>}
+                                            {!loadingNotifs && notifs.length === 0 && <div className="p-3 text-sm text-gray-500 dark:text-gray-400">Cap notificació</div>}
+                                            {!loadingNotifs && [...notifs].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).map(n => {
                                                 const isProposta = n.tipus === 'proposta';
                                                 const isPendent = n.extra?.estat === 'PENDENT';
                                                 const isAcceptat = n.extra?.estat === 'ACCEPTAT';
@@ -196,12 +210,11 @@ const Header = () => {
                                                 const isProcessing = processingId === n.id;
 
                                                 return (
-                                                    <div key={n.id} className="p-3 border-b last:border-b-0">
-                                                        <div className="font-semibold text-sm">{n.titol}</div>
-                                                        <div className="text-xs text-gray-600">{n.missatge}</div>
-                                                        <div className="text-xs text-gray-400 mt-1">{new Date(n.created_at).toLocaleString()}</div>
+                                                    <div key={n.id} className="p-3 border-b border-gray-100 dark:border-zinc-800 last:border-b-0 hover:bg-gray-50 dark:hover:bg-zinc-800/50">
+                                                        <div className="font-semibold text-sm text-gray-900 dark:text-gray-100">{n.titol}</div>
+                                                        <div className="text-xs text-gray-600 dark:text-gray-400">{n.missatge}</div>
+                                                        <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">{new Date(n.created_at).toLocaleString()}</div>
 
-                                                        {/* Botones para propostas pendientes */}
                                                         {isProposta && isPendent && (
                                                             <div className="flex gap-2 mt-2">
                                                                 <button
@@ -221,7 +234,6 @@ const Header = () => {
                                                             </div>
                                                         )}
 
-                                                        {/* Badge de estat si ja s'ha processat */}
                                                         {isProposta && isAcceptat && (
                                                             <span className="inline-block mt-2 px-2 py-0.5 text-xs font-medium text-green-700 bg-green-100 rounded">
                                                                 ✓ Acceptada
@@ -236,8 +248,8 @@ const Header = () => {
                                                 );
                                             })}
                                         </div>
-                                        <div className="p-2 border-t text-center">
-                                            <button className="text-sm text-blue-600" onClick={() => { setNotifOpen(false); }}>Tancar</button>
+                                        <div className="p-2 border-t border-gray-200 dark:border-zinc-700 text-center bg-gray-50 dark:bg-zinc-800 rounded-b-lg">
+                                            <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300" onClick={() => { setNotifOpen(false); }}>Tancar</button>
                                         </div>
                                     </div>
                                 )}
@@ -247,7 +259,6 @@ const Header = () => {
                         <ThemeToggle />
                     </div>
 
-                    {/* Mobile button */}
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         className="md:hidden p-2 rounded-lg text-muted-foreground hover:bg-accent"
@@ -256,9 +267,8 @@ const Header = () => {
                     </button>
                 </div>
 
-                {/* Mobile menu */}
                 {mobileMenuOpen && (
-                    <div className="md:hidden py-4 border-t border-border space-y-2">
+                    <div className="md:hidden py-4 border-t border-border space-y-2 bg-white dark:bg-zinc-900">
                         <Link
                             to="/"
                             className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg"
@@ -267,7 +277,6 @@ const Header = () => {
                             Inici
                         </Link>
 
-                        {/* Dashboards móvil según rol */}
                         {isAdmin && (
                             <Link
                                 to="/dashboardAdmin"

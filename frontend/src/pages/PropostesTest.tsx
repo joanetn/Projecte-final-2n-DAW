@@ -57,35 +57,35 @@ const PropostesTest: React.FC = () => {
             <div className="space-y-2 mb-4">
                 <div>
                     <label className="block text-sm">From Equip Id</label>
-                    <input value={fromEquipId} onChange={e => setFromEquipId(e.target.value)} className="border px-2 py-1 w-full" />
+                    <input value={fromEquipId} onChange={e => setFromEquipId(e.target.value)} className="border border-input bg-background text-foreground px-2 py-1 w-full rounded" />
                 </div>
                 <div>
                     <label className="block text-sm">To Equip Id</label>
-                    <input value={toEquipId} onChange={e => setToEquipId(e.target.value)} className="border px-2 py-1 w-full" />
+                    <input value={toEquipId} onChange={e => setToEquipId(e.target.value)} className="border border-input bg-background text-foreground px-2 py-1 w-full rounded" />
                 </div>
                 <div>
                     <label className="block text-sm">Data i Hora</label>
-                    <input value={dataHora} onChange={e => setDataHora(e.target.value)} className="border px-2 py-1 w-full" />
+                    <input value={dataHora} onChange={e => setDataHora(e.target.value)} className="border border-input bg-background text-foreground px-2 py-1 w-full rounded" />
                 </div>
                 <div>
-                    <button onClick={crearProposta} className="bg-blue-600 text-white px-3 py-1 rounded">Crear proposta</button>
+                    <button onClick={crearProposta} className="bg-primary text-primary-foreground px-3 py-1 rounded hover:bg-primary/90">Crear proposta</button>
                 </div>
             </div>
 
             <div>
                 <h3 className="font-medium mb-2">Notificacions creades</h3>
-                {lastNotifs.length === 0 && <div className="text-sm text-gray-500">Cap notificació creada encara</div>}
+                {lastNotifs.length === 0 && <div className="text-sm text-muted-foreground">Cap notificació creada encara</div>}
                 <ul className="space-y-2 mt-2">
                     {lastNotifs.map((n: any) => (
-                        <li key={n.id} className="border p-3 rounded flex justify-between items-center">
+                        <li key={n.id} className="border border-border p-3 rounded flex justify-between items-center bg-card">
                             <div>
                                 <div className="font-semibold">{n.titol}</div>
-                                <div className="text-sm text-gray-600">{n.missatge}</div>
-                                <div className="text-xs text-gray-500">id: {n.id}</div>
+                                <div className="text-sm text-muted-foreground">{n.missatge}</div>
+                                <div className="text-xs text-muted-foreground/70">id: {n.id}</div>
                             </div>
                             <div className="space-x-2">
-                                <button onClick={() => accept(n.id)} className="px-2 py-1 bg-green-600 text-white rounded">Acceptar</button>
-                                <button onClick={() => reject(n.id)} className="px-2 py-1 bg-red-600 text-white rounded">Rebutjar</button>
+                                <button onClick={() => accept(n.id)} className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded">Acceptar</button>
+                                <button onClick={() => reject(n.id)} className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded">Rebutjar</button>
                             </div>
                         </li>
                     ))}

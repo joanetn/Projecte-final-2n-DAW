@@ -1,5 +1,5 @@
 import { backend_rapid } from "@/api/axios";
-import { AlineacioData, AlineacioResponse, PlantillaResponse } from "@/types/entrenador";
+import { AlineacioData, AlineacioResponse, CalendariResponse, ClassificacioResponse, EstadistiquesResponse, PlantillaResponse } from "@/types/entrenador";
 import { PartitsResponse } from "@/types/partits";
 export const getPlantilla = async (): Promise<PlantillaResponse> => {
     try {
@@ -60,5 +60,35 @@ export const postProposta = async (body: { fromEquipId: any; toEquipId: any; dat
     } catch (err: any) {
         console.error('Error enviant proposta:', err);
         throw new Error(err.response?.data?.message || 'Error enviant proposta');
+    }
+}
+
+export const getClassificacio = async (): Promise<ClassificacioResponse> => {
+    try {
+        const res = await backend_rapid.get<ClassificacioResponse>('/entrenador/classificacio');
+        return res.data;
+    } catch (err: any) {
+        console.error("Error obtenint classificació:", err);
+        throw new Error(err.response?.data?.message || "Error obtenint la classificació");
+    }
+}
+
+export const getCalendari = async (): Promise<CalendariResponse> => {
+    try {
+        const res = await backend_rapid.get<CalendariResponse>('/entrenador/calendari');
+        return res.data;
+    } catch (err: any) {
+        console.error("Error obtenint calendari:", err);
+        throw new Error(err.response?.data?.message || "Error obtenint el calendari");
+    }
+}
+
+export const getEstadistiques = async (): Promise<EstadistiquesResponse> => {
+    try {
+        const res = await backend_rapid.get<EstadistiquesResponse>('/entrenador/estadistiques');
+        return res.data;
+    } catch (err: any) {
+        console.error("Error obtenint estadístiques:", err);
+        throw new Error(err.response?.data?.message || "Error obtenint les estadístiques");
     }
 }

@@ -45,14 +45,14 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <div className="w-full max-w-md">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                <div className="bg-card rounded-xl shadow-sm border border-border p-8">
                     <div className="mb-8">
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-1">
+                        <h2 className="text-2xl font-semibold text-foreground mb-1">
                             Iniciar sessió
                         </h2>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                             Introdueix les teves credencials per continuar
                         </p>
                     </div>
@@ -93,9 +93,9 @@ const Login = () => {
                         </div>
 
                         {isError && (
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
-                                <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
-                                <p className="text-sm text-red-800">{(error as Error).message}</p>
+                            <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-start gap-2">
+                                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                                <p className="text-sm text-red-800 dark:text-red-200">{(error as Error).message}</p>
                             </div>
                         )}
 
@@ -105,9 +105,9 @@ const Login = () => {
                     </form>
 
                     <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                             No tens compte?{" "}
-                            <a href="/register" className="font-medium text-gray-900 hover:underline">
+                            <a href="/register" className="font-medium text-foreground hover:underline">
                                 Registra't
                             </a>
                         </p>

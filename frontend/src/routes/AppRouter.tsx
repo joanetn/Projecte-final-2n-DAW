@@ -11,6 +11,7 @@ import DashboardArbitre from "@/pages/DashboardArbitre";
 import DashboardEntrenador from "@/pages/DashboardEntrenador";
 import AlineacioPartit from "@/components/partits/AlineacioPartit";
 import PropostesTest from "@/pages/PropostesTest";
+import Ranking from "@/pages/Ranking";
 
 const AppRouter = () => {
     return (
@@ -51,7 +52,10 @@ const AppRouter = () => {
                             element={<AlineacioPartit />}
                         />
                         <Route path="/propostes-test" element={<PropostesTest />} />
-
+                        <Route
+                            path="/ranking"
+                            element={<Ranking />}
+                        />
                     </Routes>
                 </main>
                 <Footer />

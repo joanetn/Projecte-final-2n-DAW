@@ -11,7 +11,6 @@ const io = new Server(server, {
     }
 });
 
-// Simple map userId -> socketId(s)
 const userSockets = new Map();
 
 io.on('connection', (socket) => {
@@ -39,7 +38,6 @@ io.on('connection', (socket) => {
     });
 });
 
-// expose io and userSockets to other modules
 module.exports = { server, io, userSockets };
 
 server.listen(3001, () => {

@@ -462,3 +462,273 @@ exports.plantilla = async (req, res) => {
         });
     }
 };
+
+/**
+ * Obtener classificació de la lliga del equip
+ */
+exports.classificacio = async (req, res) => {
+    try {
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuari(user.id);
+
+        // Obtener el equip para saber la categoria
+        const equipResponse = await api.get(`/Equip?id=${equipId}`);
+        const equip = Array.isArray(equipResponse) ? equipResponse[0] : equipResponse;
+
+        if (!equip) {
+            return res.status(404).json({ message: "Equip no trobat" });
+        }
+
+        // Buscar la lliga por categoria del equipo
+        const lliguesResponse = await api.get(`/Lliga?categoria=${encodeURIComponent(equip.categoria)}&isActive=true`);
+        const lliga = Array.isArray(lliguesResponse) ? lliguesResponse[0] : lliguesResponse;
+
+        if (!lliga) {
+            return res.status(404).json({ message: "No hi ha cap lliga per a la teua categoria" });
+        }
+
+        // Obtener todas las classificacions de la lliga
+        const classificacionsResponse = await api.get(`/Classificacio?lligaId=${lliga.id}`);
+        const classificacions = Array.isArray(classificacionsResponse) ? classificacionsResponse : (classificacionsResponse ? [classificacionsResponse] : []);
+
+        // Obtener info de todos los equipos
+        const classificacioAmbEquips = await Promise.all(
+            classificacions.map(async (c) => {
+                const equipResp = await api.get(`/Equip?id=${c.equipId}`);
+                const eq = Array.isArray(equipResp) ? equipResp[0] : equipResp;
+                return {
+                    ...c,
+                    equip: eq ? { id: eq.id, nom: eq.nom, categoria: eq.categoria } : null
+                };
+            })
+        );
+
+        // Ordenar por puntos (descendente)
+        classificacioAmbEquips.sort((a, b) => b.punts - a.punts);
+
+        // Añadir posición
+        const classificacioFinal = classificacioAmbEquips.map((c, idx) => ({
+            ...c,
+            posicio: idx + 1,
+            esElMeuEquip: String(c.equipId) === String(equipId)
+        }));
+
+        res.json({
+            lliga: { id: lliga.id, nom: lliga.nom, categoria: lliga.categoria },
+            classificacio: classificacioFinal,
+            total: classificacioFinal.length
+        });
+
+    } catch (err) {
+        console.error("Error en classificacio:", err);
+
+        if (err.message === "TOKEN_NO_PROPORCIONAT") return res.status(401).json({ message: "Token no proporcionat" });
+        if (err.message === "USUARI_NO_TROBAT") return res.status(404).json({ message: "Usuari no trobat" });
+        if (err.message === "USUARI_INACTIU") return res.status(403).json({ message: "Usuari inactiu" });
+        if (err.message === "SENSE_EQUIP" || err.message === "SENSE_EQUIP_ACTIU") return res.status(404).json({ message: "No tens cap equip assignat" });
+        if (err.name === "JsonWebTokenError") return res.status(401).json({ message: "Token invàlid" });
+        if (err.name === "TokenExpiredError") return res.status(401).json({ message: "Token expirat" });
+
+        res.status(500).json({ message: "Error al obtenir classificació", error: err.message });
+    }
+};
+
+/**
+ * Obtener calendario de partidos con jornadas
+ */
+exports.calendari = async (req, res) => {
+    try {
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuari(user.id);
+
+        // Obtener el equip
+        const equipResponse = await api.get(`/Equip?id=${equipId}`);
+        const equip = Array.isArray(equipResponse) ? equipResponse[0] : equipResponse;
+
+        if (!equip) {
+            return res.status(404).json({ message: "Equip no trobat" });
+        }
+
+        // Buscar la lliga por categoria
+        const lliguesResponse = await api.get(`/Lliga?categoria=${encodeURIComponent(equip.categoria)}&isActive=true`);
+        const lliga = Array.isArray(lliguesResponse) ? lliguesResponse[0] : lliguesResponse;
+
+        // Obtener jornadas de la lliga
+        let jornades = [];
+        if (lliga) {
+            const jornadesResponse = await api.get(`/Jornada?lligaId=${lliga.id}&isActive=true`);
+            jornades = Array.isArray(jornadesResponse) ? jornadesResponse : (jornadesResponse ? [jornadesResponse] : []);
+        }
+
+        // Obtener todos los partidos del equipo
+        const partitsLocalResponse = await api.get(`/Partit?localId=${equipId}&isActive=true`);
+        const partitsVisitantResponse = await api.get(`/Partit?visitantId=${equipId}&isActive=true`);
+
+        const partitsLocal = Array.isArray(partitsLocalResponse) ? partitsLocalResponse : (partitsLocalResponse ? [partitsLocalResponse] : []);
+        const partitsVisitant = Array.isArray(partitsVisitantResponse) ? partitsVisitantResponse : (partitsVisitantResponse ? [partitsVisitantResponse] : []);
+
+        const totsPartits = [...partitsLocal, ...partitsVisitant];
+
+        // Enriquecer partits con info de equipos y pistas
+        const partitsEnriquits = await Promise.all(
+            totsPartits.map(async (p) => {
+                const [localResp, visitantResp, pistaResp] = await Promise.all([
+                    api.get(`/Equip?id=${p.localId}`),
+                    api.get(`/Equip?id=${p.visitantId}`),
+                    p.pistaId ? api.get(`/Pista?id=${p.pistaId}`) : Promise.resolve(null)
+                ]);
+
+                const local = Array.isArray(localResp) ? localResp[0] : localResp;
+                const visitant = Array.isArray(visitantResp) ? visitantResp[0] : visitantResp;
+                const pista = pistaResp ? (Array.isArray(pistaResp) ? pistaResp[0] : pistaResp) : null;
+
+                return {
+                    id: p.id,
+                    dataHora: p.dataHora,
+                    status: p.status,
+                    jornadaId: p.jornadaId,
+                    esLocal: String(p.localId) === String(equipId),
+                    local: local ? { id: local.id, nom: local.nom } : null,
+                    visitant: visitant ? { id: visitant.id, nom: visitant.nom } : null,
+                    pista: pista ? { id: pista.id, nom: pista.nom } : null,
+                    resultatLocal: p.resultatLocal,
+                    resultatVisitant: p.resultatVisitant
+                };
+            })
+        );
+
+        // Ordenar por fecha
+        partitsEnriquits.sort((a, b) => new Date(a.dataHora) - new Date(b.dataHora));
+
+        // Agrupar por jornada
+        const calendari = jornades.map(j => ({
+            jornada: { id: j.id, nom: j.nom, data: j.data, status: j.status },
+            partits: partitsEnriquits.filter(p => String(p.jornadaId) === String(j.id))
+        }));
+
+        // Partits sense jornada
+        const partitsSenseJornada = partitsEnriquits.filter(p => !p.jornadaId);
+
+        res.json({
+            lliga: lliga ? { id: lliga.id, nom: lliga.nom, categoria: lliga.categoria } : null,
+            calendari,
+            partitsSenseJornada,
+            totalPartits: partitsEnriquits.length
+        });
+
+    } catch (err) {
+        console.error("Error en calendari:", err);
+
+        if (err.message === "TOKEN_NO_PROPORCIONAT") return res.status(401).json({ message: "Token no proporcionat" });
+        if (err.message === "USUARI_NO_TROBAT") return res.status(404).json({ message: "Usuari no trobat" });
+        if (err.message === "USUARI_INACTIU") return res.status(403).json({ message: "Usuari inactiu" });
+        if (err.message === "SENSE_EQUIP" || err.message === "SENSE_EQUIP_ACTIU") return res.status(404).json({ message: "No tens cap equip assignat" });
+        if (err.name === "JsonWebTokenError") return res.status(401).json({ message: "Token invàlid" });
+        if (err.name === "TokenExpiredError") return res.status(401).json({ message: "Token expirat" });
+
+        res.status(500).json({ message: "Error al obtenir calendari", error: err.message });
+    }
+};
+
+/**
+ * Obtener estadístiques dels jugadors del equip
+ */
+exports.estadistiques = async (req, res) => {
+    try {
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuari(user.id);
+
+        // Obtener jugadores del equipo
+        const equipUsuarisResponse = await api.get(`/EquipUsuari?equipId=${equipId}&isActive=true`);
+        const equipUsuaris = Array.isArray(equipUsuarisResponse) ? equipUsuarisResponse : (equipUsuarisResponse ? [equipUsuarisResponse] : []);
+
+        const jugadors = equipUsuaris.filter(eu => eu.rolEquip === "JUGADOR");
+
+        // Obtener estadísticas de cada jugador
+        const estadistiques = await Promise.all(
+            jugadors.map(async (eu) => {
+                // Obtener info del usuario
+                const usuariResp = await api.get(`/Usuari?id=${eu.usuariId}`);
+                const usuari = Array.isArray(usuariResp) ? usuariResp[0] : usuariResp;
+
+                // Obtener alineaciones del jugador (partidos jugados)
+                const alineacionsResp = await api.get(`/Alineacio?jugadorId=${eu.usuariId}&isActive=true`);
+                const alineacions = Array.isArray(alineacionsResp) ? alineacionsResp : (alineacionsResp ? [alineacionsResp] : []);
+
+                // Contar partidos jugados por este jugador
+                const partitsJugatsIds = [...new Set(alineacions.map(a => a.partitId))];
+
+                // Para cada partido, verificar si ganó o perdió
+                let partitsGuanyats = 0;
+                let partitsPerduts = 0;
+                let setsGuanyats = 0;
+                let setsPerduts = 0;
+
+                for (const partitId of partitsJugatsIds) {
+                    const partitResp = await api.get(`/Partit?id=${partitId}`);
+                    const partit = Array.isArray(partitResp) ? partitResp[0] : partitResp;
+
+                    if (partit && partit.status === "COMPLETAT") {
+                        const esLocal = String(partit.localId) === String(equipId);
+
+                        // Obtener sets del partido
+                        const setsResp = await api.get(`/SetPartit?partitId=${partitId}`);
+                        const sets = Array.isArray(setsResp) ? setsResp : (setsResp ? [setsResp] : []);
+
+                        let setsGanatsPartit = 0;
+                        let setsPerditsPartit = 0;
+
+                        sets.forEach(s => {
+                            if (esLocal) {
+                                if (s.jocsLocal > s.jocsVisit) setsGanatsPartit++;
+                                else setsPerditsPartit++;
+                            } else {
+                                if (s.jocsVisit > s.jocsLocal) setsGanatsPartit++;
+                                else setsPerditsPartit++;
+                            }
+                        });
+
+                        setsGuanyats += setsGanatsPartit;
+                        setsPerduts += setsPerditsPartit;
+
+                        if (setsGanatsPartit > setsPerditsPartit) partitsGuanyats++;
+                        else partitsPerduts++;
+                    }
+                }
+
+                return {
+                    id: eu.usuariId,
+                    nom: usuari?.nom || "Desconegut",
+                    avatar: usuari?.avatar,
+                    nivell: usuari?.nivell,
+                    partitsJugats: partitsJugatsIds.length,
+                    partitsGuanyats,
+                    partitsPerduts,
+                    setsGuanyats,
+                    setsPerduts,
+                    winRate: partitsJugatsIds.length > 0 ? Math.round((partitsGuanyats / partitsJugatsIds.length) * 100) : 0
+                };
+            })
+        );
+
+        // Ordenar por partidos ganados (descendente)
+        estadistiques.sort((a, b) => b.partitsGuanyats - a.partitsGuanyats);
+
+        res.json({
+            estadistiques,
+            total: estadistiques.length
+        });
+
+    } catch (err) {
+        console.error("Error en estadístiques:", err);
+
+        if (err.message === "TOKEN_NO_PROPORCIONAT") return res.status(401).json({ message: "Token no proporcionat" });
+        if (err.message === "USUARI_NO_TROBAT") return res.status(404).json({ message: "Usuari no trobat" });
+        if (err.message === "USUARI_INACTIU") return res.status(403).json({ message: "Usuari inactiu" });
+        if (err.message === "SENSE_EQUIP" || err.message === "SENSE_EQUIP_ACTIU") return res.status(404).json({ message: "No tens cap equip assignat" });
+        if (err.name === "JsonWebTokenError") return res.status(401).json({ message: "Token invàlid" });
+        if (err.name === "TokenExpiredError") return res.status(401).json({ message: "Token expirat" });
+
+        res.status(500).json({ message: "Error al obtenir estadístiques", error: err.message });
+    }
+};

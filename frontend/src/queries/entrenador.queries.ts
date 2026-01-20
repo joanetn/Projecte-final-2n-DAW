@@ -1,5 +1,5 @@
-import { getComprovarAlineacio, getPartitsJugats, getPartitsPendents, getPlantilla } from "@/services/entrenador.service"
-import { PlantillaResponse } from "@/types/entrenador"
+import { getCalendari, getClassificacio, getComprovarAlineacio, getEstadistiques, getPartitsJugats, getPartitsPendents, getPlantilla } from "@/services/entrenador.service"
+import { CalendariResponse, ClassificacioResponse, EstadistiquesResponse, PlantillaResponse } from "@/types/entrenador"
 import { PartitsResponse } from "@/types/partits"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
@@ -30,3 +30,21 @@ export const useComprovarAlineacions = () => {
         // enabled: !!partitId
     })
 }
+
+export const useClassificacio = () =>
+    useQuery<ClassificacioResponse>({
+        queryKey: ["classificacio"],
+        queryFn: getClassificacio
+    })
+
+export const useCalendari = () =>
+    useQuery<CalendariResponse>({
+        queryKey: ["calendari"],
+        queryFn: getCalendari
+    })
+
+export const useEstadistiques = () =>
+    useQuery<EstadistiquesResponse>({
+        queryKey: ["estadistiques"],
+        queryFn: getEstadistiques
+    })

@@ -1,22 +1,25 @@
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core";
 import DraggableJugador from "./DraggableJugador";
 import SlotJugador from "./DropPista";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEffect, useState } from "react";
 import { useComprovarAlineacions, usePlantilla } from "@/queries/entrenador.queries";
 import { useToast } from "@/components/ui/Toast";
-import { queryClient } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useGuardarAlineacio } from "@/mutations/entrenador.mutations";
 import { CompAlineacioResponse } from "@/types/entrenador";
+import { ArrowLeft, Users, Save, Check } from "lucide-react";
+import { Badge } from "../ui/badge";
 
 const AlineacioPartit = () => {
     const { data: plantillaData } = usePlantilla();
     const plantilla = plantillaData?.plantilla.jugadors || [];
     const params = useParams();
+    const navigate = useNavigate();
     const partitId = params.partitId!;
+    const [activeId, setActiveId] = useState<string | null>(null);
     const [alineacio, setAlineacio] = useState<{
         [key: string]: any | null
     }>({
@@ -106,60 +109,185 @@ const AlineacioPartit = () => {
         setJugadoresUsados(prev => prev.filter(id => id !== jugadorEnSlot.id));
     };
 
+    const handleDragStart = (event: DragStartEvent) => {
+        setActiveId(event.active.id as string);
+    };
+
+    const handleDragCancel = () => {
+        setActiveId(null);
+    };
+
+    const activeJugador = activeId ? plantilla.find(j => j.id === activeId) : null;
+
     useEffect(() => {
         const filledSlots = Object.values(alineacio).filter(Boolean).length;
         const totalSlots = Object.keys(alineacio).length;
         setMostrarBoto(filledSlots === totalSlots && totalSlots > 0);
     }, [alineacio, jugadoresUsados])
 
+    const filledSlots = Object.values(alineacio).filter(Boolean).length;
+    const totalSlots = Object.keys(alineacio).length;
+
     return (
-        <DndContext onDragEnd={handleDragEnd}>
-            <div className="flex h-[80vh] gap-6 p-6">
-                {/* PLANTILLA */}
-                <Card className="w-64 p-4">
-                    <ScrollArea className="h-full">
-                        <div className="space-y-2">
-                            {plantilla
-                                .filter(j => !jugadoresUsados.includes(j.id))
-                                .map(j => (
-                                    <DraggableJugador
-                                        key={j.id}
-                                        jugador={j}
-                                    />
-                                ))}
+        <DndContext
+            onDragStart={handleDragStart}
+            onDragEnd={(event) => {
+                handleDragEnd(event);
+                setActiveId(null);
+            }}
+            onDragCancel={handleDragCancel}
+        >
+            <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 p-6">
+                {/* Header amb navegació */}
+                <div className="max-w-6xl mx-auto mb-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => navigate('/entrenador')}
+                                className="rounded-full"
+                            >
+                                <ArrowLeft className="h-5 w-5" />
+                            </Button>
+                            <div>
+                                <h1 className="text-2xl font-bold">Configurar Alineació</h1>
+                                <p className="text-muted-foreground">Partit #{partitId} · Arrastra els jugadors als slots</p>
+                            </div>
                         </div>
-                    </ScrollArea>
-                </Card>
+                        <Badge variant={mostrarBoto ? "default" : "secondary"} className="text-sm px-3 py-1">
+                            {filledSlots}/{totalSlots} posicions ocupades
+                        </Badge>
+                    </div>
+                </div>
 
-                {/* PISTA */}
-                <div className="flex-1 flex justify-center items-center">
-                    <div className="relative w-[500px] h-[300px] bg-green-100 border-4 border-green-600 rounded-xl">
-                        <div className="absolute top-1/2 left-0 right-0 border-t-2 border-white" />
+                <div className="max-w-6xl mx-auto flex gap-6">
+                    {/* PLANTILLA */}
+                    <Card className="w-72 shadow-lg">
+                        <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center gap-2 text-lg">
+                                <Users className="h-5 w-5" />
+                                Jugadors Disponibles
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <ScrollArea className="h-[calc(80vh-200px)]">
+                                <div className="space-y-2 pr-4">
+                                    {plantilla
+                                        .filter(j => !jugadoresUsados.includes(j.id))
+                                        .map(j => (
+                                            <DraggableJugador
+                                                key={j.id}
+                                                jugador={j}
+                                            />
+                                        ))}
+                                    {plantilla.filter(j => !jugadoresUsados.includes(j.id)).length === 0 && (
+                                        <p className="text-center text-muted-foreground text-sm py-4">
+                                            Tots els jugadors assignats
+                                        </p>
+                                    )}
+                                </div>
+                            </ScrollArea>
+                        </CardContent>
+                    </Card>
 
-                        <div className="absolute top-1/2 left-16 -translate-y-1/2">
-                            <SlotJugador id="slot1"
-                                jugador={alineacio.slot1}
-                                onSlotClick={() => handleSlotClick('slot1')}
-                            />
-                        </div>
+                    {/* PISTA I ACCIONS */}
+                    <div className="flex-1 flex flex-col gap-4">
+                        {/* PISTA */}
+                        <Card className="flex-1 shadow-lg overflow-hidden">
+                            <div className="h-full flex items-center justify-center p-8">
+                                <div className="relative w-full max-w-[600px] h-[350px] bg-gradient-to-b from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 border-4 border-white/30 rounded-2xl shadow-2xl overflow-hidden">
+                                    {/* Línia central */}
+                                    <div className="absolute top-1/2 left-0 right-0 border-t-2 border-white/60" />
 
-                        <div className="absolute top-1/2 right-16 -translate-y-1/2">
-                            <SlotJugador
-                                id="slot2"
-                                jugador={alineacio.slot2}
-                                onSlotClick={() => handleSlotClick('slot2')}
-                            />
-                        </div>
-                        {mostrarBoto && (
+                                    {/* Cercle central decoratiu */}
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-white/40" />
+
+                                    {/* Marques de cantonada */}
+                                    <div className="absolute top-2 left-2 w-8 h-8 border-l-2 border-t-2 border-white/40 rounded-tl-lg" />
+                                    <div className="absolute top-2 right-2 w-8 h-8 border-r-2 border-t-2 border-white/40 rounded-tr-lg" />
+                                    <div className="absolute bottom-2 left-2 w-8 h-8 border-l-2 border-b-2 border-white/40 rounded-bl-lg" />
+                                    <div className="absolute bottom-2 right-2 w-8 h-8 border-r-2 border-b-2 border-white/40 rounded-br-lg" />
+
+                                    {/* Labels dels slots */}
+                                    <div className="absolute top-4 left-16 text-white/80 text-xs font-semibold uppercase tracking-wider">
+                                        Jugador 1
+                                    </div>
+                                    <div className="absolute top-4 right-16 text-white/80 text-xs font-semibold uppercase tracking-wider">
+                                        Jugador 2
+                                    </div>
+
+                                    {/* Slots */}
+                                    <div className="absolute top-1/2 left-16 -translate-y-1/2 z-10">
+                                        <SlotJugador
+                                            id="slot1"
+                                            jugador={alineacio.slot1}
+                                            onSlotClick={() => handleSlotClick('slot1')}
+                                        />
+                                    </div>
+
+                                    <div className="absolute top-1/2 right-16 -translate-y-1/2 z-10">
+                                        <SlotJugador
+                                            id="slot2"
+                                            jugador={alineacio.slot2}
+                                            onSlotClick={() => handleSlotClick('slot2')}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+
+                        {/* Botó Guardar - FORA de la pista */}
+                        <div className="flex justify-center">
                             <Button
                                 onClick={() => guardarAlineacio()}
+                                disabled={!mostrarBoto || mutation.isPending}
+                                size="lg"
+                                className="px-8 gap-2 shadow-lg"
                             >
-                                Guardar Alineació
+                                {mutation.isPending ? (
+                                    <>Guardant...</>
+                                ) : mostrarBoto ? (
+                                    <>
+                                        <Save className="h-5 w-5" />
+                                        Guardar Alineació
+                                    </>
+                                ) : (
+                                    <>
+                                        <Check className="h-5 w-5" />
+                                        Posiciona dos jugadors
+                                    </>
+                                )}
                             </Button>
-                        )}
+                        </div>
+
+                        {/* Instruccions */}
+                        <Card className="shadow-sm">
+                            <CardContent className="py-3">
+                                <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-3 h-3 rounded bg-blue-500" />
+                                        <span>Arrossega jugador al slot</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-3 h-3 rounded bg-red-500" />
+                                        <span>Clica al slot per llevar el jugador</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </div>
+
+            {/* Overlay mentre arrossegues */}
+            <DragOverlay>
+                {activeJugador && (
+                    <div className="p-3 bg-primary text-primary-foreground rounded-lg shadow-2xl font-medium cursor-grabbing transform scale-105">
+                        {activeJugador.nom}
+                    </div>
+                )}
+            </DragOverlay>
         </DndContext>
     );
 };

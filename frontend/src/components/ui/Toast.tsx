@@ -61,6 +61,25 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             }
         });
 
+        // Escoltar events de proposta acceptada/rebutjada per invalidar queries
+        s.on('proposta-acceptada', () => {
+            try {
+                const ev = new CustomEvent('proposta-acceptada', {});
+                window.dispatchEvent(ev as any);
+            } catch (e) {
+                // ignore
+            }
+        });
+
+        s.on('proposta-rebutjada', () => {
+            try {
+                const ev = new CustomEvent('proposta-rebutjada', {});
+                window.dispatchEvent(ev as any);
+            } catch (e) {
+                // ignore
+            }
+        });
+
         return () => {
             s.disconnect();
         };
@@ -72,11 +91,11 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             {children}
             <div aria-live="polite" className="fixed top-4 right-4 z-50 flex flex-col gap-2">
                 {toasts.map(t => (
-                    <div key={t.id} className={`max-w-sm w-full rounded-md shadow-lg p-3 text-sm border ${t.type === 'success' ? 'bg-green-50 border-green-400' : t.type === 'error' ? 'bg-red-50 border-red-400' : 'bg-white border-gray-200'}`}>
+                    <div key={t.id} className={`max-w-sm w-full rounded-md shadow-lg p-3 text-sm border ${t.type === 'success' ? 'bg-green-50 dark:bg-green-950 border-green-400 dark:border-green-600 text-green-900 dark:text-green-100' : t.type === 'error' ? 'bg-red-50 dark:bg-red-950 border-red-400 dark:border-red-600 text-red-900 dark:text-red-100' : 'bg-card border-border text-card-foreground'}`}>
                         {t.title && <div className="font-medium">{t.title}</div>}
-                        {t.description && <div className="text-xs mt-1">{t.description}</div>}
+                        {t.description && <div className="text-xs mt-1 opacity-80">{t.description}</div>}
                         <div className="flex justify-end mt-2">
-                            <button onClick={() => removeToast(t.id)} className="text-xs text-gray-500 hover:text-gray-800">Tancar</button>
+                            <button onClick={() => removeToast(t.id)} className="text-xs text-muted-foreground hover:text-foreground">Tancar</button>
                         </div>
                     </div>
                 ))}

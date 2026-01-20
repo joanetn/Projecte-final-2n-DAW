@@ -9,6 +9,33 @@ exports.crearProposta = async (req, res) => {
         const { fromEquipId, toEquipId, dataHora, pistaId, partitId } = req.body;
         if (!fromEquipId || !toEquipId || !dataHora) return res.status(400).json({ message: 'fromEquipId, toEquipId i dataHora són requerits' });
 
+        // Si hi ha partitId, buscar si ja existeix una proposta pendent per aquest partit i eliminar-la
+        if (partitId) {
+            try {
+                const existingNotifsResp = await api.get(`/Notificacio?tipus=proposta`);
+                const existingNotifs = Array.isArray(existingNotifsResp) ? existingNotifsResp : (existingNotifsResp ? [existingNotifsResp] : []);
+
+                // Buscar notificacions de proposta per aquest partitId que estiguin PENDENT
+                const notifsToDelete = existingNotifs.filter(n =>
+                    n.extra &&
+                    n.extra.partitId === partitId &&
+                    n.extra.estat === 'PENDENT'
+                );
+
+                // Eliminar les notificacions antigues
+                await Promise.all(notifsToDelete.map(async (n) => {
+                    try {
+                        await api.delete(`/Notificacio/${n.id}`);
+                        console.log(`Proposta antiga eliminada: ${n.id} per partitId: ${partitId}`);
+                    } catch (e) {
+                        console.error('Error eliminant proposta antiga', n.id, e);
+                    }
+                }));
+            } catch (e) {
+                console.error('Error buscant propostes existents:', e);
+            }
+        }
+
         // Intentar notificar només a l'entrenador del equip visitant
         const entrenadorResp = await api.get(`/EquipUsuari?equipId=${toEquipId}&rolEquip=ENTRENADOR&isActive=true`);
         const entrenadors = Array.isArray(entrenadorResp) ? entrenadorResp : (entrenadorResp ? [entrenadorResp] : []);
@@ -112,18 +139,32 @@ exports.acceptarProposta = async (req, res) => {
         const proposta = notif.extra;
         if (!proposta) return res.status(400).json({ message: 'Notificació no és una proposta' });
 
-        // Crear partit entre equips amb la data proposta
-        const partitPayload = {
-            jornadaId: proposta.jornadaId || null,
-            localId: proposta.fromEquipId,
-            visitantId: proposta.toEquipId,
-            dataHora: proposta.dataHora,
-            pistaId: proposta.pistaId || null,
-            status: 'PENDENT',
-            isActive: true
-        };
+        let resultPartit;
 
-        const createdPartit = await api.post('/Partit', partitPayload);
+        // Si ja existeix un partitId, actualitzem la data del partit existent
+        if (proposta.partitId) {
+            const updatePayload = {
+                dataHora: proposta.dataHora,
+                pistaId: proposta.pistaId || null
+            };
+            await api.patch(`/Partit/${proposta.partitId}`, updatePayload);
+            // Obtenim el partit actualitzat
+            const partitResp = await api.get(`/Partit/${proposta.partitId}`);
+            resultPartit = Array.isArray(partitResp) ? partitResp[0] : partitResp;
+            console.log(`Partit ${proposta.partitId} actualitzat amb nova data: ${proposta.dataHora}`);
+        } else {
+            // Crear partit entre equips amb la data proposta
+            const partitPayload = {
+                jornadaId: proposta.jornadaId || null,
+                localId: proposta.fromEquipId,
+                visitantId: proposta.toEquipId,
+                dataHora: proposta.dataHora,
+                pistaId: proposta.pistaId || null,
+                status: 'PENDENT',
+                isActive: true
+            };
+            resultPartit = await api.post('/Partit', partitPayload);
+        }
 
         // Actualitzar la notificació original a ACCEPTAT
         const updatedExtra = { ...proposta, estat: 'ACCEPTAT' };
@@ -143,15 +184,31 @@ exports.acceptarProposta = async (req, res) => {
                     tipus: 'info',
                     read: false,
                     created_at: new Date(),
-                    extra: { partitId: createdPartit.id }
+                    extra: { partitId: resultPartit.id }
                 };
-                await api.post('/Notificacio', payload);
+                const createdNotif = await api.post('/Notificacio', payload);
+
+                // Emetre per socket a l'usuari que va proposar
+                try {
+                    const { io, userSockets } = require('../index');
+                    const sockets = userSockets.get(String(eu.usuariId));
+                    if (sockets && sockets.size > 0) {
+                        sockets.forEach(socketId => {
+                            io.to(socketId).emit('notificacio', createdNotif);
+                            // Emetre event especial per invalidar queries de partits
+                            io.to(socketId).emit('proposta-acceptada', { partitId: resultPartit.id });
+                        });
+                        console.log(`Socket emès a usuari ${eu.usuariId} per proposta acceptada`);
+                    }
+                } catch (e) {
+                    console.warn('Error emetent socket proposta acceptada:', e.message);
+                }
             } catch (e) {
                 console.error('Error notificando acceptació a usuari', eu.usuariId, e);
             }
         }));
 
-        return res.status(201).json({ partit: createdPartit });
+        return res.status(201).json({ partit: resultPartit });
     } catch (err) {
         console.error('Error acceptarProposta:', err);
         return res.status(500).json({ message: 'Error acceptant proposta', error: err.message });
@@ -190,7 +247,23 @@ exports.rebutjarProposta = async (req, res) => {
                     read: false,
                     created_at: new Date(),
                 };
-                await api.post('/Notificacio', payload);
+                const createdNotif = await api.post('/Notificacio', payload);
+
+                // Emetre per socket a l'usuari que va proposar
+                try {
+                    const { io, userSockets } = require('../index');
+                    const sockets = userSockets.get(String(eu.usuariId));
+                    if (sockets && sockets.size > 0) {
+                        sockets.forEach(socketId => {
+                            io.to(socketId).emit('notificacio', createdNotif);
+                            // Emetre event especial per invalidar queries de partits
+                            io.to(socketId).emit('proposta-rebutjada', {});
+                        });
+                        console.log(`Socket emès a usuari ${eu.usuariId} per proposta rebutjada`);
+                    }
+                } catch (e) {
+                    console.warn('Error emetent socket proposta rebutjada:', e.message);
+                }
             } catch (e) {
                 console.error('Error notificando rebutjament a usuari', eu.usuariId, e);
             }
@@ -200,5 +273,71 @@ exports.rebutjarProposta = async (req, res) => {
     } catch (err) {
         console.error('Error rebutjarProposta:', err);
         return res.status(500).json({ message: 'Error rebutjant proposta', error: err.message });
+    }
+};
+
+/**
+ * Obté les propostes enviades per un equip
+ * GET /propostes/enviades/:equipId
+ */
+exports.getPropostesRebudes = async (req, res) => {
+    try {
+        const { equipId } = req.params;
+        if (!equipId) return res.status(400).json({ message: 'equipId és requerit' });
+
+        // Buscar totes les notificacions de tipus proposta
+        const notifsResp = await api.get(`/Notificacio?tipus=proposta`);
+        const notifs = Array.isArray(notifsResp) ? notifsResp : (notifsResp ? [notifsResp] : []);
+
+        // Filtrar les que tenen toEquipId igual al equipId passat
+        const propostesRebudes = notifs.filter(n =>
+            n.extra && n.extra.toEquipId === equipId
+        );
+
+        return res.json(propostesRebudes);
+    } catch (err) {
+        console.error('Error getPropostesRebudes:', err);
+        return res.status(500).json({ message: 'Error obtenint propostes rebudes', error: err.message });
+    }
+};
+
+exports.getPropostesEnviades = async (req, res) => {
+    try {
+        const { equipId } = req.params;
+        if (!equipId) return res.status(400).json({ message: 'equipId és requerit' });
+
+        // Buscar totes les notificacions de tipus proposta
+        const notifsResp = await api.get(`/Notificacio?tipus=proposta`);
+        const notifs = Array.isArray(notifsResp) ? notifsResp : (notifsResp ? [notifsResp] : []);
+
+        // Filtrar les que tenen fromEquipId igual al equipId passat
+        const propostesEnviades = notifs.filter(n =>
+            n.extra && n.extra.fromEquipId === equipId
+        );
+
+        // Ordenar per data de creació (més recents primer)
+        propostesEnviades.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        // Agrupar per partitId per evitar duplicats (quedant-se amb la més recent)
+        const propostesUniques = [];
+        const seenPartitIds = new Set();
+
+        for (const p of propostesEnviades) {
+            const partitId = p.extra?.partitId;
+            if (partitId) {
+                if (!seenPartitIds.has(partitId)) {
+                    seenPartitIds.add(partitId);
+                    propostesUniques.push(p);
+                }
+            } else {
+                // Si no té partitId, l'afegim igualment
+                propostesUniques.push(p);
+            }
+        }
+
+        return res.json(propostesUniques);
+    } catch (err) {
+        console.error('Error getPropostesEnviades:', err);
+        return res.status(500).json({ message: 'Error obtenint propostes enviades', error: err.message });
     }
 };

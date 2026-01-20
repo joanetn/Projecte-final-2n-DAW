@@ -81,14 +81,14 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <div className="w-full max-w-md">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                <div className="bg-card rounded-xl shadow-sm border border-border p-8">
                     <div className="mb-8">
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-1">
+                        <h2 className="text-2xl font-semibold text-foreground mb-1">
                             Crear compte
                         </h2>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                             Omple els camps per començar a jugar
                         </p>
                     </div>
@@ -162,23 +162,23 @@ const Register = () => {
 
                         {/* Roles */}
                         <div className="space-y-2">
-                            <Label className="text-sm font-medium text-gray-700">
+                            <Label className="text-sm font-medium text-foreground">
                                 Selecciona els teus rols
                             </Label>
-                            <div className="space-y-2 bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <div className="space-y-2 bg-muted p-3 rounded-lg border border-border">
                                 {availableRoles.map(role => (
                                     <label
                                         key={role}
-                                        className="flex items-center gap-3 cursor-pointer hover:bg-white p-2 rounded transition-colors"
+                                        className="flex items-center gap-3 cursor-pointer hover:bg-background p-2 rounded transition-colors"
                                     >
                                         <input
                                             type="checkbox"
                                             value={role}
                                             checked={form.rol?.includes(role)}
                                             onChange={handleChange}
-                                            className="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-2 focus:ring-gray-900"
+                                            className="w-4 h-4 rounded border-input text-primary focus:ring-2 focus:ring-ring"
                                         />
-                                        <span className="text-sm text-gray-700">
+                                        <span className="text-sm text-foreground">
                                             {role === "JUGADOR" && "Jugador"}
                                             {role === "ENTRENADOR" && "Entrenador"}
                                             {role === "ARBITRE" && "Àrbitre"}
@@ -189,27 +189,27 @@ const Register = () => {
                         </div>
 
                         {isError && (
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
-                                <AlertCircle className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
-                                <p className="text-sm text-red-800">{(error as Error).message}</p>
+                            <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-start gap-2">
+                                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+                                <p className="text-sm text-red-800 dark:text-red-200">{(error as Error).message}</p>
                             </div>
                         )}
 
                         <Button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full h-10 bg-gray-900 hover:bg-gray-800 text-white"
+                            className="w-full h-10"
                         >
                             {isLoading ? "Registrant..." : "Crear compte"}
                         </Button>
                     </form>
 
                     <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-muted-foreground">
                             Ja tens compte?{" "}
                             <a
                                 href="/login"
-                                className="font-medium text-gray-900 hover:underline"
+                                className="font-medium text-foreground hover:underline"
                             >
                                 Inicia sessió
                             </a>

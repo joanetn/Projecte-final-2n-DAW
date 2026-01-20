@@ -11,9 +11,9 @@ const PlantillaCard = ({ usuari }: PlantillaCardProps) => (
             <div className="flex items-start justify-between">
                 <div className="flex-1">
                     <CardTitle className="text-lg">{usuari.nom}</CardTitle>
-                    <p className="text-sm text-gray-500">{usuari.email}</p>
+                    <p className="text-sm text-muted-foreground">{usuari.email}</p>
                     {usuari.telefon && (
-                        <p className="text-xs text-gray-400 mt-1">{usuari.telefon}</p>
+                        <p className="text-xs text-muted-foreground/70 mt-1">{usuari.telefon}</p>
                     )}
                 </div>
                 {usuari.avatar && (
@@ -28,7 +28,7 @@ const PlantillaCard = ({ usuari }: PlantillaCardProps) => (
 
         <CardContent>
             {usuari.nivell && (
-                <p className="text-sm text-gray-600 mb-2">Nivell: {usuari.nivell}</p>
+                <p className="text-sm text-muted-foreground mb-2">Nivell: {usuari.nivell}</p>
             )}
             <div className="flex flex-wrap gap-2">
                 <Badge variant="outline" className="text-xs">

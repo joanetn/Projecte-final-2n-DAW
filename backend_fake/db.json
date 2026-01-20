@@ -87,8 +87,8 @@
     {
       "id": "7",
       "nom": "Entrenador Valencia B",
-      "email": "entrenador.valenciab@valencia.es",
-      "contrasenya": "entrenador123",
+      "email": "b@b.com",
+      "contrasenya": "b",
       "telefon": "+34670000007",
       "dataNaixement": "1980-01-01T00:00:00.000Z",
       "nivell": "Entrenador",
@@ -462,11 +462,41 @@
       "isActive": true
     },
     {
+      "id": "4",
+      "jornadaId": 1,
+      "localId": 3,
+      "visitantId": 1,
+      "dataHora": "2024-09-15T16:00:00.000Z",
+      "pistaId": 2,
+      "status": "COMPLETAT",
+      "isActive": true
+    },
+    {
+      "id": "5",
+      "jornadaId": 2,
+      "localId": 1,
+      "visitantId": 3,
+      "dataHora": "2024-09-22T16:00:00.000Z",
+      "pistaId": 1,
+      "status": "COMPLETAT",
+      "isActive": true
+    },
+    {
+      "id": "6",
+      "jornadaId": 2,
+      "localId": 4,
+      "visitantId": 3,
+      "dataHora": "2024-09-22T18:00:00.000Z",
+      "pistaId": 3,
+      "status": "COMPLETAT",
+      "isActive": true
+    },
+    {
       "id": "bfe3",
       "jornadaId": null,
       "localId": "1",
       "visitantId": "2",
-      "dataHora": "2026-02-10 18:00",
+      "dataHora": "2026-01-28T01:17:00.000Z",
       "pistaId": null,
       "status": "PENDENT",
       "isActive": true
@@ -480,12 +510,32 @@
       "pistaId": null,
       "status": "PENDENT",
       "isActive": true
+    },
+    {
+      "id": "0e81",
+      "jornadaId": null,
+      "localId": "1",
+      "visitantId": "2",
+      "dataHora": "2026-02-10 21:00",
+      "pistaId": null,
+      "status": "PENDENT",
+      "isActive": true
+    },
+    {
+      "id": "1a68",
+      "jornadaId": null,
+      "localId": "1",
+      "visitantId": "2",
+      "dataHora": "2026-02-10 22:00",
+      "pistaId": null,
+      "status": "PENDENT",
+      "isActive": true
     }
   ],
   "SetPartit": [
     {
       "id": "1",
-      "partitId": 1,
+      "partitId": "1",
       "numeroSet": 1,
       "jocsLocal": 6,
       "jocsVisit": 4,
@@ -495,7 +545,7 @@
     },
     {
       "id": "2",
-      "partitId": 1,
+      "partitId": "1",
       "numeroSet": 2,
       "jocsLocal": 7,
       "jocsVisit": 6,
@@ -505,7 +555,7 @@
     },
     {
       "id": "3",
-      "partitId": 2,
+      "partitId": "2",
       "numeroSet": 1,
       "jocsLocal": 4,
       "jocsVisit": 6,
@@ -515,7 +565,7 @@
     },
     {
       "id": "4",
-      "partitId": 2,
+      "partitId": "2",
       "numeroSet": 2,
       "jocsLocal": 6,
       "jocsVisit": 3,
@@ -525,10 +575,50 @@
     },
     {
       "id": "5",
-      "partitId": 2,
+      "partitId": "2",
       "numeroSet": 3,
       "jocsLocal": 5,
       "jocsVisit": 7,
+      "tiebreak": false,
+      "puntsLocalTiebreak": null,
+      "puntsVisitTiebreak": null
+    },
+    {
+      "id": "6",
+      "partitId": "4",
+      "numeroSet": 1,
+      "jocsLocal": 6,
+      "jocsVisit": 2,
+      "tiebreak": false,
+      "puntsLocalTiebreak": null,
+      "puntsVisitTiebreak": null
+    },
+    {
+      "id": "7",
+      "partitId": "4",
+      "numeroSet": 2,
+      "jocsLocal": 6,
+      "jocsVisit": 4,
+      "tiebreak": false,
+      "puntsLocalTiebreak": null,
+      "puntsVisitTiebreak": null
+    },
+    {
+      "id": "8",
+      "partitId": "5",
+      "numeroSet": 1,
+      "jocsLocal": 3,
+      "jocsVisit": 6,
+      "tiebreak": false,
+      "puntsLocalTiebreak": null,
+      "puntsVisitTiebreak": null
+    },
+    {
+      "id": "9",
+      "partitId": "5",
+      "numeroSet": 2,
+      "jocsLocal": 4,
+      "jocsVisit": 6,
       "tiebreak": false,
       "puntsLocalTiebreak": null,
       "puntsVisitTiebreak": null
@@ -700,7 +790,7 @@
       "partitId": "3",
       "jugadorId": "1",
       "equipId": 1,
-      "isActive": true,
+      "isActive": false,
       "creada_at": "2026-01-19T17:48:10.639Z",
       "posicio": "REVES"
     },
@@ -709,8 +799,368 @@
       "partitId": "3",
       "jugadorId": "2",
       "equipId": 1,
-      "isActive": true,
+      "isActive": false,
       "creada_at": "2026-01-19T17:48:10.640Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "d72d",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:40:17.738Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "8828",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:40:17.738Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "ab36",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:23.582Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "6cc8",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:23.583Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "cc75",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:25.187Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "12b6",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:25.189Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "cff7",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:26.562Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "bca8",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:26.563Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "121d",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:26.677Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "6f50",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:26.677Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "caac",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:27.297Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "7514",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:27.299Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "bb49",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:27.323Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "f866",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:27.324Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "c8aa",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:27.363Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "aec5",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:27.363Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "4379",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:27.546Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "eae3",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:27.546Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "3c2d",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:28.095Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "4041",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T14:59:28.096Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "c450",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T16:07:10.357Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "8a95",
+      "partitId": "3",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T16:07:10.358Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "a1d7",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T16:48:28.448Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "4ba1",
+      "partitId": "1a68",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T16:48:28.449Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "bbe8",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T16:48:32.419Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "e93d",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": false,
+      "creada_at": "2026-01-20T16:48:32.421Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "alin-p1-j1",
+      "partitId": "1",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-15T09:00:00.000Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "alin-p1-j2",
+      "partitId": "1",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-15T09:00:00.000Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "alin-p2-j1",
+      "partitId": "2",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-22T10:00:00.000Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "alin-p2-j6",
+      "partitId": "2",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-22T10:00:00.000Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "alin-p4-j2",
+      "partitId": "4",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-15T15:00:00.000Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "alin-p4-j6",
+      "partitId": "4",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-15T15:00:00.000Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "alin-p5-j1",
+      "partitId": "5",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-22T15:00:00.000Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "alin-p5-j2",
+      "partitId": "5",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2024-09-22T15:00:00.000Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "1625",
+      "partitId": "3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-20T19:10:30.475Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "269c",
+      "partitId": "3",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-20T19:10:30.476Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "979e",
+      "partitId": "bfe3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-20T19:11:07.712Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "a589",
+      "partitId": "bfe3",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-20T19:11:07.713Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "39f8",
+      "partitId": "1a68",
+      "jugadorId": "6",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-20T19:11:27.767Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "41c2",
+      "partitId": "1a68",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-20T19:11:27.768Z",
       "posicio": "DRETA"
     }
   ],
@@ -771,6 +1221,41 @@
       "partitId": 2,
       "jugadorId": 1,
       "punts": 15,
+      "isActive": true
+    },
+    {
+      "id": "3",
+      "partitId": 3,
+      "jugadorId": 1,
+      "punts": 11,
+      "isActive": true
+    },
+    {
+      "id": "4",
+      "partitId": 3,
+      "jugadorId": 2,
+      "punts": 9,
+      "isActive": true
+    },
+    {
+      "id": "5",
+      "partitId": 3,
+      "jugadorId": 6,
+      "punts": 14,
+      "isActive": true
+    },
+    {
+      "id": "6",
+      "partitId": "1a68",
+      "jugadorId": 1,
+      "punts": 12,
+      "isActive": true
+    },
+    {
+      "id": "7",
+      "partitId": "1a68",
+      "jugadorId": 6,
+      "punts": 16,
       "isActive": true
     }
   ],
@@ -1974,23 +2459,6 @@
       }
     },
     {
-      "id": "20c5",
-      "usuariId": "7",
-      "titol": "Proposta de partit",
-      "missatge": "Proposta de data: 2026-02-10 22:00",
-      "tipus": "proposta",
-      "read": false,
-      "created_at": "2026-01-19T18:32:14.448Z",
-      "extra": {
-        "fromEquipId": "1",
-        "toEquipId": "2",
-        "dataHora": "2026-02-10 22:00",
-        "pistaId": null,
-        "partitId": "bfe3",
-        "estat": "PENDENT"
-      }
-    },
-    {
       "id": "12c1",
       "usuariId": "7",
       "titol": "Proposta de partit",
@@ -2021,40 +2489,6 @@
         "dataHora": "2026-02-10 18:00",
         "pistaId": null,
         "partitId": 123,
-        "estat": "PENDENT"
-      }
-    },
-    {
-      "id": "c3d8",
-      "usuariId": "7",
-      "titol": "Proposta de partit",
-      "missatge": "Proposta de data: 2026-02-10 18:00",
-      "tipus": "proposta",
-      "read": false,
-      "created_at": "2026-01-19T19:04:55.718Z",
-      "extra": {
-        "fromEquipId": "1",
-        "toEquipId": "2",
-        "dataHora": "2026-02-10 18:00",
-        "pistaId": null,
-        "partitId": "bfe3",
-        "estat": "PENDENT"
-      }
-    },
-    {
-      "id": "1d6e",
-      "usuariId": "7",
-      "titol": "Proposta de partit",
-      "missatge": "Proposta de data: 2026-02-10 18:00",
-      "tipus": "proposta",
-      "read": false,
-      "created_at": "2026-01-19T19:09:02.807Z",
-      "extra": {
-        "fromEquipId": "1",
-        "toEquipId": "2",
-        "dataHora": "2026-02-10 18:00",
-        "pistaId": null,
-        "partitId": "bfe3",
         "estat": "PENDENT"
       }
     },
@@ -2207,6 +2641,853 @@
       "tipus": "info",
       "read": false,
       "created_at": "2026-01-19T19:24:40.650Z"
+    },
+    {
+      "id": "2249",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-02-10 21:00",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T14:27:42.672Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-02-10 21:00",
+        "pistaId": null,
+        "partitId": "e87b",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "079b",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:29:14.594Z",
+      "extra": {
+        "partitId": "0e81"
+      }
+    },
+    {
+      "id": "ed8f",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:29:14.595Z",
+      "extra": {
+        "partitId": "0e81"
+      }
+    },
+    {
+      "id": "5f1c",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:29:14.596Z",
+      "extra": {
+        "partitId": "0e81"
+      }
+    },
+    {
+      "id": "f8ab",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:29:14.597Z",
+      "extra": {
+        "partitId": "0e81"
+      }
+    },
+    {
+      "id": "41d9",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:29:14.598Z",
+      "extra": {
+        "partitId": "0e81"
+      }
+    },
+    {
+      "id": "9a9b",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-02-10 22:00",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T14:31:56.260Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-02-10 22:00",
+        "pistaId": null,
+        "partitId": "0e81",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "804f",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:32:04.603Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "f698",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:32:04.603Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "5955",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:32:04.604Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "c0f8",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:32:04.605Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "4dd2",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:32:04.606Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "dd89",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-02-10 23:00",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T14:33:45.835Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-02-10 23:00",
+        "pistaId": null,
+        "partitId": "1a68",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "ced3",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 23:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:33:52.419Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "6902",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 23:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:33:52.420Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "d6a5",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 23:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:33:52.422Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "c4d2",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 23:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:33:52.423Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "ef0b",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 23:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T14:33:52.425Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "90a7",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-02-10 12:00",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T15:12:34.613Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-02-10 12:00",
+        "pistaId": null,
+        "partitId": "bfe3",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "d1f2",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 12:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:12:54.947Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "d71e",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 12:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:12:54.948Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "0d42",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 12:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:12:54.949Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "61de",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 12:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:12:54.951Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "551f",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 12:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:12:54.952Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "ebe2",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-02-10 10:00",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T15:14:05.391Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-02-10 10:00",
+        "pistaId": null,
+        "partitId": "bfe3",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "f399",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 10:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:14:10.179Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "c191",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 10:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:14:10.179Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "f45e",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 10:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:14:10.180Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "2f39",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 10:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:14:10.182Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "1282",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 10:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:14:10.184Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "d643",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-02-10 9:00",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T15:16:20.417Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-02-10 9:00",
+        "pistaId": null,
+        "partitId": "bfe3",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "3066",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 9:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:16:25.056Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "7356",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 9:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:16:25.057Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "0097",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 9:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:16:25.058Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "faa3",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 9:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:16:25.060Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "7e5a",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 9:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T15:16:25.062Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "ceb7",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-02-10 22:00",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T16:07:56.688Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-02-10 22:00",
+        "pistaId": null,
+        "partitId": "1a68",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "9b7f",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T16:08:06.854Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "5a4c",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T16:08:06.854Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "5b55",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T16:08:06.856Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "db04",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T16:08:06.856Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "1e46",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T16:08:06.857Z",
+      "extra": {
+        "partitId": "1a68"
+      }
+    },
+    {
+      "id": "57d3",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-01-31T18:53:00.000Z",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T17:54:05.238Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-01-31T18:53:00.000Z",
+        "pistaId": null,
+        "partitId": "bfe3",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "756b",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-31T18:53:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T17:54:17.245Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "f7f8",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-31T18:53:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T17:54:17.247Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "36ca",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-31T18:53:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T17:54:17.248Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "bf18",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-31T18:53:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T17:54:17.248Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "1ad8",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-31T18:53:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T17:54:17.249Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "4196",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-01-30T23:14:00.000Z",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T18:10:37.257Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-01-30T23:14:00.000Z",
+        "pistaId": null,
+        "partitId": "bfe3",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "e188",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-30T23:14:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:10:44.730Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "2036",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-30T23:14:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:10:44.731Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "8bf0",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-30T23:14:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:10:44.732Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "56c8",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-30T23:14:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:10:44.732Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "30b3",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-30T23:14:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:10:44.733Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "91ee",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-01-29T00:18:00.000Z",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T18:15:19.383Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-01-29T00:18:00.000Z",
+        "pistaId": null,
+        "partitId": "bfe3",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "cf85",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-29T00:18:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:15:23.299Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "92d5",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-29T00:18:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:15:23.300Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "1962",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-29T00:18:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:15:23.300Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "5251",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-29T00:18:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:15:23.301Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "22c6",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-29T00:18:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T18:15:23.301Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "e861",
+      "usuariId": "7",
+      "titol": "Proposta de partit",
+      "missatge": "Proposta de data: 2026-01-28T01:17:00.000Z",
+      "tipus": "proposta",
+      "read": true,
+      "created_at": "2026-01-20T19:11:40.976Z",
+      "extra": {
+        "fromEquipId": "1",
+        "toEquipId": "2",
+        "dataHora": "2026-01-28T01:17:00.000Z",
+        "pistaId": null,
+        "partitId": "bfe3",
+        "estat": "ACCEPTAT"
+      }
+    },
+    {
+      "id": "cbb8",
+      "usuariId": "1",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-28T01:17:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T19:11:54.683Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "7ff1",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-28T01:17:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T19:11:54.684Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "e5f3",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-28T01:17:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T19:11:54.685Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "528b",
+      "usuariId": "2",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-28T01:17:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T19:11:54.687Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
+    },
+    {
+      "id": "1488",
+      "usuariId": "6",
+      "titol": "Proposta acceptada",
+      "missatge": "La teua proposta per 2026-01-28T01:17:00.000Z ha sigut acceptada",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-20T19:11:54.689Z",
+      "extra": {
+        "partitId": "bfe3"
+      }
     }
   ],
   "Merch": [

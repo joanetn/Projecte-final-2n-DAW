@@ -4,7 +4,7 @@ const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="bg-white border-t border-gray-200 mt-auto">
+        <footer className="bg-background border-t border-border mt-auto">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* Logo y descripción */}
@@ -13,11 +13,11 @@ const Footer = () => {
                             <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
                                 <span className="text-white font-bold text-sm">PP</span>
                             </div>
-                            <span className="text-xl font-semibold text-gray-900">
+                            <span className="text-xl font-semibold text-foreground">
                                 PadelPlay
                             </span>
                         </div>
-                        <p className="text-sm text-gray-600 max-w-md">
+                        <p className="text-sm text-muted-foreground max-w-md">
                             La plataforma líder per gestionar les teves lligues de pàdel.
                             Organitza tornejos, segueix estadístiques i connecta amb jugadors.
                         </p>
@@ -25,14 +25,14 @@ const Footer = () => {
 
                     {/* Navegación */}
                     <div>
-                        <h3 className="text-sm font-semibold text-gray-900 mb-4">
+                        <h3 className="text-sm font-semibold text-foreground mb-4">
                             Navegació
                         </h3>
                         <ul className="space-y-3">
                             <li>
                                 <Link
                                     to="/"
-                                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     Inici
                                 </Link>
@@ -40,7 +40,7 @@ const Footer = () => {
                             <li>
                                 <Link
                                     to="/login"
-                                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     Iniciar sessió
                                 </Link>
@@ -48,7 +48,7 @@ const Footer = () => {
                             <li>
                                 <Link
                                     to="/register"
-                                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     Registrar-se
                                 </Link>
@@ -58,14 +58,14 @@ const Footer = () => {
 
                     {/* Legal */}
                     <div>
-                        <h3 className="text-sm font-semibold text-gray-900 mb-4">
+                        <h3 className="text-sm font-semibold text-foreground mb-4">
                             Legal
                         </h3>
                         <ul className="space-y-3">
                             <li>
                                 <a
                                     href="#"
-                                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     Privacitat
                                 </a>
@@ -73,7 +73,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="#"
-                                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     Termes i condicions
                                 </a>
@@ -81,7 +81,7 @@ const Footer = () => {
                             <li>
                                 <a
                                     href="#"
-                                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     Contacte
                                 </a>
@@ -91,8 +91,8 @@ const Footer = () => {
                 </div>
 
                 {/* Copyright */}
-                <div className="mt-8 pt-8 border-t border-gray-200">
-                    <p className="text-sm text-gray-600 text-center">
+                <div className="mt-8 pt-8 border-t border-border">
+                    <p className="text-sm text-muted-foreground text-center">
                         © {currentYear} PadelPlay. Tots els drets reservats.
                     </p>
                 </div>

@@ -3,7 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PlantillaCard from "@/components/plantilla/PlantillaCard";
 import PartitCard from "@/components/partits/PartitCard";
-import { Loader2, Users } from "lucide-react";
+import ClassificacioLliga from "@/components/entrenador/ClassificacioLliga";
+import CalendariPartits from "@/components/entrenador/CalendariPartits";
+import EstadistiquesJugadors from "@/components/entrenador/EstadistiquesJugadors";
+import HistorialPropostes from "@/components/entrenador/HistorialPropostes";
+import { Loader2, Users, Trophy, Calendar, BarChart3, FileText } from "lucide-react";
 
 const DashboardEntrenador = () => {
     const plantilla = usePlantilla();
@@ -14,23 +18,40 @@ const DashboardEntrenador = () => {
         <div className="max-w-6xl mx-auto px-4 py-8">
             {/* Header */}
             <div className="flex items-center gap-3 mb-6">
-                <Users className="h-6 w-6 text-blue-600" />
-                <h2 className="text-2xl font-semibold text-gray-900">
+                <Users className="h-6 w-6 text-primary" />
+                <h2 className="text-2xl font-semibold text-foreground">
                     Dashboard Entrenador
                 </h2>
             </div>
 
             <Tabs defaultValue="plantilla" className="w-full">
                 {/* Menu */}
-                <TabsList className="grid w-full grid-cols-3 mb-6">
-                    <TabsTrigger value="plantilla">
-                        Plantilla ({plantilla.data?.total ?? 0})
+                <TabsList className="grid w-full grid-cols-7 mb-6">
+                    <TabsTrigger value="plantilla" className="flex items-center gap-1">
+                        <Users className="w-4 h-4 hidden sm:inline" />
+                        <span>Plantilla</span>
                     </TabsTrigger>
-                    <TabsTrigger value="jugats">
-                        Partits jugats ({partitsJugats.data?.total ?? 0})
+                    <TabsTrigger value="jugats" className="flex items-center gap-1">
+                        <span>Jugats</span>
                     </TabsTrigger>
-                    <TabsTrigger value="futurs">
-                        Partits futurs ({partitsPendents.data?.total ?? 0})
+                    <TabsTrigger value="futurs" className="flex items-center gap-1">
+                        <span>Futurs</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="classificacio" className="flex items-center gap-1">
+                        <Trophy className="w-4 h-4 hidden sm:inline" />
+                        <span>Classificació</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="calendari" className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4 hidden sm:inline" />
+                        <span>Calendari</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="estadistiques" className="flex items-center gap-1">
+                        <BarChart3 className="w-4 h-4 hidden sm:inline" />
+                        <span>Stats</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="propostes" className="flex items-center gap-1">
+                        <FileText className="w-4 h-4 hidden sm:inline" />
+                        <span>Propostes</span>
                     </TabsTrigger>
                 </TabsList>
 
@@ -38,8 +59,8 @@ const DashboardEntrenador = () => {
                 <TabsContent value="plantilla">
                     {plantilla.isLoading && (
                         <div className="flex items-center justify-center h-[40vh]">
-                            <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
-                            <span className="ml-2 text-gray-600">
+                            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                            <span className="ml-2 text-muted-foreground">
                                 Carregant plantilla...
                             </span>
                         </div>
@@ -52,7 +73,7 @@ const DashboardEntrenador = () => {
                     )}
 
                     {!plantilla.isLoading && plantilla.data && plantilla.data.total === 0 && (
-                        <div className="text-center text-gray-500">
+                        <div className="text-center text-muted-foreground">
                             No hi ha jugadors a la plantilla
                         </div>
                     )}
@@ -61,12 +82,12 @@ const DashboardEntrenador = () => {
                         <div className="space-y-8">
                             {/* Info del equipo */}
                             {plantilla.data.equip && (
-                                <Card className="bg-blue-50 border-blue-200">
+                                <Card className="bg-primary/10 border-primary/20">
                                     <CardHeader>
                                         <CardTitle className="text-xl">
                                             {plantilla.data.equip.nom}
                                         </CardTitle>
-                                        <p className="text-sm text-gray-600">
+                                        <p className="text-sm text-muted-foreground">
                                             Categoria: {plantilla.data.equip.categoria}
                                         </p>
                                     </CardHeader>
@@ -76,7 +97,7 @@ const DashboardEntrenador = () => {
                             {/* Entrenadores */}
                             {plantilla.data.plantilla.entrenadors.length > 0 && (
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-3 text-gray-700">
+                                    <h3 className="text-lg font-semibold mb-3 text-foreground">
                                         Entrenadors ({plantilla.data.plantilla.entrenadors.length})
                                     </h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -90,7 +111,7 @@ const DashboardEntrenador = () => {
                             {/* Jugadores */}
                             {plantilla.data.plantilla.jugadors.length > 0 && (
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-3 text-gray-700">
+                                    <h3 className="text-lg font-semibold mb-3 text-foreground">
                                         Jugadors ({plantilla.data.plantilla.jugadors.length})
                                     </h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -104,7 +125,7 @@ const DashboardEntrenador = () => {
                             {/* Administradores */}
                             {plantilla.data.plantilla.administradors.length > 0 && (
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-3 text-gray-700">
+                                    <h3 className="text-lg font-semibold mb-3 text-foreground">
                                         Administradors ({plantilla.data.plantilla.administradors.length})
                                     </h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -122,8 +143,8 @@ const DashboardEntrenador = () => {
                 <TabsContent value="jugats">
                     {partitsJugats.isLoading && (
                         <div className="flex items-center justify-center h-[40vh]">
-                            <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
-                            <span className="ml-2 text-gray-600">
+                            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                            <span className="ml-2 text-muted-foreground">
                                 Carregant partits...
                             </span>
                         </div>
@@ -139,7 +160,7 @@ const DashboardEntrenador = () => {
 
                     {!partitsJugats.isLoading && partitsJugats.data && partitsJugats.data.total === 0 && (
                         <Card>
-                            <CardContent className="pt-6 text-center text-gray-500">
+                            <CardContent className="pt-6 text-center text-muted-foreground">
                                 No hi ha partits jugats encara
                             </CardContent>
                         </Card>
@@ -158,8 +179,8 @@ const DashboardEntrenador = () => {
                 <TabsContent value="futurs">
                     {partitsPendents.isLoading && (
                         <div className="flex items-center justify-center h-[40vh]">
-                            <Loader2 className="h-6 w-6 animate-spin text-gray-500" />
-                            <span className="ml-2 text-gray-600">
+                            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                            <span className="ml-2 text-muted-foreground">
                                 Carregant partits...
                             </span>
                         </div>
@@ -175,7 +196,7 @@ const DashboardEntrenador = () => {
 
                     {!partitsPendents.isLoading && partitsPendents.data && partitsPendents.data.total === 0 && (
                         <Card>
-                            <CardContent className="pt-6 text-center text-gray-500">
+                            <CardContent className="pt-6 text-center text-muted-foreground">
                                 No hi ha partits pendents
                             </CardContent>
                         </Card>
@@ -188,6 +209,26 @@ const DashboardEntrenador = () => {
                             ))}
                         </div>
                     )}
+                </TabsContent>
+
+                {/* ════════════ Classificació ════════════ */}
+                <TabsContent value="classificacio">
+                    <ClassificacioLliga />
+                </TabsContent>
+
+                {/* ════════════ Calendari ════════════ */}
+                <TabsContent value="calendari">
+                    <CalendariPartits />
+                </TabsContent>
+
+                {/* ════════════ Estadístiques ════════════ */}
+                <TabsContent value="estadistiques">
+                    <EstadistiquesJugadors />
+                </TabsContent>
+
+                {/* ════════════ Historial Propostes ════════════ */}
+                <TabsContent value="propostes">
+                    <HistorialPropostes />
                 </TabsContent>
             </Tabs>
         </div>

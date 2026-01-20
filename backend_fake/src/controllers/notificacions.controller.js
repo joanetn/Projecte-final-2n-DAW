@@ -17,9 +17,6 @@ exports.crearNotificacio = async (req, res) => {
         };
 
         const created = await api.post('/Notificacio', payload);
-
-        // Emitir per Socket.IO si el usuari està connectat
-        // require index here to avoid circular dependency on module load
         const { io, userSockets } = require('../index');
         const sockets = userSockets.get(String(usuariId));
         console.log('notificacions.controller: enviant notificació a usuari', usuariId, 'sockets:', sockets ? Array.from(sockets) : []);
@@ -50,3 +47,17 @@ exports.llistarNotificacions = async (req, res) => {
         return res.status(500).json({ message: 'Error obtenint notificacions', error: err.message });
     }
 };
+
+exports.llistarPropostesEnviades = async (req, res) => {
+    try {
+        const { equipId } = req.params;
+
+        const propostes = await api.get(`/Notificacio?tipus=proposta`);
+
+        // const propostesEquip = await propostes.filter(p => p.extra.fromEquipId !== equipId);
+        res.json(propostes);
+    } catch (err) {
+        console.error('Error llistarPropostesEnviades:', err);
+        return res.status(500).json({ message: 'Error obtenint propostes', error: err.message });
+    }
+}
