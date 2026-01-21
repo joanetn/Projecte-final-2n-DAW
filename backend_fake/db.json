@@ -97,6 +97,48 @@
       "created_at": "2026-01-19T00:00:00.000Z",
       "updated_at": "2026-01-19T00:00:00.000Z",
       "isActive": true
+    },
+    {
+      "id": "8",
+      "nom": "Alejandro Puig",
+      "email": "alejandro.puig@example.com",
+      "contrasenya": "test",
+      "telefon": "+34611223344",
+      "dataNaixement": "1994-05-12T00:00:00.000Z",
+      "nivell": "Avançat",
+      "avatar": "https://i.pravatar.cc/150?img=11",
+      "dni": "48572319L",
+      "created_at": "2026-01-21T10:00:00.000Z",
+      "updated_at": "2026-01-21T10:00:00.000Z",
+      "isActive": true
+    },
+    {
+      "id": "9",
+      "nom": "Núria Soler",
+      "email": "nuria.soler@example.com",
+      "contrasenya": "test",
+      "telefon": "+34622334455",
+      "dataNaixement": "1997-09-03T00:00:00.000Z",
+      "nivell": "Intermedi",
+      "avatar": "https://i.pravatar.cc/150?img=12",
+      "dni": "67234125M",
+      "created_at": "2026-01-21T10:00:00.000Z",
+      "updated_at": "2026-01-21T10:00:00.000Z",
+      "isActive": true
+    },
+    {
+      "id": "10",
+      "nom": "Hugo Martín",
+      "email": "hugo.martin@example.com",
+      "contrasenya": "test",
+      "telefon": "+34633445566",
+      "dataNaixement": "1992-02-18T00:00:00.000Z",
+      "nivell": "Avançat",
+      "avatar": "https://i.pravatar.cc/150?img=13",
+      "dni": "30219847K",
+      "created_at": "2026-01-21T10:00:00.000Z",
+      "updated_at": "2026-01-21T10:00:00.000Z",
+      "isActive": true
     }
   ],
   "UsuariRol": [
@@ -146,6 +188,24 @@
       "id": "9999",
       "usuariId": 7,
       "rol": "ENTRENADOR",
+      "isActive": true
+    },
+    {
+      "id": "1001",
+      "usuariId": 8,
+      "rol": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": "1002",
+      "usuariId": 9,
+      "rol": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": "1003",
+      "usuariId": 10,
+      "rol": "JUGADOR",
       "isActive": true
     }
   ],
@@ -1132,7 +1192,7 @@
       "partitId": "bfe3",
       "jugadorId": "1",
       "equipId": 1,
-      "isActive": true,
+      "isActive": false,
       "creada_at": "2026-01-20T19:11:07.712Z",
       "posicio": "REVES"
     },
@@ -1141,7 +1201,7 @@
       "partitId": "bfe3",
       "jugadorId": "6",
       "equipId": 1,
-      "isActive": true,
+      "isActive": false,
       "creada_at": "2026-01-20T19:11:07.713Z",
       "posicio": "DRETA"
     },
@@ -1161,6 +1221,24 @@
       "equipId": 1,
       "isActive": true,
       "creada_at": "2026-01-20T19:11:27.768Z",
+      "posicio": "DRETA"
+    },
+    {
+      "id": "cbee",
+      "partitId": "bfe3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-21T16:14:09.967Z",
+      "posicio": "REVES"
+    },
+    {
+      "id": "d1dc",
+      "partitId": "bfe3",
+      "jugadorId": "2",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-21T16:14:09.968Z",
       "posicio": "DRETA"
     }
   ],
@@ -3576,6 +3654,19 @@
       "created_at": "2024-09-25T10:15:00.000Z",
       "pagat": true,
       "status": "PENDENT",
+      "isActive": true
+    }
+  ],
+  "InvitacioEquip": [
+    {
+      "id": "inv-example-1",
+      "equipId": 1,
+      "jugadorId": "3",
+      "enviadaPer": "2",
+      "missatge": "T'has estat convidat a unir-te a l'equip Valencia A",
+      "estat": "PENDENT",
+      "created_at": "2026-01-21T10:00:00.000Z",
+      "updated_at": "2026-01-21T10:00:00.000Z",
       "isActive": true
     }
   ]

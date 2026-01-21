@@ -9,8 +9,10 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/Toast";
 import { postProposta } from "@/services/entrenador.service";
 import { usePlantilla } from "@/queries/entrenador.queries";
+import { usePistes } from "@/queries/notificacions.queries";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface PartitCardProps {
     partit: any;
@@ -25,8 +27,10 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
     const [showPropostaForm, setShowPropostaForm] = useState(false);
     const [proposedDate, setProposedDate] = useState('');
     const [proposedTime, setProposedTime] = useState('');
+    const [selectedPistaId, setSelectedPistaId] = useState('');
     const [loading, setLoading] = useState(false);
     const plantilla = usePlantilla();
+    const { data: pistes = [] } = usePistes();
     const myEquipId = plantilla.data?.equip?.id;
     const canPropose = myEquipId && partit.local?.id && myEquipId === partit.local.id;
 
@@ -48,6 +52,7 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
                 fromEquipId: partit.local?.id,
                 toEquipId: partit.visitant?.id,
                 dataHora,
+                pistaId: selectedPistaId || undefined,
                 partitId: partit.id
             };
 
@@ -56,6 +61,7 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
             setShowPropostaForm(false);
             setProposedDate('');
             setProposedTime('');
+            setSelectedPistaId('');
         } catch (err) {
             console.error(err);
             showToast({ type: 'error', title: 'Error', description: "No s'ha pogut enviar la proposta." });
@@ -161,10 +167,27 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
                                     />
                                 </div>
                             </div>
+                            <div className="space-y-1 mb-3">
+                                <Label htmlFor="pista" className="text-xs flex items-center gap-1">
+                                    <MapPin className="w-3 h-3" /> Pista
+                                </Label>
+                                <Select value={selectedPistaId} onValueChange={setSelectedPistaId}>
+                                    <SelectTrigger className="h-9 bg-background">
+                                        <SelectValue placeholder="Selecciona una pista" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-background border shadow-lg">
+                                        {pistes.map((pista) => (
+                                            <SelectItem key={pista.id} value={pista.id}>
+                                                {pista.nom} ({pista.tipus})
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
                             <div className="flex gap-2">
-                                <Button 
-                                    size="sm" 
-                                    onClick={enviarProposta} 
+                                <Button
+                                    size="sm"
+                                    onClick={enviarProposta}
                                     disabled={loading || !proposedDate || !proposedTime}
                                     className="flex items-center gap-1"
                                 >

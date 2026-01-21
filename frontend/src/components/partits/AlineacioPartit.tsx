@@ -34,7 +34,6 @@ const AlineacioPartit = () => {
     const { showToast } = useToast();
 
     const guardarAlineacio = () => {
-        console.log("holaaaaaaaaaaa");
         const body = {
             jugadorsId: jugadoresUsados,
             partitId
@@ -145,7 +144,7 @@ const AlineacioPartit = () => {
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                onClick={() => navigate('/entrenador')}
+                                onClick={() => navigate('/dashboardEntrenador')}
                                 className="rounded-full"
                             >
                                 <ArrowLeft className="h-5 w-5" />

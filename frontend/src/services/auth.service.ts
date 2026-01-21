@@ -13,7 +13,6 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
         const res = await backend_rapid.post<RegisterResponse>("/auth/register", data);
         console.log("Resposta del backend:", res.data);
 
-        // Guardar el usuario si viene con token
         if (res.data.usuari?.token) {
             setCurrentUser(res.data.usuari);
         }
@@ -30,7 +29,6 @@ export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
     try {
         const res = await backend_rapid.post<LoginResponse>("/auth/login", data);
 
-        // El backend devuelve { usuari: { ...data, token, rols } }
         if (res.data.usuari) {
             setCurrentUser(res.data.usuari);
             return res.data;
@@ -49,7 +47,6 @@ export const getCurrentUserData = async (): Promise<User> => {
         const res = await backend_rapid.get<{ usuari: User }>("/auth/me");
 
         if (res.data.usuari) {
-            // Actualizar el usuario en localStorage
             setCurrentUser(res.data.usuari);
             return res.data.usuari;
         }

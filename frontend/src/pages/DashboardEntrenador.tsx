@@ -8,10 +8,11 @@ import CalendariPartits from "@/components/entrenador/CalendariPartits";
 import EstadistiquesJugadors from "@/components/entrenador/EstadistiquesJugadors";
 import HistorialPropostes from "@/components/entrenador/HistorialPropostes";
 import { Loader2, Users, Trophy, Calendar, BarChart3, FileText } from "lucide-react";
+import Invitacions from "@/components/entrenador/Invitacions";
 
 const DashboardEntrenador = () => {
     const plantilla = usePlantilla();
-    const partitsJugats = usePartitsJugats();
+    // const partitsJugats = usePartitsJugats();
     const partitsPendents = usePartitsPendents();
 
     return (
@@ -31,9 +32,9 @@ const DashboardEntrenador = () => {
                         <Users className="w-4 h-4 hidden sm:inline" />
                         <span>Plantilla</span>
                     </TabsTrigger>
-                    <TabsTrigger value="jugats" className="flex items-center gap-1">
+                    {/* <TabsTrigger value="jugats" className="flex items-center gap-1">
                         <span>Jugats</span>
-                    </TabsTrigger>
+                    </TabsTrigger> */}
                     <TabsTrigger value="futurs" className="flex items-center gap-1">
                         <span>Futurs</span>
                     </TabsTrigger>
@@ -52,6 +53,10 @@ const DashboardEntrenador = () => {
                     <TabsTrigger value="propostes" className="flex items-center gap-1">
                         <FileText className="w-4 h-4 hidden sm:inline" />
                         <span>Propostes</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="invitacions" className="flex items-center gap-1">
+                        <FileText className="w-4 h-4 hidden sm:inline" />
+                        <span>Invitacions</span>
                     </TabsTrigger>
                 </TabsList>
 
@@ -140,7 +145,7 @@ const DashboardEntrenador = () => {
                 </TabsContent>
 
                 {/* ════════════ Partits jugats ════════════ */}
-                <TabsContent value="jugats">
+                {/* <TabsContent value="jugats">
                     {partitsJugats.isLoading && (
                         <div className="flex items-center justify-center h-[40vh]">
                             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -173,7 +178,7 @@ const DashboardEntrenador = () => {
                             ))}
                         </div>
                     )}
-                </TabsContent>
+                </TabsContent> */}
 
                 {/* ════════════ Partits futurs ════════════ */}
                 <TabsContent value="futurs">
@@ -229,6 +234,9 @@ const DashboardEntrenador = () => {
                 {/* ════════════ Historial Propostes ════════════ */}
                 <TabsContent value="propostes">
                     <HistorialPropostes />
+                </TabsContent>
+                <TabsContent value="invitacions">
+                    <Invitacions />
                 </TabsContent>
             </Tabs>
         </div>

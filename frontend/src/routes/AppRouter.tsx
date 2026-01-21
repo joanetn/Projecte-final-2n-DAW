@@ -10,8 +10,9 @@ import DashboardAdmin from "@/pages/DashboardAdmin";
 import DashboardArbitre from "@/pages/DashboardArbitre";
 import DashboardEntrenador from "@/pages/DashboardEntrenador";
 import AlineacioPartit from "@/components/partits/AlineacioPartit";
-import PropostesTest from "@/pages/PropostesTest";
+// import PropostesTest from "@/pages/PropostesTest";
 import Ranking from "@/pages/Ranking";
+import Invitacions from "@/components/entrenador/Invitacions";
 
 const AppRouter = () => {
     return (
@@ -51,10 +52,14 @@ const AppRouter = () => {
                             path="/entrenador/partits/:partitId/alineacio"
                             element={<AlineacioPartit />}
                         />
-                        <Route path="/propostes-test" element={<PropostesTest />} />
+                        {/* <Route path="/propostes-test" element={<PropostesTest />} /> */}
                         <Route
                             path="/ranking"
                             element={<Ranking />}
+                        />
+                        <Route
+                            path="/invitacions"
+                            element={<Invitacions />}
                         />
                     </Routes>
                 </main>

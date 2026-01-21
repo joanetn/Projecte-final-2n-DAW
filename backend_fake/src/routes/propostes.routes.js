@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/propostes.controller');
 
+router.get('/pistes', controller.getPistes);
 router.get('/enviades/:equipId', controller.getPropostesEnviades);
 router.get('/rebudes/:equipId', controller.getPropostesRebudes);
 router.post('/', controller.crearProposta);

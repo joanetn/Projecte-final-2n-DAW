@@ -277,6 +277,56 @@ exports.rebutjarProposta = async (req, res) => {
 };
 
 /**
+ * Funció auxiliar per enriquir propostes amb noms d'equips i pistes
+ */
+async function enriquirPropostes(propostes) {
+    const enriched = await Promise.all(propostes.map(async (p) => {
+        const extra = p.extra || {};
+        let fromEquipNom = null;
+        let toEquipNom = null;
+        let pistaNom = null;
+
+        // Obtenir nom de l'equip origen
+        if (extra.fromEquipId) {
+            try {
+                const equipResp = await api.get(`/Equip?id=${extra.fromEquipId}`);
+                const equip = Array.isArray(equipResp) ? equipResp[0] : equipResp;
+                fromEquipNom = equip?.nom || null;
+            } catch (e) { /* ignore */ }
+        }
+
+        // Obtenir nom de l'equip destí
+        if (extra.toEquipId) {
+            try {
+                const equipResp = await api.get(`/Equip?id=${extra.toEquipId}`);
+                const equip = Array.isArray(equipResp) ? equipResp[0] : equipResp;
+                toEquipNom = equip?.nom || null;
+            } catch (e) { /* ignore */ }
+        }
+
+        // Obtenir nom de la pista
+        if (extra.pistaId) {
+            try {
+                const pistaResp = await api.get(`/Pista?id=${extra.pistaId}`);
+                const pista = Array.isArray(pistaResp) ? pistaResp[0] : pistaResp;
+                pistaNom = pista?.nom || null;
+            } catch (e) { /* ignore */ }
+        }
+
+        return {
+            ...p,
+            extra: {
+                ...extra,
+                fromEquipNom,
+                toEquipNom,
+                pistaNom
+            }
+        };
+    }));
+    return enriched;
+}
+
+/**
  * Obté les propostes enviades per un equip
  * GET /propostes/enviades/:equipId
  */
@@ -294,7 +344,12 @@ exports.getPropostesRebudes = async (req, res) => {
             n.extra && n.extra.toEquipId === equipId
         );
 
-        return res.json(propostesRebudes);
+        propostesRebudes.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        // Enriquir amb noms
+        const enriched = await enriquirPropostes(propostesRebudes);
+
+        return res.json(enriched);
     } catch (err) {
         console.error('Error getPropostesRebudes:', err);
         return res.status(500).json({ message: 'Error obtenint propostes rebudes', error: err.message });
@@ -335,9 +390,27 @@ exports.getPropostesEnviades = async (req, res) => {
             }
         }
 
-        return res.json(propostesUniques);
+        // Enriquir amb noms
+        const enriched = await enriquirPropostes(propostesUniques);
+
+        return res.json(enriched);
     } catch (err) {
         console.error('Error getPropostesEnviades:', err);
         return res.status(500).json({ message: 'Error obtenint propostes enviades', error: err.message });
+    }
+};
+
+/**
+ * Obté totes les pistes actives
+ * GET /propostes/pistes
+ */
+exports.getPistes = async (req, res) => {
+    try {
+        const pistesResp = await api.get(`/Pista?isActive=true`);
+        const pistes = Array.isArray(pistesResp) ? pistesResp : (pistesResp ? [pistesResp] : []);
+        return res.json(pistes);
+    } catch (err) {
+        console.error('Error getPistes:', err);
+        return res.status(500).json({ message: 'Error obtenint pistes', error: err.message });
     }
 };

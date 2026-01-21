@@ -105,9 +105,6 @@ const Ranking = () => {
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-lg">{jugador.nom}</p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    Jugador #{jugador.jugadorId}
-                                                </p>
                                             </div>
                                         </div>
                                         <div className="text-right">
