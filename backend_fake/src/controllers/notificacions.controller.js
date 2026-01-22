@@ -48,6 +48,48 @@ exports.llistarNotificacions = async (req, res) => {
     }
 };
 
+exports.marcarComLlegida = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) return res.status(400).json({ message: 'id és requerit' });
+
+        const updated = await api.patch(`/Notificacio/${id}`, { read: true });
+        return res.json(updated);
+    } catch (err) {
+        console.error('Error marcarComLlegida:', err);
+        return res.status(500).json({ message: 'Error marcant notificació com a llegida', error: err.message });
+    }
+};
+
+exports.marcarTotesComLlegides = async (req, res) => {
+    try {
+        const { usuariId } = req.params;
+        if (!usuariId) return res.status(400).json({ message: 'usuariId és requerit' });
+
+        // Obtenir totes les notificacions de l'usuari
+        const notificacions = await api.get(`/Notificacio?usuariId=${usuariId}`);
+
+        // Assegurar-se que és un array i filtrar les no llegides
+        let notifs = [];
+        if (Array.isArray(notificacions)) {
+            notifs = notificacions.filter(n => n && n.read === false);
+        } else if (notificacions && notificacions.id && notificacions.read === false) {
+            notifs = [notificacions];
+        }
+
+        // Marcar totes com a llegides en paral·lel per ser més ràpid
+        const updatePromises = notifs.map(notif =>
+            api.patch(`/Notificacio/${notif.id}`, { read: true })
+        );
+        await Promise.all(updatePromises);
+
+        return res.json({ message: 'Totes les notificacions marcades com a llegides', count: notifs.length });
+    } catch (err) {
+        console.error('Error marcarTotesComLlegides:', err);
+        return res.status(500).json({ message: 'Error marcant notificacions com a llegides', error: err.message });
+    }
+};
+
 exports.llistarPropostesEnviades = async (req, res) => {
     try {
         const { equipId } = req.params;

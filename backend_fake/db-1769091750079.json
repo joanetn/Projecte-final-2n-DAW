@@ -1345,18 +1345,16 @@
       "missatge": "Tens un partit programat per al proper diumenge a les 10:00h",
       "llegit": false,
       "created_at": "2024-09-27T09:00:00.000Z",
-      "isActive": true,
-      "read": false
+      "isActive": true
     },
     {
       "id": "2",
       "usuariId": 1,
       "titol": "Resultat validat",
       "missatge": "L'acta del teu últim partit ha estat validada",
-      "llegit": false,
+      "llegit": true,
       "created_at": "2024-09-22T15:30:00.000Z",
-      "isActive": true,
-      "read": false
+      "isActive": true
     },
     {
       "id": "3",
@@ -1365,8 +1363,7 @@
       "missatge": "Has estat convocat per al partit de dissabte",
       "llegit": false,
       "created_at": "2024-09-26T12:00:00.000Z",
-      "isActive": true,
-      "read": false
+      "isActive": true
     },
     {
       "id": "7655",
@@ -1374,7 +1371,7 @@
       "titol": "Proposta partit",
       "missatge": "El teu equip t� una proposta de data: 2026-02-10 18:00",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T17:58:36.433Z",
       "extra": {}
     },
@@ -1384,7 +1381,7 @@
       "titol": "Proposta partit",
       "missatge": "El teu equip t� una proposta de data: 2026-02-10 18:00",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T17:59:55.313Z",
       "extra": {}
     },
@@ -1394,7 +1391,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 18:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-19T18:09:45.711Z",
       "extra": {
         "fromEquipId": "1",
@@ -1423,7 +1420,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:54.155Z",
       "extra": {
         "partitId": "bfe3"
@@ -1435,7 +1432,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:54.156Z",
       "extra": {
         "partitId": "bfe3"
@@ -1447,7 +1444,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:54.156Z",
       "extra": {
         "partitId": "bfe3"
@@ -1483,7 +1480,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:54.926Z",
       "extra": {
         "partitId": "d2ae"
@@ -1495,7 +1492,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:54.927Z",
       "extra": {
         "partitId": "d2ae"
@@ -1507,7 +1504,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:54.928Z",
       "extra": {
         "partitId": "d2ae"
@@ -1543,7 +1540,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.094Z",
       "extra": {
         "partitId": "31e1"
@@ -1555,7 +1552,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.094Z",
       "extra": {
         "partitId": "31e1"
@@ -1567,7 +1564,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.095Z",
       "extra": {
         "partitId": "31e1"
@@ -1591,7 +1588,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.554Z",
       "extra": {
         "partitId": "57ed"
@@ -1603,7 +1600,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.556Z",
       "extra": {
         "partitId": "57ed"
@@ -1615,7 +1612,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.556Z",
       "extra": {
         "partitId": "57ed"
@@ -1651,7 +1648,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.615Z",
       "extra": {
         "partitId": "6981"
@@ -1663,7 +1660,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.616Z",
       "extra": {
         "partitId": "6981"
@@ -1675,7 +1672,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.617Z",
       "extra": {
         "partitId": "6981"
@@ -1711,7 +1708,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.625Z",
       "extra": {
         "partitId": "038b"
@@ -1723,7 +1720,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.626Z",
       "extra": {
         "partitId": "038b"
@@ -1735,7 +1732,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.626Z",
       "extra": {
         "partitId": "038b"
@@ -1771,7 +1768,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.782Z",
       "extra": {
         "partitId": "3d07"
@@ -1783,7 +1780,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.782Z",
       "extra": {
         "partitId": "3d07"
@@ -1795,7 +1792,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:55.783Z",
       "extra": {
         "partitId": "3d07"
@@ -1831,7 +1828,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.624Z",
       "extra": {
         "partitId": "d5f5"
@@ -1843,7 +1840,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.627Z",
       "extra": {
         "partitId": "d5f5"
@@ -1855,7 +1852,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.629Z",
       "extra": {
         "partitId": "d5f5"
@@ -1891,7 +1888,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.660Z",
       "extra": {
         "partitId": "b449"
@@ -1903,7 +1900,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.660Z",
       "extra": {
         "partitId": "b449"
@@ -1915,7 +1912,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.661Z",
       "extra": {
         "partitId": "b449"
@@ -1948,7 +1945,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.688Z"
     },
     {
@@ -1957,7 +1954,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.689Z"
     },
     {
@@ -1966,7 +1963,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:56.689Z"
     },
     {
@@ -1993,7 +1990,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:57.226Z"
     },
     {
@@ -2002,7 +1999,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:57.227Z"
     },
     {
@@ -2011,7 +2008,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:57.228Z"
     },
     {
@@ -2038,7 +2035,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:57.266Z"
     },
     {
@@ -2047,7 +2044,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:57.266Z"
     },
     {
@@ -2056,7 +2053,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:09:57.266Z"
     },
     {
@@ -2086,7 +2083,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:00.654Z",
       "extra": {
         "partitId": "ac82"
@@ -2098,7 +2095,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:00.655Z",
       "extra": {
         "partitId": "ac82"
@@ -2110,7 +2107,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:00.656Z",
       "extra": {
         "partitId": "ac82"
@@ -2146,7 +2143,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:00.893Z",
       "extra": {
         "partitId": "d3c0"
@@ -2158,7 +2155,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:00.893Z",
       "extra": {
         "partitId": "d3c0"
@@ -2170,7 +2167,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:00.894Z",
       "extra": {
         "partitId": "d3c0"
@@ -2206,7 +2203,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.135Z",
       "extra": {
         "partitId": "4de1"
@@ -2218,7 +2215,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.135Z",
       "extra": {
         "partitId": "4de1"
@@ -2230,7 +2227,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.135Z",
       "extra": {
         "partitId": "4de1"
@@ -2266,7 +2263,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.778Z",
       "extra": {
         "partitId": "d37c"
@@ -2278,7 +2275,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.778Z",
       "extra": {
         "partitId": "d37c"
@@ -2290,7 +2287,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.779Z",
       "extra": {
         "partitId": "d37c"
@@ -2323,7 +2320,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.830Z"
     },
     {
@@ -2332,7 +2329,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.831Z"
     },
     {
@@ -2341,7 +2338,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:01.831Z"
     },
     {
@@ -2368,7 +2365,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.511Z"
     },
     {
@@ -2377,7 +2374,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.512Z"
     },
     {
@@ -2386,7 +2383,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.512Z"
     },
     {
@@ -2413,7 +2410,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.543Z"
     },
     {
@@ -2422,7 +2419,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.544Z"
     },
     {
@@ -2431,7 +2428,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.544Z"
     },
     {
@@ -2458,7 +2455,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.584Z"
     },
     {
@@ -2467,7 +2464,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.585Z"
     },
     {
@@ -2476,7 +2473,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 18:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T18:10:02.585Z"
     },
     {
@@ -2494,7 +2491,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 20:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-19T18:27:04.936Z",
       "extra": {
         "fromEquipId": "1",
@@ -2511,7 +2508,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 21:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-19T18:27:21.281Z",
       "extra": {
         "fromEquipId": "1",
@@ -2528,7 +2525,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 22:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-19T18:30:23.293Z",
       "extra": {
         "fromEquipId": "1",
@@ -2591,7 +2588,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 20:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:25.466Z",
       "extra": {
         "partitId": "e87b"
@@ -2603,7 +2600,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 20:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:25.467Z",
       "extra": {
         "partitId": "e87b"
@@ -2615,7 +2612,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 20:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:25.468Z",
       "extra": {
         "partitId": "e87b"
@@ -2648,7 +2645,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:39.266Z"
     },
     {
@@ -2657,7 +2654,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:39.267Z"
     },
     {
@@ -2666,7 +2663,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:39.268Z"
     },
     {
@@ -2693,7 +2690,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:40.647Z"
     },
     {
@@ -2702,7 +2699,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:40.648Z"
     },
     {
@@ -2711,7 +2708,7 @@
       "titol": "Proposta rebutjada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut rebutjada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-19T19:24:40.649Z"
     },
     {
@@ -2729,7 +2726,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 21:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T14:27:42.672Z",
       "extra": {
         "fromEquipId": "1",
@@ -2758,7 +2755,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:29:14.595Z",
       "extra": {
         "partitId": "0e81"
@@ -2770,7 +2767,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:29:14.596Z",
       "extra": {
         "partitId": "0e81"
@@ -2782,7 +2779,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 21:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:29:14.597Z",
       "extra": {
         "partitId": "0e81"
@@ -2806,7 +2803,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 22:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T14:31:56.260Z",
       "extra": {
         "fromEquipId": "1",
@@ -2835,7 +2832,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:32:04.603Z",
       "extra": {
         "partitId": "1a68"
@@ -2847,7 +2844,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:32:04.604Z",
       "extra": {
         "partitId": "1a68"
@@ -2859,7 +2856,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:32:04.605Z",
       "extra": {
         "partitId": "1a68"
@@ -2883,7 +2880,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 23:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T14:33:45.835Z",
       "extra": {
         "fromEquipId": "1",
@@ -2912,7 +2909,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 23:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:33:52.420Z",
       "extra": {
         "partitId": "1a68"
@@ -2924,7 +2921,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 23:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:33:52.422Z",
       "extra": {
         "partitId": "1a68"
@@ -2936,7 +2933,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 23:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T14:33:52.423Z",
       "extra": {
         "partitId": "1a68"
@@ -2960,7 +2957,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 12:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T15:12:34.613Z",
       "extra": {
         "fromEquipId": "1",
@@ -2989,7 +2986,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 12:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:12:54.948Z",
       "extra": {
         "partitId": "bfe3"
@@ -3001,7 +2998,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 12:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:12:54.949Z",
       "extra": {
         "partitId": "bfe3"
@@ -3013,7 +3010,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 12:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:12:54.951Z",
       "extra": {
         "partitId": "bfe3"
@@ -3037,7 +3034,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 10:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T15:14:05.391Z",
       "extra": {
         "fromEquipId": "1",
@@ -3066,7 +3063,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 10:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:14:10.179Z",
       "extra": {
         "partitId": "bfe3"
@@ -3078,7 +3075,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 10:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:14:10.180Z",
       "extra": {
         "partitId": "bfe3"
@@ -3090,7 +3087,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 10:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:14:10.182Z",
       "extra": {
         "partitId": "bfe3"
@@ -3114,7 +3111,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 9:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T15:16:20.417Z",
       "extra": {
         "fromEquipId": "1",
@@ -3143,7 +3140,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 9:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:16:25.057Z",
       "extra": {
         "partitId": "bfe3"
@@ -3155,7 +3152,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 9:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:16:25.058Z",
       "extra": {
         "partitId": "bfe3"
@@ -3167,7 +3164,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 9:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T15:16:25.060Z",
       "extra": {
         "partitId": "bfe3"
@@ -3191,7 +3188,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 22:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T16:07:56.688Z",
       "extra": {
         "fromEquipId": "1",
@@ -3220,7 +3217,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T16:08:06.854Z",
       "extra": {
         "partitId": "1a68"
@@ -3232,7 +3229,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T16:08:06.856Z",
       "extra": {
         "partitId": "1a68"
@@ -3244,7 +3241,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-02-10 22:00 ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T16:08:06.856Z",
       "extra": {
         "partitId": "1a68"
@@ -3268,7 +3265,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-01-31T18:53:00.000Z",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T17:54:05.238Z",
       "extra": {
         "fromEquipId": "1",
@@ -3297,7 +3294,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-31T18:53:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T17:54:17.247Z",
       "extra": {
         "partitId": "bfe3"
@@ -3309,7 +3306,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-31T18:53:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T17:54:17.248Z",
       "extra": {
         "partitId": "bfe3"
@@ -3321,7 +3318,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-31T18:53:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T17:54:17.248Z",
       "extra": {
         "partitId": "bfe3"
@@ -3345,7 +3342,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-01-30T23:14:00.000Z",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T18:10:37.257Z",
       "extra": {
         "fromEquipId": "1",
@@ -3374,7 +3371,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-30T23:14:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T18:10:44.731Z",
       "extra": {
         "partitId": "bfe3"
@@ -3386,7 +3383,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-30T23:14:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T18:10:44.732Z",
       "extra": {
         "partitId": "bfe3"
@@ -3398,7 +3395,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-30T23:14:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T18:10:44.732Z",
       "extra": {
         "partitId": "bfe3"
@@ -3422,7 +3419,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-01-29T00:18:00.000Z",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T18:15:19.383Z",
       "extra": {
         "fromEquipId": "1",
@@ -3451,7 +3448,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-29T00:18:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T18:15:23.300Z",
       "extra": {
         "partitId": "bfe3"
@@ -3463,7 +3460,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-29T00:18:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T18:15:23.300Z",
       "extra": {
         "partitId": "bfe3"
@@ -3475,7 +3472,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-29T00:18:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T18:15:23.301Z",
       "extra": {
         "partitId": "bfe3"
@@ -3499,7 +3496,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-01-28T01:17:00.000Z",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T19:11:40.976Z",
       "extra": {
         "fromEquipId": "1",
@@ -3528,7 +3525,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-28T01:17:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T19:11:54.684Z",
       "extra": {
         "partitId": "bfe3"
@@ -3540,7 +3537,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-28T01:17:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T19:11:54.685Z",
       "extra": {
         "partitId": "bfe3"
@@ -3552,7 +3549,7 @@
       "titol": "Proposta acceptada",
       "missatge": "La teua proposta per 2026-01-28T01:17:00.000Z ha sigut acceptada",
       "tipus": "info",
-      "read": true,
+      "read": false,
       "created_at": "2026-01-20T19:11:54.687Z",
       "extra": {
         "partitId": "bfe3"
@@ -3568,216 +3565,6 @@
       "created_at": "2026-01-20T19:11:54.689Z",
       "extra": {
         "partitId": "bfe3"
-      }
-    },
-    {
-      "id": "e990671f",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T15:57:32.374Z",
-      "extra": {
-        "invitacioId": "d702677b",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "Hola alejandro vine al equip\n"
-      }
-    },
-    {
-      "id": "393ee20e",
-      "usuariId": "9",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": false,
-      "created_at": "2026-01-22T15:59:50.209Z",
-      "extra": {
-        "invitacioId": "a3296615",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "fitxa ostia"
-      }
-    },
-    {
-      "id": "630a1cd1",
-      "usuariId": "10",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": false,
-      "created_at": "2026-01-22T16:14:09.865Z",
-      "extra": {
-        "invitacioId": "7e8d2492",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "Hola, vull fitxar-te\n"
-      }
-    },
-    {
-      "id": "920b71b5",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:17:52.266Z",
-      "extra": {
-        "invitacioId": "4dbbf27e",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "Hola alejandro"
-      }
-    },
-    {
-      "id": "be426e6e",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:18:10.907Z",
-      "extra": {
-        "invitacioId": "f0833c8c",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "HOLA ALEJANDRO"
-      }
-    },
-    {
-      "id": "8c01742d",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:31:19.094Z",
-      "extra": {
-        "invitacioId": "4540a236",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "ola"
-      }
-    },
-    {
-      "id": "80b3b9fe",
-      "usuariId": "10",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": false,
-      "created_at": "2026-01-22T16:31:33.452Z",
-      "extra": {
-        "invitacioId": "55a80d11",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "jijijiij"
-      }
-    },
-    {
-      "id": "4ffa2025",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:31:42.748Z",
-      "extra": {
-        "invitacioId": "1bfd78b6",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "aleeeeeeeeeeeeee"
-      }
-    },
-    {
-      "id": "22d7d982",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:35:11.765Z",
-      "extra": {
-        "invitacioId": "9e07f88f",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "holaaaaaaaaaaa"
-      }
-    },
-    {
-      "id": "8a1af27e",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:36:49.473Z",
-      "extra": {
-        "invitacioId": "c5745122",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "aleeeeeeeeeee"
-      }
-    },
-    {
-      "id": "ee310f66",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:37:32.283Z",
-      "extra": {
-        "invitacioId": "2a08ec42",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "alejandro?"
-      }
-    },
-    {
-      "id": "c8aacb32",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:37:54.591Z",
-      "extra": {
-        "invitacioId": "42210484",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "dcvdvdf"
-      }
-    },
-    {
-      "id": "3bfa886f",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:39:34.980Z",
-      "extra": {
-        "invitacioId": "774cbe37",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "aleeeeeeeeeee"
-      }
-    },
-    {
-      "id": "8aab289c",
-      "usuariId": "9",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": false,
-      "created_at": "2026-01-22T16:41:30.172Z",
-      "extra": {
-        "invitacioId": "469d14c1",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "nuria?"
       }
     }
   ],
@@ -3872,158 +3659,15 @@
   ],
   "InvitacioEquip": [
     {
-      "id": "d702677b",
+      "id": "inv-example-1",
       "equipId": 1,
-      "jugadorId": "8",
+      "jugadorId": "3",
       "enviadaPer": "2",
-      "missatge": "Hola alejandro vine al equip\n",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T15:57:32.327Z",
-      "updated_at": "2026-01-22T16:13:49.781Z",
-      "isActive": false
-    },
-    {
-      "id": "a3296615",
-      "equipId": 1,
-      "jugadorId": "9",
-      "enviadaPer": "2",
-      "missatge": "fitxa ostia",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T15:59:50.177Z",
-      "updated_at": "2026-01-22T16:13:44.290Z",
-      "isActive": false
-    },
-    {
-      "id": "7e8d2492",
-      "equipId": 1,
-      "jugadorId": "10",
-      "enviadaPer": "2",
-      "missatge": "Hola, vull fitxar-te\n",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:14:09.831Z",
-      "updated_at": "2026-01-22T16:31:27.751Z",
-      "isActive": false
-    },
-    {
-      "id": "4dbbf27e",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "Hola alejandro",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:17:52.217Z",
-      "updated_at": "2026-01-22T16:18:02.470Z",
-      "isActive": false
-    },
-    {
-      "id": "f0833c8c",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "HOLA ALEJANDRO",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:18:10.876Z",
-      "updated_at": "2026-01-22T16:31:06.982Z",
-      "isActive": false
-    },
-    {
-      "id": "4540a236",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "ola",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:31:19.064Z",
-      "updated_at": "2026-01-22T16:31:36.773Z",
-      "isActive": false
-    },
-    {
-      "id": "55a80d11",
-      "equipId": 1,
-      "jugadorId": "10",
-      "enviadaPer": "2",
-      "missatge": "jijijiij",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:31:33.421Z",
-      "updated_at": "2026-01-22T16:31:34.952Z",
-      "isActive": false
-    },
-    {
-      "id": "1bfd78b6",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "aleeeeeeeeeeeeee",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:31:42.715Z",
-      "updated_at": "2026-01-22T16:34:31.974Z",
-      "isActive": false
-    },
-    {
-      "id": "9e07f88f",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "holaaaaaaaaaaa",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:35:11.736Z",
-      "updated_at": "2026-01-22T16:36:45.354Z",
-      "isActive": false
-    },
-    {
-      "id": "c5745122",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "aleeeeeeeeeee",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:36:49.440Z",
-      "updated_at": "2026-01-22T16:37:24.890Z",
-      "isActive": false
-    },
-    {
-      "id": "2a08ec42",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "alejandro?",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:37:32.252Z",
-      "updated_at": "2026-01-22T16:37:48.960Z",
-      "isActive": false
-    },
-    {
-      "id": "42210484",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "dcvdvdf",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:37:54.559Z",
-      "updated_at": "2026-01-22T16:39:30.353Z",
-      "isActive": false
-    },
-    {
-      "id": "774cbe37",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "aleeeeeeeeeee",
+      "missatge": "T'has estat convidat a unir-te a l'equip Valencia A",
       "estat": "PENDENT",
-      "created_at": "2026-01-22T16:39:34.963Z",
-      "updated_at": "2026-01-22T16:39:34.963Z",
+      "created_at": "2026-01-21T10:00:00.000Z",
+      "updated_at": "2026-01-21T10:00:00.000Z",
       "isActive": true
-    },
-    {
-      "id": "469d14c1",
-      "equipId": 1,
-      "jugadorId": "9",
-      "enviadaPer": "2",
-      "missatge": "nuria?",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:41:30.141Z",
-      "updated_at": "2026-01-22T16:41:36.683Z",
-      "isActive": false
     }
   ]
 }

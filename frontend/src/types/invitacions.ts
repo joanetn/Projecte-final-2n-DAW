@@ -14,4 +14,43 @@ export interface JugadorsDisponiblesResponse {
 
 export interface InvitacioData {
     missatge: string;
+    jugadorId: string;
+}
+
+export interface InvitacioResponse {
+    id: string;
+    usuariId: string;
+    titol: string;
+    missatge: string;
+    tipus: string;
+    read: boolean;
+    created_at: Date;
+    extra: {
+        invitacioId: string;
+        equipId: string;
+        equipNom: string;
+        missatge: string;
+    }
+}
+
+export interface InvitacionsEnviadesResponse {
+    invitacions: [{
+        id: string;
+        equipId: string;
+        jugadorId: string;
+        enviadaPer: string;
+        missatge: string;
+        estat: string;
+        created_at: string;
+        updated_at: string;
+        isActive: string;
+        jugador: {
+            id: string;
+            nom: string;
+            email: string;
+            nivell: string;
+            avatar: string;
+        }
+    }],
+    total: number;
 }

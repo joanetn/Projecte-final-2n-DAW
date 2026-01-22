@@ -180,7 +180,7 @@ exports.enviarInvitacio = async (req, res) => {
             equipId: equipId,
             jugadorId: jugadorId,
             enviadaPer: user.id,
-            missatge: missatge || `T'has estat convidat a unir-te a l'equip ${equip?.nom || 'Desconegut'}`,
+            missatge: missatge || `El entrenador o el admin de l'equip ${equip?.nom} t'ha contactat per a fitxar-te.` || 'Desconegut',
             estat: "PENDENT",
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
@@ -202,11 +202,25 @@ exports.enviarInvitacio = async (req, res) => {
             extra: {
                 invitacioId: invitacioId,
                 equipId: equipId,
-                equipNom: equip?.nom
+                equipNom: equip?.nom,
+                missatge
             }
         };
 
         await api.post("/Notificacio", novaNotificacio);
+
+        // Emetre notificació via socket per actualitzar en temps real
+        try {
+            const { io, userSockets } = require('../index');
+            const sockets = userSockets.get(String(jugadorId));
+            if (sockets && sockets.size > 0) {
+                sockets.forEach(socketId => {
+                    io.to(socketId).emit('notificacio', novaNotificacio);
+                });
+            }
+        } catch (socketErr) {
+            console.error('Error emitint socket:', socketErr);
+        }
 
         res.status(201).json({
             message: "Invitació enviada correctament",

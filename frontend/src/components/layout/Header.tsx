@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/Toast";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { useNotificacions } from "@/queries/notificacions.queries";
-import { useAcceptProposta, useRejectProposta } from "@/mutations/notificacions.mutations";
+import { useAcceptProposta, useRejectProposta, useMarcarLlegida, useMarcarTotesLlegides } from "@/mutations/notificacions.mutations";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Header = () => {
@@ -21,6 +21,10 @@ const Header = () => {
     const { data: notifs = [], isLoading: loadingNotifs, refetch } = useNotificacions(user?.id?.toString());
     const acceptMutation = useAcceptProposta();
     const rejectMutation = useRejectProposta();
+    const marcarLlegidaMutation = useMarcarLlegida();
+    const marcarTotesLlegidesMutation = useMarcarTotesLlegides();
+    const notificacionsNoLlegides = notifs.filter(n => !n.read);
+    const countNoLlegides = notificacionsNoLlegides.length;
 
     const isLoggedIn = !!user;
     if (isLoading) return null;
@@ -31,15 +35,15 @@ const Header = () => {
 
     useEffect(() => {
         const handler = () => {
-            queryClient.invalidateQueries({ queryKey: ["notificacions"] });
+            refetch();
         };
         window.addEventListener('new-notificacio', handler as EventListener);
         return () => window.removeEventListener('new-notificacio', handler as EventListener);
-    }, [queryClient]);
+    }, [refetch]);
 
     useEffect(() => {
         const handler = () => {
-            queryClient.invalidateQueries({ queryKey: ["notificacions"] });
+            refetch();
             queryClient.invalidateQueries({ queryKey: ["partitsPendents"] });
             queryClient.invalidateQueries({ queryKey: ["partitsJugats"] });
         };
@@ -191,13 +195,29 @@ const Header = () => {
                                     }}
                                 >
                                     <Bell />
-                                    {/* <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" /> */}
+                                    {countNoLlegides > 0 && (
+                                        <>
+                                            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                                            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold text-white bg-red-500 rounded-full px-1">
+                                                {countNoLlegides > 99 ? '99+' : countNoLlegides}
+                                            </span>
+                                        </>
+                                    )}
                                 </button>
 
                                 {notifOpen && (
                                     <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-xl z-50">
-                                        <div className="p-3 border-b border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 rounded-t-lg">
+                                        <div className="p-3 border-b border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 rounded-t-lg flex items-center justify-between">
                                             <div className="font-medium text-gray-900 dark:text-gray-100">Notificacions</div>
+                                            {countNoLlegides > 0 && (
+                                                <button
+                                                    onClick={() => user?.id && marcarTotesLlegidesMutation.mutate(user.id.toString())}
+                                                    disabled={marcarTotesLlegidesMutation.isPending}
+                                                    className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 disabled:opacity-50"
+                                                >
+                                                    {marcarTotesLlegidesMutation.isPending ? '...' : 'Marcar totes com llegides'}
+                                                </button>
+                                            )}
                                         </div>
                                         <div className="max-h-64 overflow-auto bg-white dark:bg-zinc-900">
                                             {loadingNotifs && <div className="p-3 text-sm text-gray-500 dark:text-gray-400">Carregant...</div>}
@@ -208,12 +228,30 @@ const Header = () => {
                                                 const isAcceptat = n.extra?.estat === 'ACCEPTAT';
                                                 const isRebutjat = n.extra?.estat === 'REBUTJAT';
                                                 const isProcessing = processingId === n.id;
+                                                const isMarkingRead = marcarLlegidaMutation.isPending && marcarLlegidaMutation.variables === n.id;
 
                                                 return (
-                                                    <div key={n.id} className="p-3 border-b border-gray-100 dark:border-zinc-800 last:border-b-0 hover:bg-gray-50 dark:hover:bg-zinc-800/50">
-                                                        <div className="font-semibold text-sm text-gray-900 dark:text-gray-100">{n.titol}</div>
-                                                        <div className="text-xs text-gray-600 dark:text-gray-400">{n.missatge}</div>
-                                                        <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">{new Date(n.created_at).toLocaleString()}</div>
+                                                    <div key={n.id} className={`p-3 border-b border-gray-100 dark:border-zinc-800 last:border-b-0 hover:bg-gray-50 dark:hover:bg-zinc-800/50 ${!n.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
+                                                        <div className="flex items-start justify-between gap-2">
+                                                            <div className="flex-1">
+                                                                <div className="flex items-center gap-2">
+                                                                    {!n.read && <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />}
+                                                                    <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">{n.titol}</span>
+                                                                </div>
+                                                                <div className="text-xs text-gray-600 dark:text-gray-400">{n.missatge}</div>
+                                                                <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">{new Date(n.created_at).toLocaleString()}</div>
+                                                            </div>
+                                                            {!n.read && (
+                                                                <button
+                                                                    onClick={() => marcarLlegidaMutation.mutate(n.id)}
+                                                                    disabled={isMarkingRead}
+                                                                    className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 disabled:opacity-50"
+                                                                    title="Marcar com a llegida"
+                                                                >
+                                                                    {isMarkingRead ? '...' : '✓'}
+                                                                </button>
+                                                            )}
+                                                        </div>
 
                                                         {isProposta && isPendent && (
                                                             <div className="flex gap-2 mt-2">
@@ -324,10 +362,20 @@ const Header = () => {
                                     <button
                                         aria-label="Notificacions"
                                         className="relative p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
-                                        onClick={() => { /* placeholder */ setMobileMenuOpen(false); }}
+                                        onClick={() => {
+                                            setNotifOpen(v => !v);
+                                            setMobileMenuOpen(false);
+                                        }}
                                     >
                                         <Bell />
-                                        <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                                        {countNoLlegides > 0 && (
+                                            <>
+                                                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
+                                                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center text-[10px] font-bold text-white bg-red-500 rounded-full px-1">
+                                                    {countNoLlegides > 99 ? '99+' : countNoLlegides}
+                                                </span>
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                                 <Button

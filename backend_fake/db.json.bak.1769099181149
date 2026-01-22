@@ -1345,18 +1345,16 @@
       "missatge": "Tens un partit programat per al proper diumenge a les 10:00h",
       "llegit": false,
       "created_at": "2024-09-27T09:00:00.000Z",
-      "isActive": true,
-      "read": false
+      "isActive": true
     },
     {
       "id": "2",
       "usuariId": 1,
       "titol": "Resultat validat",
       "missatge": "L'acta del teu últim partit ha estat validada",
-      "llegit": false,
+      "llegit": true,
       "created_at": "2024-09-22T15:30:00.000Z",
-      "isActive": true,
-      "read": false
+      "isActive": true
     },
     {
       "id": "3",
@@ -1365,8 +1363,7 @@
       "missatge": "Has estat convocat per al partit de dissabte",
       "llegit": false,
       "created_at": "2024-09-26T12:00:00.000Z",
-      "isActive": true,
-      "read": false
+      "isActive": true
     },
     {
       "id": "7655",
@@ -1394,7 +1391,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 18:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-19T18:09:45.711Z",
       "extra": {
         "fromEquipId": "1",
@@ -2494,7 +2491,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 20:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-19T18:27:04.936Z",
       "extra": {
         "fromEquipId": "1",
@@ -2511,7 +2508,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 21:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-19T18:27:21.281Z",
       "extra": {
         "fromEquipId": "1",
@@ -2528,7 +2525,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 22:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-19T18:30:23.293Z",
       "extra": {
         "fromEquipId": "1",
@@ -2729,7 +2726,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 21:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T14:27:42.672Z",
       "extra": {
         "fromEquipId": "1",
@@ -2806,7 +2803,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 22:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T14:31:56.260Z",
       "extra": {
         "fromEquipId": "1",
@@ -2883,7 +2880,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 23:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T14:33:45.835Z",
       "extra": {
         "fromEquipId": "1",
@@ -2960,7 +2957,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 12:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T15:12:34.613Z",
       "extra": {
         "fromEquipId": "1",
@@ -3037,7 +3034,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 10:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T15:14:05.391Z",
       "extra": {
         "fromEquipId": "1",
@@ -3114,7 +3111,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 9:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T15:16:20.417Z",
       "extra": {
         "fromEquipId": "1",
@@ -3191,7 +3188,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-02-10 22:00",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T16:07:56.688Z",
       "extra": {
         "fromEquipId": "1",
@@ -3268,7 +3265,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-01-31T18:53:00.000Z",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T17:54:05.238Z",
       "extra": {
         "fromEquipId": "1",
@@ -3345,7 +3342,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-01-30T23:14:00.000Z",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T18:10:37.257Z",
       "extra": {
         "fromEquipId": "1",
@@ -3422,7 +3419,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-01-29T00:18:00.000Z",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T18:15:19.383Z",
       "extra": {
         "fromEquipId": "1",
@@ -3499,7 +3496,7 @@
       "titol": "Proposta de partit",
       "missatge": "Proposta de data: 2026-01-28T01:17:00.000Z",
       "tipus": "proposta",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-20T19:11:40.976Z",
       "extra": {
         "fromEquipId": "1",
@@ -3644,141 +3641,6 @@
         "equipNom": "Valencia A",
         "missatge": "HOLA ALEJANDRO"
       }
-    },
-    {
-      "id": "8c01742d",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:31:19.094Z",
-      "extra": {
-        "invitacioId": "4540a236",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "ola"
-      }
-    },
-    {
-      "id": "80b3b9fe",
-      "usuariId": "10",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": false,
-      "created_at": "2026-01-22T16:31:33.452Z",
-      "extra": {
-        "invitacioId": "55a80d11",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "jijijiij"
-      }
-    },
-    {
-      "id": "4ffa2025",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:31:42.748Z",
-      "extra": {
-        "invitacioId": "1bfd78b6",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "aleeeeeeeeeeeeee"
-      }
-    },
-    {
-      "id": "22d7d982",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:35:11.765Z",
-      "extra": {
-        "invitacioId": "9e07f88f",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "holaaaaaaaaaaa"
-      }
-    },
-    {
-      "id": "8a1af27e",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:36:49.473Z",
-      "extra": {
-        "invitacioId": "c5745122",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "aleeeeeeeeeee"
-      }
-    },
-    {
-      "id": "ee310f66",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:37:32.283Z",
-      "extra": {
-        "invitacioId": "2a08ec42",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "alejandro?"
-      }
-    },
-    {
-      "id": "c8aacb32",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:37:54.591Z",
-      "extra": {
-        "invitacioId": "42210484",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "dcvdvdf"
-      }
-    },
-    {
-      "id": "3bfa886f",
-      "usuariId": "8",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": true,
-      "created_at": "2026-01-22T16:39:34.980Z",
-      "extra": {
-        "invitacioId": "774cbe37",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "aleeeeeeeeeee"
-      }
-    },
-    {
-      "id": "8aab289c",
-      "usuariId": "9",
-      "titol": "Invitació a equip",
-      "missatge": "Has rebut una invitació per unir-te a l'equip Valencia A",
-      "tipus": "invitacio_equip",
-      "read": false,
-      "created_at": "2026-01-22T16:41:30.172Z",
-      "extra": {
-        "invitacioId": "469d14c1",
-        "equipId": 1,
-        "equipNom": "Valencia A",
-        "missatge": "nuria?"
-      }
     }
   ],
   "Merch": [
@@ -3899,10 +3761,10 @@
       "jugadorId": "10",
       "enviadaPer": "2",
       "missatge": "Hola, vull fitxar-te\n",
-      "estat": "CANCEL·LADA",
+      "estat": "PENDENT",
       "created_at": "2026-01-22T16:14:09.831Z",
-      "updated_at": "2026-01-22T16:31:27.751Z",
-      "isActive": false
+      "updated_at": "2026-01-22T16:14:09.831Z",
+      "isActive": true
     },
     {
       "id": "4dbbf27e",
@@ -3921,109 +3783,10 @@
       "jugadorId": "8",
       "enviadaPer": "2",
       "missatge": "HOLA ALEJANDRO",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:18:10.876Z",
-      "updated_at": "2026-01-22T16:31:06.982Z",
-      "isActive": false
-    },
-    {
-      "id": "4540a236",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "ola",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:31:19.064Z",
-      "updated_at": "2026-01-22T16:31:36.773Z",
-      "isActive": false
-    },
-    {
-      "id": "55a80d11",
-      "equipId": 1,
-      "jugadorId": "10",
-      "enviadaPer": "2",
-      "missatge": "jijijiij",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:31:33.421Z",
-      "updated_at": "2026-01-22T16:31:34.952Z",
-      "isActive": false
-    },
-    {
-      "id": "1bfd78b6",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "aleeeeeeeeeeeeee",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:31:42.715Z",
-      "updated_at": "2026-01-22T16:34:31.974Z",
-      "isActive": false
-    },
-    {
-      "id": "9e07f88f",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "holaaaaaaaaaaa",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:35:11.736Z",
-      "updated_at": "2026-01-22T16:36:45.354Z",
-      "isActive": false
-    },
-    {
-      "id": "c5745122",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "aleeeeeeeeeee",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:36:49.440Z",
-      "updated_at": "2026-01-22T16:37:24.890Z",
-      "isActive": false
-    },
-    {
-      "id": "2a08ec42",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "alejandro?",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:37:32.252Z",
-      "updated_at": "2026-01-22T16:37:48.960Z",
-      "isActive": false
-    },
-    {
-      "id": "42210484",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "dcvdvdf",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:37:54.559Z",
-      "updated_at": "2026-01-22T16:39:30.353Z",
-      "isActive": false
-    },
-    {
-      "id": "774cbe37",
-      "equipId": 1,
-      "jugadorId": "8",
-      "enviadaPer": "2",
-      "missatge": "aleeeeeeeeeee",
       "estat": "PENDENT",
-      "created_at": "2026-01-22T16:39:34.963Z",
-      "updated_at": "2026-01-22T16:39:34.963Z",
+      "created_at": "2026-01-22T16:18:10.876Z",
+      "updated_at": "2026-01-22T16:18:10.876Z",
       "isActive": true
-    },
-    {
-      "id": "469d14c1",
-      "equipId": 1,
-      "jugadorId": "9",
-      "enviadaPer": "2",
-      "missatge": "nuria?",
-      "estat": "CANCEL·LADA",
-      "created_at": "2026-01-22T16:41:30.141Z",
-      "updated_at": "2026-01-22T16:41:36.683Z",
-      "isActive": false
     }
   ]
 }

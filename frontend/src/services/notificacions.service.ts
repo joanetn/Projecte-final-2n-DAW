@@ -38,3 +38,15 @@ export const rejectProposta = async (notifId: string) => {
     if (!res.ok) throw new Error('Error rebutjant proposta');
     return res.json();
 };
+
+export const marcarNotificacioLlegida = async (notifId: string) => {
+    const res = await fetch(`${API_BASE}/notificacions/${notifId}/llegida`, { method: 'PATCH' });
+    if (!res.ok) throw new Error('Error marcant notificació com a llegida');
+    return res.json();
+};
+
+export const marcarTotesNotificacionsLlegides = async (usuariId: string) => {
+    const res = await fetch(`${API_BASE}/notificacions/usuari/${usuariId}/llegides`, { method: 'PATCH' });
+    if (!res.ok) throw new Error('Error marcant notificacions com a llegides');
+    return res.json();
+};
