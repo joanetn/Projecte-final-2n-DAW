@@ -1,5 +1,5 @@
 import { backend_rapid } from "@/api/axios"
-import { InvitacioData, InvitacionsEnviadesResponse, InvitacioResponse, JugadorsDisponiblesResponse } from "@/types/invitacions"
+import { InvitacioData, InvitacionsEnviadesResponse, InvitacionsRebudesResponse, JugadorsDisponiblesResponse } from "@/types/invitacions"
 
 export const getJugadorsDisponibles = async (): Promise<JugadorsDisponiblesResponse> => {
     try {
@@ -41,6 +41,17 @@ export const getCancelarInvitacio = async (id: string) => {
     } catch (err: any) {
         const message = err.response?.data?.message || "Error al cancel·lar l'invitació";
         console.error("Error en getCancelarInvitacio:", err);
+        throw new Error(message);
+    }
+}
+
+export const getInvitacionsRebudes = async () => {
+    try {
+        const res = await backend_rapid.get<InvitacionsRebudesResponse>(`/invitacions/rebudes`);
+        return res.data;
+    } catch (err: any) {
+        const message = err.response?.data?.message || "Error al carregar les invitacions";
+        console.error("Error en getInvitacionsRebudes:", err);
         throw new Error(message);
     }
 }

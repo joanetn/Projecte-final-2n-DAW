@@ -13,6 +13,7 @@ import AlineacioPartit from "@/components/partits/AlineacioPartit";
 // import PropostesTest from "@/pages/PropostesTest";
 import Ranking from "@/pages/Ranking";
 import Invitacions from "@/components/entrenador/Invitacions";
+import InvitacionsJugador from "@/components/jugadors/Invitacions";
 
 const AppRouter = () => {
     return (
@@ -60,6 +61,10 @@ const AppRouter = () => {
                         <Route
                             path="/invitacions"
                             element={<Invitacions />}
+                        />
+                        <Route
+                            path="/areaJugador"
+                            element={<InvitacionsJugador />}
                         />
                     </Routes>
                 </main>

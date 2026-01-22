@@ -103,6 +103,7 @@ const Header = () => {
     const isAdmin = hasRol("ADMIN_WEB");
     const isArbitre = hasRol("ARBITRE");
     const isEntrenador = hasRol("ENTRENADOR");
+    const isJugador = hasRol("JUGADOR");
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 border-b border-border shadow-sm">
@@ -159,6 +160,15 @@ const Header = () => {
                         >
                             Ranking
                         </Link>
+
+                        {isJugador && (
+                            <Link
+                                to="/areaJugador"
+                                className={`text-sm font-medium ${isActive("/areaJugador") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                            >
+                                Area de jugador
+                            </Link>
+                        )}
 
                         {!isLoggedIn && (
                             <div className="flex items-center gap-3">

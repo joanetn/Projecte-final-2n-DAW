@@ -54,3 +54,34 @@ export interface InvitacionsEnviadesResponse {
     }],
     total: number;
 }
+
+export interface InvitacionsRebudesResponse {
+    invitacions: [{
+        id: string;
+        equipId: string;
+        jugadorId: string;
+        enviadaPer: string;
+        missatge: string;
+        estat: string;
+        created_at: string;
+        updated_at: string;
+        isActive: string;
+        jugador: {
+            id: string;
+            nom: string;
+            email: string;
+            nivell: string;
+            avatar: string;
+        }
+    }],
+    equip: {
+        id: string;
+        nom: string;
+        categoria: string;
+    },
+    enviadaPer: {
+        id: string;
+        nom: string;
+    },
+    total: number;
+}
