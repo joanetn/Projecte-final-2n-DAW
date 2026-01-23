@@ -85,3 +85,12 @@ export interface InvitacionsRebudesResponse {
     },
     total: number;
 }
+
+export interface InvitacioAcceptadaResponse {
+    message: string;
+    equip: {
+        id: string;
+        nom: string;
+        categoria: string;
+    }
+}

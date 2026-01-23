@@ -1,4 +1,5 @@
 const api = require("../services/jsonServer.service");
+const { comprovarSeguroVigent } = require("./seguro.controller");
 
 exports.crearAlineacio = async (req, res) => {
     try {
@@ -7,6 +8,24 @@ exports.crearAlineacio = async (req, res) => {
 
         if (!Array.isArray(jugadorIds) || jugadorIds.length !== 2) {
             return res.status(400).json({ message: "Debes pasar exactamente 2 jugadores" });
+        }
+
+        // Validar que tots els jugadors tinguin segur vigent
+        const validacionsSeguros = await Promise.all(
+            jugadorIds.map(async (id) => ({
+                jugadorId: id,
+                teSeguro: await comprovarSeguroVigent(id)
+            }))
+        );
+
+        const jugadorsSenseSeguro = validacionsSeguros.filter(v => !v.teSeguro);
+
+        if (jugadorsSenseSeguro.length > 0) {
+            const idsInvalids = jugadorsSenseSeguro.map(j => j.jugadorId).join(", ");
+            return res.status(400).json({
+                message: `Els següents jugadors no tenen el segur pagat i no poden ser alineats: ${idsInvalids}`,
+                jugadorsSenseSeguro: jugadorsSenseSeguro.map(j => j.jugadorId)
+            });
         }
 
         const promises = jugadorIds.map(jugadorId =>

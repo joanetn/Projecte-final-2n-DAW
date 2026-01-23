@@ -14,6 +14,7 @@ import AlineacioPartit from "@/components/partits/AlineacioPartit";
 import Ranking from "@/pages/Ranking";
 import Invitacions from "@/components/entrenador/Invitacions";
 import InvitacionsJugador from "@/components/jugadors/Invitacions";
+import SeguroPage from "@/pages/SeguroPage";
 
 const AppRouter = () => {
     return (
@@ -65,6 +66,14 @@ const AppRouter = () => {
                         <Route
                             path="/areaJugador"
                             element={<InvitacionsJugador />}
+                        />
+                        <Route
+                            path="/jugador/seguro"
+                            element={
+                                <RolGuard allowedRoles={["JUGADOR"]}>
+                                    <SeguroPage />
+                                </RolGuard>
+                            }
                         />
                     </Routes>
                 </main>

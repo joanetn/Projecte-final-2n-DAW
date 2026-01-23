@@ -235,7 +235,7 @@ const Invitacions = () => {
 
                                         <CardHeader className="pb-3">
                                             <div className="flex items-start gap-4">
-                                                {/* Avatar */}
+
                                                 <div className="relative">
                                                     {inv.jugador.avatar ? (
                                                         <img
@@ -250,14 +250,14 @@ const Invitacions = () => {
                                                             </span>
                                                         </div>
                                                     )}
-                                                    {/* Indicador de estado pequeño */}
+
                                                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${inv.estat === 'PENDENT' ? 'bg-amber-400' :
                                                         inv.estat === 'ACCEPTADA' ? 'bg-emerald-400' :
                                                             inv.estat === 'REBUTJADA' ? 'bg-red-400' : 'bg-gray-400'
                                                         }`} />
                                                 </div>
 
-                                                {/* Info principal */}
+
                                                 <div className="flex-1 min-w-0">
                                                     <CardTitle className="text-base font-semibold text-gray-800 truncate">
                                                         {inv.jugador.nom}
@@ -270,7 +270,7 @@ const Invitacions = () => {
                                                     </div>
                                                 </div>
 
-                                                {/* Badge de estado */}
+
                                                 <Badge
                                                     variant="outline"
                                                     className={`${estatStyle.bg} ${estatStyle.text} ${estatStyle.border} text-xs font-medium px-2.5 py-0.5`}
@@ -281,7 +281,6 @@ const Invitacions = () => {
                                         </CardHeader>
 
                                         <CardContent className="pt-0 space-y-4">
-                                            {/* Nivel del jugador */}
                                             {inv.jugador.nivell && (
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Nivell:</span>
@@ -291,7 +290,6 @@ const Invitacions = () => {
                                                 </div>
                                             )}
 
-                                            {/* Mensaje de la invitación */}
                                             {inv.missatge && (
                                                 <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
                                                     <div className="flex items-start gap-2">
@@ -303,7 +301,6 @@ const Invitacions = () => {
                                                 </div>
                                             )}
 
-                                            {/* Fecha y botón */}
                                             <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                                                 <div className="flex items-center gap-1.5 text-muted-foreground">
                                                     <Clock className="w-3.5 h-3.5" />

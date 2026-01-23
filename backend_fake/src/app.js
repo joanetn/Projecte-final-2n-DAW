@@ -18,5 +18,7 @@ app.use("/entrenador", require("./routes/entrenador.routes"));
 app.use("/notificacions", require("./routes/notificacions.routes"));
 app.use("/propostes", require("./routes/propostes.routes"));
 app.use("/invitacions", require("./routes/invitacions.routes"));
+app.use("/seguro", require("./routes/seguro.routes"));
+app.use("/actes", require("./routes/acta.routes"));
 
 module.exports = app;

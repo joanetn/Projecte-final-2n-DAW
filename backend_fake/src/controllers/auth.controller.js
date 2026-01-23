@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
                 rols: rols.map(r => r.rol)
             },
             JWT_SECRET,
-            { expiresIn: "2h" }
+            { expiresIn: "2d" }
         );
 
         res.json({

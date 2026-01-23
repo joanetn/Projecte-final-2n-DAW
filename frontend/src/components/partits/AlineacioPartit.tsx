@@ -3,15 +3,16 @@ import DraggableJugador from "./DraggableJugador";
 import SlotJugador from "./DropPista";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useComprovarAlineacions, usePlantilla } from "@/queries/entrenador.queries";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "../ui/button";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGuardarAlineacio } from "@/mutations/entrenador.mutations";
 import { CompAlineacioResponse } from "@/types/entrenador";
-import { ArrowLeft, Users, Save, Check } from "lucide-react";
+import { ArrowLeft, Users, Save, Check, ShieldAlert } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { useValidarJugadorsAlineacio } from "@/queries/seguro.queries";
 
 const AlineacioPartit = () => {
     const { data: plantillaData } = usePlantilla();
@@ -32,6 +33,26 @@ const AlineacioPartit = () => {
     const mutation = useGuardarAlineacio();
     const compAlineacio = useComprovarAlineacions();
     const { showToast } = useToast();
+
+    // Obtenir IDs de tots els jugadors per validar el segur
+    const jugadorIds = useMemo(() => plantilla.map(j => j.id), [plantilla]);
+    const { data: validacioSeguros } = useValidarJugadorsAlineacio(jugadorIds);
+
+    // Mapa de jugador -> teSeguro per accés ràpid
+    const segurosMap = useMemo(() => {
+        const map: Record<string, boolean> = {};
+        if (validacioSeguros?.jugadors) {
+            validacioSeguros.jugadors.forEach(j => {
+                map[j.jugadorId] = j.teSeguro;
+            });
+        }
+        return map;
+    }, [validacioSeguros]);
+
+    // Comptar jugadors sense segur
+    const jugadorsSenseSeguro = useMemo(() => {
+        return plantilla.filter(j => segurosMap[j.id] === false);
+    }, [plantilla, segurosMap]);
 
     const guardarAlineacio = () => {
         const body = {
@@ -168,6 +189,12 @@ const AlineacioPartit = () => {
                                 <Users className="h-5 w-5" />
                                 Jugadors Disponibles
                             </CardTitle>
+                            {jugadorsSenseSeguro.length > 0 && (
+                                <div className="flex items-center gap-1 text-xs text-orange-600 mt-1">
+                                    <ShieldAlert className="h-3 w-3" />
+                                    {jugadorsSenseSeguro.length} sense segur
+                                </div>
+                            )}
                         </CardHeader>
                         <CardContent>
                             <ScrollArea className="h-[calc(80vh-200px)]">
@@ -178,6 +205,7 @@ const AlineacioPartit = () => {
                                             <DraggableJugador
                                                 key={j.id}
                                                 jugador={j}
+                                                teSeguro={segurosMap[j.id] ?? true}
                                             />
                                         ))}
                                     {plantilla.filter(j => !jugadoresUsados.includes(j.id)).length === 0 && (

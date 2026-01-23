@@ -1,4 +1,4 @@
-import { usePartitsJugats, usePartitsPendents, usePlantilla } from "@/queries/entrenador.queries";
+import { usePartitsPendents, usePlantilla } from "@/queries/entrenador.queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PlantillaCard from "@/components/plantilla/PlantillaCard";
@@ -7,13 +7,40 @@ import ClassificacioLliga from "@/components/entrenador/ClassificacioLliga";
 import CalendariPartits from "@/components/entrenador/CalendariPartits";
 import EstadistiquesJugadors from "@/components/entrenador/EstadistiquesJugadors";
 import HistorialPropostes from "@/components/entrenador/HistorialPropostes";
-import { Loader2, Users, Trophy, Calendar, BarChart3, FileText } from "lucide-react";
+import { Loader2, Users, Trophy, Calendar, BarChart3, FileText, ShieldAlert } from "lucide-react";
 import Invitacions from "@/components/entrenador/Invitacions";
+import { useValidarJugadorsAlineacio } from "@/queries/seguro.queries";
+import { useMemo } from "react";
 
 const DashboardEntrenador = () => {
     const plantilla = usePlantilla();
     // const partitsJugats = usePartitsJugats();
     const partitsPendents = usePartitsPendents();
+
+    // Obtenir IDs de tots els jugadors per validar seguros
+    const jugadorIds = useMemo(() => {
+        if (!plantilla.data) return [];
+        return plantilla.data.plantilla.jugadors.map(j => j.id);
+    }, [plantilla.data]);
+
+    const { data: validacioSeguros } = useValidarJugadorsAlineacio(jugadorIds);
+
+    // Mapa de jugador -> teSeguro
+    const segurosMap = useMemo(() => {
+        const map: Record<string, boolean> = {};
+        if (validacioSeguros?.jugadors) {
+            validacioSeguros.jugadors.forEach(j => {
+                map[j.jugadorId] = j.teSeguro;
+            });
+        }
+        return map;
+    }, [validacioSeguros]);
+
+    // Comptar jugadors sense segur
+    const jugadorsSenseSeguro = useMemo(() => {
+        if (!plantilla.data) return 0;
+        return plantilla.data.plantilla.jugadors.filter(j => segurosMap[j.id] === false).length;
+    }, [plantilla.data, segurosMap]);
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-8">
@@ -116,12 +143,24 @@ const DashboardEntrenador = () => {
                             {/* Jugadores */}
                             {plantilla.data.plantilla.jugadors.length > 0 && (
                                 <div>
-                                    <h3 className="text-lg font-semibold mb-3 text-foreground">
-                                        Jugadors ({plantilla.data.plantilla.jugadors.length})
-                                    </h3>
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <h3 className="text-lg font-semibold text-foreground">
+                                            Jugadors ({plantilla.data.plantilla.jugadors.length})
+                                        </h3>
+                                        {jugadorsSenseSeguro > 0 && (
+                                            <div className="flex items-center gap-1 text-sm text-orange-600 bg-orange-100 dark:bg-orange-900/30 px-2 py-1 rounded-full">
+                                                <ShieldAlert className="h-4 w-4" />
+                                                {jugadorsSenseSeguro} sense segur
+                                            </div>
+                                        )}
+                                    </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                         {plantilla.data.plantilla.jugadors.map((usuari) => (
-                                            <PlantillaCard key={usuari.id} usuari={usuari} />
+                                            <PlantillaCard
+                                                key={usuari.id}
+                                                usuari={usuari}
+                                                teSeguro={segurosMap[usuari.id]}
+                                            />
                                         ))}
                                     </div>
                                 </div>

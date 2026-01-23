@@ -1,5 +1,5 @@
 import { backend_rapid } from "@/api/axios"
-import { InvitacioData, InvitacionsEnviadesResponse, InvitacionsRebudesResponse, JugadorsDisponiblesResponse } from "@/types/invitacions"
+import { InvitacioAcceptadaResponse, InvitacioData, InvitacionsEnviadesResponse, InvitacionsRebudesResponse, JugadorsDisponiblesResponse } from "@/types/invitacions"
 
 export const getJugadorsDisponibles = async (): Promise<JugadorsDisponiblesResponse> => {
     try {
@@ -52,6 +52,28 @@ export const getInvitacionsRebudes = async () => {
     } catch (err: any) {
         const message = err.response?.data?.message || "Error al carregar les invitacions";
         console.error("Error en getInvitacionsRebudes:", err);
+        throw new Error(message);
+    }
+}
+
+export const getAcceptarInvitacio = async (id: string) => {
+    try {
+        const res = await backend_rapid.post<InvitacioAcceptadaResponse>(`/invitacions/${id}/acceptar`);
+        return res.data;
+    } catch (err: any) {
+        const message = err.response?.data?.message || "Error al cancelar l'invitacio";
+        console.error("Error en getAcceptarInvitacio:", err);
+        throw new Error(message);
+    }
+}
+
+export const getRebujarInvitacio = async (id: string) => {
+    try {
+        const res = await backend_rapid.post<{ message: string }>(`/invitacions/${id}/rebutjar`);
+        return res.data;
+    } catch (err: any) {
+        const message = err.response?.data?.message || "Error al rebutjar l'invitacio";
+        console.error("Error en getRebujarInvitacio:", err);
         throw new Error(message);
     }
 }

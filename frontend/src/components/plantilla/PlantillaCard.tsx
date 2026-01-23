@@ -1,16 +1,31 @@
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
+import { ShieldCheck, ShieldAlert } from "lucide-react";
 
 interface PlantillaCardProps {
     usuari: any;
+    teSeguro?: boolean;
 }
 
-const PlantillaCard = ({ usuari }: PlantillaCardProps) => (
-    <Card className="hover:shadow-md transition">
+const PlantillaCard = ({ usuari, teSeguro }: PlantillaCardProps) => (
+    <Card className={`hover:shadow-md transition ${teSeguro === false ? 'border-orange-300 bg-orange-50/30 dark:bg-orange-950/20' : ''}`}>
         <CardHeader className="pb-2">
             <div className="flex items-start justify-between">
                 <div className="flex-1">
-                    <CardTitle className="text-lg">{usuari.nom}</CardTitle>
+                    <div className="flex items-center gap-2">
+                        <CardTitle className="text-lg">{usuari.nom}</CardTitle>
+                        {teSeguro !== undefined && (
+                            teSeguro ? (
+                                <span title="Segur pagat">
+                                    <ShieldCheck className="h-4 w-4 text-green-600" />
+                                </span>
+                            ) : (
+                                <span title="Sense segur">
+                                    <ShieldAlert className="h-4 w-4 text-orange-500" />
+                                </span>
+                            )
+                        )}
+                    </div>
                     <p className="text-sm text-muted-foreground">{usuari.email}</p>
                     {usuari.telefon && (
                         <p className="text-xs text-muted-foreground/70 mt-1">{usuari.telefon}</p>
@@ -39,6 +54,12 @@ const PlantillaCard = ({ usuari }: PlantillaCardProps) => (
                         {rol}
                     </Badge>
                 ))}
+                {teSeguro === false && (
+                    <Badge variant="destructive" className="text-xs gap-1">
+                        <ShieldAlert className="h-3 w-3" />
+                        Sense segur
+                    </Badge>
+                )}
             </div>
         </CardContent>
     </Card>

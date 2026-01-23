@@ -5,16 +5,43 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Mail, Clock, MessageSquare, Check, X } from "lucide-react"
 import { useState } from "react"
+import { useAcceptarInvitacio, useRebutjarInvitacio } from "@/mutations/invitacions.mutations"
+import { useToast } from "../ui/Toast"
+import SeguroWarning from "./SeguroWarning"
+import SeguroBadge from "./SeguroBadge"
 
 const InvitacionsJugador = () => {
     const { data: invitacions, isLoading: invitacionsIsLoading, isError: invitacionsIsError } = useInvitacionsRebudes();
-
-    console.log(invitacions);
+    const mutationAcceptar = useAcceptarInvitacio();
+    const mutationRebutjar = useRebutjarInvitacio();
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [replyFor, setReplyFor] = useState<string | null>(null);
     const [replyMode, setReplyMode] = useState<'accept' | 'reject' | null>(null);
     const [replyMessage, setReplyMessage] = useState<string>('');
+    const { showToast } = useToast();
+
+    const acceptarInvitacio = (id: string) => {
+        mutationAcceptar.mutate(id, {
+            onSuccess: () => {
+                showToast({ type: 'success', title: 'Invitació acceptada', description: "Formes part de l'equip" });
+            },
+            onError: () => {
+                showToast({ type: 'error', title: 'Error', description: "No s'ha pogut acceptar l'invitació." });
+            }
+        });
+    }
+
+    const rebutjarInvitacio = (id: string) => {
+        mutationRebutjar.mutate(id, {
+            onSuccess: () => {
+                showToast({ type: 'success', title: 'Invitació rebutjada', description: "No formaràs part de l'equip" });
+            },
+            onError: () => {
+                showToast({ type: 'error', title: 'Error', description: "No s'ha pogut rebutjar l'invitació." });
+            }
+        })
+    }
 
     const handleOpenReply = (invId: string, mode: 'accept' | 'reject') => {
         setReplyFor(invId);
@@ -25,6 +52,7 @@ const InvitacionsJugador = () => {
 
     const handleConfirm = () => {
         console.log({ id: replyFor, action: replyMode, message: replyMessage });
+        replyMode === 'accept' ? acceptarInvitacio(replyFor!) : rebutjarInvitacio(replyFor!)
         setIsDialogOpen(false);
         setReplyFor(null);
         setReplyMode(null);
@@ -65,9 +93,15 @@ const InvitacionsJugador = () => {
     return (
         <>
             <div className="w-full max-w-5xl mx-auto px-4 py-8 space-y-6">
-                <div className="text-center">
-                    <h2 className="text-lg font-semibold text-gray-800">Invitacions rebudes</h2>
-                    <p className="text-sm text-muted-foreground">Tens {total} invitació{total !== 1 ? 's' : ''} rebuda{total !== 1 ? 's' : ''}.</p>
+                {/* Avís de segur */}
+                <SeguroWarning />
+
+                <div className="flex items-center justify-between">
+                    <div className="text-center flex-1">
+                        <h2 className="text-lg font-semibold text-gray-800">Invitacions rebudes</h2>
+                        <p className="text-sm text-muted-foreground">Tens {total} invitació{total !== 1 ? 's' : ''} rebuda{total !== 1 ? 's' : ''}.</p>
+                    </div>
+                    <SeguroBadge size="sm" />
                 </div>
 
                 {total === 0 && (

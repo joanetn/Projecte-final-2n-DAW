@@ -1,6 +1,7 @@
 const api = require("../services/jsonServer.service");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
+const { comprovarSeguroVigent } = require("./seguro.controller");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -378,6 +379,15 @@ exports.acceptarInvitacio = async (req, res) => {
         // Verificar que està pendent
         if (invitacio.estat !== "PENDENT") {
             return res.status(400).json({ message: "Aquesta invitació ja ha estat processada" });
+        }
+
+        // Verificar que el jugador té el segur pagat
+        const teSeguro = await comprovarSeguroVigent(user.id);
+        if (!teSeguro) {
+            return res.status(400).json({
+                message: "No pots unir-te a un equip sense tenir el segur pagat. Paga el segur primer.",
+                errorCode: "SEGURO_NO_PAGAT"
+            });
         }
 
         // Verificar que el jugador no té equip actiu
