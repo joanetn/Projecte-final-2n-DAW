@@ -55,17 +55,7 @@ import {
 import { useUsuarisAdmin } from "@/queries/adminWeb.queries";
 import { useToggleUsuariActiu, useCanviarRolsUsuari, useEliminarUsuari } from "@/mutations/adminWeb.mutations";
 import { useToast } from "@/components/ui/Toast";
-
-interface UsuariAdmin {
-    id: string;
-    nom: string;
-    email: string;
-    telefon?: string;
-    nivell?: string;
-    avatar?: string;
-    isActive: boolean;
-    rols: string[];
-}
+import { UsuariAdmin } from "@/types/auth";
 
 export function UsuarisTab() {
     const { showToast } = useToast();

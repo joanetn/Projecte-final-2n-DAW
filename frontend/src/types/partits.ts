@@ -44,3 +44,19 @@ export interface JugadorType {
     nom: string;
 };
 export type PartitsDashboardEntrenador = Partit;
+
+export interface PartitAdmin {
+    id: string;
+    localId: string;
+    localNom: string;
+    visitantId: string;
+    visitantNom: string;
+    data: string;
+    hora?: string;
+    ubicacio?: string;
+    status: string;
+    setsLocal: number;
+    setsVisitant: number;
+    arbitreId?: string;
+    isActive: boolean;
+}

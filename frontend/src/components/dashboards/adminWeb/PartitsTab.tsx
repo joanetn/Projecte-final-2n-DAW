@@ -46,22 +46,7 @@ import { Search, RefreshCw, Loader2, Pencil, Trash2, Plus } from "lucide-react";
 import { usePartitsAdmin, useEquipsAdmin, useArbitresAdmin } from "@/queries/adminWeb.queries";
 import { useCrearPartit, useActualitzarPartit, useEliminarPartit, useAssignarArbitre } from "@/mutations/adminWeb.mutations";
 import { useToast } from "@/components/ui/Toast";
-
-interface PartitAdmin {
-    id: string;
-    localId: string;
-    localNom: string;
-    visitantId: string;
-    visitantNom: string;
-    data: string;
-    hora?: string;
-    ubicacio?: string;
-    status: string;
-    setsLocal: number;
-    setsVisitant: number;
-    arbitreId?: string;
-    isActive: boolean;
-}
+import { PartitAdmin } from "@/types/partits";
 
 export function PartitsTab() {
     const { showToast } = useToast();

@@ -1,5 +1,5 @@
 import { laravel, backend_rapid } from '../api/axios';
-import { User, RegisterResponse, RegisterData, LoginData, LoginResponse } from '../types/auth';
+import { User, RegisterResponse, RegisterData, LoginData, LoginResponse, TeEquipResponse } from '../types/auth';
 import { clearCurrentUser, getCurrentUser, setCurrentUser } from '@/lib/utils';
 export const getUsuaris = async (): Promise<User[]> => {
     const res = await laravel.get<User[]>('/usuaris');
@@ -48,10 +48,23 @@ export const getCurrentUserData = async (): Promise<User> => {
         throw new Error(message);
     }
 }
+
+export const getTeEquip = async (): Promise<TeEquipResponse> => {
+    try {
+        const res = await backend_rapid.get<TeEquipResponse>("/auth/teEquip");
+        return res.data;
+    } catch (err: any) {
+        console.error("Error obtenint si l'usuari te equip:", err);
+        const message = err.response?.data?.message || "Error obtenint dades de l'usuari";
+        throw new Error(message);
+    }
+}
+
 export const useCurrentUser = () => {
     const user = getCurrentUser();
     return user;
 }
+
 export const logoutUser = () => {
     clearCurrentUser();
 }

@@ -39,14 +39,7 @@ import { RefreshCw, Loader2, Pencil, Trash2, Plus } from "lucide-react";
 import { useLliguesAdmin } from "@/queries/adminWeb.queries";
 import { useCrearLliga, useActualitzarLliga, useEliminarLliga } from "@/mutations/adminWeb.mutations";
 import { useToast } from "@/components/ui/Toast";
-
-interface LligaAdmin {
-    id: string;
-    nom: string;
-    categoria: string;
-    isActive: boolean;
-    totalEquips: number;
-}
+import { LligaAdmin } from "@/types/lligues";
 
 export function LliguesTab() {
     const { showToast } = useToast();

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
+import { useTeEquip } from "@/queries/auth.queries";
 import { CrearClubForm } from "@/components/forms/CrearClubForm";
 import {
     Trophy,
@@ -140,24 +141,26 @@ const TestimonialCard = ({
 );
 const Home = () => {
     const { user } = useAuth();
+    const { data: dataTeEquip, isLoading } = useTeEquip();
     const isLoggedIn = !!user;
+    const teEquip = dataTeEquip;
     const HeroSection = () => (
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden hero-gradient-bg">
-            {}
+            { }
             <div className="floating-orb floating-orb-1" />
             <div className="floating-orb floating-orb-2" />
             <div className="floating-orb floating-orb-3" />
             <div className="floating-orb floating-orb-4" />
-            {}
+            { }
             <div className="mesh-gradient" />
-            {}
+            { }
             <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]"
                 style={{
                     backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
                     backgroundSize: '40px 40px'
                 }}
             />
-            {}
+            { }
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-[15%] left-[10%] icon-float">
                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-sm flex items-center justify-center border border-blue-500/10">
@@ -192,7 +195,7 @@ const Home = () => {
             </div>
             <div className="relative z-10 container mx-auto px-4 py-20">
                 <div className="max-w-4xl mx-auto text-center">
-                    {}
+                    { }
                     <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 border border-blue-500/20 mb-8 animate-fade-in backdrop-blur-sm">
                         <div className="relative">
                             <Sparkles className="w-5 h-5 text-blue-500" />
@@ -204,7 +207,7 @@ const Home = () => {
                             Sistema de Gestió de Lligues de Pàdel
                         </span>
                     </div>
-                    {}
+                    { }
                     <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight animate-fade-in-up">
                         <span className="block text-foreground mb-2">
                             La teua lliga de pàdel,
@@ -213,13 +216,13 @@ const Home = () => {
                             organitzada i professional
                         </span>
                     </h1>
-                    {}
+                    { }
                     <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up delay-200">
                         Plataforma integral per a la gestió de competicions de pàdel.
                         Des de la creació de partits fins al seguiment de classificacions,
                         <span className="text-foreground font-medium"> tot en un sol lloc</span> per a entrenadors, àrbitres i jugadors.
                     </p>
-                    {}
+                    { }
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up delay-300">
                         <Link to="/register">
                             <Button size="lg" className="shimmer-btn text-lg px-10 py-7 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300 group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 border-0">
@@ -235,7 +238,7 @@ const Home = () => {
                             </Button>
                         </Link>
                     </div>
-                    {}
+                    { }
                     <div className="mt-16 flex flex-wrap justify-center gap-6 md:gap-10 animate-fade-in-up delay-500">
                         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20">
                             <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -252,20 +255,11 @@ const Home = () => {
                     </div>
                 </div>
             </div>
-            {}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-                <div className="flex flex-col items-center gap-2">
-                    <span className="text-xs text-muted-foreground font-medium">Descobreix més</span>
-                    <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full flex justify-center backdrop-blur-sm">
-                        <div className="w-1.5 h-3 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full mt-2 animate-pulse" />
-                    </div>
-                </div>
-            </div>
         </section>
     );
     const WelcomeSection = () => {
         const isArbitre = user?.rols?.includes("ARBITRE");
-        
+
         return (
             <section className="relative py-16 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background" />
@@ -278,7 +272,7 @@ const Home = () => {
                         </div>
                         <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
                             <span className="text-muted-foreground">Hola, </span>
-                            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text">
                                 {user?.nom}! 👋
                             </span>
                         </h1>
@@ -286,11 +280,15 @@ const Home = () => {
                             Benvingut/da de nou a la plataforma. Ací baix pots veure tota la informació sobre com funciona el sistema.
                         </p>
                     </div>
-                    
-                    {!isArbitre && (
-                        <div className="max-w-md mx-auto mt-8">
-                            <CrearClubForm />
-                        </div>
+
+                    {!isLoading && (
+                        <>
+                            {!isArbitre && !teEquip && (
+                                <div className="max-w-md mx-auto mt-8">
+                                    <CrearClubForm />
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </section>
@@ -298,11 +296,11 @@ const Home = () => {
     };
     return (
         <div className="min-h-screen">
-            {}
+            { }
             {isLoggedIn ? <WelcomeSection /> : <HeroSection />}
-            {}
+            { }
             <section className="py-20 section-gradient-blue relative overflow-hidden">
-                {}
+                { }
                 <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
                 <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
                 <div className="container mx-auto px-4 relative">
@@ -355,9 +353,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            {}
+            { }
             <section className="py-20 section-gradient-purple relative overflow-hidden">
-                {}
+                { }
                 <div className="absolute top-1/4 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl translate-x-1/2" />
                 <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-violet-500/10 rounded-full blur-3xl -translate-x-1/2" />
                 <div className="container mx-auto px-4 relative">
@@ -375,7 +373,7 @@ const Home = () => {
                     </div>
                     <div className="max-w-5xl mx-auto">
                         <div className="grid gap-8">
-                            {}
+                            { }
                             <div className="flex flex-col md:flex-row gap-6 items-start group">
                                 <div className="flex-shrink-0">
                                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
@@ -415,7 +413,7 @@ const Home = () => {
                                     </CardContent>
                                 </Card>
                             </div>
-                            {}
+                            { }
                             <div className="flex flex-col md:flex-row gap-6 items-start">
                                 <div className="flex-shrink-0">
                                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
@@ -447,7 +445,7 @@ const Home = () => {
                                     </CardContent>
                                 </Card>
                             </div>
-                            {}
+                            { }
                             <div className="flex flex-col md:flex-row gap-6 items-start">
                                 <div className="flex-shrink-0">
                                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
@@ -479,7 +477,7 @@ const Home = () => {
                                     </CardContent>
                                 </Card>
                             </div>
-                            {}
+                            { }
                             <div className="flex flex-col md:flex-row gap-6 items-start">
                                 <div className="flex-shrink-0">
                                     <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg">
@@ -515,9 +513,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            {}
+            { }
             <section className="py-20 section-gradient-green relative overflow-hidden">
-                {}
+                { }
                 <div className="absolute top-0 right-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-3xl" />
                 <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl" />
                 <div className="container mx-auto px-4 relative">
@@ -603,9 +601,9 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            {}
+            { }
             <section className="py-20 section-gradient-amber relative overflow-hidden">
-                {}
+                { }
                 <div className="absolute top-1/2 left-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2" />
                 <div className="absolute top-1/2 right-0 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                 <div className="container mx-auto px-4 relative">
@@ -629,10 +627,10 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            {}
+            { }
             {!isLoggedIn && (
                 <section className="py-20 section-gradient-blue relative overflow-hidden">
-                    {}
+                    { }
                     <div className="absolute top-0 left-1/3 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl" />
                     <div className="absolute bottom-0 right-1/3 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl" />
                     <div className="container mx-auto px-4 relative">
@@ -671,17 +669,17 @@ const Home = () => {
                     </div>
                 </section>
             )}
-            {}
+            { }
             {!isLoggedIn && (
                 <section className="py-24 relative overflow-hidden">
-                    {}
+                    { }
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600" />
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyIi8+PC9nPjwvZz48L3N2Zz4=')] opacity-30" />
-                    {}
+                    { }
                     <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
                     <div className="absolute bottom-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-                    {}
+                    { }
                     <div className="absolute inset-0 overflow-hidden">
                         <div className="absolute top-10 left-10 w-32 h-32 border border-white/20 rounded-full animate-pulse" />
                         <div className="absolute bottom-10 right-10 w-48 h-48 border border-white/20 rounded-full animate-pulse delay-500" />
@@ -711,7 +709,7 @@ const Home = () => {
                     </div>
                 </section>
             )}
-            {}
+            { }
             {isLoggedIn && (
                 <section className="py-16 bg-muted/30">
                     <div className="container mx-auto px-4">

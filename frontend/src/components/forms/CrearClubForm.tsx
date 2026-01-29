@@ -50,6 +50,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCrearClub, useInscriureLliga } from "@/mutations/club.mutations";
 import { useLliguesDisponibles } from "@/queries/club.queries";
 import { cn } from "@/lib/utils";
+import { useTeEquip } from "@/queries/auth.queries";
 
 interface Instalacio {
     nom: string;
@@ -264,8 +265,9 @@ export function CrearClubForm() {
     };
 
     const isArbitre = user?.rols?.includes("ARBITRE");
+    const { data: teEquip } = useTeEquip();
 
-    if (isArbitre) {
+    if (isArbitre || teEquip) {
         return null;
     }
 
@@ -312,8 +314,8 @@ export function CrearClubForm() {
                                             isCompleted
                                                 ? "bg-green-500 text-white"
                                                 : isActive
-                                                ? "bg-primary text-white ring-4 ring-primary/20"
-                                                : "bg-gray-200 text-gray-500"
+                                                    ? "bg-primary text-white ring-4 ring-primary/20"
+                                                    : "bg-gray-200 text-gray-500"
                                         )}
                                     >
                                         {isCompleted ? (
@@ -739,8 +741,8 @@ export function CrearClubForm() {
                                                         </div>
                                                         <div className={cn(
                                                             "w-5 h-5 rounded border-2 flex items-center justify-center mt-1",
-                                                            isSelected 
-                                                                ? "bg-primary border-primary" 
+                                                            isSelected
+                                                                ? "bg-primary border-primary"
                                                                 : "border-gray-300"
                                                         )}>
                                                             {isSelected && (

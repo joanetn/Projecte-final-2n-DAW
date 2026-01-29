@@ -47,15 +47,7 @@ import { Search, RefreshCw, Loader2, Pencil, Trash2, Plus } from "lucide-react";
 import { useEquipsAdmin, useLliguesAdmin } from "@/queries/adminWeb.queries";
 import { useCrearEquip, useActualitzarEquip, useEliminarEquip } from "@/mutations/adminWeb.mutations";
 import { useToast } from "@/components/ui/Toast";
-
-interface EquipAdmin {
-    id: string;
-    nom: string;
-    categoria: string;
-    isActive: boolean;
-    lliga: { id: string; nom: string } | null;
-    totalMembres: number;
-}
+import { EquipAdmin } from "@/types/equips";
 
 export function EquipsTab() {
     const { showToast } = useToast();

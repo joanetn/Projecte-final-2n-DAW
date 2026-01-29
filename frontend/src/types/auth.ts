@@ -34,3 +34,18 @@ export interface LoginResponse {
 export interface CurrentData {
     usuari: User;
 }
+
+export interface UsuariAdmin {
+    id: string;
+    nom: string;
+    email: string;
+    telefon?: string;
+    nivell?: string;
+    avatar?: string;
+    isActive: boolean;
+    rols: string[];
+}
+
+export interface TeEquipResponse {
+    teEquip: boolean;
+}

@@ -198,6 +198,69 @@ exports.register = async (req, res) => {
     }
 };
 
+exports.teEquip = async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+
+        if (!token) {
+            return res.status(401).json({
+                message: "Token no proporcionat"
+            });
+        }
+
+        const JWT_SECRET = process.env.JWT_SECRET;
+
+        // Verificar y decodificar el token
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        // Buscar usuario por ID
+        const usersResponse = await api.get(`/Usuari?id=${decoded.id}`);
+
+        if (!usersResponse || usersResponse.length === 0) {
+            return res.status(404).json({
+                message: "Usuari no trobat"
+            });
+        }
+
+        const user = usersResponse[0];
+
+        // Verificar que el usuario esté activo
+        if (!user.isActive) {
+            return res.status(403).json({
+                message: "Usuari inactiu"
+            });
+        }
+
+        const equip = await api.get(`/EquipUsuari?usuariId=${user.id}`);
+
+        if (equip) {
+            return res.status(200).json({
+                teEquip: true
+            })
+        } else {
+            return res.status(200).json({
+                teEquip: false
+            })
+        }
+    } catch (err) {
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({
+                message: "Token invàlid"
+            });
+        }
+        if (err.name === "TokenExpiredError") {
+            return res.status(401).json({
+                message: "Token expirat"
+            });
+        }
+        console.error("Error en me:", err);
+        res.status(500).json({
+            message: "Error del servidor",
+            error: err.message
+        });
+    }
+}
+
 exports.me = async (req, res) => {
     try {
         const token = req.headers.authorization?.split(" ")[1];

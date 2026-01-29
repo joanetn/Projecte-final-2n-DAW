@@ -11,7 +11,7 @@
       "avatar": "https://i.pravatar.cc/150?img=1",
       "dni": "12345678A",
       "created_at": "2024-01-15T10:00:00.000Z",
-      "updated_at": "2026-01-29T11:59:41.606Z",
+      "updated_at": "2026-01-29T14:37:43.853Z",
       "isActive": true
     },
     {
@@ -25,7 +25,7 @@
       "avatar": "https://i.pravatar.cc/150?img=2",
       "dni": "23456789B",
       "created_at": "2024-01-16T11:00:00.000Z",
-      "updated_at": "2024-01-16T11:00:00.000Z",
+      "updated_at": "2026-01-29T14:37:38.814Z",
       "isActive": true
     },
     {
@@ -314,6 +314,19 @@
       "rol": "ADMIN_EQUIP",
       "isActive": true,
       "created_at": "2026-01-29T13:06:00.202Z"
+    },
+    {
+      "id": "18eca2d1",
+      "usuariId": "2",
+      "rol": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T14:29:59.242Z"
+    },
+    {
+      "usuariId": "IQk2srQ",
+      "rol": "ADMIN_WEB",
+      "isActive": true,
+      "id": "k_jnOVl"
     }
   ],
   "Club": [
@@ -433,6 +446,23 @@
       "isActive": true,
       "created_at": "2026-01-29T13:08:39.522Z",
       "updated_at": "2026-01-29T13:08:39.522Z"
+    },
+    {
+      "id": "aacedd48",
+      "nom": "clup padel jaume vaño",
+      "descripcio": "club de padel de jaume",
+      "adreca": "dvdvdv",
+      "ciutat": "dvvdvdv",
+      "codiPostal": "34344",
+      "provincia": "dffb",
+      "telefon": "bfbdfbf",
+      "email": "a@a.com",
+      "web": "fbbfbf",
+      "anyFundacio": 2026,
+      "creadorId": "2",
+      "isActive": true,
+      "created_at": "2026-01-29T14:29:59.147Z",
+      "updated_at": "2026-01-29T14:29:59.147Z"
     }
   ],
   "Equip": [
@@ -599,6 +629,24 @@
       "isActive": true,
       "created_at": "2026-01-29T13:08:39.555Z",
       "updated_at": "2026-01-29T13:08:39.555Z"
+    },
+    {
+      "id": "0f6474b5",
+      "nom": "Equip padel Jaume Vaño 1",
+      "categoria": "Veterà Femení",
+      "clubId": "aacedd48",
+      "lligaId": "2",
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-01-29T14:29:59.180Z",
+      "updated_at": "2026-01-29T14:29:59.414Z"
     }
   ],
   "EquipUsuari": [
@@ -733,6 +781,14 @@
       "rolEquip": "ADMIN_EQUIP",
       "isActive": true,
       "created_at": "2026-01-29T13:08:39.586Z"
+    },
+    {
+      "id": "e1fa3711",
+      "equipId": "0f6474b5",
+      "usuariId": "2",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T14:29:59.213Z"
     }
   ],
   "Lliga": [
@@ -791,6 +847,22 @@
       "jocsGuanyats": 95,
       "jocsPerduts": 78,
       "punts": 12
+    },
+    {
+      "id": "ae9901ec",
+      "lligaId": "2",
+      "equipId": "0f6474b5",
+      "partitsJugats": 0,
+      "partitsGuanyats": 0,
+      "partitsPerduts": 0,
+      "partitsEmpatats": 0,
+      "setsGuanyats": 0,
+      "setsPerduts": 0,
+      "jocsGuanyats": 0,
+      "jocsPerduts": 0,
+      "punts": 0,
+      "isActive": true,
+      "created_at": "2026-01-29T14:29:59.449Z"
     }
   ],
   "Jornada": [
@@ -854,6 +926,17 @@
       "clubId": "73dc3ace",
       "isActive": true,
       "created_at": "2026-01-29T12:36:54.931Z"
+    },
+    {
+      "id": "5f88ea7d",
+      "nom": "Pista central",
+      "adreca": "123",
+      "telefon": "bfbdfbf",
+      "tipusPista": "Indoor/Outdoor",
+      "numPistes": 5,
+      "clubId": "aacedd48",
+      "isActive": true,
+      "created_at": "2026-01-29T14:29:59.259Z"
     }
   ],
   "Pista": [
@@ -932,7 +1015,9 @@
       "dataHora": "2024-09-15T16:00:00.000Z",
       "pistaId": 2,
       "status": "COMPLETAT",
-      "isActive": true
+      "isActive": true,
+      "arbitreId": "iwovBM5",
+      "updated_at": "2026-01-29T14:30:49.557Z"
     },
     {
       "id": "5",
@@ -1633,7 +1718,7 @@
       "partitId": "bfe3",
       "jugadorId": "1",
       "equipId": 1,
-      "isActive": true,
+      "isActive": false,
       "creada_at": "2026-01-21T16:14:09.967Z",
       "posicio": "REVES"
     },
@@ -1642,7 +1727,7 @@
       "partitId": "bfe3",
       "jugadorId": "2",
       "equipId": 1,
-      "isActive": true,
+      "isActive": false,
       "creada_at": "2026-01-21T16:14:09.968Z",
       "posicio": "DRETA"
     },
@@ -1681,6 +1766,24 @@
       "creada_at": "2026-01-23T16:48:07.641Z",
       "posicio": "DRETA",
       "id": "HVmxlb_"
+    },
+    {
+      "partitId": "bfe3",
+      "jugadorId": "1",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-29T14:25:03.637Z",
+      "posicio": "REVES",
+      "id": "AwU0ne9"
+    },
+    {
+      "partitId": "bfe3",
+      "jugadorId": "10",
+      "equipId": 1,
+      "isActive": true,
+      "creada_at": "2026-01-29T14:25:03.638Z",
+      "posicio": "DRETA",
+      "id": "FoA_IHo"
     }
   ],
   "PartitJugador": [
@@ -4805,6 +4908,20 @@
       "stripeSessionId": null,
       "created_at": "2026-01-29T12:42:29.610Z",
       "updated_at": "2026-01-29T12:42:29.610Z",
+      "isActive": true
+    },
+    {
+      "id": "2798987f",
+      "usuariId": "IQk2srQ",
+      "dataInici": "2026-01-29T14:39:04.403Z",
+      "dataFi": "2027-01-29T14:39:04.403Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "STRIPE",
+      "stripePaymentId": "pi_3SuwN6Ed7XCgbD1o1BXUfMR2",
+      "stripeSessionId": "cs_test_a14keb5iHudiV4f7rHkRM8nHo52CGB4D2CKqXyXfu18AnPREHu9TM5XecZ",
+      "created_at": "2026-01-29T14:39:04.403Z",
+      "updated_at": "2026-01-29T14:39:04.403Z",
       "isActive": true
     }
   ]
