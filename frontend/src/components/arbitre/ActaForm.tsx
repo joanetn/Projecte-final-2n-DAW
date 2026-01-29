@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { PartitPendentActa, Incidencia, SetResultat } from "@/types/acta";
+import { useState, useEffect } from "react";
+import { PartitPendentActa, Incidencia, SetResultat, Acta } from "@/types/acta";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,10 +13,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Calendar, Plus, Trash2, AlertTriangle, FileText, X } from "lucide-react";
+import { Calendar, Plus, Trash2, AlertTriangle, FileText, X, Edit } from "lucide-react";
 
 interface ActaFormProps {
     partit: PartitPendentActa;
+    actaExistent?: Acta; // Per a edició
     onSubmit: (data: {
         partitId: string | number;
         sets: SetResultat[];
@@ -47,7 +48,9 @@ const createEmptySet = (numeroSet: number): SetResultat => ({
     puntsVisitantTiebreak: null,
 });
 
-export function ActaForm({ partit, onSubmit, onCancel, isLoading }: ActaFormProps) {
+export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }: ActaFormProps) {
+    const esEdicio = !!actaExistent;
+
     // Estat per als sets (mínim 2, màxim 3)
     const [sets, setSets] = useState<SetResultat[]>([
         createEmptySet(1),
@@ -55,6 +58,15 @@ export function ActaForm({ partit, onSubmit, onCancel, isLoading }: ActaFormProp
     ]);
     const [observacions, setObservacions] = useState<string>("");
     const [incidencies, setIncidencies] = useState<Incidencia[]>([]);
+
+    // Carregar dades existents si estem editant
+    useEffect(() => {
+        if (actaExistent) {
+            setSets(actaExistent.sets.length > 0 ? actaExistent.sets : [createEmptySet(1), createEmptySet(2)]);
+            setObservacions(actaExistent.observacions || "");
+            setIncidencies(actaExistent.incidencies || []);
+        }
+    }, [actaExistent]);
 
     // Formulari nova incidència
     const [novaIncidencia, setNovaIncidencia] = useState({
@@ -147,8 +159,8 @@ export function ActaForm({ partit, onSubmit, onCancel, isLoading }: ActaFormProp
                     <div className="flex items-center justify-between">
                         <div>
                             <CardTitle className="text-xl flex items-center gap-2">
-                                <FileText className="h-5 w-5" />
-                                Nova Acta del Partit
+                                {esEdicio ? <Edit className="h-5 w-5" /> : <FileText className="h-5 w-5" />}
+                                {esEdicio ? "Editar Acta del Partit" : "Nova Acta del Partit"}
                             </CardTitle>
                             <CardDescription className="mt-1">
                                 {partit.local?.nom || "Local"} vs {partit.visitant?.nom || "Visitant"}
@@ -435,7 +447,7 @@ export function ActaForm({ partit, onSubmit, onCancel, isLoading }: ActaFormProp
                     className="flex-1"
                     disabled={isLoading || !algunSetComplet}
                 >
-                    {isLoading ? "Guardant..." : "Guardar Acta"}
+                    {isLoading ? "Guardant..." : esEdicio ? "Actualitzar Acta" : "Guardar Acta"}
                 </Button>
             </div>
         </form>

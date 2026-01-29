@@ -22,13 +22,10 @@ import { ActaDetall } from "@/components/arbitre/ActaDetall";
 // Importa els tipus
 import type { PartitPendentActa, Acta, Incidencia, SetResultat } from "@/types/acta";
 
-// ============================================
-// NOTA: Aquesta pàgina té la part VISUAL feta.
-// Tu has d'implementar la part FUNCIONAL:
-// - Queries (useQuery) per obtenir dades del backend
-// - Mutations (useMutation) per crear/editar/validar/eliminar actes
-// - Gestió d'estat i navegació
-// ============================================
+// Importa queries i mutations
+import { usePartitsPendentsActa, useMevesActes } from "@/queries/acta.queries";
+import { useCrearActa, useValidarActa, useEliminarActa, useActualitzarActa } from "@/mutations/acta.mutations";
+import { useToast } from "@/components/ui/Toast";
 
 type Vista = "llistat" | "crear" | "detall" | "editar";
 
@@ -39,125 +36,24 @@ const DashboardArbitre = () => {
     const [actaSeleccionada, setActaSeleccionada] = useState<Acta | null>(null);
     const [cercador, setCercador] = useState("");
 
-    // ============================================
-    // TODO: Implementa les queries aquí
-    // Exemple:
-    // const { data: partitsPendents, isLoading: loadingPartits } = useQuery({
-    //   queryKey: ["partits-pendents-acta"],
-    //   queryFn: getPartitsPendentsActa,
-    // });
-    //
-    // const { data: mevesActes, isLoading: loadingActes } = useQuery({
-    //   queryKey: ["meves-actes"],
-    //   queryFn: getMevesActes,
-    // });
-    // ============================================
+    // Toast per notificacions
+    const { showToast } = useToast();
 
-    // Dades de prova (elimina això quan tinguis les queries)
-    const partitsPendentsMock: PartitPendentActa[] = [
-        {
-            id: "1",
-            jornadaId: 5,
-            localId: "eq1",
-            visitantId: "eq2",
-            dataHora: "2025-01-15T18:00:00Z",
-            pistaId: "p1",
-            status: "COMPLETAT",
-            isActive: true,
-            local: { id: "eq1", nom: "Padel Club Barcelona" },
-            visitant: { id: "eq2", nom: "Tennis Badalona" },
-        },
-        {
-            id: "2",
-            jornadaId: 5,
-            localId: "eq3",
-            visitantId: "eq4",
-            dataHora: "2025-01-14T19:30:00Z",
-            pistaId: "p2",
-            status: "COMPLETAT",
-            isActive: true,
-            local: { id: "eq3", nom: "Club Esportiu Manresa" },
-            visitant: { id: "eq4", nom: "Padel Sabadell" },
-        },
-    ];
+    // Queries reals
+    const { data: partitsPendentsData, isLoading: loadingPartits, refetch: refetchPartits } = usePartitsPendentsActa();
+    const { data: mevesActesData, isLoading: loadingActes, refetch: refetchActes } = useMevesActes();
 
-    const mevesActesMock: Acta[] = [
-        {
-            id: "a1",
-            partitId: "p3",
-            arbitreId: "3",
-            sets: [
-                { numeroSet: 1, jocsLocal: 6, jocsVisitant: 4, tiebreak: false, puntsLocalTiebreak: null, puntsVisitantTiebreak: null },
-                { numeroSet: 2, jocsLocal: 6, jocsVisitant: 3, tiebreak: false, puntsLocalTiebreak: null, puntsVisitantTiebreak: null },
-            ],
-            setsLocal: 2,
-            setsVisitant: 0,
-            observacions: "Partit jugat amb normalitat. Bon comportament dels jugadors.",
-            incidencies: null,
-            validada: true,
-            dataValidacio: "2025-01-10T20:00:00Z",
-            created_at: "2025-01-10T19:30:00Z",
-            isActive: true,
-            partit: {
-                id: "p3",
-                dataHora: "2025-01-10T18:00:00Z",
-                local: { id: "eq5", nom: "Padel Girona" },
-                visitant: { id: "eq6", nom: "Club Terrassa" },
-            },
-        },
-        {
-            id: "a2",
-            partitId: "p4",
-            arbitreId: "3",
-            sets: [
-                { numeroSet: 1, jocsLocal: 4, jocsVisitant: 6, tiebreak: false, puntsLocalTiebreak: null, puntsVisitantTiebreak: null },
-                { numeroSet: 2, jocsLocal: 7, jocsVisitant: 6, tiebreak: true, puntsLocalTiebreak: 7, puntsVisitantTiebreak: 5 },
-                { numeroSet: 3, jocsLocal: 3, jocsVisitant: 6, tiebreak: false, puntsLocalTiebreak: null, puntsVisitantTiebreak: null },
-            ],
-            setsLocal: 1,
-            setsVisitant: 2,
-            observacions: "Alguns moments de tensió però es va resoldre tot correctament.",
-            incidencies: [
-                {
-                    id: "inc1",
-                    set: 2,
-                    tipus: "ADVERTENCIA",
-                    descripcio: "Advertència verbal per protesta reiterada",
-                },
-            ],
-            validada: false,
-            dataValidacio: null,
-            created_at: "2025-01-12T20:00:00Z",
-            isActive: true,
-            partit: {
-                id: "p4",
-                dataHora: "2025-01-12T19:00:00Z",
-                local: { id: "eq7", nom: "Padel Lleida" },
-                visitant: { id: "eq8", nom: "Club Reus" },
-            },
-        },
-    ];
+    // Mutations reals
+    const crearActaMutation = useCrearActa();
+    const actualitzarActaMutation = useActualitzarActa();
+    const validarActaMutation = useValidarActa();
+    const eliminarActaMutation = useEliminarActa();
 
-    // Usa les dades mock mentre no tinguis les queries
-    const partitsPendents = partitsPendentsMock;
-    const mevesActes = mevesActesMock;
-    const loadingPartits = false;
-    const loadingActes = false;
+    // Extreure dades de les respostes
+    const partitsPendents = partitsPendentsData?.partits || [];
+    const mevesActes = mevesActesData?.actes || [];
 
-    // ============================================
-    // TODO: Implementa les mutations aquí
-    // Exemple:
-    // const crearActaMutation = useMutation({
-    //   mutationFn: crearActa,
-    //   onSuccess: () => {
-    //     queryClient.invalidateQueries(["partits-pendents-acta"]);
-    //     queryClient.invalidateQueries(["meves-actes"]);
-    //     setVistaActual("llistat");
-    //   },
-    // });
-    // ============================================
-
-    // Handlers (connecta'ls amb les mutations)
+    // Handlers (connectats amb les mutations reals)
     const handleCrearActa = (partitId: string | number) => {
         const partit = partitsPendents.find((p) => String(p.id) === String(partitId));
         if (partit) {
@@ -172,10 +68,32 @@ const DashboardArbitre = () => {
         observacions: string;
         incidencies: Incidencia[];
     }) => {
-        // TODO: Crida a la mutation crearActa
-        console.log("Crear acta:", data);
-        // crearActaMutation.mutate(data);
-        setVistaActual("llistat");
+        crearActaMutation.mutate(
+            {
+                partitId: data.partitId,
+                sets: data.sets,
+                observacions: data.observacions,
+                incidencies: data.incidencies.length > 0 ? data.incidencies : undefined,
+            },
+            {
+                onSuccess: () => {
+                    showToast({
+                        type: "success",
+                        title: "Acta creada",
+                        description: "L'acta s'ha creat correctament",
+                    });
+                    setVistaActual("llistat");
+                    setPartitSeleccionat(null);
+                },
+                onError: (error) => {
+                    showToast({
+                        type: "error",
+                        title: "Error",
+                        description: error.message || "No s'ha pogut crear l'acta",
+                    });
+                },
+            }
+        );
     };
 
     const handleVeureActa = (actaId: string) => {
@@ -187,18 +105,101 @@ const DashboardArbitre = () => {
     };
 
     const handleEditarActa = (actaId: string) => {
-        // TODO: Implementa l'edició
-        console.log("Editar acta:", actaId);
+        const acta = mevesActes.find((a) => a.id === actaId);
+        if (acta) {
+            setActaSeleccionada(acta);
+            setVistaActual("editar");
+        }
+    };
+
+    const handleSubmitEditarActa = (data: {
+        partitId: string | number;
+        sets: SetResultat[];
+        observacions: string;
+        incidencies: Incidencia[];
+    }) => {
+        if (!actaSeleccionada) return;
+
+        actualitzarActaMutation.mutate(
+            {
+                id: actaSeleccionada.id,
+                data: {
+                    sets: data.sets,
+                    observacions: data.observacions,
+                    incidencies: data.incidencies.length > 0 ? data.incidencies : undefined,
+                },
+            },
+            {
+                onSuccess: () => {
+                    showToast({
+                        type: "success",
+                        title: "Acta actualitzada",
+                        description: "L'acta s'ha actualitzat correctament",
+                    });
+                    setVistaActual("llistat");
+                    setActaSeleccionada(null);
+                },
+                onError: (error) => {
+                    showToast({
+                        type: "error",
+                        title: "Error",
+                        description: error.message || "No s'ha pogut actualitzar l'acta",
+                    });
+                },
+            }
+        );
     };
 
     const handleValidarActa = (actaId: string) => {
-        // TODO: Crida a la mutation validarActa
-        console.log("Validar acta:", actaId);
+        validarActaMutation.mutate(
+            { id: actaId },
+            {
+                onSuccess: () => {
+                    showToast({
+                        type: "success",
+                        title: "Acta validada",
+                        description: "L'acta s'ha validat correctament",
+                    });
+                    // Actualitzar l'acta seleccionada si estem al detall
+                    if (actaSeleccionada?.id === actaId) {
+                        setActaSeleccionada({ ...actaSeleccionada, validada: true, dataValidacio: new Date().toISOString() });
+                    }
+                },
+                onError: (error) => {
+                    showToast({
+                        type: "error",
+                        title: "Error",
+                        description: error.message || "No s'ha pogut validar l'acta",
+                    });
+                },
+            }
+        );
     };
 
     const handleEliminarActa = (actaId: string) => {
-        // TODO: Crida a la mutation eliminarActa
-        console.log("Eliminar acta:", actaId);
+        eliminarActaMutation.mutate(
+            { id: actaId },
+            {
+                onSuccess: () => {
+                    showToast({
+                        type: "success",
+                        title: "Acta eliminada",
+                        description: "L'acta s'ha eliminat correctament",
+                    });
+                    if (vistaActual === "detall") {
+                        setVistaActual("llistat");
+                        setActaSeleccionada(null);
+                    }
+                },
+                onError: (error) => {
+                    showToast({
+                        type: "error",
+                        title: "Error",
+                        description: error.message || "No s'ha pogut eliminar l'acta",
+                    });
+                },
+            }
+        );
     };
 
     const handleTornar = () => {
@@ -234,7 +235,7 @@ const DashboardArbitre = () => {
                     partit={partitSeleccionat}
                     onSubmit={handleSubmitActa}
                     onCancel={handleTornar}
-                    isLoading={false} // TODO: crearActaMutation.isPending
+                    isLoading={crearActaMutation.isPending}
                 />
             </div>
         );
@@ -249,7 +250,36 @@ const DashboardArbitre = () => {
                     onTornar={handleTornar}
                     onEditar={!actaSeleccionada.validada ? handleEditarActa : undefined}
                     onValidar={!actaSeleccionada.validada ? handleValidarActa : undefined}
-                    isValidating={false} // TODO: validarActaMutation.isPending
+                    isValidating={validarActaMutation.isPending}
+                />
+            </div>
+        );
+    }
+
+    // Vista: Editar acta existent
+    if (vistaActual === "editar" && actaSeleccionada) {
+        // Convertim l'acta a un format compatible amb el formulari
+        const partitPerEditar: PartitPendentActa = {
+            id: actaSeleccionada.partit?.id || actaSeleccionada.partitId,
+            jornadaId: 0,
+            localId: actaSeleccionada.partit?.local?.id || "",
+            visitantId: actaSeleccionada.partit?.visitant?.id || "",
+            dataHora: actaSeleccionada.partit?.dataHora || actaSeleccionada.created_at,
+            pistaId: "",
+            status: "COMPLETAT",
+            isActive: true,
+            local: actaSeleccionada.partit?.local || null,
+            visitant: actaSeleccionada.partit?.visitant || null,
+        };
+
+        return (
+            <div className="container mx-auto p-6 max-w-3xl">
+                <ActaForm
+                    partit={partitPerEditar}
+                    actaExistent={actaSeleccionada}
+                    onSubmit={handleSubmitEditarActa}
+                    onCancel={handleTornar}
+                    isLoading={actualitzarActaMutation.isPending}
                 />
             </div>
         );

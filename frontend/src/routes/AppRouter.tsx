@@ -9,6 +9,7 @@ import { RolGuard } from "@/guard/rolGuard";
 import DashboardAdmin from "@/pages/DashboardAdmin";
 import DashboardArbitre from "@/pages/DashboardArbitre";
 import DashboardEntrenador from "@/pages/DashboardEntrenador";
+import DashboardAdminEquip from "@/pages/DashboardAdminEquip";
 import AlineacioPartit from "@/components/partits/AlineacioPartit";
 // import PropostesTest from "@/pages/PropostesTest";
 import Ranking from "@/pages/Ranking";
@@ -47,6 +48,14 @@ const AppRouter = () => {
                             element={
                                 <RolGuard allowedRoles={["ENTRENADOR"]}>
                                     <DashboardEntrenador />
+                                </RolGuard>
+                            }
+                        />
+                        <Route
+                            path="/dashboardAdminEquip"
+                            element={
+                                <RolGuard allowedRoles={["ADMIN_EQUIP"]}>
+                                    <DashboardAdminEquip />
                                 </RolGuard>
                             }
                         />

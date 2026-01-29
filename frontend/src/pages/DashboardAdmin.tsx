@@ -1,5 +1,2 @@
-const DashboardAdmin = () => {
-    return <h1>DashboardAdmin</h1>;
-};
-
-export default DashboardAdmin;
+// Re-export del nou Dashboard Admin Web complet
+export { default } from "./DashboardAdminWeb";

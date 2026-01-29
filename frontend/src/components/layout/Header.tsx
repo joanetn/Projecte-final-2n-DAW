@@ -104,6 +104,7 @@ const Header = () => {
     const isArbitre = hasRol("ARBITRE");
     const isEntrenador = hasRol("ENTRENADOR");
     const isJugador = hasRol("JUGADOR");
+    const isAdminEquip = hasRol("ADMIN_EQUIP");
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 border-b border-border shadow-sm">
@@ -151,6 +152,15 @@ const Header = () => {
                                 className={`text-sm font-medium ${isActive("/dashboardEntrenador") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                             >
                                 Dashboard Entrenador
+                            </Link>
+                        )}
+
+                        {isAdminEquip && (
+                            <Link
+                                to="/dashboardAdminEquip"
+                                className={`text-sm font-medium ${isActive("/dashboardAdminEquip") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
+                            >
+                                Dashboard Admin Equip
                             </Link>
                         )}
 
@@ -352,6 +362,16 @@ const Header = () => {
                                 onClick={() => setMobileMenuOpen(false)}
                             >
                                 Dashboard Entrenador
+                            </Link>
+                        )}
+
+                        {isAdminEquip && (
+                            <Link
+                                to="/dashboardAdminEquip"
+                                className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg"
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                Dashboard Admin Equip
                             </Link>
                         )}
 

@@ -37,14 +37,24 @@ exports.login = async (req, res) => {
         // Obtener roles del usuario
         const rolsResponse = await api.get(`/UsuariRol?usuariId=${user.id}`);
         // res.json({ rolsResponse, user });
-        const rols = rolsResponse.filter(r => r.usuariId == user.id && r.isActive);
+        const rols = rolsResponse.filter(r => String(r.usuariId) == String(user.id) && r.isActive);
+
+        // Obtener roles de equipo del usuario
+        const equipUsuariResponse = await api.get(`/EquipUsuari?usuariId=${user.id}`);
+        const rolsEquip = equipUsuariResponse
+            .filter(eu => String(eu.usuariId) == String(user.id))
+            .map(eu => eu.rolEquip);
+
+        // Combinar roles globales y de equipo (sin duplicados)
+        const totsElsRols = [...new Set([...rols.map(r => r.rol), ...rolsEquip])];
+
         // res.json(rols);
         // Generar token
         const token = jwt.sign(
             {
                 id: user.id,
                 email: user.email,
-                rols: rols.map(r => r.rol)
+                rols: totsElsRols
             },
             JWT_SECRET,
             { expiresIn: "2d" }
@@ -59,7 +69,7 @@ exports.login = async (req, res) => {
                 telefon: user.telefon,
                 nivell: user.nivell,
                 token,
-                rols: rols.map(r => r.rol)
+                rols: totsElsRols
             }
         });
     } catch (err) {
@@ -217,9 +227,18 @@ exports.me = async (req, res) => {
             });
         }
 
-        // Obtener roles del usuario
+        // Obtener roles globales del usuario
         const rolsResponse = await api.get(`/UsuariRol?usuariId=${user.id}`);
-        const rols = rolsResponse.filter(r => r.usuariId == user.id && r.isActive);
+        const rols = rolsResponse.filter(r => String(r.usuariId) == String(user.id) && r.isActive);
+
+        // Obtener roles de equipo del usuario
+        const equipUsuariResponse = await api.get(`/EquipUsuari?usuariId=${user.id}`);
+        const rolsEquip = equipUsuariResponse
+            .filter(eu => String(eu.usuariId) == String(user.id))
+            .map(eu => eu.rolEquip);
+
+        // Combinar roles globales y de equipo (sin duplicados)
+        const totsElsRols = [...new Set([...rols.map(r => r.rol), ...rolsEquip])];
 
         res.json({
             usuari: {
@@ -231,7 +250,7 @@ exports.me = async (req, res) => {
                 nivell: user.nivell,
                 avatar: user.avatar,
                 dni: user.dni,
-                rols: rols.map(r => r.rol),
+                rols: totsElsRols,
                 created_at: user.created_at,
                 updated_at: user.updated_at
             }

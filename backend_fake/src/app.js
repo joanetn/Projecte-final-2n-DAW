@@ -15,6 +15,8 @@ app.use("/ranking", require("./routes/ranking.routes"));
 app.use("/equipos", require("./routes/equipos.routes"));
 app.use("/alineacions", require("./routes/alineacio.routes"));
 app.use("/entrenador", require("./routes/entrenador.routes"));
+app.use("/admin-equip", require("./routes/adminEquip.routes"));
+app.use("/admin-web", require("./routes/adminWeb.routes"));
 app.use("/notificacions", require("./routes/notificacions.routes"));
 app.use("/propostes", require("./routes/propostes.routes"));
 app.use("/invitacions", require("./routes/invitacions.routes"));

@@ -163,6 +163,12 @@
       "isActive": true
     },
     {
+      "id": "43244444",
+      "usuariId": 2,
+      "rol": "ADMIN_WEB",
+      "isActive": true
+    },
+    {
       "id": "2",
       "usuariId": 2,
       "rol": "ENTRENADOR",
@@ -374,7 +380,7 @@
       "equipId": 1,
       "usuariId": "9",
       "rolEquip": "JUGADOR",
-      "isActive": true
+      "isActive": false
     },
     {
       "id": "52dca35b",
@@ -382,6 +388,13 @@
       "usuariId": "10",
       "rolEquip": "JUGADOR",
       "isActive": true
+    },
+    {
+      "equipId": 1,
+      "usuariId": "1",
+      "rolEquip": "ENTRENADOR",
+      "isActive": false,
+      "id": "itvMzKM"
     }
   ],
   "Lliga": [
@@ -1339,27 +1352,128 @@
   ],
   "Acta": [
     {
-      "id": "1",
-      "partitId": 1,
-      "arbitreId": 3,
-      "observacions": "Partit sense incidències",
-      "incidencies": null,
-      "resultat": "2-0",
+      "id": "9102b953",
+      "partitId": "1",
+      "arbitreId": "iwovBM5",
+      "sets": [
+        {
+          "numeroSet": 1,
+          "jocsLocal": 6,
+          "jocsVisitant": 7,
+          "tiebreak": true,
+          "puntsLocalTiebreak": 5,
+          "puntsVisitantTiebreak": 7
+        },
+        {
+          "numeroSet": 2,
+          "jocsLocal": 6,
+          "jocsVisitant": 7,
+          "tiebreak": true,
+          "puntsLocalTiebreak": 2,
+          "puntsVisitantTiebreak": 7
+        }
+      ],
+      "setsLocal": 0,
+      "setsVisitant": 2,
+      "observacions": "Prova acta 1",
+      "incidencies": [
+        {
+          "id": "inc-1769444828605",
+          "set": 1,
+          "tipus": "ADVERTENCIA",
+          "descripcio": "incidencia prova"
+        }
+      ],
       "validada": true,
-      "dataValidacio": "2024-09-15T14:00:00.000Z",
-      "created_at": "2024-09-15T12:30:00.000Z",
+      "dataValidacio": "2026-01-26T16:34:22.463Z",
+      "created_at": "2026-01-26T16:27:09.993Z",
+      "updated_at": "2026-01-26T16:34:22.463Z",
       "isActive": true
     },
     {
-      "id": "2",
-      "partitId": 2,
-      "arbitreId": 3,
-      "observacions": "Bon ambient esportiu",
-      "incidencies": "Retard de 10 minuts en l'inici",
-      "resultat": "1-2",
+      "id": "6f7031f2",
+      "partitId": "2",
+      "arbitreId": "iwovBM5",
+      "sets": [
+        {
+          "numeroSet": 1,
+          "jocsLocal": 6,
+          "jocsVisitant": 4,
+          "tiebreak": false,
+          "puntsLocalTiebreak": null,
+          "puntsVisitantTiebreak": null
+        },
+        {
+          "numeroSet": 2,
+          "jocsLocal": 4,
+          "jocsVisitant": 6,
+          "tiebreak": false,
+          "puntsLocalTiebreak": null,
+          "puntsVisitantTiebreak": null
+        },
+        {
+          "numeroSet": 3,
+          "jocsLocal": 6,
+          "jocsVisitant": 0,
+          "tiebreak": false,
+          "puntsLocalTiebreak": null,
+          "puntsVisitantTiebreak": null
+        }
+      ],
+      "setsLocal": 2,
+      "setsVisitant": 1,
+      "observacions": "Si",
+      "incidencies": [
+        {
+          "id": "inc-1769445702739",
+          "set": 3,
+          "tipus": "LESIO",
+          "descripcio": "Lesió fingida del visitant"
+        }
+      ],
       "validada": true,
-      "dataValidacio": "2024-09-22T15:00:00.000Z",
-      "created_at": "2024-09-22T13:45:00.000Z",
+      "dataValidacio": "2026-01-26T16:41:59.944Z",
+      "created_at": "2026-01-26T16:41:45.359Z",
+      "updated_at": "2026-01-26T16:41:59.944Z",
+      "isActive": true
+    },
+    {
+      "id": "f5083bc8",
+      "partitId": "4",
+      "arbitreId": "iwovBM5",
+      "sets": [
+        {
+          "numeroSet": 1,
+          "jocsLocal": 6,
+          "jocsVisitant": 4,
+          "tiebreak": false,
+          "puntsLocalTiebreak": null,
+          "puntsVisitantTiebreak": null
+        },
+        {
+          "numeroSet": 2,
+          "jocsLocal": 6,
+          "jocsVisitant": 4,
+          "tiebreak": false,
+          "puntsLocalTiebreak": null,
+          "puntsVisitantTiebreak": null
+        }
+      ],
+      "setsLocal": 2,
+      "setsVisitant": 0,
+      "observacions": "ni",
+      "incidencies": [
+        {
+          "id": "inc-1769448040481",
+          "set": 1,
+          "tipus": "RETARD",
+          "descripcio": "retard de 1"
+        }
+      ],
+      "validada": true,
+      "dataValidacio": "2026-01-26T17:20:49.228Z",
+      "created_at": "2026-01-26T17:20:42.162Z",
+      "updated_at": "2026-01-26T17:20:49.228Z",
       "isActive": true
     }
   ],
@@ -4276,6 +4390,20 @@
       "stripeSessionId": "cs_test_a1ykDcv9Co8PUQTFenSvEmnaziTXvnBkwEi9cg4cogKMxltoAcAgGa837f",
       "created_at": "2026-01-23T16:36:17.302Z",
       "updated_at": "2026-01-23T16:36:17.302Z",
+      "isActive": true
+    },
+    {
+      "id": "38a256f2",
+      "usuariId": "8",
+      "dataInici": "2026-01-26T17:23:27.961Z",
+      "dataFi": "2027-01-26T17:23:27.961Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "STRIPE",
+      "stripePaymentId": "pi_3SttVXEd7XCgbD1o1fNohLYK",
+      "stripeSessionId": "cs_test_a1WPed5FDpJePsy6dHCdQjtbeFqg9qRDVgj4PnMxz89u5n05EmEQ32LJUZ",
+      "created_at": "2026-01-26T17:23:27.961Z",
+      "updated_at": "2026-01-26T17:23:27.961Z",
       "isActive": true
     }
   ]

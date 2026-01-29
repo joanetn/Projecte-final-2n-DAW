@@ -3,6 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle2, Clock, Edit, Eye, Trash2 } from "lucide-react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface ActaCardProps {
     acta: Acta;
@@ -122,14 +133,38 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                     )}
 
                     {!acta.validada && onEliminar && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                            onClick={() => onEliminar(acta.id)}
-                        >
-                            <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Eliminar acta</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Estàs segur que vols eliminar aquesta acta? Aquesta acció no es pot desfer.
+                                        <div className="mt-3 p-3 bg-muted rounded-lg text-foreground">
+                                            <strong>{acta.partit?.local?.nom}</strong> vs <strong>{acta.partit?.visitant?.nom}</strong>
+                                            <div className="text-sm mt-1">Resultat: {acta.setsLocal} - {acta.setsVisitant}</div>
+                                        </div>
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel·lar</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        className="bg-red-600 hover:bg-red-700"
+                                        onClick={() => onEliminar(acta.id)}
+                                    >
+                                        Eliminar
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     )}
                 </div>
             </CardContent>

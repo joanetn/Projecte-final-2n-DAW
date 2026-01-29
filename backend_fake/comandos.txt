@@ -1,2 +1,3 @@
 ARRANCAR
 npx json-server db.json --port 4004
+stripe listen --forward-to localhost:3001/webhook
