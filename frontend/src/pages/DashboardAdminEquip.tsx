@@ -8,7 +8,7 @@ import { useCanviarRolMembre, useDonarBaixaMembre } from "@/mutations/adminEquip
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Trophy, Calendar, BarChart3, Settings, UserPlus } from "lucide-react";
 import { useValidarJugadorsAlineacio } from "@/queries/seguro.queries";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/components/ui/Toast";
 import { PlantillaTab } from "@/components/dashboards/adminEquip/PlantillaTab";
@@ -16,6 +16,7 @@ import { ClassificacioTab } from "@/components/dashboards/adminEquip/Classificac
 import { CalendariTab } from "@/components/dashboards/adminEquip/CalendariTab";
 import { EstadistiquesTab } from "@/components/dashboards/adminEquip/EstadistiquesTab";
 import FitxarTab from "@/components/adminEquip/FitxarTab";
+import { queryClient } from "@/lib/utils";
 const DashboardAdminEquip = () => {
     const { user } = useAuth();
     const { showToast } = useToast();
@@ -30,6 +31,19 @@ const DashboardAdminEquip = () => {
         return plantilla.data.plantilla.jugadors.map(j => j.id);
     }, [plantilla.data]);
     const { data: validacioSeguros } = useValidarJugadorsAlineacio(jugadorIds);
+
+    useEffect(() => {
+        const handler = () => {
+            queryClient.invalidateQueries({ queryKey: ["plantilla"] });
+            queryClient.invalidateQueries({ queryKey: ["invitacionsEnviades"] });
+            queryClient.invalidateQueries({ queryKey: ["jugadors-disponibles"] });
+        }
+        window.addEventListener('new-notificacio', handler as EventListener);
+        return () => {
+            window.removeEventListener('new-notificacio', handler as EventListener);
+        };
+    }, [queryClient]);
+
     const segurosMap = useMemo(() => {
         const map: Record<string, boolean> = {};
         if (validacioSeguros?.jugadors) {
@@ -71,7 +85,6 @@ const DashboardAdminEquip = () => {
     };
     return (
         <div className="max-w-6xl mx-auto px-4 py-8">
-            {}
             <div className="flex items-center gap-3 mb-6">
                 <Settings className="h-6 w-6 text-primary" />
                 <h2 className="text-2xl font-semibold text-foreground">
@@ -79,7 +92,7 @@ const DashboardAdminEquip = () => {
                 </h2>
             </div>
             <Tabs defaultValue="plantilla" className="w-full">
-                {}
+                { }
                 <TabsList className="grid w-full grid-cols-5 mb-6">
                     <TabsTrigger value="plantilla" className="flex items-center gap-1">
                         <Users className="w-4 h-4 hidden sm:inline" />
@@ -102,7 +115,6 @@ const DashboardAdminEquip = () => {
                         <span>Stats</span>
                     </TabsTrigger>
                 </TabsList>
-                {}
                 <TabsContent value="plantilla">
                     <PlantillaTab
                         plantilla={plantilla}
@@ -113,19 +125,15 @@ const DashboardAdminEquip = () => {
                         onDonarBaixa={handleDonarBaixa}
                     />
                 </TabsContent>
-                {}
                 <TabsContent value="invitacions">
                     <FitxarTab />
                 </TabsContent>
-                {}
                 <TabsContent value="classificacio">
                     <ClassificacioTab classificacio={classificacio} />
                 </TabsContent>
-                {}
                 <TabsContent value="calendari">
                     <CalendariTab calendari={calendari} />
                 </TabsContent>
-                {}
                 <TabsContent value="estadistiques">
                     <EstadistiquesTab estadistiques={estadistiques} />
                 </TabsContent>

@@ -127,7 +127,6 @@ const AlineacioPartit = () => {
             onDragCancel={handleDragCancel}
         >
             <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 p-6">
-                {}
                 <div className="max-w-6xl mx-auto mb-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -150,7 +149,6 @@ const AlineacioPartit = () => {
                     </div>
                 </div>
                 <div className="max-w-6xl mx-auto flex gap-6">
-                    {}
                     <Card className="w-72 shadow-lg">
                         <CardHeader className="pb-3">
                             <CardTitle className="flex items-center gap-2 text-lg">
@@ -185,29 +183,24 @@ const AlineacioPartit = () => {
                             </ScrollArea>
                         </CardContent>
                     </Card>
-                    {}
                     <div className="flex-1 flex flex-col gap-4">
-                        {}
                         <Card className="flex-1 shadow-lg overflow-hidden">
                             <div className="h-full flex items-center justify-center p-8">
                                 <div className="relative w-full max-w-[600px] h-[350px] bg-gradient-to-b from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 border-4 border-white/30 rounded-2xl shadow-2xl overflow-hidden">
-                                    {}
                                     <div className="absolute top-1/2 left-0 right-0 border-t-2 border-white/60" />
-                                    {}
                                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-white/40" />
-                                    {}
                                     <div className="absolute top-2 left-2 w-8 h-8 border-l-2 border-t-2 border-white/40 rounded-tl-lg" />
                                     <div className="absolute top-2 right-2 w-8 h-8 border-r-2 border-t-2 border-white/40 rounded-tr-lg" />
                                     <div className="absolute bottom-2 left-2 w-8 h-8 border-l-2 border-b-2 border-white/40 rounded-bl-lg" />
                                     <div className="absolute bottom-2 right-2 w-8 h-8 border-r-2 border-b-2 border-white/40 rounded-br-lg" />
-                                    {}
+
                                     <div className="absolute top-4 left-16 text-white/80 text-xs font-semibold uppercase tracking-wider">
                                         Jugador 1
                                     </div>
                                     <div className="absolute top-4 right-16 text-white/80 text-xs font-semibold uppercase tracking-wider">
                                         Jugador 2
                                     </div>
-                                    {}
+
                                     <div className="absolute top-1/2 left-16 -translate-y-1/2 z-10">
                                         <SlotJugador
                                             id="slot1"
@@ -225,7 +218,7 @@ const AlineacioPartit = () => {
                                 </div>
                             </div>
                         </Card>
-                        {}
+
                         <div className="flex justify-center">
                             <Button
                                 onClick={() => guardarAlineacio()}
@@ -248,7 +241,7 @@ const AlineacioPartit = () => {
                                 )}
                             </Button>
                         </div>
-                        {}
+
                         <Card className="shadow-sm">
                             <CardContent className="py-3">
                                 <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
@@ -266,7 +259,7 @@ const AlineacioPartit = () => {
                     </div>
                 </div>
             </div>
-            {}
+
             <DragOverlay>
                 {activeJugador && (
                     <div className="p-3 bg-primary text-primary-foreground rounded-lg shadow-2xl font-medium cursor-grabbing transform scale-105">

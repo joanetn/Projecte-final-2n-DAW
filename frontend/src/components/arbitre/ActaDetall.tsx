@@ -42,7 +42,6 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
     };
     return (
         <div className="space-y-6">
-            {}
             <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon" onClick={onTornar}>
                     <ArrowLeft className="h-5 w-5" />
@@ -68,7 +67,6 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     </Badge>
                 )}
             </div>
-            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg">Informació del Partit</CardTitle>
@@ -91,7 +89,6 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     )}
                 </CardContent>
             </Card>
-            {}
             <Card className="border-primary/20">
                 <CardHeader>
                     <div className="flex items-center justify-between">
@@ -102,7 +99,6 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     </div>
                 </CardHeader>
                 <CardContent>
-                    {}
                     <div className="space-y-2">
                         <div className="grid grid-cols-[1fr_80px_80px] gap-2 text-sm font-medium text-center border-b pb-2">
                             <div></div>
@@ -130,7 +126,6 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     </div>
                 </CardContent>
             </Card>
-            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg">Observacions Reglamentàries</CardTitle>
@@ -150,7 +145,6 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     )}
                 </CardContent>
             </Card>
-            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -190,7 +184,6 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     )}
                 </CardContent>
             </Card>
-            {}
             {!acta.validada && (
                 <Card className="border-yellow-200 bg-yellow-50/50">
                     <CardContent className="pt-6">

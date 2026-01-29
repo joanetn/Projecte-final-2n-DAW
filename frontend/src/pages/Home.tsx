@@ -143,7 +143,7 @@ const Home = () => {
     const { user } = useAuth();
     const { data: dataTeEquip, isLoading } = useTeEquip();
     const isLoggedIn = !!user;
-    const teEquip = dataTeEquip;
+    console.log(dataTeEquip);
     const HeroSection = () => (
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden hero-gradient-bg">
             { }
@@ -283,7 +283,7 @@ const Home = () => {
 
                     {!isLoading && (
                         <>
-                            {!isArbitre && !teEquip && (
+                            {!isArbitre && dataTeEquip === false && (
                                 <div className="max-w-md mx-auto mt-8">
                                     <CrearClubForm />
                                 </div>

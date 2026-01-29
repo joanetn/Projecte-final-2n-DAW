@@ -31,6 +31,10 @@ export const useAcceptarInvitacio = () => {
             queryClient.invalidateQueries({ queryKey: ["invitacionsRebudes"], refetchType: 'all' });
             queryClient.invalidateQueries({ queryKey: ["invitacionsEnviades"], refetchType: 'all' });
             queryClient.invalidateQueries({ queryKey: ["jugadors-disponibles"], refetchType: 'all' });
+            queryClient.invalidateQueries({ queryKey: ["plantilla"], refetchType: 'all' });
+            queryClient.invalidateQueries({ queryKey: ["admin-equip"], refetchType: 'all' });
+            queryClient.invalidateQueries({ queryKey: ["entrenador"], refetchType: 'all' });
+            queryClient.invalidateQueries({ queryKey: ["user"], refetchType: 'all' });
         }
     })
 }
@@ -42,6 +46,9 @@ export const useRebutjarInvitacio = () => {
             queryClient.invalidateQueries({ queryKey: ["invitacionsRebudes"], refetchType: 'all' });
             queryClient.invalidateQueries({ queryKey: ["invitacionsEnviades"], refetchType: 'all' });
             queryClient.invalidateQueries({ queryKey: ["jugadors-disponibles"], refetchType: 'all' });
+            queryClient.invalidateQueries({ queryKey: ["plantilla"], refetchType: 'all' });
+            queryClient.invalidateQueries({ queryKey: ["admin-equip"], refetchType: 'all' });
+            queryClient.invalidateQueries({ queryKey: ["entrenador"], refetchType: 'all' });
         }
     })
 }

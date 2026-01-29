@@ -50,7 +50,6 @@ const ClassificacioLliga = () => {
     }
     return (
         <div className="space-y-4">
-            {}
             <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
                 <CardHeader className="pb-3">
                     <div className="flex items-center gap-3">
@@ -62,7 +61,6 @@ const ClassificacioLliga = () => {
                     </div>
                 </CardHeader>
             </Card>
-            {}
             <Card>
                 <CardHeader className="pb-2">
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -71,7 +69,6 @@ const ClassificacioLliga = () => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {}
                     <div className="grid grid-cols-12 gap-2 px-4 py-2 text-xs font-semibold text-muted-foreground uppercase border-b">
                         <div className="col-span-1">#</div>
                         <div className="col-span-4">Equip</div>
@@ -81,7 +78,7 @@ const ClassificacioLliga = () => {
                         <div className="col-span-2 text-center">Sets</div>
                         <div className="col-span-2 text-center font-bold">Pts</div>
                     </div>
-                    {}
+
                     <div className="space-y-1 mt-2">
                         {data.classificacio.map((c) => (
                             <div

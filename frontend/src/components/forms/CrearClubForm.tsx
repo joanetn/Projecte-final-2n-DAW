@@ -50,7 +50,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useCrearClub, useInscriureLliga } from "@/mutations/club.mutations";
 import { useLliguesDisponibles } from "@/queries/club.queries";
 import { cn } from "@/lib/utils";
-import { useTeEquip } from "@/queries/auth.queries";
 
 interface Instalacio {
     nom: string;
@@ -265,9 +264,8 @@ export function CrearClubForm() {
     };
 
     const isArbitre = user?.rols?.includes("ARBITRE");
-    const { data: teEquip } = useTeEquip();
 
-    if (isArbitre || teEquip) {
+    if (isArbitre) {
         return null;
     }
 

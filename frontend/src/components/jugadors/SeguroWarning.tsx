@@ -9,7 +9,7 @@ const SeguroWarning = () => {
         return null;
     }
     return (
-        <Card className="border-orange-500 bg-orange-50 dark:bg-orange-950 mb-6">
+        <Card className="border-orange-500 bg-orange-50 dark:bg-orange-800 mb-6">
             <CardContent className="pt-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex items-start gap-3">
@@ -24,7 +24,7 @@ const SeguroWarning = () => {
                         </div>
                     </div>
                     <Link to="/jugador/seguro">
-                        <Button variant="default" size="sm" className="gap-2 whitespace-nowrap">
+                        <Button variant="default" size="sm" className="gap-2 whitespace-nowrap text-orange-800 dark:text-orange-200">
                             <CreditCard className="h-4 w-4" />
                             Pagar Segur
                         </Button>

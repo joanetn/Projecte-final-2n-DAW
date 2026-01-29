@@ -231,9 +231,11 @@ exports.teEquip = async (req, res) => {
             });
         }
 
+        // return res.json(user);
+
         const equip = await api.get(`/EquipUsuari?usuariId=${user.id}`);
 
-        if (equip) {
+        if (equip && equip.length != 0) {
             return res.status(200).json({
                 teEquip: true
             })

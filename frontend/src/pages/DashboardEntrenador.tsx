@@ -7,12 +7,27 @@ import HistorialPropostes from "@/components/entrenador/HistorialPropostes";
 import { Users, Trophy, Calendar, BarChart3, FileText } from "lucide-react";
 import Invitacions from "@/components/entrenador/Invitacions";
 import { useValidarJugadorsAlineacio } from "@/queries/seguro.queries";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { PlantillaTab } from "@/components/dashboards/entrenador/PlantillaTab";
 import { FutursTab } from "@/components/dashboards/entrenador/FutursTab";
+import { useQueryClient } from "@tanstack/react-query";
 const DashboardEntrenador = () => {
     const plantilla = usePlantilla();
     const partitsPendents = usePartitsPendents();
+    const queryClient = useQueryClient();
+
+    useEffect(() => {
+        const handler = () => {
+            queryClient.invalidateQueries({ queryKey: ["plantilla"] });
+            queryClient.invalidateQueries({ queryKey: ["invitacionsEnviades"] });
+            queryClient.invalidateQueries({ queryKey: ["jugadors-disponibles"] });
+        }
+        window.addEventListener('new-notificacio', handler as EventListener);
+        return () => {
+            window.removeEventListener('new-notificacio', handler as EventListener);
+        };
+    }, [queryClient]);
+
     const jugadorIds = useMemo(() => {
         if (!plantilla.data) return [];
         return plantilla.data.plantilla.jugadors.map(j => j.id);
@@ -33,7 +48,6 @@ const DashboardEntrenador = () => {
     }, [plantilla.data, segurosMap]);
     return (
         <div className="max-w-6xl mx-auto px-4 py-8">
-            {}
             <div className="flex items-center gap-3 mb-6">
                 <Users className="h-6 w-6 text-primary" />
                 <h2 className="text-2xl font-semibold text-foreground">
@@ -41,14 +55,12 @@ const DashboardEntrenador = () => {
                 </h2>
             </div>
             <Tabs defaultValue="plantilla" className="w-full">
-                {}
+
                 <TabsList className="grid w-full grid-cols-7 mb-6">
                     <TabsTrigger value="plantilla" className="flex items-center gap-1">
                         <Users className="w-4 h-4 hidden sm:inline" />
                         <span>Plantilla</span>
                     </TabsTrigger>
-                    {
-}
                     <TabsTrigger value="futurs" className="flex items-center gap-1">
                         <span>Futurs</span>
                     </TabsTrigger>
@@ -73,7 +85,7 @@ const DashboardEntrenador = () => {
                         <span>Invitacions</span>
                     </TabsTrigger>
                 </TabsList>
-                {}
+
                 <TabsContent value="plantilla">
                     <PlantillaTab
                         plantilla={plantilla}
@@ -81,24 +93,23 @@ const DashboardEntrenador = () => {
                         segurosMap={segurosMap}
                     />
                 </TabsContent>
-                {}
-                {}
+
                 <TabsContent value="futurs">
                     <FutursTab partitsPendents={partitsPendents} />
                 </TabsContent>
-                {}
+
                 <TabsContent value="classificacio">
                     <ClassificacioLliga />
                 </TabsContent>
-                {}
+
                 <TabsContent value="calendari">
                     <CalendariPartits />
                 </TabsContent>
-                {}
+
                 <TabsContent value="estadistiques">
                     <EstadistiquesJugadors />
                 </TabsContent>
-                {}
+
                 <TabsContent value="propostes">
                     <HistorialPropostes />
                 </TabsContent>

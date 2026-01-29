@@ -72,7 +72,6 @@ const FitxarEntrenadors = () => {
                                     {e.especialitat && (
                                         <p className="text-sm text-muted-foreground mb-2">Especialitat: {e.especialitat}</p>
                                     )}
-                                    {}
                                     <div className="mt-3">
                                         <button
                                             type="button"

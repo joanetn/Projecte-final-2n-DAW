@@ -112,7 +112,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
     const { setsLocal, setsVisitant } = calcularSetsGuanyats();
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {}
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
@@ -142,7 +141,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     </div>
                 </CardContent>
             </Card>
-            {}
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
@@ -158,14 +156,12 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {}
                     <div className="grid grid-cols-[1fr_80px_80px_100px] gap-2 text-sm font-medium text-center">
                         <div></div>
                         <div className="truncate">{partit.local?.nom || "Local"}</div>
                         <div className="truncate">{partit.visitant?.nom || "Visitant"}</div>
                         <div>Tiebreak</div>
                     </div>
-                    {}
                     {sets.map((set, index) => (
                         <div key={set.numeroSet} className="space-y-2">
                             <div className="grid grid-cols-[1fr_80px_80px_100px] gap-2 items-center">
@@ -210,7 +206,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                                     />
                                 </div>
                             </div>
-                            {}
                             {set.tiebreak && (
                                 <div className="grid grid-cols-[1fr_80px_80px_100px] gap-2 items-center pl-4">
                                     <div className="text-xs text-muted-foreground">Punts tiebreak:</div>
@@ -235,7 +230,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                             )}
                         </div>
                     ))}
-                    {}
                     {sets.length < 3 && (
                         <Button
                             type="button"
@@ -250,7 +244,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     )}
                 </CardContent>
             </Card>
-            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg">Observacions Reglamentàries</CardTitle>
@@ -268,7 +261,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     />
                 </CardContent>
             </Card>
-            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -280,7 +272,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {}
                     {incidencies.length > 0 && (
                         <div className="space-y-2 mb-4">
                             {incidencies.map((inc) => (
@@ -314,7 +305,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                             ))}
                         </div>
                     )}
-                    {}
                     <div className="border rounded-lg p-4 space-y-3 bg-muted/30">
                         <div className="grid grid-cols-2 gap-3">
                             <div>
@@ -382,7 +372,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     </div>
                 </CardContent>
             </Card>
-            {}
             <div className="flex gap-3 pt-4">
                 <Button
                     type="button"

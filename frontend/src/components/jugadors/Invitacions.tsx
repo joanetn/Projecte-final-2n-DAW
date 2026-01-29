@@ -4,13 +4,23 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Mail, Clock, MessageSquare, Check, X } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAcceptarInvitacio, useRebutjarInvitacio } from "@/mutations/invitacions.mutations"
 import { useToast } from "../ui/Toast"
 import SeguroWarning from "./SeguroWarning"
 import SeguroBadge from "./SeguroBadge"
 const InvitacionsJugador = () => {
-    const { data: invitacions, isLoading: invitacionsIsLoading, isError: invitacionsIsError } = useInvitacionsRebudes();
+    const { data: invitacions, isLoading: invitacionsIsLoading, isError: invitacionsIsError, refetch } = useInvitacionsRebudes();
+
+    useEffect(() => {
+        const handler = () => {
+            refetch();
+        };
+        window.addEventListener('new-notificacio', handler as EventListener);
+        return () => {
+            window.removeEventListener('new-notificacio', handler as EventListener);
+        };
+    }, [refetch]);
     const mutationAcceptar = useAcceptarInvitacio();
     const mutationRebutjar = useRebutjarInvitacio();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -81,7 +91,6 @@ const InvitacionsJugador = () => {
     return (
         <>
             <div className="w-full max-w-5xl mx-auto px-4 py-8 space-y-6">
-                {}
                 <SeguroWarning />
                 <div className="flex items-center justify-between">
                     <div className="text-center flex-1">

@@ -195,6 +195,90 @@
       "created_at": "2026-01-29T13:01:47.687Z",
       "updated_at": "2026-01-29T13:01:47.687Z",
       "id": "IQk2srQ"
+    },
+    {
+      "nom": "Joan Nácher",
+      "email": "entrenador@gmail.com",
+      "contrasenya": "123456",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-01-29T15:08:00.937Z",
+      "updated_at": "2026-01-29T15:08:00.937Z",
+      "id": "n-IOqC9"
+    },
+    {
+      "nom": "Joan Nácher Jr",
+      "email": "jugador@gmail.com",
+      "contrasenya": "123456",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-01-29T15:13:18.451Z",
+      "updated_at": "2026-01-29T15:13:18.451Z",
+      "id": "PGEAato"
+    },
+    {
+      "nom": "Jairo Perfavor",
+      "email": "j3@j.com",
+      "contrasenya": "123456",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-01-29T15:18:30.069Z",
+      "updated_at": "2026-01-29T15:18:30.069Z",
+      "id": "4vfhc8m"
+    },
+    {
+      "nom": "Jaume Perfavor",
+      "email": "j4@j.com",
+      "contrasenya": "123456",
+      "telefon": "612345678",
+      "dataNaixement": null,
+      "nivell": "Principiant",
+      "avatar": null,
+      "dni": null,
+      "isActive": false,
+      "created_at": "2026-01-29T15:49:58.250Z",
+      "updated_at": "2026-01-29T16:19:31.699Z",
+      "id": "Yf5pcS_"
+    },
+    {
+      "nom": "Sense Segur",
+      "email": "sense@segur.com",
+      "contrasenya": "123456",
+      "telefon": "5454545454",
+      "dataNaixement": null,
+      "nivell": "Principiant",
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-01-29T16:20:41.560Z",
+      "updated_at": "2026-01-29T16:20:41.560Z",
+      "id": "7ocyq6p"
+    },
+    {
+      "nom": "Sense Segur Jr",
+      "email": "sense2@segur.com",
+      "contrasenya": "123456",
+      "telefon": "12345678",
+      "dataNaixement": null,
+      "nivell": "Principiant",
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-01-29T16:35:01.470Z",
+      "updated_at": "2026-01-29T16:35:01.470Z",
+      "id": "Kok5QOX"
     }
   ],
   "UsuariRol": [
@@ -327,6 +411,48 @@
       "rol": "ADMIN_WEB",
       "isActive": true,
       "id": "k_jnOVl"
+    },
+    {
+      "usuariId": "n-IOqC9",
+      "rol": "ENTRENADOR",
+      "isActive": true,
+      "id": "k64jMOh"
+    },
+    {
+      "usuariId": "n-IOqC9",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "S9hN4R4"
+    },
+    {
+      "usuariId": "PGEAato",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "ex9EJvh"
+    },
+    {
+      "usuariId": "4vfhc8m",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "9asGcj4"
+    },
+    {
+      "usuariId": "Yf5pcS_",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "mQ1f3f_"
+    },
+    {
+      "usuariId": "7ocyq6p",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "ZUZaBqf"
+    },
+    {
+      "usuariId": "Kok5QOX",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "IadjaZy"
     }
   ],
   "Club": [
@@ -789,6 +915,118 @@
       "rolEquip": "ADMIN_EQUIP",
       "isActive": true,
       "created_at": "2026-01-29T14:29:59.213Z"
+    },
+    {
+      "id": "24454ed5",
+      "equipId": "bc8e1701",
+      "usuariId": "n-IOqC9",
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "equipId": "bc8e1701",
+      "usuariId": "n-IOqC9",
+      "rolEquip": "ENTRENADOR",
+      "isActive": true,
+      "id": "h74d0Pc"
+    },
+    {
+      "id": "4de05f40",
+      "equipId": "bc8e1701",
+      "usuariId": "PGEAato",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "equipId": "bc8e1701",
+      "usuariId": "PGEAato",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "id": "p-l4Kjr"
+    },
+    {
+      "id": "bfa10182",
+      "equipId": "bc8e1701",
+      "usuariId": "4vfhc8m",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "81323af6",
+      "equipId": "bc8e1701",
+      "usuariId": "Yf5pcS_",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "7e00689f",
+      "equipId": "bc8e1701",
+      "usuariId": "Yf5pcS_",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "396c07ea",
+      "equipId": "bc8e1701",
+      "usuariId": "Yf5pcS_",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "804cdffe",
+      "equipId": "bc8e1701",
+      "usuariId": "Yf5pcS_",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "e42060dd",
+      "equipId": "bc8e1701",
+      "usuariId": "Yf5pcS_",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "353ecd6e",
+      "equipId": "bc8e1701",
+      "usuariId": "Yf5pcS_",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "4922e510",
+      "equipId": "bc8e1701",
+      "usuariId": "Yf5pcS_",
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": "bd02f310",
+      "equipId": "bc8e1701",
+      "usuariId": "4vfhc8m",
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": "9a0ffb32",
+      "equipId": "bc8e1701",
+      "usuariId": "9",
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": "cfec0f22",
+      "equipId": "bc8e1701",
+      "usuariId": "7ocyq6p",
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "id": "b656577e",
+      "equipId": "bc8e1701",
+      "usuariId": "Kok5QOX",
+      "rolEquip": "JUGADOR",
+      "isActive": true
     }
   ],
   "Lliga": [
@@ -4527,7 +4765,7 @@
       "titol": "Invitació a equip",
       "missatge": "Has rebut una invitació per unir-te a l'equip Club padel jaume primer A",
       "tipus": "invitacio_equip",
-      "read": false,
+      "read": true,
       "created_at": "2026-01-29T12:42:11.158Z",
       "extra": {
         "invitacioId": "23308b62",
@@ -4545,6 +4783,520 @@
       "llegida": false,
       "created_at": "2026-01-29T12:42:29.610Z",
       "read": true
+    },
+    {
+      "id": "d3059794",
+      "usuariId": "n-IOqC9",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T15:08:43.812Z",
+      "extra": {
+        "invitacioId": "10b7e103",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "Hola, vine a entrenar"
+      }
+    },
+    {
+      "id": "55fb7f44",
+      "usuariId": "n-IOqC9",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T15:09:47.397Z",
+      "extra": {
+        "invitacioId": "1bbf206c",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "Vine a jugar home"
+      }
+    },
+    {
+      "id": "fbbda284",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Joan Nácher ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T15:10:42.122Z",
+      "extra": {
+        "jugadorId": "n-IOqC9",
+        "jugadorNom": "Joan Nácher",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "5177aa1d",
+      "usuariId": "PGEAato",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T15:14:46.473Z",
+      "extra": {
+        "invitacioId": "082e16a0",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "Hola, fitxa"
+      }
+    },
+    {
+      "id": "34987b82",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Joan Nácher Jr ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T15:15:10.047Z",
+      "extra": {
+        "jugadorId": "PGEAato",
+        "jugadorNom": "Joan Nácher Jr",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "d647d446",
+      "usuariId": "4vfhc8m",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 29/1/2027.",
+      "tipus": "SEGURO",
+      "llegida": false,
+      "created_at": "2026-01-29T15:30:46.652Z",
+      "read": true
+    },
+    {
+      "id": "62838135",
+      "usuariId": "4vfhc8m",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T15:31:13.558Z",
+      "extra": {
+        "invitacioId": "19e2a1a0",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "dsvvdv"
+      }
+    },
+    {
+      "id": "b917261d",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Jairo Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T15:31:32.555Z",
+      "extra": {
+        "jugadorId": "4vfhc8m",
+        "jugadorNom": "Jairo Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "b384fd25",
+      "usuariId": "Yf5pcS_",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 29/1/2027.",
+      "tipus": "SEGURO",
+      "llegida": false,
+      "created_at": "2026-01-29T15:50:20.475Z",
+      "read": true
+    },
+    {
+      "id": "79b563f1",
+      "usuariId": "Yf5pcS_",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T15:52:27.773Z",
+      "extra": {
+        "invitacioId": "9211d0f8",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "Holaaaaaaaaaaa"
+      }
+    },
+    {
+      "id": "0063c49b",
+      "usuariId": "Yf5pcS_",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T15:53:23.290Z",
+      "extra": {
+        "invitacioId": "17cb4d44",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "entraaa"
+      }
+    },
+    {
+      "id": "52b1b206",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Jaume Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T15:53:37.335Z",
+      "extra": {
+        "jugadorId": "Yf5pcS_",
+        "jugadorNom": "Jaume Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "0f45bb63",
+      "usuariId": "Yf5pcS_",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T15:58:34.833Z",
+      "extra": {
+        "invitacioId": "850f9331",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "cdscdcdsc"
+      }
+    },
+    {
+      "id": "744bbef9",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Jaume Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T15:58:46.758Z",
+      "extra": {
+        "jugadorId": "Yf5pcS_",
+        "jugadorNom": "Jaume Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "cab01d7d",
+      "usuariId": "Yf5pcS_",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:03:06.495Z",
+      "extra": {
+        "invitacioId": "1e01b3c5",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "fitxa home"
+      }
+    },
+    {
+      "id": "bde659d2",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Jaume Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:03:22.333Z",
+      "extra": {
+        "jugadorId": "Yf5pcS_",
+        "jugadorNom": "Jaume Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "8e5a7a35",
+      "usuariId": "Yf5pcS_",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:05:04.440Z",
+      "extra": {
+        "invitacioId": "04e0a45d",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "holaaaaaaaa"
+      }
+    },
+    {
+      "id": "7977358e",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Jaume Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:05:21.217Z",
+      "extra": {
+        "jugadorId": "Yf5pcS_",
+        "jugadorNom": "Jaume Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "746c3de6",
+      "usuariId": "Yf5pcS_",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:10:45.890Z",
+      "extra": {
+        "invitacioId": "7a72af18",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "fitxa tio"
+      }
+    },
+    {
+      "id": "cea4b374",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Jaume Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:10:55.068Z",
+      "extra": {
+        "jugadorId": "Yf5pcS_",
+        "jugadorNom": "Jaume Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "cb260b29",
+      "usuariId": "Yf5pcS_",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:12:57.920Z",
+      "extra": {
+        "invitacioId": "fd192a85",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "dddvdsvvd"
+      }
+    },
+    {
+      "id": "53121d35",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Jaume Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:13:04.704Z",
+      "extra": {
+        "jugadorId": "Yf5pcS_",
+        "jugadorNom": "Jaume Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "f0b10e86",
+      "usuariId": "Yf5pcS_",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:13:41.711Z",
+      "extra": {
+        "invitacioId": "c9fbbff6",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "vale va fitxa"
+      }
+    },
+    {
+      "id": "1af15616",
+      "usuariId": "11",
+      "titol": "Invitació acceptada",
+      "missatge": "Jaume Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:13:49.367Z",
+      "extra": {
+        "jugadorId": "Yf5pcS_",
+        "jugadorNom": "Jaume Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "c8b491f6",
+      "usuariId": "4vfhc8m",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:14:46.342Z",
+      "extra": {
+        "invitacioId": "5066b9a4",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "va fitxa"
+      }
+    },
+    {
+      "id": "4a3b8103",
+      "usuariId": "n-IOqC9",
+      "titol": "Invitació acceptada",
+      "missatge": "Jairo Perfavor ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:15:18.985Z",
+      "extra": {
+        "jugadorId": "4vfhc8m",
+        "jugadorNom": "Jairo Perfavor",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "88417898",
+      "usuariId": "9",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:15:40.147Z",
+      "extra": {
+        "invitacioId": "5bdba4dc",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "nuriaaa"
+      }
+    },
+    {
+      "id": "787338d4",
+      "usuariId": "9",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 29/1/2027.",
+      "tipus": "SEGURO",
+      "llegida": false,
+      "created_at": "2026-01-29T16:16:12.897Z"
+    },
+    {
+      "id": "45e444c9",
+      "usuariId": "1HYI5VS",
+      "titol": "Invitació rebutjada",
+      "missatge": "Núria Soler ha rebutjat la invitació per unir-se a Club padel jaume primer A",
+      "tipus": "info",
+      "read": false,
+      "created_at": "2026-01-29T16:16:19.901Z",
+      "extra": {
+        "jugadorId": "9",
+        "jugadorNom": "Núria Soler",
+        "equipId": "430cea43"
+      }
+    },
+    {
+      "id": "332afe4b",
+      "usuariId": "n-IOqC9",
+      "titol": "Invitació acceptada",
+      "missatge": "Núria Soler ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:16:23.646Z",
+      "extra": {
+        "jugadorId": "9",
+        "jugadorNom": "Núria Soler",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "70f6183f",
+      "usuariId": "7ocyq6p",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:21:03.243Z",
+      "extra": {
+        "invitacioId": "da7428bb",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "hola, paga tio"
+      }
+    },
+    {
+      "id": "de6e05b7",
+      "usuariId": "7ocyq6p",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 29/1/2027.",
+      "tipus": "SEGURO",
+      "llegida": false,
+      "created_at": "2026-01-29T16:21:22.962Z",
+      "read": true
+    },
+    {
+      "id": "8d4778d4",
+      "usuariId": "n-IOqC9",
+      "titol": "Invitació acceptada",
+      "missatge": "Sense Segur ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:21:34.447Z",
+      "extra": {
+        "jugadorId": "7ocyq6p",
+        "jugadorNom": "Sense Segur",
+        "equipId": "bc8e1701"
+      }
+    },
+    {
+      "id": "2750ab79",
+      "usuariId": "Kok5QOX",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:39:02.083Z",
+      "extra": {
+        "invitacioId": "5ef092e9",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "sense segur jr?"
+      }
+    },
+    {
+      "id": "84cf5146",
+      "usuariId": "Kok5QOX",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-01-29T16:39:21.046Z",
+      "extra": {
+        "invitacioId": "6b10f5be",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "sense segur jr?"
+      }
+    },
+    {
+      "id": "67effe95",
+      "usuariId": "Kok5QOX",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 29/1/2027.",
+      "tipus": "SEGURO",
+      "llegida": false,
+      "created_at": "2026-01-29T16:39:41.370Z",
+      "read": true
+    },
+    {
+      "id": "25595de1",
+      "usuariId": "n-IOqC9",
+      "titol": "Invitació acceptada",
+      "missatge": "Sense Segur Jr ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-01-29T16:39:58.132Z",
+      "extra": {
+        "jugadorId": "Kok5QOX",
+        "jugadorNom": "Sense Segur Jr",
+        "equipId": "bc8e1701"
+      }
     }
   ],
   "Merch": [
@@ -4819,9 +5571,196 @@
       "jugadorId": "9",
       "enviadaPer": "1HYI5VS",
       "missatge": "hola",
-      "estat": "PENDENT",
+      "estat": "REBUTJADA",
       "created_at": "2026-01-29T12:42:11.126Z",
-      "updated_at": "2026-01-29T12:42:11.126Z",
+      "updated_at": "2026-01-29T16:16:19.853Z",
+      "isActive": true
+    },
+    {
+      "id": "10b7e103",
+      "equipId": "bc8e1701",
+      "jugadorId": "n-IOqC9",
+      "enviadaPer": "11",
+      "missatge": "Hola, vine a entrenar",
+      "estat": "CANCEL·LADA",
+      "created_at": "2026-01-29T15:08:43.779Z",
+      "updated_at": "2026-01-29T15:09:36.151Z",
+      "isActive": false
+    },
+    {
+      "id": "1bbf206c",
+      "equipId": "bc8e1701",
+      "jugadorId": "n-IOqC9",
+      "enviadaPer": "11",
+      "missatge": "Vine a jugar home",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T15:09:47.364Z",
+      "updated_at": "2026-01-29T15:10:42.028Z",
+      "isActive": true
+    },
+    {
+      "id": "082e16a0",
+      "equipId": "bc8e1701",
+      "jugadorId": "PGEAato",
+      "enviadaPer": "11",
+      "missatge": "Hola, fitxa",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T15:14:46.439Z",
+      "updated_at": "2026-01-29T15:15:09.953Z",
+      "isActive": true
+    },
+    {
+      "id": "19e2a1a0",
+      "equipId": "bc8e1701",
+      "jugadorId": "4vfhc8m",
+      "enviadaPer": "11",
+      "missatge": "dsvvdv",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T15:31:13.527Z",
+      "updated_at": "2026-01-29T15:31:32.464Z",
+      "isActive": true
+    },
+    {
+      "id": "9211d0f8",
+      "equipId": "bc8e1701",
+      "jugadorId": "Yf5pcS_",
+      "enviadaPer": "11",
+      "missatge": "Holaaaaaaaaaaa",
+      "estat": "CANCEL·LADA",
+      "created_at": "2026-01-29T15:52:27.739Z",
+      "updated_at": "2026-01-29T15:53:12.134Z",
+      "isActive": false
+    },
+    {
+      "id": "17cb4d44",
+      "equipId": "bc8e1701",
+      "jugadorId": "Yf5pcS_",
+      "enviadaPer": "11",
+      "missatge": "entraaa",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T15:53:23.259Z",
+      "updated_at": "2026-01-29T15:53:37.242Z",
+      "isActive": true
+    },
+    {
+      "id": "850f9331",
+      "equipId": "bc8e1701",
+      "jugadorId": "Yf5pcS_",
+      "enviadaPer": "11",
+      "missatge": "cdscdcdsc",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T15:58:34.804Z",
+      "updated_at": "2026-01-29T15:58:46.663Z",
+      "isActive": true
+    },
+    {
+      "id": "1e01b3c5",
+      "equipId": "bc8e1701",
+      "jugadorId": "Yf5pcS_",
+      "enviadaPer": "11",
+      "missatge": "fitxa home",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:03:06.463Z",
+      "updated_at": "2026-01-29T16:03:22.255Z",
+      "isActive": true
+    },
+    {
+      "id": "04e0a45d",
+      "equipId": "bc8e1701",
+      "jugadorId": "Yf5pcS_",
+      "enviadaPer": "11",
+      "missatge": "holaaaaaaaa",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:05:04.406Z",
+      "updated_at": "2026-01-29T16:05:21.140Z",
+      "isActive": true
+    },
+    {
+      "id": "7a72af18",
+      "equipId": "bc8e1701",
+      "jugadorId": "Yf5pcS_",
+      "enviadaPer": "11",
+      "missatge": "fitxa tio",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:10:45.859Z",
+      "updated_at": "2026-01-29T16:10:54.975Z",
+      "isActive": true
+    },
+    {
+      "id": "fd192a85",
+      "equipId": "bc8e1701",
+      "jugadorId": "Yf5pcS_",
+      "enviadaPer": "11",
+      "missatge": "dddvdsvvd",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:12:57.886Z",
+      "updated_at": "2026-01-29T16:13:04.657Z",
+      "isActive": true
+    },
+    {
+      "id": "c9fbbff6",
+      "equipId": "bc8e1701",
+      "jugadorId": "Yf5pcS_",
+      "enviadaPer": "11",
+      "missatge": "vale va fitxa",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:13:41.678Z",
+      "updated_at": "2026-01-29T16:13:49.291Z",
+      "isActive": true
+    },
+    {
+      "id": "5066b9a4",
+      "equipId": "bc8e1701",
+      "jugadorId": "4vfhc8m",
+      "enviadaPer": "n-IOqC9",
+      "missatge": "va fitxa",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:14:46.307Z",
+      "updated_at": "2026-01-29T16:15:18.891Z",
+      "isActive": true
+    },
+    {
+      "id": "5bdba4dc",
+      "equipId": "bc8e1701",
+      "jugadorId": "9",
+      "enviadaPer": "n-IOqC9",
+      "missatge": "nuriaaa",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:15:40.114Z",
+      "updated_at": "2026-01-29T16:16:23.552Z",
+      "isActive": true
+    },
+    {
+      "id": "da7428bb",
+      "equipId": "bc8e1701",
+      "jugadorId": "7ocyq6p",
+      "enviadaPer": "n-IOqC9",
+      "missatge": "hola, paga tio",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:21:03.208Z",
+      "updated_at": "2026-01-29T16:21:34.369Z",
+      "isActive": true
+    },
+    {
+      "id": "5ef092e9",
+      "equipId": "bc8e1701",
+      "jugadorId": "Kok5QOX",
+      "enviadaPer": "n-IOqC9",
+      "missatge": "sense segur jr?",
+      "estat": "CANCEL·LADA",
+      "created_at": "2026-01-29T16:39:02.052Z",
+      "updated_at": "2026-01-29T16:39:05.876Z",
+      "isActive": false
+    },
+    {
+      "id": "6b10f5be",
+      "equipId": "bc8e1701",
+      "jugadorId": "Kok5QOX",
+      "enviadaPer": "n-IOqC9",
+      "missatge": "sense segur jr?",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-01-29T16:39:21.011Z",
+      "updated_at": "2026-01-29T16:39:58.070Z",
       "isActive": true
     }
   ],
@@ -4922,6 +5861,104 @@
       "stripeSessionId": "cs_test_a14keb5iHudiV4f7rHkRM8nHo52CGB4D2CKqXyXfu18AnPREHu9TM5XecZ",
       "created_at": "2026-01-29T14:39:04.403Z",
       "updated_at": "2026-01-29T14:39:04.403Z",
+      "isActive": true
+    },
+    {
+      "id": "8430074c",
+      "usuariId": "n-IOqC9",
+      "dataInici": "2026-01-29T15:10:28.899Z",
+      "dataFi": "2027-01-29T15:10:28.899Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "STRIPE",
+      "stripePaymentId": "pi_3SuwrUEd7XCgbD1o0rOX3jRd",
+      "stripeSessionId": "cs_test_a13mct2JMXOoyPtc3nxhkQfLbHjAJSTttRDZqnIrbaDBgUAIUibeCCPRFY",
+      "created_at": "2026-01-29T15:10:28.899Z",
+      "updated_at": "2026-01-29T15:10:28.899Z",
+      "isActive": true
+    },
+    {
+      "id": "247e7236",
+      "usuariId": "PGEAato",
+      "dataInici": "2026-01-29T15:14:21.318Z",
+      "dataFi": "2027-01-29T15:14:21.318Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "STRIPE",
+      "stripePaymentId": "pi_3SuwvFEd7XCgbD1o0MaOYX50",
+      "stripeSessionId": "cs_test_a1HfCa8rVK4QndH6yCRssSNFVWDan5emIrI1w4ovefVIi3jMj3GqqpUcR1",
+      "created_at": "2026-01-29T15:14:21.318Z",
+      "updated_at": "2026-01-29T15:14:21.318Z",
+      "isActive": true
+    },
+    {
+      "id": "3c84bd55",
+      "usuariId": "4vfhc8m",
+      "dataInici": "2026-01-29T15:30:46.652Z",
+      "dataFi": "2027-01-29T15:30:46.652Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-01-29T15:30:46.652Z",
+      "updated_at": "2026-01-29T15:30:46.652Z",
+      "isActive": true
+    },
+    {
+      "id": "af997896",
+      "usuariId": "Yf5pcS_",
+      "dataInici": "2026-01-29T15:50:20.475Z",
+      "dataFi": "2027-01-29T15:50:20.475Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-01-29T15:50:20.475Z",
+      "updated_at": "2026-01-29T15:50:20.475Z",
+      "isActive": true
+    },
+    {
+      "id": "1d34438d",
+      "usuariId": "9",
+      "dataInici": "2026-01-29T16:16:12.897Z",
+      "dataFi": "2027-01-29T16:16:12.897Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-01-29T16:16:12.897Z",
+      "updated_at": "2026-01-29T16:16:12.897Z",
+      "isActive": true
+    },
+    {
+      "id": "dbf5694d",
+      "usuariId": "7ocyq6p",
+      "dataInici": "2026-01-29T16:21:22.962Z",
+      "dataFi": "2027-01-29T16:21:22.962Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-01-29T16:21:22.962Z",
+      "updated_at": "2026-01-29T16:21:22.962Z",
+      "isActive": true
+    },
+    {
+      "id": "443124b9",
+      "usuariId": "Kok5QOX",
+      "dataInici": "2026-01-29T16:39:41.370Z",
+      "dataFi": "2027-01-29T16:39:41.370Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-01-29T16:39:41.370Z",
+      "updated_at": "2026-01-29T16:39:41.370Z",
       "isActive": true
     }
   ]

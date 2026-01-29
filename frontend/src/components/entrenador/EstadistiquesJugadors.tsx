@@ -20,7 +20,6 @@ const EstadistiquesJugadors = () => {
             <Card key={jugador.id} className="hover:shadow-lg transition-shadow">
                 <CardContent className="pt-6">
                     <div className="flex items-start gap-4">
-                        {}
                         <div className="relative">
                             {jugador.avatar ? (
                                 <img
@@ -40,7 +39,6 @@ const EstadistiquesJugadors = () => {
                                 {index + 1}
                             </Badge>
                         </div>
-                        {}
                         <div className="flex-1">
                             <h3 className="font-semibold text-lg">{jugador.nom}</h3>
                             {jugador.nivell && (
@@ -49,7 +47,6 @@ const EstadistiquesJugadors = () => {
                                 </Badge>
                             )}
                         </div>
-                        {}
                         <div className="text-center">
                             <div className={`text-2xl font-bold ${getWinRateColor(jugador.winRate)}`}>
                                 {jugador.winRate}%
@@ -57,7 +54,6 @@ const EstadistiquesJugadors = () => {
                             <span className="text-xs text-muted-foreground">Win Rate</span>
                         </div>
                     </div>
-                    {}
                     <div className="mt-4">
                         <div className="h-2 bg-muted rounded-full overflow-hidden">
                             <div
@@ -66,7 +62,6 @@ const EstadistiquesJugadors = () => {
                             />
                         </div>
                     </div>
-                    {}
                     <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t">
                         <div className="text-center">
                             <div className="text-xl font-bold">{jugador.partitsJugats}</div>
@@ -124,7 +119,6 @@ const EstadistiquesJugadors = () => {
         : 0;
     return (
         <div className="space-y-6">
-            {}
             <Card className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border-primary/20">
                 <CardHeader className="pb-3">
                     <div className="flex items-center gap-3">
@@ -156,7 +150,6 @@ const EstadistiquesJugadors = () => {
                     </div>
                 </CardContent>
             </Card>
-            {}
             {data.estadistiques.length > 0 ? (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     {data.estadistiques.map((jugador, index) => renderJugadorCard(jugador, index))}

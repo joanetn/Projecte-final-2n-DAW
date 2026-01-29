@@ -40,12 +40,10 @@ const CalendariPartits = () => {
                 </div>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 flex-1">
-                        {}
                         <div className={`flex items-center gap-2 flex-1 ${partit.esLocal ? 'font-bold' : ''}`}>
                             {partit.esLocal && <Home className="w-4 h-4 text-blue-600" />}
                             <span className="truncate">{partit.local?.nom || "TBD"}</span>
                         </div>
-                        {}
                         <div className="px-4 py-1 bg-muted rounded-lg text-center min-w-[80px]">
                             {partit.status === "COMPLETAT" && partit.resultatLocal !== undefined ? (
                                 <span className="font-bold text-lg">
@@ -55,7 +53,6 @@ const CalendariPartits = () => {
                                 <span className="text-muted-foreground font-medium">VS</span>
                             )}
                         </div>
-                        {}
                         <div className={`flex items-center gap-2 flex-1 justify-end ${!partit.esLocal ? 'font-bold' : ''}`}>
                             <span className="truncate">{partit.visitant?.nom || "TBD"}</span>
                             {!partit.esLocal && <Plane className="w-4 h-4 text-orange-600" />}
@@ -90,7 +87,6 @@ const CalendariPartits = () => {
     }
     return (
         <div className="space-y-6">
-            {}
             {data.lliga && (
                 <Card className="bg-gradient-to-r from-blue-500/10 to-orange-500/10 border-primary/20">
                     <CardHeader className="pb-3">
@@ -109,7 +105,6 @@ const CalendariPartits = () => {
                     </CardHeader>
                 </Card>
             )}
-            {}
             <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-blue-200 dark:bg-blue-800"></div>
@@ -122,7 +117,6 @@ const CalendariPartits = () => {
                     <span>Visitant</span>
                 </div>
             </div>
-            {}
             {data.calendari.map((jornada) => (
                 <Card key={jornada.jornada.id}>
                     <CardHeader className="pb-2">
@@ -152,7 +146,6 @@ const CalendariPartits = () => {
                     </CardContent>
                 </Card>
             ))}
-            {}
             {data.partitsSenseJornada.length > 0 && (
                 <Card>
                     <CardHeader className="pb-2">

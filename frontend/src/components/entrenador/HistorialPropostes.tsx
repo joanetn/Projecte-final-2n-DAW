@@ -112,7 +112,6 @@ const HistorialPropostes = () => {
     }
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {}
             <Card className="shadow-lg">
                 <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2 text-lg">
@@ -138,7 +137,7 @@ const HistorialPropostes = () => {
                     </ScrollArea>
                 </CardContent>
             </Card>
-            {}
+            { }
             <Card className="shadow-lg">
                 <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2 text-lg">
@@ -164,7 +163,7 @@ const HistorialPropostes = () => {
                     </ScrollArea>
                 </CardContent>
             </Card>
-            {}
+            { }
             <Card className="lg:col-span-2 shadow-lg">
                 <CardContent className="py-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

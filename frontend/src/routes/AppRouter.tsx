@@ -61,7 +61,6 @@ const AppRouter = () => {
                             path="/entrenador/partits/:partitId/alineacio"
                             element={<AlineacioPartit />}
                         />
-                        {}
                         <Route
                             path="/ranking"
                             element={<Ranking />}

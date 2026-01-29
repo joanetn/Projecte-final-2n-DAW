@@ -28,7 +28,6 @@ const PlantillaCard = ({ usuari, teSeguro }: PlantillaCardProps) => (
                 </div>
                 {usuari.avatar && (
                     <img
-                        src={usuari.avatar}
                         alt={usuari.nom}
                         className="h-12 w-12 rounded-full object-cover"
                     />

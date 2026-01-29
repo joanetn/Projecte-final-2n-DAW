@@ -352,7 +352,6 @@ const Header = () => {
                             <div className="pt-2 space-y-2">
                                 <div className="flex items-center justify-between px-4">
                                     <div className="text-sm text-foreground">Hola, {user.nom}</div>
-                                    {}
                                     <button
                                         aria-label="Notificacions"
                                         className="relative p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"

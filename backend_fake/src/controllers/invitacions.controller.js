@@ -446,7 +446,18 @@ exports.acceptarInvitacio = async (req, res) => {
 
         await api.post("/Notificacio", novaNotificacio);
 
-        // Cancel·lar altres invitacions pendents d'aquest jugador
+        try {
+            const { io, userSockets } = require('../index');
+            const sockets = userSockets.get(String(invitacio.enviadaPer));
+            if (sockets && sockets.size > 0) {
+                sockets.forEach(socketId => {
+                    io.to(socketId).emit('notificacio', novaNotificacio);
+                });
+            }
+        } catch (socketErr) {
+            console.error('Error emitint socket:', socketErr);
+        }
+
         const altresInv = await api.get(`/InvitacioEquip?jugadorId=${user.id}&estat=PENDENT`);
         const altresInvArray = Array.isArray(altresInv) ? altresInv : (altresInv ? [altresInv] : []);
 
@@ -533,6 +544,18 @@ exports.rebutjarInvitacio = async (req, res) => {
         };
 
         await api.post("/Notificacio", novaNotificacio);
+
+        try {
+            const { io, userSockets } = require('../index');
+            const sockets = userSockets.get(String(invitacio.enviadaPer));
+            if (sockets && sockets.size > 0) {
+                sockets.forEach(socketId => {
+                    io.to(socketId).emit('notificacio', novaNotificacio);
+                });
+            }
+        } catch (socketErr) {
+            console.error('Error emitint socket:', socketErr);
+        }
 
         res.json({
             message: "Invitació rebutjada"

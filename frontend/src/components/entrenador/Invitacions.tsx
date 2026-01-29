@@ -102,7 +102,6 @@ const Invitacions = () => {
                                         {j.nivell && (
                                             <p className="text-sm text-muted-foreground mb-2">Nivell: {j.nivell}</p>
                                         )}
-                                        {}
                                         <div className="mt-3">
                                             <button
                                                 type="button"
@@ -176,7 +175,6 @@ const Invitacions = () => {
                 )}
                 {!invitacionsIsLoading && invitacions && invitacions.total > 0 && (
                     <div className="space-y-4">
-                        {}
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-indigo-100 rounded-lg">
@@ -188,7 +186,6 @@ const Invitacions = () => {
                                 </div>
                             </div>
                         </div>
-                        {}
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                             {invitacions.invitacions.map((inv) => {
                                 const estatColors: Record<string, { bg: string; text: string; border: string }> = {
@@ -211,7 +208,6 @@ const Invitacions = () => {
                                         key={inv.id}
                                         className="group relative overflow-hidden border border-gray-100 hover:border-indigo-200 hover:shadow-lg transition-all duration-300"
                                     >
-                                        {}
                                         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                                         <CardHeader className="pb-3">
                                             <div className="flex items-start gap-4">

@@ -8,12 +8,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
 const availableRoles = ["JUGADOR", "ENTRENADOR", "ARBITRE"];
+
+const availableLevels = ["Principiant", "Intermedi", "Avançat", "Professional"];
 const Register = () => {
     const [form, setForm] = useState<RegisterData>({
         nom: "",
         email: "",
         contrasenya: "",
         rol: [],
+        nivell: "",
+        telefon: "",
     });
     const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
     const navigate = useNavigate();
@@ -34,20 +38,31 @@ const Register = () => {
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-        if (type === "checkbox") {
-            if (value === "ARBITRE") {
-                setForm(prev => ({
-                    ...prev,
-                    rol: checked ? ["ARBITRE"] : [],
-                }));
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+        const target = e.currentTarget;
+        const { name, value } = target;
+
+        if (target.tagName === "INPUT") {
+            const inputElement = target as HTMLInputElement;
+            if (inputElement.type === "checkbox") {
+                const checked = inputElement.checked;
+                if (value === "ARBITRE") {
+                    setForm(prev => ({
+                        ...prev,
+                        rol: checked ? ["ARBITRE"] : [],
+                    }));
+                } else {
+                    setForm(prev => ({
+                        ...prev,
+                        rol: checked
+                            ? [...(prev.rol?.filter(r => r !== "ARBITRE") || []), value]
+                            : prev.rol?.filter(r => r !== value),
+                    }));
+                }
             } else {
                 setForm(prev => ({
                     ...prev,
-                    rol: checked
-                        ? [...(prev.rol?.filter(r => r !== "ARBITRE") || []), value]
-                        : prev.rol?.filter(r => r !== value),
+                    [name]: value,
                 }));
             }
         } else {
@@ -83,7 +98,6 @@ const Register = () => {
                         </p>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        {}
                         <div className="space-y-1.5">
                             <Label htmlFor="nom">
                                 Nom complet
@@ -104,7 +118,6 @@ const Register = () => {
                                 </p>
                             )}
                         </div>
-                        {}
                         <div className="space-y-1.5">
                             <Label htmlFor="email">
                                 Email
@@ -125,7 +138,6 @@ const Register = () => {
                                 </p>
                             )}
                         </div>
-                        {}
                         <div className="space-y-1.5">
                             <Label htmlFor="contrasenya">
                                 Contrasenya
@@ -146,7 +158,6 @@ const Register = () => {
                                 </p>
                             )}
                         </div>
-                        {}
                         <div className="space-y-2">
                             <Label className="text-sm font-medium text-foreground">
                                 Selecciona els teus rols
@@ -172,6 +183,38 @@ const Register = () => {
                                     </label>
                                 ))}
                             </div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="telefon">
+                                Número de telèfon (opcional)
+                            </Label>
+                            <Input
+                                id="telefon"
+                                type="tel"
+                                name="telefon"
+                                placeholder="+34 600 000 000"
+                                value={form.telefon || ""}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="nivell">
+                                Nivell de joc (opcional)
+                            </Label>
+                            <select
+                                id="nivell"
+                                name="nivell"
+                                value={form.nivell || ""}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                            >
+                                <option value="">Selecciona un nivell</option>
+                                {availableLevels.map(level => (
+                                    <option key={level} value={level}>
+                                        {level}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                         {isError && (
                             <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-start gap-2">

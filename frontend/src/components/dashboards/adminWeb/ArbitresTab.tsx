@@ -64,7 +64,6 @@ export function ArbitresTab() {
                                             <div className="flex items-center gap-2">
                                                 {arbitre.avatar && (
                                                     <img
-                                                        src={arbitre.avatar}
                                                         alt={arbitre.nom}
                                                         className="w-8 h-8 rounded-full object-cover"
                                                     />

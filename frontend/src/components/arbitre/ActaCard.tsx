@@ -44,14 +44,12 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                 </div>
             </CardHeader>
             <CardContent className="space-y-3">
-                {}
                 <div className="flex items-center justify-center py-3 bg-muted rounded-lg">
                     <span className="text-3xl font-bold text-primary">
                         {acta.setsLocal} - {acta.setsVisitant}
                     </span>
                     <span className="text-sm text-muted-foreground ml-2">sets</span>
                 </div>
-                {}
                 {acta.sets && acta.sets.length > 0 && (
                     <div className="flex justify-center gap-2 text-sm text-muted-foreground">
                         {acta.sets.map((set) => (
@@ -62,7 +60,6 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                         ))}
                     </div>
                 )}
-                {}
                 {acta.partit?.dataHora && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Calendar className="h-4 w-4" />
@@ -75,7 +72,6 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                         </span>
                     </div>
                 )}
-                {}
                 {teIncidencies && (
                     <div className="text-sm">
                         <Badge variant="destructive" className="text-xs">
@@ -83,17 +79,14 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                         </Badge>
                     </div>
                 )}
-                {}
                 {acta.observacions && (
                     <p className="text-sm text-muted-foreground line-clamp-2 italic">
                         "{acta.observacions}"
                     </p>
                 )}
-                {}
                 <div className="text-xs text-muted-foreground">
                     Creada el {dataFormatejada}
                 </div>
-                {}
                 <div className="flex gap-2 pt-2">
                     <Button
                         variant="outline"

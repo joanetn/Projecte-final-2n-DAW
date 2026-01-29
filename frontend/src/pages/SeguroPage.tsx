@@ -93,7 +93,7 @@ const SeguroPage = () => {
                     El segur és obligatori per poder ser alineat en partits i unir-te a equips.
                 </p>
             </div>
-            {}
+            { }
             {showSuccessMessage && (
                 <Card className="mb-6 border-green-500 bg-green-50 dark:bg-green-950">
                     <CardContent className="pt-6">
@@ -111,7 +111,7 @@ const SeguroPage = () => {
                     </CardContent>
                 </Card>
             )}
-            {}
+            { }
             {errorMessage && (
                 <Card className="mb-6 border-red-500 bg-red-50 dark:bg-red-950">
                     <CardContent className="pt-6">
@@ -129,7 +129,7 @@ const SeguroPage = () => {
                     </CardContent>
                 </Card>
             )}
-            {}
+            { }
             <Card className="mb-6">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -179,7 +179,7 @@ const SeguroPage = () => {
                                     </Badge>
                                 </div>
                             </div>
-                            {}
+                            { }
                             {estatSeguro.seguro.diesRestants <= 30 && (
                                 <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-300 rounded-lg p-4">
                                     <div className="flex items-center gap-2">
@@ -230,7 +230,7 @@ const SeguroPage = () => {
                                 )}
                                 Pagar Segur
                             </Button>
-                            {}
+                            { }
                             <div className="mt-4">
                                 <Button
                                     variant="outline"
@@ -248,7 +248,7 @@ const SeguroPage = () => {
                     )}
                 </CardContent>
             </Card>
-            {}
+            { }
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -271,12 +271,12 @@ const SeguroPage = () => {
                                 return (
                                     <div
                                         key={seguro.id}
-                                        className={`flex items-center justify-between p-4 rounded-lg border ${esVigent ? 'bg-green-50 dark:bg-green-950 border-green-200' : 'bg-muted/30'
+                                        className={`flex items-center justify-between p-4 rounded-lg border ${esVigent ? 'bg-green-50 dark:bg-green-600 border-green-200' : 'bg-muted/30'
                                             }`}
                                     >
                                         <div className="flex items-center gap-3">
                                             {esVigent ? (
-                                                <ShieldCheck className="h-5 w-5 text-green-600" />
+                                                <ShieldCheck className="h-5 w-5 text-green-950" />
                                             ) : (
                                                 <Shield className="h-5 w-5 text-muted-foreground" />
                                             )}

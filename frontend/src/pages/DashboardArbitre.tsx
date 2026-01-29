@@ -238,7 +238,6 @@ const DashboardArbitre = () => {
     }
     return (
         <div className="container mx-auto p-6 space-y-6">
-            {}
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold flex items-center gap-2">
@@ -250,7 +249,6 @@ const DashboardArbitre = () => {
                     </p>
                 </div>
             </div>
-            {}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Card>
                     <CardContent className="pt-6">
@@ -305,7 +303,6 @@ const DashboardArbitre = () => {
                     </CardContent>
                 </Card>
             </div>
-            {}
             <Tabs defaultValue="pendents" className="space-y-4">
                 <TabsList className="grid w-full grid-cols-2 max-w-md">
                     <TabsTrigger value="pendents" className="gap-2">
@@ -327,7 +324,7 @@ const DashboardArbitre = () => {
                         )}
                     </TabsTrigger>
                 </TabsList>
-                {}
+                { }
                 <TabsContent value="pendents" className="space-y-4">
                     <PartitsPendentsTab
                         loadingPartits={loadingPartits}
@@ -335,9 +332,7 @@ const DashboardArbitre = () => {
                         onCrearActa={handleCrearActa}
                     />
                 </TabsContent>
-                {}
                 <TabsContent value="actes" className="space-y-4">
-                    {}
                     <MevesActesTab
                         loadingActes={loadingActes}
                         actesFiltrades={actesFiltrades}

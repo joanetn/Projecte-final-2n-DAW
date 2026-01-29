@@ -129,7 +129,6 @@ const PlantillaCardAdmin = ({
                         <p className="text-sm text-muted-foreground mb-2">Nivell: {usuari.nivell}</p>
                     )}
                     <div className="flex flex-wrap gap-2">
-                        {}
                         {(usuari.rolsEquip || [usuari.rolEquip]).map((rol: string) => (
                             <Badge key={rol} className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 border-green-300 dark:border-green-700">
                                 {rol === "ADMIN_EQUIP" ? "Admin" : rol === "ENTRENADOR" ? "Entrenador" : "Jugador"}
@@ -154,22 +153,21 @@ const PlantillaCardAdmin = ({
                     </div>
                 </CardContent>
             </Card>
-            {}
             <AlertDialog open={showBaixaDialog} onOpenChange={setShowBaixaDialog}>
-                <AlertDialogContent>
+                <AlertDialogContent className="bg-white border border-gray-200 shadow-xl">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Donar de baixa membre</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Estàs segur que vols donar de baixa a <strong>{usuari.nom}</strong> de l'equip?
-                            <div className="mt-3 p-3 bg-muted rounded-lg">
-                                <p className="text-sm"><strong>Email:</strong> {usuari.email}</p>
-                                <p className="text-sm"><strong>Rol actual:</strong> {usuari.rolEquip}</p>
-                            </div>
-                            <p className="mt-3 text-sm text-orange-600">
-                                ⚠️ Aquesta acció eliminarà el membre de l'equip, però no eliminarà el seu compte d'usuari.
-                            </p>
+                        <AlertDialogTitle className="text-gray-900">Donar de baixa membre</AlertDialogTitle>
+                        <AlertDialogDescription className="text-gray-700">
+                            Estàs segur que vols donar de baixa a <strong className="text-gray-900">{usuari.nom}</strong> de l'equip?
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+                    <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <p className="text-sm text-gray-700"><strong className="text-gray-900">Email:</strong> {usuari.email}</p>
+                        <p className="text-sm text-gray-700"><strong className="text-gray-900">Rol actual:</strong> {usuari.rolEquip}</p>
+                    </div>
+                    <p className="mt-3 text-sm text-orange-600">
+                        ⚠️ Aquesta acció eliminarà el membre de l'equip, però no eliminarà el seu compte d'usuari.
+                    </p>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel·lar</AlertDialogCancel>
                         <AlertDialogAction
@@ -181,7 +179,6 @@ const PlantillaCardAdmin = ({
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-            {}
             <AlertDialog open={showRolDialog} onOpenChange={setShowRolDialog}>
                 <AlertDialogContent className="bg-white border border-gray-200 shadow-xl">
                     <AlertDialogHeader>
