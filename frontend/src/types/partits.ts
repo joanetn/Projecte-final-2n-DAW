@@ -2,17 +2,14 @@ export interface EquipPartit {
     id: number;
     nom: string;
 }
-
 export interface JornadaPartit {
     id: number;
     nom: string;
 }
-
 export interface PistaPartit {
     id: number;
     nom: string;
 }
-
 export interface SetPartit {
     id: number;
     partitId: number;
@@ -23,7 +20,6 @@ export interface SetPartit {
     puntsLocalTiebreak?: number;
     puntsVisitTiebreak?: number;
 }
-
 export interface Partit {
     id: number;
     jornadaId: number;
@@ -39,15 +35,12 @@ export interface Partit {
     pista: PistaPartit | null;
     sets?: SetPartit[];
 }
-
 export interface PartitsResponse {
     partits: Partit[];
     total: number;
 }
-
 export interface JugadorType {
     id: number;
     nom: string;
 };
-
 export type PartitsDashboardEntrenador = Partit;

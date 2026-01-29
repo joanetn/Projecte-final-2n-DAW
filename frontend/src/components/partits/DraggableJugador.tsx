@@ -1,28 +1,19 @@
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import React from 'react';
+import { type DraggableJugadorProps } from "@/types/components.partits";
 import { GripVertical, User, ShieldCheck, ShieldAlert, Ban } from "lucide-react";
-
-interface DraggableJugadorProps {
-    jugador: any;
-    teSeguro?: boolean;
-    disabled?: boolean;
-}
-
 const DraggableJugador = ({ jugador, teSeguro = true, disabled = false }: DraggableJugadorProps) => {
     const isDisabled = disabled || !teSeguro;
-
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: jugador.id,
         disabled: isDisabled
     });
-
     const style: React.CSSProperties = {
         transform: CSS.Translate.toString(transform),
         position: isDragging ? 'absolute' : 'static',
         zIndex: isDragging ? 1000 : 'auto'
     };
-
     return (
         <div
             ref={setNodeRef}
@@ -67,5 +58,4 @@ const DraggableJugador = ({ jugador, teSeguro = true, disabled = false }: Dragga
         </div>
     );
 };
-
 export default DraggableJugador;

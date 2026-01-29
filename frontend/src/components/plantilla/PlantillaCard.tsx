@@ -1,12 +1,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { ShieldCheck, ShieldAlert } from "lucide-react";
-
-interface PlantillaCardProps {
-    usuari: any;
-    teSeguro?: boolean;
-}
-
+import { type PlantillaCardProps } from "@/types/components.plantilla";
 const PlantillaCard = ({ usuari, teSeguro }: PlantillaCardProps) => (
     <Card className={`hover:shadow-md transition ${teSeguro === false ? 'border-orange-300 bg-orange-50/30 dark:bg-orange-950/20' : ''}`}>
         <CardHeader className="pb-2">
@@ -40,7 +35,6 @@ const PlantillaCard = ({ usuari, teSeguro }: PlantillaCardProps) => (
                 )}
             </div>
         </CardHeader>
-
         <CardContent>
             {usuari.nivell && (
                 <p className="text-sm text-muted-foreground mb-2">Nivell: {usuari.nivell}</p>
@@ -64,5 +58,4 @@ const PlantillaCard = ({ usuari, teSeguro }: PlantillaCardProps) => (
         </CardContent>
     </Card>
 );
-
 export default PlantillaCard;

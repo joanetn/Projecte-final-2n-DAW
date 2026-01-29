@@ -10,7 +10,6 @@ export const getPlantilla = async (): Promise<PlantillaResponse> => {
         throw new Error(err.response?.data?.message || "Error obtenint la plantilla");
     }
 }
-
 export const getPartitsJugats = async (): Promise<PartitsResponse> => {
     try {
         const res = await backend_rapid.get<PartitsResponse>('/entrenador/partitsJugats');
@@ -20,7 +19,6 @@ export const getPartitsJugats = async (): Promise<PartitsResponse> => {
         throw new Error(err.response?.data?.message || "Error obtenint els partits jugats");
     }
 }
-
 export const getPartitsPendents = async (): Promise<PartitsResponse> => {
     try {
         const res = await backend_rapid.get<PartitsResponse>('/entrenador/partitsPendents');
@@ -30,7 +28,6 @@ export const getPartitsPendents = async (): Promise<PartitsResponse> => {
         throw new Error(err.response?.data?.message || "Error obtenint els partits pendents");
     }
 }
-
 export const getEnviarAlineacio = async (body: AlineacioData): Promise<AlineacioResponse> => {
     try {
         const res = await backend_rapid.post<AlineacioResponse>('/entrenador/enviarAlineacio', body);
@@ -40,7 +37,6 @@ export const getEnviarAlineacio = async (body: AlineacioData): Promise<Alineacio
         throw new Error(err.response?.data?.message || "Error manant la alineació");
     }
 }
-
 export const getComprovarAlineacio = async (partitId?: string): Promise<any> => {
     try {
         if (!partitId) throw new Error("partitId is required");
@@ -52,7 +48,6 @@ export const getComprovarAlineacio = async (partitId?: string): Promise<any> => 
         throw new Error(err.response?.data?.message || "Error manant la alineació");
     }
 }
-
 export const postProposta = async (body: { fromEquipId: any; toEquipId: any; dataHora: string; pistaId?: any; partitId?: any }) => {
     try {
         const res = await backend_rapid.post('/propostes', body);
@@ -62,7 +57,6 @@ export const postProposta = async (body: { fromEquipId: any; toEquipId: any; dat
         throw new Error(err.response?.data?.message || 'Error enviant proposta');
     }
 }
-
 export const getClassificacio = async (): Promise<ClassificacioResponse> => {
     try {
         const res = await backend_rapid.get<ClassificacioResponse>('/entrenador/classificacio');
@@ -72,7 +66,6 @@ export const getClassificacio = async (): Promise<ClassificacioResponse> => {
         throw new Error(err.response?.data?.message || "Error obtenint la classificació");
     }
 }
-
 export const getCalendari = async (): Promise<CalendariResponse> => {
     try {
         const res = await backend_rapid.get<CalendariResponse>('/entrenador/calendari');
@@ -82,7 +75,6 @@ export const getCalendari = async (): Promise<CalendariResponse> => {
         throw new Error(err.response?.data?.message || "Error obtenint el calendari");
     }
 }
-
 export const getEstadistiques = async (): Promise<EstadistiquesResponse> => {
     try {
         const res = await backend_rapid.get<EstadistiquesResponse>('/entrenador/estadistiques');

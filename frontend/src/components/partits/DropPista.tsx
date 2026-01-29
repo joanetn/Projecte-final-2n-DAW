@@ -1,13 +1,11 @@
 import { useDroppable } from "@dnd-kit/core";
 import { User, X } from "lucide-react";
-
 const SlotJugador = ({ id, jugador, onSlotClick }: {
     id: string,
     jugador: any,
     onSlotClick?: () => void
 }) => {
     const { setNodeRef, isOver } = useDroppable({ id });
-
     return (
         <div
             ref={setNodeRef}
@@ -40,5 +38,4 @@ const SlotJugador = ({ id, jugador, onSlotClick }: {
         </div>
     );
 };
-
 export default SlotJugador;

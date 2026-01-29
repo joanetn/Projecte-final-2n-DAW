@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
-
 const availableRoles = ["JUGADOR", "ENTRENADOR", "ARBITRE"];
-
 const Register = () => {
     const [form, setForm] = useState<RegisterData>({
         nom: "",
@@ -19,14 +17,12 @@ const Register = () => {
     });
     const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
     const navigate = useNavigate();
-
     const mutation = useRegister();
     const { mutate } = mutation;
     const { showToast } = useToast();
     const isLoading = mutation.status === "pending";
     const isError = mutation.status === "error";
     const error = mutation.error;
-
     const validate = (): boolean => {
         const errors: { [key: string]: string } = {};
         if (!form.nom.trim()) errors.nom = "El nom és obligatori";
@@ -35,14 +31,11 @@ const Register = () => {
         if (!form.contrasenya.trim()) errors.contrasenya = "La contrasenya és obligatòria";
         else if (form.contrasenya.length < 6)
             errors.contrasenya = "La contrasenya ha de tenir mínim 6 caràcters";
-
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
-
         if (type === "checkbox") {
             if (value === "ARBITRE") {
                 setForm(prev => ({
@@ -64,11 +57,9 @@ const Register = () => {
             }));
         }
     };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) return;
-
         mutate(form, {
             onSuccess: () => {
                 showToast({ type: 'success', title: "Registre correcte", description: "Usuari registrat correctament. Ja pots iniciar sessió." });
@@ -79,7 +70,6 @@ const Register = () => {
             },
         });
     };
-
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <div className="w-full max-w-md">
@@ -92,9 +82,8 @@ const Register = () => {
                             Omple els camps per començar a jugar
                         </p>
                     </div>
-
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        {/* Nombre */}
+                        {}
                         <div className="space-y-1.5">
                             <Label htmlFor="nom">
                                 Nom complet
@@ -115,8 +104,7 @@ const Register = () => {
                                 </p>
                             )}
                         </div>
-
-                        {/* Email */}
+                        {}
                         <div className="space-y-1.5">
                             <Label htmlFor="email">
                                 Email
@@ -137,8 +125,7 @@ const Register = () => {
                                 </p>
                             )}
                         </div>
-
-                        {/* Contrasenya */}
+                        {}
                         <div className="space-y-1.5">
                             <Label htmlFor="contrasenya">
                                 Contrasenya
@@ -159,8 +146,7 @@ const Register = () => {
                                 </p>
                             )}
                         </div>
-
-                        {/* Roles */}
+                        {}
                         <div className="space-y-2">
                             <Label className="text-sm font-medium text-foreground">
                                 Selecciona els teus rols
@@ -187,14 +173,12 @@ const Register = () => {
                                 ))}
                             </div>
                         </div>
-
                         {isError && (
                             <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-start gap-2">
                                 <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
                                 <p className="text-sm text-red-800 dark:text-red-200">{(error as Error).message}</p>
                             </div>
                         )}
-
                         <Button
                             type="submit"
                             disabled={isLoading}
@@ -203,7 +187,6 @@ const Register = () => {
                             {isLoading ? "Registrant..." : "Crear compte"}
                         </Button>
                     </form>
-
                     <div className="mt-6 text-center">
                         <p className="text-sm text-muted-foreground">
                             Ja tens compte?{" "}
@@ -220,5 +203,4 @@ const Register = () => {
         </div>
     );
 };
-
 export default Register;

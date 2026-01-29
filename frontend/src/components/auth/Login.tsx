@@ -10,26 +10,21 @@ import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-
 const schema = yup.object().shape({
     email: yup.string().required("El camp email és obligatori"),
     contrasenya: yup.string().required("El camp contrasenya és obligatori"),
 });
-
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginData>({
         resolver: yupResolver(schema),
     });
-
     const mutation = useLogin();
     const navigate = useNavigate();
     const { login } = useAuth();
     const { showToast } = useToast();
-
     const isLoading = mutation.status === "pending";
     const isError = mutation.status === "error";
     const error = mutation.error;
-
     const onSubmit = (data: LoginData) => {
         mutation.mutate(data, {
             onSuccess: (res) => {
@@ -43,7 +38,6 @@ const Login = () => {
             },
         });
     };
-
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">
             <div className="w-full max-w-md">
@@ -56,7 +50,6 @@ const Login = () => {
                             Introdueix les teves credencials per continuar
                         </p>
                     </div>
-
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="space-y-1.5">
                             <Label htmlFor="email">Email</Label>
@@ -74,7 +67,6 @@ const Login = () => {
                                 </p>
                             )}
                         </div>
-
                         <div className="space-y-1.5">
                             <Label htmlFor="contrasenya">Contrasenya</Label>
                             <Input
@@ -91,19 +83,16 @@ const Login = () => {
                                 </p>
                             )}
                         </div>
-
                         {isError && (
                             <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-start gap-2">
                                 <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
                                 <p className="text-sm text-red-800 dark:text-red-200">{(error as Error).message}</p>
                             </div>
                         )}
-
                         <Button type="submit" disabled={isLoading} className="w-full">
                             {isLoading ? "Entrant..." : "Entrar"}
                         </Button>
                     </form>
-
                     <div className="mt-6 text-center">
                         <p className="text-sm text-muted-foreground">
                             No tens compte?{" "}
@@ -117,5 +106,4 @@ const Login = () => {
         </div>
     );
 };
-
 export default Login;

@@ -1,7 +1,6 @@
 import { getAcceptarInvitacio, getCancelarInvitacio, getEnviarInvitacio, getRebujarInvitacio } from "@/services/invitacions.service";
 import { InvitacioData, InvitacioResponse } from "@/types/invitacions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 export const useEnviarInvitacio = () => {
     const queryClient = useQueryClient();
     return useMutation<InvitacioResponse, Error, InvitacioData>({
@@ -13,7 +12,6 @@ export const useEnviarInvitacio = () => {
         },
     });
 }
-
 export const useCancelarInvitacio = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -25,7 +23,6 @@ export const useCancelarInvitacio = () => {
         }
     })
 }
-
 export const useAcceptarInvitacio = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -37,7 +34,6 @@ export const useAcceptarInvitacio = () => {
         }
     })
 }
-
 export const useRebutjarInvitacio = () => {
     const queryClient = useQueryClient();
     return useMutation({

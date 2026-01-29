@@ -17,24 +17,19 @@ import {
     History,
     Euro
 } from "lucide-react";
-
 const SeguroPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
     const { data: estatSeguro, isLoading: loadingEstat, refetch: refetchEstat } = useEstatSeguro();
     const { data: historial, isLoading: loadingHistorial } = useHistorialSeguros();
-
     const crearSessio = useCrearSessioPagament();
     const confirmarPagament = useConfirmarPagament();
     const confirmarSimulat = useConfirmarPagamentSimulat();
-
     useEffect(() => {
         const success = searchParams.get("success");
         const sessionId = searchParams.get("session_id");
         const canceled = searchParams.get("canceled");
-
         if (success === "true" && sessionId) {
             confirmarPagament.mutate(sessionId, {
                 onSuccess: () => {
@@ -48,16 +43,13 @@ const SeguroPage = () => {
                 }
             });
         }
-
         if (canceled === "true") {
             setErrorMessage("El pagament ha estat cancel·lat. Pots tornar-ho a intentar.");
             setSearchParams({});
         }
     }, [searchParams]);
-
     const handlePagar = async () => {
         setErrorMessage(null);
-
         crearSessio.mutate(undefined, {
             onSuccess: (data) => {
                 if (data.mode === "stripe" && data.url) {
@@ -71,7 +63,6 @@ const SeguroPage = () => {
             }
         });
     };
-
     const handlePagarSimulat = () => {
         confirmarSimulat.mutate(undefined, {
             onSuccess: () => {
@@ -83,9 +74,7 @@ const SeguroPage = () => {
             }
         });
     };
-
     const isLoading = loadingEstat || crearSessio.isPending || confirmarPagament.isPending || confirmarSimulat.isPending;
-
     const formatData = (dataStr: string) => {
         return new Date(dataStr).toLocaleDateString('ca-ES', {
             day: '2-digit',
@@ -93,7 +82,6 @@ const SeguroPage = () => {
             year: 'numeric'
         });
     };
-
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl">
             <div className="mb-8">
@@ -105,8 +93,7 @@ const SeguroPage = () => {
                     El segur és obligatori per poder ser alineat en partits i unir-te a equips.
                 </p>
             </div>
-
-            {/* Missatge d'èxit */}
+            {}
             {showSuccessMessage && (
                 <Card className="mb-6 border-green-500 bg-green-50 dark:bg-green-950">
                     <CardContent className="pt-6">
@@ -124,8 +111,7 @@ const SeguroPage = () => {
                     </CardContent>
                 </Card>
             )}
-
-            {/* Missatge d'error */}
+            {}
             {errorMessage && (
                 <Card className="mb-6 border-red-500 bg-red-50 dark:bg-red-950">
                     <CardContent className="pt-6">
@@ -143,8 +129,7 @@ const SeguroPage = () => {
                     </CardContent>
                 </Card>
             )}
-
-            {/* Estat actual del segur */}
+            {}
             <Card className="mb-6">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -194,8 +179,7 @@ const SeguroPage = () => {
                                     </Badge>
                                 </div>
                             </div>
-
-                            {/* Avís si queden pocs dies */}
+                            {}
                             {estatSeguro.seguro.diesRestants <= 30 && (
                                 <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-300 rounded-lg p-4">
                                     <div className="flex items-center gap-2">
@@ -246,8 +230,7 @@ const SeguroPage = () => {
                                 )}
                                 Pagar Segur
                             </Button>
-
-                            {/* Botó per pagament simulat (desenvolupament) */}
+                            {}
                             <div className="mt-4">
                                 <Button
                                     variant="outline"
@@ -265,8 +248,7 @@ const SeguroPage = () => {
                     )}
                 </CardContent>
             </Card>
-
-            {/* Historial de seguros */}
+            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -328,5 +310,4 @@ const SeguroPage = () => {
         </div>
     );
 };
-
 export default SeguroPage;

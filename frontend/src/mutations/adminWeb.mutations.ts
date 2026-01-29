@@ -14,11 +14,6 @@ import {
     eliminarPartit,
     assignarArbitre
 } from "@/services/adminWeb.service";
-
-// ═══════════════════════════════════════════════════════════════
-// USUARIS
-// ═══════════════════════════════════════════════════════════════
-
 export const useToggleUsuariActiu = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -29,7 +24,6 @@ export const useToggleUsuariActiu = () => {
         },
     });
 };
-
 export const useCanviarRolsUsuari = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -40,7 +34,6 @@ export const useCanviarRolsUsuari = () => {
         },
     });
 };
-
 export const useEliminarUsuari = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -51,11 +44,6 @@ export const useEliminarUsuari = () => {
         },
     });
 };
-
-// ═══════════════════════════════════════════════════════════════
-// EQUIPS
-// ═══════════════════════════════════════════════════════════════
-
 export const useCrearEquip = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -67,7 +55,6 @@ export const useCrearEquip = () => {
         },
     });
 };
-
 export const useActualitzarEquip = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -83,7 +70,6 @@ export const useActualitzarEquip = () => {
         },
     });
 };
-
 export const useEliminarEquip = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -94,11 +80,6 @@ export const useEliminarEquip = () => {
         },
     });
 };
-
-// ═══════════════════════════════════════════════════════════════
-// LLIGUES
-// ═══════════════════════════════════════════════════════════════
-
 export const useCrearLliga = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -109,7 +90,6 @@ export const useCrearLliga = () => {
         },
     });
 };
-
 export const useActualitzarLliga = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -125,7 +105,6 @@ export const useActualitzarLliga = () => {
         },
     });
 };
-
 export const useEliminarLliga = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -136,11 +115,6 @@ export const useEliminarLliga = () => {
         },
     });
 };
-
-// ═══════════════════════════════════════════════════════════════
-// PARTITS
-// ═══════════════════════════════════════════════════════════════
-
 export const useCrearPartit = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -158,7 +132,6 @@ export const useCrearPartit = () => {
         },
     });
 };
-
 export const useActualitzarPartit = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -182,7 +155,6 @@ export const useActualitzarPartit = () => {
         },
     });
 };
-
 export const useEliminarPartit = () => {
     const queryClient = useQueryClient();
     return useMutation({
@@ -193,11 +165,6 @@ export const useEliminarPartit = () => {
         },
     });
 };
-
-// ═══════════════════════════════════════════════════════════════
-// ÀRBITRES
-// ═══════════════════════════════════════════════════════════════
-
 export const useAssignarArbitre = () => {
     const queryClient = useQueryClient();
     return useMutation({

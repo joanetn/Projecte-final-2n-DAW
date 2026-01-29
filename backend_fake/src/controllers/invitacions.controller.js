@@ -607,3 +607,78 @@ exports.cancellarInvitacio = async (req, res) => {
         });
     }
 };
+
+/**
+ * Obtenir entrenadors disponibles (sense equip actiu) per convidar
+ * GET /invitacions/entrenadors-disponibles
+ */
+exports.getEntrenadorsDisponibles = async (req, res) => {
+    try {
+        const user = await verificarUsuari(req);
+        const equipId = await obtenirEquipUsuariEntrenador(user.id);
+
+        // Obtenir tots els usuaris actius
+        const usuaris = await api.get(`/Usuari?isActive=true`);
+
+        // Obtenir totes les assignacions d'equip actives
+        const equipUsuaris = await api.get(`/EquipUsuari?isActive=true`);
+        const usuarisAmbEquip = new Set(
+            (Array.isArray(equipUsuaris) ? equipUsuaris : [])
+                .map(eu => String(eu.usuariId))
+        );
+
+        // Obtenir invitacions pendents del nostre equip als entrenadors
+        const invitacionsPendents = await api.get(`/InvitacioEquip?equipId=${equipId}&estat=PENDENT`);
+        const entrenadorsConvidats = new Set(
+            (Array.isArray(invitacionsPendents) ? invitacionsPendents : [])
+                .map(inv => String(inv.jugadorId))
+        );
+
+        // Obtenir rols dels usuaris per filtrar només ENTRENADORS
+        const usuariRols = await api.get(`/UsuariRol?isActive=true`);
+        const entrenadorsIds = new Set(
+            (Array.isArray(usuariRols) ? usuariRols : [])
+                .filter(ur => ur.rol === "ENTRENADOR")
+                .map(ur => String(ur.usuariId))
+        );
+
+        // Filtrar: usuaris sense equip, que són entrenadors i no estan convidats
+        const entrenadorsDisponibles = (Array.isArray(usuaris) ? usuaris : [])
+            .filter(u => {
+                const userId = String(u.id);
+                return (
+                    !usuarisAmbEquip.has(userId) &&
+                    entrenadorsIds.has(userId) &&
+                    !entrenadorsConvidats.has(userId)
+                );
+            })
+            .map(u => ({
+                id: u.id,
+                nom: u.nom,
+                email: u.email,
+                telefon: u.telefon || null,
+                avatar: u.avatar || null,
+                especialitat: u.especialitat || null
+            }));
+
+        res.json({
+            total: entrenadorsDisponibles.length,
+            entrenadors: entrenadorsDisponibles
+        });
+    } catch (err) {
+        console.error("Error obtenint entrenadors disponibles:", err);
+
+        if (err.message === "TOKEN_NO_PROPORCIONAT") {
+            return res.status(401).json({ message: "Token no proporcionat" });
+        }
+        if (err.message === "NO_ES_ENTRENADOR_NI_ADMIN") {
+            return res.status(403).json({ message: "No tens permisos" });
+        }
+
+        res.status(500).json({
+            message: "Error del servidor",
+            error: err.message
+        });
+    }
+};
+

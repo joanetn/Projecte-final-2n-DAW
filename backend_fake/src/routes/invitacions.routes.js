@@ -12,6 +12,14 @@ router.get(
     controller.getJugadorsDisponibles
 );
 
+// Obtenir entrenadors disponibles per convidar (solo ADMIN_EQUIP)
+router.get(
+    "/entrenadors-disponibles",
+    verifyToken,
+    roleMiddleware("ADMIN_EQUIP"),
+    controller.getEntrenadorsDisponibles
+);
+
 // Enviar invitació a un jugador
 router.post(
     "/enviar",

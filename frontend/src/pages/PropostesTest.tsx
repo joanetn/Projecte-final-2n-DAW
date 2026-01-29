@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { useToast } from '@/components/ui/Toast';
-
 const API_BASE = 'http://localhost:3001';
-
 const PropostesTest: React.FC = () => {
     const { showToast } = useToast();
     const [fromEquipId, setFromEquipId] = useState('1');
     const [toEquipId, setToEquipId] = useState('2');
     const [dataHora, setDataHora] = useState('2026-02-10 18:00');
     const [lastNotifs, setLastNotifs] = useState<any[]>([]);
-
     const crearProposta = async () => {
         try {
             const resp = await fetch(`${API_BASE}/propostes`, {
@@ -26,7 +23,6 @@ const PropostesTest: React.FC = () => {
             showToast({ type: 'error', title: 'Error', description: 'No s\'ha pogut crear la proposta.' });
         }
     };
-
     const accept = async (notifId: any) => {
         try {
             const resp = await fetch(`${API_BASE}/propostes/${notifId}/accept`, { method: 'POST' });
@@ -39,7 +35,6 @@ const PropostesTest: React.FC = () => {
             showToast({ type: 'error', title: 'Error', description: 'No s\'ha pogut acceptar la proposta.' });
         }
     };
-
     const reject = async (notifId: any) => {
         try {
             const resp = await fetch(`${API_BASE}/propostes/${notifId}/reject`, { method: 'POST' });
@@ -50,7 +45,6 @@ const PropostesTest: React.FC = () => {
             showToast({ type: 'error', title: 'Error', description: 'No s\'ha pogut rebutjar la proposta.' });
         }
     };
-
     return (
         <div className="p-6 max-w-xl mx-auto">
             <h2 className="text-xl font-semibold mb-4">Test Propostes (mínim)</h2>
@@ -71,7 +65,6 @@ const PropostesTest: React.FC = () => {
                     <button onClick={crearProposta} className="bg-primary text-primary-foreground px-3 py-1 rounded hover:bg-primary/90">Crear proposta</button>
                 </div>
             </div>
-
             <div>
                 <h3 className="font-medium mb-2">Notificacions creades</h3>
                 {lastNotifs.length === 0 && <div className="text-sm text-muted-foreground">Cap notificació creada encara</div>}
@@ -94,5 +87,4 @@ const PropostesTest: React.FC = () => {
         </div>
     );
 };
-
 export default PropostesTest;

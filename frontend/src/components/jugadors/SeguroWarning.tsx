@@ -3,14 +3,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShieldAlert, CreditCard } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const SeguroWarning = () => {
     const { data: estatSeguro, isLoading } = useEstatSeguro();
-
     if (isLoading || estatSeguro?.teSeguro) {
         return null;
     }
-
     return (
         <Card className="border-orange-500 bg-orange-50 dark:bg-orange-950 mb-6">
             <CardContent className="pt-6">
@@ -37,5 +34,4 @@ const SeguroWarning = () => {
         </Card>
     );
 };
-
 export default SeguroWarning;

@@ -13,17 +13,11 @@ import { usePistes } from "@/queries/notificacions.queries";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-
-interface PartitCardProps {
-    partit: any;
-    showSets?: boolean;
-}
-
+import { type PartitCardProps } from "@/types/components.partits";
 const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
     const dataFormatejada = format(new Date(partit.dataHora), "d MMMM yyyy - HH:mm", { locale: ca });
     const navigate = useNavigate();
     const { showToast } = useToast();
-
     const [showPropostaForm, setShowPropostaForm] = useState(false);
     const [proposedDate, setProposedDate] = useState('');
     const [proposedTime, setProposedTime] = useState('');
@@ -33,21 +27,17 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
     const { data: pistes = [] } = usePistes();
     const myEquipId = plantilla.data?.equip?.id;
     const canPropose = myEquipId && partit.local?.id && myEquipId === partit.local.id;
-
     const comprovarAlineacio = async () => {
         navigate(`/entrenador/partits/${partit.id}/alineacio`)
     }
-
     const enviarProposta = async () => {
         if (!proposedDate || !proposedTime) {
             showToast({ type: 'error', title: 'Error', description: 'Has de seleccionar data i hora.' });
             return;
         }
-
         try {
             setLoading(true);
             const dataHora = `${proposedDate}T${proposedTime}:00.000Z`;
-
             const body = {
                 fromEquipId: partit.local?.id,
                 toEquipId: partit.visitant?.id,
@@ -55,7 +45,6 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
                 pistaId: selectedPistaId || undefined,
                 partitId: partit.id
             };
-
             await postProposta(body);
             showToast({ type: 'success', title: 'Proposta enviada', description: 'S\'ha enviat la proposta correctament.' });
             setShowPropostaForm(false);
@@ -69,7 +58,6 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
             setLoading(false);
         }
     }
-
     return (
         <Card>
             <CardHeader>
@@ -96,7 +84,6 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
                     </Badge>
                 </div>
             </CardHeader>
-
             {showSets && partit.sets && partit.sets.length > 0 && (
                 <CardContent>
                     <div className="space-y-2">
@@ -126,14 +113,12 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
                         >
                             Alinear
                         </Button>
-
                         {canPropose && (
                             <Button size="sm" variant="outline" onClick={() => setShowPropostaForm(s => !s)}>
                                 Proposar data
                             </Button>
                         )}
                     </div>
-
                     {showPropostaForm && (
                         <div className="mt-3 p-4 border border-primary/20 rounded-lg bg-primary/5">
                             <div className="flex items-center gap-2 mb-3">
@@ -205,5 +190,4 @@ const PartitCard = ({ partit, showSets = false }: PartitCardProps) => {
         </Card>
     );
 };
-
 export default PartitCard;

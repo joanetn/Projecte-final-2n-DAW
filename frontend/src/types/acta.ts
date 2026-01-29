@@ -2,7 +2,6 @@ export interface EquipInfo {
     id: string | number;
     nom: string;
 }
-
 export interface PartitResumit {
     id: string | number;
     dataHora: string;
@@ -10,7 +9,6 @@ export interface PartitResumit {
     local: EquipInfo | null;
     visitant: EquipInfo | null;
 }
-
 export interface PartitPendentActa {
     id: string | number;
     jornadaId: number;
@@ -23,7 +21,6 @@ export interface PartitPendentActa {
     local: EquipInfo | null;
     visitant: EquipInfo | null;
 }
-
 export interface Incidencia {
     id: string;
     set?: number;
@@ -32,7 +29,6 @@ export interface Incidencia {
     equipId?: string | number;
     descripcio: string;
 }
-
 export interface SetResultat {
     numeroSet: number;
     jocsLocal: number;
@@ -41,7 +37,6 @@ export interface SetResultat {
     puntsLocalTiebreak?: number | null;
     puntsVisitantTiebreak?: number | null;
 }
-
 export interface Acta {
     id: string;
     partitId: string | number;
@@ -58,30 +53,25 @@ export interface Acta {
     isActive: boolean;
     partit?: PartitResumit;
 }
-
 export interface PartitsPendentsResponse {
     partits: PartitPendentActa[];
     total: number;
 }
-
 export interface MevesActesResponse {
     actes: Acta[];
     total: number;
 }
-
 export interface CrearActaRequest {
     partitId: string | number;
     sets: SetResultat[];
     observacions?: string;
     incidencies?: Incidencia[];
 }
-
 export interface ActualitzarActaRequest {
     sets?: SetResultat[];
     observacions?: string;
     incidencies?: Incidencia[];
 }
-
 export interface ActaResponse {
     success: boolean;
     acta: Acta;

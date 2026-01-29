@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const adminWebController = require("../controllers/adminWeb.controller");
+const { verifyToken } = require("../middleware/auth.middleware");
 const { roleMiddleware } = require("../middleware/role.middleware");
 
-// Totes les rutes requereixen rol ADMIN_WEB
+// Totes les rutes requereixen verificació de token i rol ADMIN_WEB
+router.use(verifyToken);
 router.use(roleMiddleware("ADMIN_WEB"));
 
 // ═══════════════════════════════════════════════════════════════
@@ -50,5 +52,10 @@ router.delete("/partits/:partitId", adminWebController.eliminarPartit);
 router.get("/arbitres", adminWebController.llistarArbitres);
 router.patch("/partits/:partitId/arbitre", adminWebController.assignarArbitre);
 router.get("/arbitres/:arbitreId/partits", adminWebController.partitsArbitre);
+
+// ═══════════════════════════════════════════════════════════════
+// CLASSIFICACIONS
+// ═══════════════════════════════════════════════════════════════
+router.get("/classificacions", adminWebController.classificacions);
 
 module.exports = router;

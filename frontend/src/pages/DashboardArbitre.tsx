@@ -1,67 +1,43 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     FileText,
     ClipboardList,
-    Search,
     RefreshCw,
-    AlertCircle,
     CheckCircle2,
     Clock,
 } from "lucide-react";
-
-// Importa els components d'àrbitre
-import { PartitPendentCard } from "@/components/arbitre/PartitPendentCard";
-import { ActaCard } from "@/components/arbitre/ActaCard";
 import { ActaForm } from "@/components/arbitre/ActaForm";
 import { ActaDetall } from "@/components/arbitre/ActaDetall";
-
-// Importa els tipus
 import type { PartitPendentActa, Acta, Incidencia, SetResultat } from "@/types/acta";
-
-// Importa queries i mutations
 import { usePartitsPendentsActa, useMevesActes } from "@/queries/acta.queries";
 import { useCrearActa, useValidarActa, useEliminarActa, useActualitzarActa } from "@/mutations/acta.mutations";
 import { useToast } from "@/components/ui/Toast";
-
+import { Badge } from "@/components/ui/badge";
+import { PartitsPendentsTab } from "@/components/dashboards/arbitre/PartitsPendentsTab";
+import { MevesActesTab } from "@/components/dashboards/arbitre/MevesActesTab";
 type Vista = "llistat" | "crear" | "detall" | "editar";
-
 const DashboardArbitre = () => {
-    // Estats per controlar la vista actual
     const [vistaActual, setVistaActual] = useState<Vista>("llistat");
     const [partitSeleccionat, setPartitSeleccionat] = useState<PartitPendentActa | null>(null);
     const [actaSeleccionada, setActaSeleccionada] = useState<Acta | null>(null);
     const [cercador, setCercador] = useState("");
-
-    // Toast per notificacions
     const { showToast } = useToast();
-
-    // Queries reals
     const { data: partitsPendentsData, isLoading: loadingPartits, refetch: refetchPartits } = usePartitsPendentsActa();
     const { data: mevesActesData, isLoading: loadingActes, refetch: refetchActes } = useMevesActes();
-
-    // Mutations reals
     const crearActaMutation = useCrearActa();
     const actualitzarActaMutation = useActualitzarActa();
     const validarActaMutation = useValidarActa();
     const eliminarActaMutation = useEliminarActa();
-
-    // Extreure dades de les respostes
     const partitsPendents = partitsPendentsData?.partits || [];
     const mevesActes = mevesActesData?.actes || [];
-
-    // Handlers (connectats amb les mutations reals)
-    const handleCrearActa = (partitId: string | number) => {
-        const partit = partitsPendents.find((p) => String(p.id) === String(partitId));
+    const handleCrearActa = (partit: any) => {
         if (partit) {
             setPartitSeleccionat(partit);
             setVistaActual("crear");
         }
     };
-
     const handleSubmitActa = (data: {
         partitId: string | number;
         sets: SetResultat[];
@@ -95,7 +71,6 @@ const DashboardArbitre = () => {
             }
         );
     };
-
     const handleVeureActa = (actaId: string) => {
         const acta = mevesActes.find((a) => a.id === actaId);
         if (acta) {
@@ -103,7 +78,6 @@ const DashboardArbitre = () => {
             setVistaActual("detall");
         }
     };
-
     const handleEditarActa = (actaId: string) => {
         const acta = mevesActes.find((a) => a.id === actaId);
         if (acta) {
@@ -111,7 +85,6 @@ const DashboardArbitre = () => {
             setVistaActual("editar");
         }
     };
-
     const handleSubmitEditarActa = (data: {
         partitId: string | number;
         sets: SetResultat[];
@@ -119,7 +92,6 @@ const DashboardArbitre = () => {
         incidencies: Incidencia[];
     }) => {
         if (!actaSeleccionada) return;
-
         actualitzarActaMutation.mutate(
             {
                 id: actaSeleccionada.id,
@@ -149,7 +121,6 @@ const DashboardArbitre = () => {
             }
         );
     };
-
     const handleValidarActa = (actaId: string) => {
         validarActaMutation.mutate(
             { id: actaId },
@@ -160,7 +131,6 @@ const DashboardArbitre = () => {
                         title: "Acta validada",
                         description: "L'acta s'ha validat correctament",
                     });
-                    // Actualitzar l'acta seleccionada si estem al detall
                     if (actaSeleccionada?.id === actaId) {
                         setActaSeleccionada({ ...actaSeleccionada, validada: true, dataValidacio: new Date().toISOString() });
                     }
@@ -175,7 +145,6 @@ const DashboardArbitre = () => {
             }
         );
     };
-
     const handleEliminarActa = (actaId: string) => {
         eliminarActaMutation.mutate(
             { id: actaId },
@@ -201,14 +170,11 @@ const DashboardArbitre = () => {
             }
         );
     };
-
     const handleTornar = () => {
         setVistaActual("llistat");
         setPartitSeleccionat(null);
         setActaSeleccionada(null);
     };
-
-    // Filtrar actes per cercador
     const actesFiltrades = mevesActes.filter((acta) => {
         const cerca = cercador.toLowerCase();
         return (
@@ -217,17 +183,9 @@ const DashboardArbitre = () => {
             acta.observacions?.toLowerCase().includes(cerca)
         );
     });
-
-    // Estadístiques
     const totalActes = mevesActes.length;
     const actesValidadas = mevesActes.filter((a) => a.validada).length;
     const actesPendents = mevesActes.filter((a) => !a.validada).length;
-
-    // ============================================
-    // RENDERITZAT
-    // ============================================
-
-    // Vista: Crear nova acta
     if (vistaActual === "crear" && partitSeleccionat) {
         return (
             <div className="container mx-auto p-6 max-w-3xl">
@@ -240,8 +198,6 @@ const DashboardArbitre = () => {
             </div>
         );
     }
-
-    // Vista: Detall d'una acta
     if (vistaActual === "detall" && actaSeleccionada) {
         return (
             <div className="container mx-auto p-6 max-w-3xl">
@@ -255,10 +211,7 @@ const DashboardArbitre = () => {
             </div>
         );
     }
-
-    // Vista: Editar acta existent
     if (vistaActual === "editar" && actaSeleccionada) {
-        // Convertim l'acta a un format compatible amb el formulari
         const partitPerEditar: PartitPendentActa = {
             id: actaSeleccionada.partit?.id || actaSeleccionada.partitId,
             jornadaId: 0,
@@ -271,7 +224,6 @@ const DashboardArbitre = () => {
             local: actaSeleccionada.partit?.local || null,
             visitant: actaSeleccionada.partit?.visitant || null,
         };
-
         return (
             <div className="container mx-auto p-6 max-w-3xl">
                 <ActaForm
@@ -284,11 +236,9 @@ const DashboardArbitre = () => {
             </div>
         );
     }
-
-    // Vista: Llistat principal
     return (
         <div className="container mx-auto p-6 space-y-6">
-            {/* Capçalera */}
+            {}
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold flex items-center gap-2">
@@ -300,8 +250,7 @@ const DashboardArbitre = () => {
                     </p>
                 </div>
             </div>
-
-            {/* Estadístiques */}
+            {}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Card>
                     <CardContent className="pt-6">
@@ -316,7 +265,6 @@ const DashboardArbitre = () => {
                         </div>
                     </CardContent>
                 </Card>
-
                 <Card>
                     <CardContent className="pt-6">
                         <div className="flex items-center gap-3">
@@ -330,7 +278,6 @@ const DashboardArbitre = () => {
                         </div>
                     </CardContent>
                 </Card>
-
                 <Card>
                     <CardContent className="pt-6">
                         <div className="flex items-center gap-3">
@@ -344,7 +291,6 @@ const DashboardArbitre = () => {
                         </div>
                     </CardContent>
                 </Card>
-
                 <Card>
                     <CardContent className="pt-6">
                         <div className="flex items-center gap-3">
@@ -359,8 +305,7 @@ const DashboardArbitre = () => {
                     </CardContent>
                 </Card>
             </div>
-
-            {/* Tabs */}
+            {}
             <Tabs defaultValue="pendents" className="space-y-4">
                 <TabsList className="grid w-full grid-cols-2 max-w-md">
                     <TabsTrigger value="pendents" className="gap-2">
@@ -382,96 +327,29 @@ const DashboardArbitre = () => {
                         )}
                     </TabsTrigger>
                 </TabsList>
-
-                {/* Tab: Partits pendents d'acta */}
+                {}
                 <TabsContent value="pendents" className="space-y-4">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-lg">Partits Completats Sense Acta</CardTitle>
-                            <CardDescription>
-                                Aquests partits ja s'han jugat i necessiten que creïs l'acta
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            {loadingPartits ? (
-                                <div className="flex items-center justify-center py-12">
-                                    <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
-                                </div>
-                            ) : partitsPendents.length === 0 ? (
-                                <div className="text-center py-12">
-                                    <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-3" />
-                                    <p className="text-lg font-medium">Tot al dia!</p>
-                                    <p className="text-muted-foreground">
-                                        No tens partits pendents de crear acta
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {partitsPendents.map((partit) => (
-                                        <PartitPendentCard
-                                            key={partit.id}
-                                            partit={partit}
-                                            onCrearActa={handleCrearActa}
-                                        />
-                                    ))}
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
+                    <PartitsPendentsTab
+                        loadingPartits={loadingPartits}
+                        partitsPendents={partitsPendents}
+                        onCrearActa={handleCrearActa}
+                    />
                 </TabsContent>
-
-                {/* Tab: Les meves actes */}
+                {}
                 <TabsContent value="actes" className="space-y-4">
-                    {/* Cercador */}
-                    <div className="flex gap-2">
-                        <div className="relative flex-1 max-w-sm">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Cercar per equip o observacions..."
-                                value={cercador}
-                                onChange={(e) => setCercador(e.target.value)}
-                                className="pl-10"
-                            />
-                        </div>
-                    </div>
-
-                    {loadingActes ? (
-                        <div className="flex items-center justify-center py-12">
-                            <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
-                        </div>
-                    ) : actesFiltrades.length === 0 ? (
-                        <Card>
-                            <CardContent className="py-12">
-                                <div className="text-center">
-                                    <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                                    <p className="text-lg font-medium">
-                                        {cercador ? "No s'han trobat actes" : "Encara no has creat cap acta"}
-                                    </p>
-                                    <p className="text-muted-foreground">
-                                        {cercador
-                                            ? "Prova amb una altra cerca"
-                                            : "Quan arbitris un partit i es completi, podràs crear l'acta des d'aquí"}
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {actesFiltrades.map((acta) => (
-                                <ActaCard
-                                    key={acta.id}
-                                    acta={acta}
-                                    onVeure={handleVeureActa}
-                                    onEditar={!acta.validada ? handleEditarActa : undefined}
-                                    onEliminar={!acta.validada ? handleEliminarActa : undefined}
-                                />
-                            ))}
-                        </div>
-                    )}
+                    {}
+                    <MevesActesTab
+                        loadingActes={loadingActes}
+                        actesFiltrades={actesFiltrades}
+                        cercador={cercador}
+                        onCercadorChange={setCercador}
+                        onVeure={handleVeureActa}
+                        onEditar={handleEditarActa}
+                        onEliminar={handleEliminarActa}
+                    />
                 </TabsContent>
             </Tabs>
         </div>
     );
 };
-
 export default DashboardArbitre;

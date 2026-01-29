@@ -5,10 +5,8 @@ import { Calendar, MapPin, Loader2, ChevronRight, Home, Plane } from "lucide-rea
 import { format } from "date-fns";
 import { ca } from "date-fns/locale";
 import { PartitCalendari } from "@/types/entrenador";
-
 const CalendariPartits = () => {
     const { data, isLoading, isError } = useCalendari();
-
     const getStatusBadge = (status: string) => {
         switch (status) {
             case "COMPLETAT":
@@ -23,10 +21,8 @@ const CalendariPartits = () => {
                 return <Badge variant="outline">{status}</Badge>;
         }
     };
-
     const renderPartit = (partit: PartitCalendari) => {
         const dataFormatejada = format(new Date(partit.dataHora), "EEEE d MMM - HH:mm", { locale: ca });
-
         return (
             <div
                 key={partit.id}
@@ -42,16 +38,14 @@ const CalendariPartits = () => {
                     </div>
                     {getStatusBadge(partit.status)}
                 </div>
-
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 flex-1">
-                        {/* Equip local */}
+                        {}
                         <div className={`flex items-center gap-2 flex-1 ${partit.esLocal ? 'font-bold' : ''}`}>
                             {partit.esLocal && <Home className="w-4 h-4 text-blue-600" />}
                             <span className="truncate">{partit.local?.nom || "TBD"}</span>
                         </div>
-
-                        {/* Resultat o VS */}
+                        {}
                         <div className="px-4 py-1 bg-muted rounded-lg text-center min-w-[80px]">
                             {partit.status === "COMPLETAT" && partit.resultatLocal !== undefined ? (
                                 <span className="font-bold text-lg">
@@ -61,15 +55,13 @@ const CalendariPartits = () => {
                                 <span className="text-muted-foreground font-medium">VS</span>
                             )}
                         </div>
-
-                        {/* Equip visitant */}
+                        {}
                         <div className={`flex items-center gap-2 flex-1 justify-end ${!partit.esLocal ? 'font-bold' : ''}`}>
                             <span className="truncate">{partit.visitant?.nom || "TBD"}</span>
                             {!partit.esLocal && <Plane className="w-4 h-4 text-orange-600" />}
                         </div>
                     </div>
                 </div>
-
                 {partit.pista && (
                     <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
                         <MapPin className="w-4 h-4" />
@@ -79,7 +71,6 @@ const CalendariPartits = () => {
             </div>
         );
     };
-
     if (isLoading) {
         return (
             <div className="flex items-center justify-center py-12">
@@ -88,7 +79,6 @@ const CalendariPartits = () => {
             </div>
         );
     }
-
     if (isError || !data) {
         return (
             <Card>
@@ -98,10 +88,9 @@ const CalendariPartits = () => {
             </Card>
         );
     }
-
     return (
         <div className="space-y-6">
-            {/* Header */}
+            {}
             {data.lliga && (
                 <Card className="bg-gradient-to-r from-blue-500/10 to-orange-500/10 border-primary/20">
                     <CardHeader className="pb-3">
@@ -120,8 +109,7 @@ const CalendariPartits = () => {
                     </CardHeader>
                 </Card>
             )}
-
-            {/* Llegenda */}
+            {}
             <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded bg-blue-200 dark:bg-blue-800"></div>
@@ -134,8 +122,7 @@ const CalendariPartits = () => {
                     <span>Visitant</span>
                 </div>
             </div>
-
-            {/* Jornades */}
+            {}
             {data.calendari.map((jornada) => (
                 <Card key={jornada.jornada.id}>
                     <CardHeader className="pb-2">
@@ -165,8 +152,7 @@ const CalendariPartits = () => {
                     </CardContent>
                 </Card>
             ))}
-
-            {/* Partits sense jornada */}
+            {}
             {data.partitsSenseJornada.length > 0 && (
                 <Card>
                     <CardHeader className="pb-2">
@@ -182,7 +168,6 @@ const CalendariPartits = () => {
                     </CardContent>
                 </Card>
             )}
-
             {data.calendari.length === 0 && data.partitsSenseJornada.length === 0 && (
                 <Card>
                     <CardContent className="pt-6 text-center text-muted-foreground">
@@ -194,5 +179,4 @@ const CalendariPartits = () => {
         </div>
     );
 };
-
 export default CalendariPartits;

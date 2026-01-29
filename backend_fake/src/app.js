@@ -22,5 +22,6 @@ app.use("/propostes", require("./routes/propostes.routes"));
 app.use("/invitacions", require("./routes/invitacions.routes"));
 app.use("/seguro", require("./routes/seguro.routes"));
 app.use("/actes", require("./routes/acta.routes"));
+app.use("/clubs", require("./routes/club.routes"));
 
 module.exports = app;

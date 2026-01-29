@@ -6,17 +6,14 @@ export interface Jugador {
     avatar: string;
     telefon: string;
 }
-
 export interface JugadorsDisponiblesResponse {
     jugadors: Jugador[];
     total: number;
 }
-
 export interface InvitacioData {
     missatge: string;
     jugadorId: string;
 }
-
 export interface InvitacioResponse {
     id: string;
     usuariId: string;
@@ -32,7 +29,6 @@ export interface InvitacioResponse {
         missatge: string;
     }
 }
-
 export interface InvitacionsEnviadesResponse {
     invitacions: [{
         id: string;
@@ -54,7 +50,6 @@ export interface InvitacionsEnviadesResponse {
     }],
     total: number;
 }
-
 export interface InvitacionsRebudesResponse {
     invitacions: [{
         id: string;
@@ -85,7 +80,6 @@ export interface InvitacionsRebudesResponse {
     },
     total: number;
 }
-
 export interface InvitacioAcceptadaResponse {
     message: string;
     equip: {

@@ -12,7 +12,6 @@ export interface Seguro {
     updated_at: string;
     isActive: boolean;
 }
-
 export interface EstatSeguroResponse {
     teSeguro: boolean;
     seguro: {
@@ -26,7 +25,6 @@ export interface EstatSeguroResponse {
     missatge: string;
     preu: number;
 }
-
 export interface CrearSessioPagamentResponse {
     mode: "stripe" | "simulat";
     sessionId?: string;
@@ -35,32 +33,26 @@ export interface CrearSessioPagamentResponse {
     missatge?: string;
     preu?: number;
 }
-
 export interface ConfirmarPagamentResponse {
     success: boolean;
     seguro: Seguro;
     missatge: string;
 }
-
 export interface HistorialSegurosResponse {
     seguros: Seguro[];
     total: number;
 }
-
 export interface ValidarJugadorResponse {
     jugadorId: string;
     teSeguro: boolean;
     potSerAlineat: boolean;
 }
-
 export interface ValidarJugadorsAlineacioResponse {
     valid: boolean;
     jugadors: ValidarJugadorResponse[];
     jugadorsSenseSeguro: string[];
     missatge: string;
 }
-
-// Tipus per enriquir jugadors amb info de segur
 export interface JugadorAmbSeguro {
     id: string;
     nom: string;

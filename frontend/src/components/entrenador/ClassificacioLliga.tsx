@@ -2,10 +2,8 @@ import { useClassificacio } from "@/queries/entrenador.queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Award, Loader2, TrendingUp } from "lucide-react";
-
 const ClassificacioLliga = () => {
     const { data, isLoading, isError } = useClassificacio();
-
     const getPosicioIcon = (posicio: number) => {
         switch (posicio) {
             case 1:
@@ -18,7 +16,6 @@ const ClassificacioLliga = () => {
                 return <span className="w-5 h-5 flex items-center justify-center font-bold text-muted-foreground">{posicio}</span>;
         }
     };
-
     const getRowStyle = (posicio: number, esElMeuEquip: boolean) => {
         if (esElMeuEquip) {
             return "bg-primary/10 border-primary/30 ring-2 ring-primary/20";
@@ -34,7 +31,6 @@ const ClassificacioLliga = () => {
                 return "bg-card border-border hover:bg-muted/50";
         }
     };
-
     if (isLoading) {
         return (
             <div className="flex items-center justify-center py-12">
@@ -43,7 +39,6 @@ const ClassificacioLliga = () => {
             </div>
         );
     }
-
     if (isError || !data) {
         return (
             <Card>
@@ -53,10 +48,9 @@ const ClassificacioLliga = () => {
             </Card>
         );
     }
-
     return (
         <div className="space-y-4">
-            {/* Header de la lliga */}
+            {}
             <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
                 <CardHeader className="pb-3">
                     <div className="flex items-center gap-3">
@@ -68,8 +62,7 @@ const ClassificacioLliga = () => {
                     </div>
                 </CardHeader>
             </Card>
-
-            {/* Tabla de clasificación */}
+            {}
             <Card>
                 <CardHeader className="pb-2">
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -78,7 +71,7 @@ const ClassificacioLliga = () => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {/* Header de la tabla */}
+                    {}
                     <div className="grid grid-cols-12 gap-2 px-4 py-2 text-xs font-semibold text-muted-foreground uppercase border-b">
                         <div className="col-span-1">#</div>
                         <div className="col-span-4">Equip</div>
@@ -88,8 +81,7 @@ const ClassificacioLliga = () => {
                         <div className="col-span-2 text-center">Sets</div>
                         <div className="col-span-2 text-center font-bold">Pts</div>
                     </div>
-
-                    {/* Filas de equipos */}
+                    {}
                     <div className="space-y-1 mt-2">
                         {data.classificacio.map((c) => (
                             <div
@@ -119,7 +111,6 @@ const ClassificacioLliga = () => {
                             </div>
                         ))}
                     </div>
-
                     {data.classificacio.length === 0 && (
                         <div className="text-center py-8 text-muted-foreground">
                             No hi ha dades de classificació
@@ -130,5 +121,4 @@ const ClassificacioLliga = () => {
         </div>
     );
 };
-
 export default ClassificacioLliga;

@@ -405,16 +405,87 @@ exports.validarActa = async (req, res) => {
 
         const ara = new Date();
 
+        // Obtenir el partit
+        const partitResp = await api.get(`/Partit?id=${acta.partitId}`);
+        const partit = Array.isArray(partitResp) ? partitResp[0] : partitResp;
+
+        if (!partit) {
+            return res.status(404).json({ error: "Partit no trobat" });
+        }
+
+        // Calcular punts segons el resultat
+        let puntsLocal = 0;
+        let puntsVisitant = 0;
+
+        if (acta.setsLocal > acta.setsVisitant) {
+            // Victòria local
+            puntsLocal = 3;
+            puntsVisitant = 0;
+        } else if (acta.setsVisitant > acta.setsLocal) {
+            // Victòria visitant
+            puntsLocal = 0;
+            puntsVisitant = 3;
+        } else {
+            // Empat
+            puntsLocal = 1;
+            puntsVisitant = 1;
+        }
+
+        // Validar acta
         const actaValidada = await api.patch(`/Acta/${id}`, {
             validada: true,
             dataValidacio: ara.toISOString(),
             updated_at: ara.toISOString()
         });
 
+        // Actualizar partit a status COMPLETAT_ACTA_VALIDADA
+        await api.patch(`/Partit/${acta.partitId}`, {
+            status: "COMPLETAT_ACTA_VALIDADA",
+            updated_at: ara.toISOString()
+        });
+
+        // Guardar punts dels equips en la base de dades
+        try {
+            // Crear entrada de puntuació per a cada equip
+            const puntuacionsResponse = await api.get(`/Puntuacio`);
+            const puntuacionsActuals = Array.isArray(puntuacionsResponse) ? puntuacionsResponse : [];
+
+            // Verificar que no existan ja puntuacions per aquest partit
+            const puntuacioExistent = puntuacionsActuals.filter(p => String(p.partitId) === String(acta.partitId));
+            
+            if (puntuacioExistent.length === 0) {
+                // Crear entrada per equip local
+                if (puntsLocal > 0 || puntsVisitant >= 0) {
+                    await api.post(`/Puntuacio`, {
+                        partitId: acta.partitId,
+                        equipId: partit.localId,
+                        punts: puntsLocal,
+                        created_at: ara.toISOString(),
+                        isActive: true
+                    });
+                }
+
+                // Crear entrada per equip visitant
+                if (puntsVisitant > 0 || puntsLocal >= 0) {
+                    await api.post(`/Puntuacio`, {
+                        partitId: acta.partitId,
+                        equipId: partit.visitantId,
+                        punts: puntsVisitant,
+                        created_at: ara.toISOString(),
+                        isActive: true
+                    });
+                }
+            }
+        } catch (puntuacioError) {
+            console.error("Error guardant puntuacions:", puntuacioError);
+            // No fallar la validació si falla guardar punts, però loguejar l'error
+        }
+
         return res.status(200).json({
             success: true,
             acta: actaValidada,
-            missatge: "Acta validada correctament. Ja no es podrà modificar."
+            missatge: "Acta validada correctament. Ja no es podrà modificar.",
+            punts: { local: puntsLocal, visitant: puntsVisitant }
         });
 
     } catch (error) {

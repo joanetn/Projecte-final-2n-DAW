@@ -14,14 +14,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
-interface ActaCardProps {
-    acta: Acta;
-    onVeure: (actaId: string) => void;
-    onEditar?: (actaId: string) => void;
-    onEliminar?: (actaId: string) => void;
-}
-
+import { type ActaCardProps } from "@/types/components.arbitre";
 export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps) {
     const dataCreacio = new Date(acta.created_at);
     const dataFormatejada = dataCreacio.toLocaleDateString("ca-ES", {
@@ -29,9 +22,7 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
         month: "long",
         year: "numeric",
     });
-
     const teIncidencies = acta.incidencies && acta.incidencies.length > 0;
-
     return (
         <Card className={`hover:shadow-md transition-shadow ${acta.validada ? 'border-green-200' : 'border-yellow-200'}`}>
             <CardHeader className="pb-3">
@@ -53,15 +44,14 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                 </div>
             </CardHeader>
             <CardContent className="space-y-3">
-                {/* Resultat en sets */}
+                {}
                 <div className="flex items-center justify-center py-3 bg-muted rounded-lg">
                     <span className="text-3xl font-bold text-primary">
                         {acta.setsLocal} - {acta.setsVisitant}
                     </span>
                     <span className="text-sm text-muted-foreground ml-2">sets</span>
                 </div>
-
-                {/* Detall sets */}
+                {}
                 {acta.sets && acta.sets.length > 0 && (
                     <div className="flex justify-center gap-2 text-sm text-muted-foreground">
                         {acta.sets.map((set) => (
@@ -72,8 +62,7 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                         ))}
                     </div>
                 )}
-
-                {/* Data partit */}
+                {}
                 {acta.partit?.dataHora && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Calendar className="h-4 w-4" />
@@ -86,8 +75,7 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                         </span>
                     </div>
                 )}
-
-                {/* Indicador d'incidències */}
+                {}
                 {teIncidencies && (
                     <div className="text-sm">
                         <Badge variant="destructive" className="text-xs">
@@ -95,20 +83,17 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                         </Badge>
                     </div>
                 )}
-
-                {/* Observacions preview */}
+                {}
                 {acta.observacions && (
                     <p className="text-sm text-muted-foreground line-clamp-2 italic">
                         "{acta.observacions}"
                     </p>
                 )}
-
-                {/* Data creació */}
+                {}
                 <div className="text-xs text-muted-foreground">
                     Creada el {dataFormatejada}
                 </div>
-
-                {/* Accions */}
+                {}
                 <div className="flex gap-2 pt-2">
                     <Button
                         variant="outline"
@@ -119,7 +104,6 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                         <Eye className="h-4 w-4" />
                         Veure
                     </Button>
-
                     {!acta.validada && onEditar && (
                         <Button
                             variant="outline"
@@ -131,7 +115,6 @@ export function ActaCard({ acta, onVeure, onEditar, onEliminar }: ActaCardProps)
                             Editar
                         </Button>
                     )}
-
                     {!acta.validada && onEliminar && (
                         <AlertDialog>
                             <AlertDialogTrigger asChild>

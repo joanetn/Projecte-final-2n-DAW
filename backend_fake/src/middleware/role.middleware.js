@@ -13,14 +13,18 @@ exports.roleMiddleware = (...allowedRoles) => {
             }
 
             // Si no té rol global, verificar rols d'equip
-            const equipUsuariResponse = await api.get(`/EquipUsuari?usuariId=${req.user.id}&isActive=true`);
-            const equipUsuaris = Array.isArray(equipUsuariResponse) ? equipUsuariResponse : [];
+            try {
+                const equipUsuariResponse = await api.get(`/EquipUsuari?usuariId=${req.user.id}`);
+                const equipUsuaris = Array.isArray(equipUsuariResponse) ? equipUsuariResponse : [];
 
-            const equipRoles = equipUsuaris.map(eu => eu.rolEquip);
-            const hasEquipRole = equipRoles.some(r => allowedRoles.includes(r));
+                const equipRoles = equipUsuaris.map(eu => eu.rolEquip);
+                const hasEquipRole = equipRoles.some(r => allowedRoles.includes(r));
 
-            if (hasEquipRole) {
-                return next();
+                if (hasEquipRole) {
+                    return next();
+                }
+            } catch (equipError) {
+                console.warn("No equipUsuari encontrados, continuando con verificación de roles globales");
             }
 
             return res.status(403).json({ message: "Accés denegat" });

@@ -16,20 +16,14 @@ import {
 } from "lucide-react";
 import { usePlantilla } from "@/queries/entrenador.queries";
 import { Notificacio } from "@/types/notificacions";
-
 const HistorialPropostes = () => {
     const { data: plantillaData } = usePlantilla();
-
     const equipId = plantillaData?.equip?.id?.toString();
-
     const { data: propostesEnviadesData, isLoading: loadingEnviades } = usePropostesEnviades(equipId);
     const { data: propostesRebudesData, isLoading: loadingRebudes } = usePropostesRebudes(equipId);
-
     const isLoading = loadingEnviades || loadingRebudes;
-
     const enviades = propostesEnviadesData || [];
     const rebudes = propostesRebudesData || [];
-
     const getEstatBadge = (estat?: string) => {
         switch (estat?.toUpperCase()) {
             case 'ACCEPTAT':
@@ -56,7 +50,6 @@ const HistorialPropostes = () => {
                 );
         }
     };
-
     const formatDate = (dateStr: string) => {
         try {
             return format(new Date(dateStr), "d MMM yyyy, HH:mm", { locale: ca });
@@ -64,7 +57,6 @@ const HistorialPropostes = () => {
             return dateStr;
         }
     };
-
     const PropostaCard = ({ proposta, tipus }: { proposta: Notificacio; tipus: 'enviada' | 'rebuda' }) => (
         <Card className="mb-3 hover:shadow-md transition-shadow">
             <CardContent className="p-4">
@@ -111,7 +103,6 @@ const HistorialPropostes = () => {
             </CardContent>
         </Card>
     );
-
     if (isLoading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -119,10 +110,9 @@ const HistorialPropostes = () => {
             </div>
         );
     }
-
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Propostes Enviades */}
+            {}
             <Card className="shadow-lg">
                 <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2 text-lg">
@@ -148,8 +138,7 @@ const HistorialPropostes = () => {
                     </ScrollArea>
                 </CardContent>
             </Card>
-
-            {/* Propostes Rebudes */}
+            {}
             <Card className="shadow-lg">
                 <CardHeader className="pb-3">
                     <CardTitle className="flex items-center gap-2 text-lg">
@@ -175,8 +164,7 @@ const HistorialPropostes = () => {
                     </ScrollArea>
                 </CardContent>
             </Card>
-
-            {/* Resum estadístic */}
+            {}
             <Card className="lg:col-span-2 shadow-lg">
                 <CardContent className="py-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -206,5 +194,4 @@ const HistorialPropostes = () => {
         </div>
     );
 };
-
 export default HistorialPropostes;

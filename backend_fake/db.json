@@ -11,7 +11,7 @@
       "avatar": "https://i.pravatar.cc/150?img=1",
       "dni": "12345678A",
       "created_at": "2024-01-15T10:00:00.000Z",
-      "updated_at": "2024-01-15T10:00:00.000Z",
+      "updated_at": "2026-01-29T11:59:41.606Z",
       "isActive": true
     },
     {
@@ -153,6 +153,48 @@
       "created_at": "2026-01-23T18:20:43.602Z",
       "updated_at": "2026-01-23T18:20:43.602Z",
       "id": "iwovBM5"
+    },
+    {
+      "id": "11",
+      "nom": "Admin Web",
+      "email": "admin@web.com",
+      "contrasenya": "admin123",
+      "telefon": "+34666999888",
+      "dataNaixement": "1990-01-01T00:00:00.000Z",
+      "nivell": "Admin",
+      "avatar": "https://i.pravatar.cc/150?img=99",
+      "dni": "99999999Z",
+      "created_at": "2026-01-29T10:00:00.000Z",
+      "updated_at": "2026-01-29T10:00:00.000Z",
+      "isActive": true
+    },
+    {
+      "nom": "prova form",
+      "email": "form@form.com",
+      "contrasenya": "form123",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-01-29T12:34:17.642Z",
+      "updated_at": "2026-01-29T12:34:17.642Z",
+      "id": "1HYI5VS"
+    },
+    {
+      "nom": "joanet",
+      "email": "j2@j.com",
+      "contrasenya": "123456",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-01-29T13:01:47.687Z",
+      "updated_at": "2026-01-29T13:01:47.687Z",
+      "id": "IQk2srQ"
     }
   ],
   "UsuariRol": [
@@ -233,6 +275,45 @@
       "rol": "ARBITRE",
       "isActive": true,
       "id": "8L-OSf5"
+    },
+    {
+      "id": "admin-web-11",
+      "usuariId": 11,
+      "rol": "ADMIN_WEB",
+      "isActive": true
+    },
+    {
+      "usuariId": "1HYI5VS",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "0nDltAf"
+    },
+    {
+      "id": "56cb8d36",
+      "usuariId": "1HYI5VS",
+      "rol": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T12:36:54.900Z"
+    },
+    {
+      "usuariId": "IQk2srQ",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "GqvDffp"
+    },
+    {
+      "id": "2cc5edb7",
+      "usuariId": "IQk2srQ",
+      "rol": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T13:02:26.599Z"
+    },
+    {
+      "id": "8de82d52",
+      "usuariId": "11",
+      "rol": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T13:06:00.202Z"
     }
   ],
   "Club": [
@@ -250,6 +331,108 @@
       "id": "3",
       "nom": "Club Esportiu Mediterrani",
       "isActive": true
+    },
+    {
+      "id": "73dc3ace",
+      "nom": "Club tennis jaume primer",
+      "descripcio": "no té el acabe de crear",
+      "adreca": "Carrer uno, 1",
+      "ciutat": "Ontinyent",
+      "codiPostal": "46870",
+      "provincia": "Valencia",
+      "telefon": "12345678",
+      "email": "form@form.com",
+      "web": "http://localhost:5173/",
+      "anyFundacio": 2026,
+      "creadorId": "1HYI5VS",
+      "isActive": true,
+      "created_at": "2026-01-29T12:36:54.806Z",
+      "updated_at": "2026-01-29T12:36:54.806Z"
+    },
+    {
+      "id": "bf7c8225",
+      "nom": "gdfgfgf",
+      "descripcio": "fggfgf",
+      "adreca": "ertr",
+      "ciutat": "gfhjhgj",
+      "codiPostal": "46870",
+      "provincia": "tytyur",
+      "telefon": "hjhgj",
+      "email": "j2@j.com",
+      "web": "htfghgfhfg",
+      "anyFundacio": 2026,
+      "creadorId": "IQk2srQ",
+      "isActive": true,
+      "created_at": "2026-01-29T13:02:26.507Z",
+      "updated_at": "2026-01-29T13:02:26.507Z"
+    },
+    {
+      "id": "c54dfdcf",
+      "nom": "dbgfbg",
+      "descripcio": "gfbgbgbg",
+      "adreca": "vfvfdvfv",
+      "ciutat": "vfdvfvf",
+      "codiPostal": "45454",
+      "provincia": "ghbgbgfb",
+      "telefon": "gfbbgfbgbgf",
+      "email": "admin@web.com",
+      "web": "gfbgfbgbg",
+      "anyFundacio": 2026,
+      "creadorId": "11",
+      "isActive": true,
+      "created_at": "2026-01-29T13:06:00.107Z",
+      "updated_at": "2026-01-29T13:06:00.107Z"
+    },
+    {
+      "id": "762d2ebb",
+      "nom": "dbdgbgb",
+      "descripcio": "gfbfgbgb",
+      "adreca": "bgbfg",
+      "ciutat": "bgfbgb",
+      "codiPostal": "45454",
+      "provincia": "gnnfhgn",
+      "telefon": "nhgnghnhg",
+      "email": "admin@web.com",
+      "web": "nhhnhg",
+      "anyFundacio": 2026,
+      "creadorId": "11",
+      "isActive": true,
+      "created_at": "2026-01-29T13:06:48.840Z",
+      "updated_at": "2026-01-29T13:06:48.840Z"
+    },
+    {
+      "id": "02a1ae70",
+      "nom": "fngngngn",
+      "descripcio": "gngngngngngng",
+      "adreca": "ngnghng",
+      "ciutat": "ngfngfngn",
+      "codiPostal": "34344",
+      "provincia": "hnhgnhgn",
+      "telefon": "hgnnhgngh",
+      "email": "admin@web.com",
+      "web": "nhnhn",
+      "anyFundacio": 2026,
+      "creadorId": "11",
+      "isActive": true,
+      "created_at": "2026-01-29T13:07:54.033Z",
+      "updated_at": "2026-01-29T13:07:54.033Z"
+    },
+    {
+      "id": "647c58ca",
+      "nom": "ngngf",
+      "descripcio": "ngngn",
+      "adreca": "ngng",
+      "ciutat": "ngngngfn",
+      "codiPostal": "34344",
+      "provincia": "nhgnh",
+      "telefon": "hgnghngh",
+      "email": "admin@web.com",
+      "web": "nhnh",
+      "anyFundacio": 2026,
+      "creadorId": "11",
+      "isActive": true,
+      "created_at": "2026-01-29T13:08:39.522Z",
+      "updated_at": "2026-01-29T13:08:39.522Z"
     }
   ],
   "Equip": [
@@ -309,6 +492,113 @@
       "PartitJugador": [],
       "Alineacio": [],
       "isActive": true
+    },
+    {
+      "id": "430cea43",
+      "nom": "Club padel jaume primer A",
+      "categoria": "Senior Masculí",
+      "clubId": "73dc3ace",
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-01-29T12:36:54.837Z",
+      "updated_at": "2026-01-29T12:36:54.837Z"
+    },
+    {
+      "id": "f1a212e7",
+      "nom": "ghjfghgfh",
+      "categoria": "Veterà Masculí",
+      "clubId": "bf7c8225",
+      "lligaId": null,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-01-29T13:02:26.537Z",
+      "updated_at": "2026-01-29T13:02:26.537Z"
+    },
+    {
+      "id": "bc8e1701",
+      "nom": "fnhnfgn",
+      "categoria": "Veterà Masculí",
+      "clubId": "c54dfdcf",
+      "lligaId": null,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-01-29T13:06:00.140Z",
+      "updated_at": "2026-01-29T13:06:00.140Z"
+    },
+    {
+      "id": "379a7545",
+      "nom": "bgbgf",
+      "categoria": "Senior Femení",
+      "clubId": "762d2ebb",
+      "lligaId": null,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-01-29T13:06:48.872Z",
+      "updated_at": "2026-01-29T13:06:48.872Z"
+    },
+    {
+      "id": "7693de8f",
+      "nom": "bgfbfggf",
+      "categoria": "Senior Femení",
+      "clubId": "02a1ae70",
+      "lligaId": null,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-01-29T13:07:54.065Z",
+      "updated_at": "2026-01-29T13:07:54.065Z"
+    },
+    {
+      "id": "96f25971",
+      "nom": "ngngng",
+      "categoria": "Veterà Masculí",
+      "clubId": "647c58ca",
+      "lligaId": null,
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-01-29T13:08:39.555Z",
+      "updated_at": "2026-01-29T13:08:39.555Z"
     }
   ],
   "EquipUsuari": [
@@ -395,6 +685,54 @@
       "rolEquip": "ENTRENADOR",
       "isActive": false,
       "id": "itvMzKM"
+    },
+    {
+      "id": "e9065332",
+      "equipId": "430cea43",
+      "usuariId": "1HYI5VS",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T12:36:54.869Z"
+    },
+    {
+      "id": "7a59bd34",
+      "equipId": "f1a212e7",
+      "usuariId": "IQk2srQ",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T13:02:26.568Z"
+    },
+    {
+      "id": "177b8dc3",
+      "equipId": "bc8e1701",
+      "usuariId": "11",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T13:06:00.171Z"
+    },
+    {
+      "id": "5f88ccad",
+      "equipId": "379a7545",
+      "usuariId": "11",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T13:06:48.887Z"
+    },
+    {
+      "id": "5ee5821d",
+      "equipId": "7693de8f",
+      "usuariId": "11",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T13:07:54.097Z"
+    },
+    {
+      "id": "1588ef40",
+      "equipId": "96f25971",
+      "usuariId": "11",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-01-29T13:08:39.586Z"
     }
   ],
   "Lliga": [
@@ -505,6 +843,17 @@
       "telefon": "+34963456789",
       "clubId": 3,
       "isActive": true
+    },
+    {
+      "id": "e4182ba8",
+      "nom": "Pista 1",
+      "adreca": "Mateixa del club",
+      "telefon": "12345678",
+      "tipusPista": "Pista dura",
+      "numPistes": 3,
+      "clubId": "73dc3ace",
+      "isActive": true,
+      "created_at": "2026-01-29T12:36:54.931Z"
     }
   ],
   "Pista": [
@@ -623,7 +972,9 @@
       "dataHora": "2026-02-10 20:00",
       "pistaId": null,
       "status": "PENDENT",
-      "isActive": true
+      "isActive": true,
+      "arbitreId": "3",
+      "updated_at": "2026-01-29T12:26:38.115Z"
     },
     {
       "id": "0e81",
@@ -4066,6 +4417,31 @@
       "llegida": false,
       "created_at": "2026-01-23T16:34:38.011Z",
       "read": true
+    },
+    {
+      "id": "614b3316",
+      "usuariId": "9",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip Club padel jaume primer A",
+      "tipus": "invitacio_equip",
+      "read": false,
+      "created_at": "2026-01-29T12:42:11.158Z",
+      "extra": {
+        "invitacioId": "23308b62",
+        "equipId": "430cea43",
+        "equipNom": "Club padel jaume primer A",
+        "missatge": "hola"
+      }
+    },
+    {
+      "id": "f77ff376",
+      "usuariId": "1HYI5VS",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 29/1/2027.",
+      "tipus": "SEGURO",
+      "llegida": false,
+      "created_at": "2026-01-29T12:42:29.610Z",
+      "read": true
     }
   ],
   "Merch": [
@@ -4333,6 +4709,17 @@
       "created_at": "2026-01-23T15:23:27.474Z",
       "updated_at": "2026-01-23T15:23:39.920Z",
       "isActive": true
+    },
+    {
+      "id": "23308b62",
+      "equipId": "430cea43",
+      "jugadorId": "9",
+      "enviadaPer": "1HYI5VS",
+      "missatge": "hola",
+      "estat": "PENDENT",
+      "created_at": "2026-01-29T12:42:11.126Z",
+      "updated_at": "2026-01-29T12:42:11.126Z",
+      "isActive": true
     }
   ],
   "Seguro": [
@@ -4404,6 +4791,20 @@
       "stripeSessionId": "cs_test_a1WPed5FDpJePsy6dHCdQjtbeFqg9qRDVgj4PnMxz89u5n05EmEQ32LJUZ",
       "created_at": "2026-01-26T17:23:27.961Z",
       "updated_at": "2026-01-26T17:23:27.961Z",
+      "isActive": true
+    },
+    {
+      "id": "00847366",
+      "usuariId": "1HYI5VS",
+      "dataInici": "2026-01-29T12:42:29.610Z",
+      "dataFi": "2027-01-29T12:42:29.610Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-01-29T12:42:29.610Z",
+      "updated_at": "2026-01-29T12:42:29.610Z",
       "isActive": true
     }
   ]

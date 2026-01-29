@@ -21,21 +21,12 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-
-interface PlantillaCardAdminProps {
-    usuari: any;
-    teSeguro?: boolean;
-    onCanviarRol: (membreId: string, rols: string[]) => void;
-    onDonarBaixa: (membreId: string) => void;
-    isCurrentUser?: boolean;
-}
-
+import { type PlantillaCardAdminProps } from "@/types/components.plantilla";
 const ROLS_DISPONIBLES = [
     { id: "JUGADOR", label: "Jugador" },
     { id: "ENTRENADOR", label: "Entrenador" },
     { id: "ADMIN_EQUIP", label: "Administrador" },
 ];
-
 const PlantillaCardAdmin = ({
     usuari,
     teSeguro,
@@ -45,43 +36,34 @@ const PlantillaCardAdmin = ({
 }: PlantillaCardAdminProps) => {
     const [showBaixaDialog, setShowBaixaDialog] = useState(false);
     const [showRolDialog, setShowRolDialog] = useState(false);
-
-    // Inicializar con los roles actuales del usuario (puede ser string o array)
     const getRolsActuals = () => {
         if (Array.isArray(usuari.rolsEquip)) {
             return usuari.rolsEquip;
         }
         return usuari.rolEquip ? [usuari.rolEquip] : [];
     };
-
     const [rolsSeleccionats, setRolsSeleccionats] = useState<string[]>(getRolsActuals());
-
     const toggleRol = (rolId: string) => {
         setRolsSeleccionats(prev => {
             if (prev.includes(rolId)) {
-                // No permitir deseleccionar todos
                 if (prev.length === 1) return prev;
                 return prev.filter(r => r !== rolId);
             }
             return [...prev, rolId];
         });
     };
-
     const handleConfirmarBaixa = () => {
         onDonarBaixa(usuari.id);
         setShowBaixaDialog(false);
     };
-
     const handleConfirmarRol = () => {
         onCanviarRol(usuari.id, rolsSeleccionats);
         setShowRolDialog(false);
     };
-
     const handleOpenRolDialog = () => {
         setRolsSeleccionats(getRolsActuals());
         setShowRolDialog(true);
     };
-
     return (
         <>
             <Card className={`hover:shadow-md transition ${teSeguro === false ? 'border-orange-300 bg-orange-50/30 dark:bg-orange-950/20' : ''}`}>
@@ -142,13 +124,12 @@ const PlantillaCardAdmin = ({
                         </div>
                     </div>
                 </CardHeader>
-
                 <CardContent>
                     {usuari.nivell && (
                         <p className="text-sm text-muted-foreground mb-2">Nivell: {usuari.nivell}</p>
                     )}
                     <div className="flex flex-wrap gap-2">
-                        {/* Mostrar tots els rols d'equip */}
+                        {}
                         {(usuari.rolsEquip || [usuari.rolEquip]).map((rol: string) => (
                             <Badge key={rol} className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200 border-green-300 dark:border-green-700">
                                 {rol === "ADMIN_EQUIP" ? "Admin" : rol === "ENTRENADOR" ? "Entrenador" : "Jugador"}
@@ -173,8 +154,7 @@ const PlantillaCardAdmin = ({
                     </div>
                 </CardContent>
             </Card>
-
-            {/* Dialog per confirmar baixa */}
+            {}
             <AlertDialog open={showBaixaDialog} onOpenChange={setShowBaixaDialog}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -201,8 +181,7 @@ const PlantillaCardAdmin = ({
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-
-            {/* Dialog per canviar rol */}
+            {}
             <AlertDialog open={showRolDialog} onOpenChange={setShowRolDialog}>
                 <AlertDialogContent className="bg-white border border-gray-200 shadow-xl">
                     <AlertDialogHeader>
@@ -255,5 +234,4 @@ const PlantillaCardAdmin = ({
         </>
     );
 };
-
 export default PlantillaCardAdmin;

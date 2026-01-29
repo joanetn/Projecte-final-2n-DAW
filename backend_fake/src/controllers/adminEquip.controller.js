@@ -243,8 +243,8 @@ exports.classificacio = async (req, res) => {
         // Calcular classificació
         const classificacio = await Promise.all(equips.map(async (eq) => {
             const [partitsLocal, partitsVisitant] = await Promise.all([
-                api.get(`/Partit?localId=${eq.id}&status=COMPLETAT`),
-                api.get(`/Partit?visitantId=${eq.id}&status=COMPLETAT`)
+                api.get(`/Partit?localId=${eq.id}&status=COMPLETAT_ACTA_VALIDADA`),
+                api.get(`/Partit?visitantId=${eq.id}&status=COMPLETAT_ACTA_VALIDADA`)
             ]);
 
             const partits = [

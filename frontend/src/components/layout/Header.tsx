@@ -8,7 +8,6 @@ import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { useNotificacions } from "@/queries/notificacions.queries";
 import { useAcceptProposta, useRejectProposta, useMarcarLlegida, useMarcarTotesLlegides } from "@/mutations/notificacions.mutations";
 import { useQueryClient } from "@tanstack/react-query";
-
 const Header = () => {
     const { user, logout, isLoading } = useAuth();
     const location = useLocation();
@@ -16,7 +15,6 @@ const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [notifOpen, setNotifOpen] = useState(false);
     const [processingId, setProcessingId] = useState<string | null>(null);
-
     const queryClient = useQueryClient();
     const { data: notifs = [], isLoading: loadingNotifs, refetch } = useNotificacions(user?.id?.toString());
     const acceptMutation = useAcceptProposta();
@@ -25,14 +23,10 @@ const Header = () => {
     const marcarTotesLlegidesMutation = useMarcarTotesLlegides();
     const notificacionsNoLlegides = notifs.filter(n => !n.read);
     const countNoLlegides = notificacionsNoLlegides.length;
-
     const isLoggedIn = !!user;
     if (isLoading) return null;
-
     const isActive = (path: string) => location.pathname === path;
-
     const { showToast } = useToast();
-
     useEffect(() => {
         const handler = () => {
             refetch();
@@ -40,7 +34,6 @@ const Header = () => {
         window.addEventListener('new-notificacio', handler as EventListener);
         return () => window.removeEventListener('new-notificacio', handler as EventListener);
     }, [refetch]);
-
     useEffect(() => {
         const handler = () => {
             refetch();
@@ -54,13 +47,11 @@ const Header = () => {
             window.removeEventListener('proposta-rebutjada', handler as EventListener);
         };
     }, [queryClient]);
-
     const handleLogout = () => {
         logout();
         showToast({ type: 'info', title: 'Sessió tancada', description: "S'ha tancat la sessió." });
         navigate("/login");
     };
-
     const handleAcceptProposta = async (notifId: string) => {
         setProcessingId(notifId);
         acceptMutation.mutate(notifId, {
@@ -79,7 +70,6 @@ const Header = () => {
             }
         });
     };
-
     const handleRejectProposta = async (notifId: string) => {
         setProcessingId(notifId);
         rejectMutation.mutate(notifId, {
@@ -95,22 +85,18 @@ const Header = () => {
             }
         });
     };
-
     const hasRol = (rol: string) => {
         return user?.rols?.some(r => (typeof r === 'string' ? r : r) === rol) || false;
     };
-
     const isAdmin = hasRol("ADMIN_WEB");
     const isArbitre = hasRol("ARBITRE");
     const isEntrenador = hasRol("ENTRENADOR");
     const isJugador = hasRol("JUGADOR");
     const isAdminEquip = hasRol("ADMIN_EQUIP");
-
     return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 border-b border-border shadow-sm">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
-
                     <Link to="/" className="flex items-center gap-2">
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center">
                             <span className="text-white font-bold text-sm">PP</span>
@@ -119,7 +105,6 @@ const Header = () => {
                             PadelPlay
                         </span>
                     </Link>
-
                     <div className="hidden md:flex items-center gap-8">
                         <Link
                             to="/"
@@ -127,7 +112,6 @@ const Header = () => {
                         >
                             Inici
                         </Link>
-
                         {isAdmin && (
                             <Link
                                 to="/dashboardAdmin"
@@ -136,7 +120,6 @@ const Header = () => {
                                 Dashboard Admin
                             </Link>
                         )}
-
                         {isArbitre && (
                             <Link
                                 to="/dashboardArbitre"
@@ -145,7 +128,6 @@ const Header = () => {
                                 Dashboard Àrbitre
                             </Link>
                         )}
-
                         {isEntrenador && (
                             <Link
                                 to="/dashboardEntrenador"
@@ -154,7 +136,6 @@ const Header = () => {
                                 Dashboard Entrenador
                             </Link>
                         )}
-
                         {isAdminEquip && (
                             <Link
                                 to="/dashboardAdminEquip"
@@ -163,14 +144,12 @@ const Header = () => {
                                 Dashboard Admin Equip
                             </Link>
                         )}
-
                         <Link
                             to="/ranking"
                             className={`text-sm font-medium ${isActive("/ranking") ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
                         >
                             Ranking
                         </Link>
-
                         {isJugador && (
                             <Link
                                 to="/areaJugador"
@@ -179,7 +158,6 @@ const Header = () => {
                                 Area de jugador
                             </Link>
                         )}
-
                         {!isLoggedIn && (
                             <div className="flex items-center gap-3">
                                 <Link to="/login">
@@ -190,7 +168,6 @@ const Header = () => {
                                 </Link>
                             </div>
                         )}
-
                         {isLoggedIn && (
                             <div className="flex items-center gap-3">
                                 <span className="text-sm text-foreground">
@@ -201,7 +178,6 @@ const Header = () => {
                                 </Button>
                             </div>
                         )}
-
                         {isLoggedIn && (
                             <div className="relative">
                                 <button
@@ -224,7 +200,6 @@ const Header = () => {
                                         </>
                                     )}
                                 </button>
-
                                 {notifOpen && (
                                     <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-xl z-50">
                                         <div className="p-3 border-b border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 rounded-t-lg flex items-center justify-between">
@@ -249,7 +224,6 @@ const Header = () => {
                                                 const isRebutjat = n.extra?.estat === 'REBUTJAT';
                                                 const isProcessing = processingId === n.id;
                                                 const isMarkingRead = marcarLlegidaMutation.isPending && marcarLlegidaMutation.variables === n.id;
-
                                                 return (
                                                     <div key={n.id} className={`p-3 border-b border-gray-100 dark:border-zinc-800 last:border-b-0 hover:bg-gray-50 dark:hover:bg-zinc-800/50 ${!n.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}`}>
                                                         <div className="flex items-start justify-between gap-2">
@@ -272,7 +246,6 @@ const Header = () => {
                                                                 </button>
                                                             )}
                                                         </div>
-
                                                         {isProposta && isPendent && (
                                                             <div className="flex gap-2 mt-2">
                                                                 <button
@@ -291,7 +264,6 @@ const Header = () => {
                                                                 </button>
                                                             </div>
                                                         )}
-
                                                         {isProposta && isAcceptat && (
                                                             <span className="inline-block mt-2 px-2 py-0.5 text-xs font-medium text-green-700 bg-green-100 rounded">
                                                                 ✓ Acceptada
@@ -313,10 +285,8 @@ const Header = () => {
                                 )}
                             </div>
                         )}
-
                         <ThemeToggle />
                     </div>
-
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         className="md:hidden p-2 rounded-lg text-muted-foreground hover:bg-accent"
@@ -324,7 +294,6 @@ const Header = () => {
                         {mobileMenuOpen ? <X /> : <Menu />}
                     </button>
                 </div>
-
                 {mobileMenuOpen && (
                     <div className="md:hidden py-4 border-t border-border space-y-2 bg-white dark:bg-zinc-900">
                         <Link
@@ -334,7 +303,6 @@ const Header = () => {
                         >
                             Inici
                         </Link>
-
                         {isAdmin && (
                             <Link
                                 to="/dashboardAdmin"
@@ -344,7 +312,6 @@ const Header = () => {
                                 Dashboard Admin
                             </Link>
                         )}
-
                         {isArbitre && (
                             <Link
                                 to="/dashboardArbitre"
@@ -354,7 +321,6 @@ const Header = () => {
                                 Dashboard Àrbitre
                             </Link>
                         )}
-
                         {isEntrenador && (
                             <Link
                                 to="/dashboardEntrenador"
@@ -364,7 +330,6 @@ const Header = () => {
                                 Dashboard Entrenador
                             </Link>
                         )}
-
                         {isAdminEquip && (
                             <Link
                                 to="/dashboardAdminEquip"
@@ -374,7 +339,6 @@ const Header = () => {
                                 Dashboard Admin Equip
                             </Link>
                         )}
-
                         {!isLoggedIn ? (
                             <div className="space-y-2 pt-2">
                                 <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
@@ -388,7 +352,7 @@ const Header = () => {
                             <div className="pt-2 space-y-2">
                                 <div className="flex items-center justify-between px-4">
                                     <div className="text-sm text-foreground">Hola, {user.nom}</div>
-                                    {/* mobile bell visual */}
+                                    {}
                                     <button
                                         aria-label="Notificacions"
                                         className="relative p-2 rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -427,5 +391,4 @@ const Header = () => {
         </header>
     );
 };
-
 export default Header;

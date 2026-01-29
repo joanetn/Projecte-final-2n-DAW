@@ -1,9 +1,7 @@
 import { acceptProposta, rejectProposta, marcarNotificacioLlegida, marcarTotesNotificacionsLlegides } from "@/services/notificacions.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 export const useAcceptProposta = () => {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: acceptProposta,
         onSuccess: () => {
@@ -13,10 +11,8 @@ export const useAcceptProposta = () => {
         }
     });
 };
-
 export const useRejectProposta = () => {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: rejectProposta,
         onSuccess: () => {
@@ -24,10 +20,8 @@ export const useRejectProposta = () => {
         }
     });
 };
-
 export const useMarcarLlegida = () => {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: marcarNotificacioLlegida,
         onSuccess: () => {
@@ -35,10 +29,8 @@ export const useMarcarLlegida = () => {
         }
     });
 };
-
 export const useMarcarTotesLlegides = () => {
     const queryClient = useQueryClient();
-
     return useMutation({
         mutationFn: marcarTotesNotificacionsLlegides,
         onSuccess: () => {

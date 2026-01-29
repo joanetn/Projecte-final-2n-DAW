@@ -658,27 +658,39 @@ exports.llistarPartits = async (req, res) => {
         // Enriquir amb noms d'equips
         const partitsEnriquits = await Promise.all(
             partits.map(async (p) => {
+                const localIdStr = String(p.localId);
+                const visitantIdStr = String(p.visitantId);
+                
                 const [localResponse, visitantResponse] = await Promise.all([
-                    api.get(`/Equip?id=${p.localId}`),
-                    api.get(`/Equip?id=${p.visitantId}`)
+                    api.get(`/Equip?id=${localIdStr}`),
+                    api.get(`/Equip?id=${visitantIdStr}`)
                 ]);
 
                 const local = Array.isArray(localResponse) ? localResponse[0] : localResponse;
                 const visitant = Array.isArray(visitantResponse) ? visitantResponse[0] : visitantResponse;
 
+                // Mapear dataHora a data i hora
+                let data = "";
+                let hora = "";
+                if (p.dataHora) {
+                    const dataObj = new Date(p.dataHora);
+                    data = dataObj.toISOString().split('T')[0];
+                    hora = dataObj.toTimeString().slice(0, 5);
+                }
+
                 return {
-                    id: p.id,
-                    localId: p.localId,
+                    id: String(p.id),
+                    localId: localIdStr,
                     localNom: local ? local.nom : "Desconegut",
-                    visitantId: p.visitantId,
+                    visitantId: visitantIdStr,
                     visitantNom: visitant ? visitant.nom : "Desconegut",
-                    data: p.data,
-                    hora: p.hora,
-                    ubicacio: p.ubicacio,
+                    data: data,
+                    hora: hora,
+                    ubicacio: p.ubicacio || "",
                     status: p.status,
-                    setsLocal: p.setsLocal,
-                    setsVisitant: p.setsVisitant,
-                    arbitreId: p.arbitreId,
+                    setsLocal: p.setsLocal || 0,
+                    setsVisitant: p.setsVisitant || 0,
+                    arbitreId: p.arbitreId ? String(p.arbitreId) : "",
                     isActive: p.isActive
                 };
             })
@@ -697,7 +709,7 @@ exports.llistarPartits = async (req, res) => {
         // Ordenar per data
         resultat.sort((a, b) => new Date(b.data) - new Date(a.data));
 
-        res.json({
+        return res.json({
             partits: resultat,
             total: resultat.length
         });
@@ -717,20 +729,22 @@ exports.crearPartit = async (req, res) => {
             return res.status(400).json({ message: "Falten camps obligatoris (localId, visitantId, data)" });
         }
 
+        // Combinar data i hora en dataHora
+        let dataHora = data;
+        if (hora) {
+            dataHora = `${data}T${hora}:00.000Z`;
+        } else {
+            dataHora = `${data}T00:00:00.000Z`;
+        }
+
         const nouPartit = await api.post("/Partit", {
             localId,
             visitantId,
-            data,
-            hora: hora || null,
-            ubicacio: ubicacio || null,
+            dataHora,
+            pistaId: null,
             lligaId: lligaId || null,
-            status: "PROGRAMAT",
-            setsLocal: 0,
-            setsVisitant: 0,
-            arbitreId: null,
-            isActive: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            status: "PENDENT",
+            isActive: true
         });
 
         res.status(201).json({
@@ -758,9 +772,15 @@ exports.actualitzarPartit = async (req, res) => {
             return res.status(404).json({ message: "Partit no trobat" });
         }
 
-        const updates = { updated_at: new Date().toISOString() };
-        if (data !== undefined) updates.data = data;
-        if (hora !== undefined) updates.hora = hora;
+        const updates = {};
+        
+        // Combinar data i hora en dataHora si es proporcionen
+        if (data !== undefined || hora !== undefined) {
+            const nuevaData = data !== undefined ? data : partit.dataHora.split('T')[0];
+            const nuevaHora = hora !== undefined ? hora : partit.dataHora.split('T')[1].slice(0, 5);
+            updates.dataHora = `${nuevaData}T${nuevaHora}:00.000Z`;
+        }
+        
         if (ubicacio !== undefined) updates.ubicacio = ubicacio;
         if (status !== undefined) updates.status = status;
         if (setsLocal !== undefined) updates.setsLocal = setsLocal;
@@ -924,6 +944,100 @@ exports.partitsArbitre = async (req, res) => {
         res.json({
             partits: partitsEnriquits,
             total: partitsEnriquits.length
+        });
+
+    } catch (err) {
+        gestionarError(err, res);
+    }
+};
+
+/**
+ * Obtenir classificacions per lliga
+ * GET /adminWeb/classificacions
+ */
+exports.classificacions = async (req, res) => {
+    try {
+        await verificarAdmin(req);
+
+        // Obtenir totes les lligues actives
+        const lliguesResponse = await api.get("/Lliga?isActive=true");
+        const lligues = Array.isArray(lliguesResponse) ? lliguesResponse : [];
+
+        // Per cada lliga, calcular la classificació
+        const classificacions = await Promise.all(lligues.map(async (lliga) => {
+            // Obtenir tots els equips de la lliga
+            const equipsResponse = await api.get(`/Equip?lligaId=${lliga.id}&isActive=true`);
+            const equips = Array.isArray(equipsResponse) ? equipsResponse : [];
+
+            // Calcular classificació per cada equip
+            const classificacio = await Promise.all(equips.map(async (equip) => {
+                // Obtenir partits del equip (tant local com visitant)
+                const [partitsLocalResp, partitsVisitantResp] = await Promise.all([
+                    api.get(`/Partit?localId=${equip.id}&status=COMPLETAT_ACTA_VALIDADA`),
+                    api.get(`/Partit?visitantId=${equip.id}&status=COMPLETAT_ACTA_VALIDADA`)
+                ]);
+
+                const partitsLocal = Array.isArray(partitsLocalResp) ? partitsLocalResp : [];
+                const partitsVisitant = Array.isArray(partitsVisitantResp) ? partitsVisitantResp : [];
+                const partits = [...partitsLocal, ...partitsVisitant].filter(p => p.isActive);
+
+                let victories = 0, derrotes = 0, empats = 0;
+                let setsAFavor = 0, setsEnContra = 0;
+
+                // Calcular resultats
+                for (const p of partits) {
+                    const esLocal = String(p.localId) === String(equip.id);
+                    const sL = p.setsLocal || 0;
+                    const sV = p.setsVisitant || 0;
+
+                    if (esLocal) {
+                        setsAFavor += sL;
+                        setsEnContra += sV;
+                        if (sL > sV) victories++;
+                        else if (sL < sV) derrotes++;
+                        else empats++;
+                    } else {
+                        setsAFavor += sV;
+                        setsEnContra += sL;
+                        if (sV > sL) victories++;
+                        else if (sV < sL) derrotes++;
+                        else empats++;
+                    }
+                }
+
+                // Calcular punts: victoria = 3, empat = 1, derrota = 0
+                const punts = victories * 3 + empats;
+
+                return {
+                    equipId: equip.id,
+                    equipNom: equip.nom,
+                    partitsJugats: partits.length,
+                    victories,
+                    derrotes,
+                    empats,
+                    setsAFavor,
+                    setsEnContra,
+                    diferenciaSets: setsAFavor - setsEnContra,
+                    punts
+                };
+            }));
+
+            // Ordenar per punts i diferència de sets
+            classificacio.sort((a, b) => {
+                if (b.punts !== a.punts) return b.punts - a.punts;
+                return b.diferenciaSets - a.diferenciaSets;
+            });
+
+            return {
+                lligaId: lliga.id,
+                lligaNom: lliga.nom,
+                classificacio
+            };
+        }));
+
+        res.json({
+            classificacions,
+            total: classificacions.length
         });
 
     } catch (err) {

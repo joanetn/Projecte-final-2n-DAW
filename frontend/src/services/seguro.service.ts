@@ -7,10 +7,6 @@ import {
     ValidarJugadorResponse,
     ValidarJugadorsAlineacioResponse
 } from "@/types/seguro";
-
-/**
- * Obtenir l'estat del segur del jugador autenticat
- */
 export const getEstatSeguro = async (): Promise<EstatSeguroResponse> => {
     try {
         const res = await backend_rapid.get<EstatSeguroResponse>("/seguro/estat");
@@ -21,10 +17,6 @@ export const getEstatSeguro = async (): Promise<EstatSeguroResponse> => {
         throw new Error(message);
     }
 };
-
-/**
- * Crear una sessió de pagament (Stripe o simulat)
- */
 export const crearSessioPagament = async (): Promise<CrearSessioPagamentResponse> => {
     try {
         const res = await backend_rapid.post<CrearSessioPagamentResponse>("/seguro/crear-sessio-pagament");
@@ -35,10 +27,6 @@ export const crearSessioPagament = async (): Promise<CrearSessioPagamentResponse
         throw new Error(message);
     }
 };
-
-/**
- * Confirmar pagament real de Stripe
- */
 export const confirmarPagament = async (sessionId: string): Promise<ConfirmarPagamentResponse> => {
     try {
         const res = await backend_rapid.post<ConfirmarPagamentResponse>("/seguro/confirmar-pagament", { sessionId });
@@ -49,10 +37,6 @@ export const confirmarPagament = async (sessionId: string): Promise<ConfirmarPag
         throw new Error(message);
     }
 };
-
-/**
- * Confirmar pagament simulat (mode desenvolupament)
- */
 export const confirmarPagamentSimulat = async (): Promise<ConfirmarPagamentResponse> => {
     try {
         const res = await backend_rapid.post<ConfirmarPagamentResponse>("/seguro/confirmar-pagament-simulat");
@@ -63,10 +47,6 @@ export const confirmarPagamentSimulat = async (): Promise<ConfirmarPagamentRespo
         throw new Error(message);
     }
 };
-
-/**
- * Obtenir historial de seguros
- */
 export const getHistorialSeguros = async (): Promise<HistorialSegurosResponse> => {
     try {
         const res = await backend_rapid.get<HistorialSegurosResponse>("/seguro/historial");
@@ -77,10 +57,6 @@ export const getHistorialSeguros = async (): Promise<HistorialSegurosResponse> =
         throw new Error(message);
     }
 };
-
-/**
- * Validar si un jugador té segur vigent
- */
 export const validarSeguroJugador = async (jugadorId: string): Promise<ValidarJugadorResponse> => {
     try {
         const res = await backend_rapid.get<ValidarJugadorResponse>(`/seguro/validar/${jugadorId}`);
@@ -91,10 +67,6 @@ export const validarSeguroJugador = async (jugadorId: string): Promise<ValidarJu
         throw new Error(message);
     }
 };
-
-/**
- * Validar múltiples jugadors per alineació
- */
 export const validarJugadorsPerAlineacio = async (jugadorIds: string[]): Promise<ValidarJugadorsAlineacioResponse> => {
     try {
         const res = await backend_rapid.post<ValidarJugadorsAlineacioResponse>("/seguro/validar-alineacio", { jugadorIds });

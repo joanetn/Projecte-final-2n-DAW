@@ -1,6 +1,5 @@
 import { backend_rapid } from "@/api/axios"
 import { InvitacioAcceptadaResponse, InvitacioData, InvitacionsEnviadesResponse, InvitacionsRebudesResponse, JugadorsDisponiblesResponse } from "@/types/invitacions"
-
 export const getJugadorsDisponibles = async (): Promise<JugadorsDisponiblesResponse> => {
     try {
         const res = await backend_rapid.get(`/invitacions/jugadors-disponibles`);
@@ -11,7 +10,6 @@ export const getJugadorsDisponibles = async (): Promise<JugadorsDisponiblesRespo
         throw new Error(message);
     }
 };
-
 export const getEnviarInvitacio = async (body: InvitacioData) => {
     try {
         const res = await backend_rapid.post(`/invitacions/enviar`, body);
@@ -22,7 +20,6 @@ export const getEnviarInvitacio = async (body: InvitacioData) => {
         throw new Error(message);
     }
 }
-
 export const getInvitacionsEnviades = async () => {
     try {
         const res = await backend_rapid.get<InvitacionsEnviadesResponse>(`/invitacions/enviades`);
@@ -33,7 +30,6 @@ export const getInvitacionsEnviades = async () => {
         throw new Error(message);
     }
 }
-
 export const getCancelarInvitacio = async (id: string) => {
     try {
         const res = await backend_rapid.delete(`/invitacions/${id}`);
@@ -44,7 +40,6 @@ export const getCancelarInvitacio = async (id: string) => {
         throw new Error(message);
     }
 }
-
 export const getInvitacionsRebudes = async () => {
     try {
         const res = await backend_rapid.get<InvitacionsRebudesResponse>(`/invitacions/rebudes`);
@@ -55,7 +50,6 @@ export const getInvitacionsRebudes = async () => {
         throw new Error(message);
     }
 }
-
 export const getAcceptarInvitacio = async (id: string) => {
     try {
         const res = await backend_rapid.post<InvitacioAcceptadaResponse>(`/invitacions/${id}/acceptar`);
@@ -66,7 +60,6 @@ export const getAcceptarInvitacio = async (id: string) => {
         throw new Error(message);
     }
 }
-
 export const getRebujarInvitacio = async (id: string) => {
     try {
         const res = await backend_rapid.post<{ message: string }>(`/invitacions/${id}/rebutjar`);
@@ -77,3 +70,14 @@ export const getRebujarInvitacio = async (id: string) => {
         throw new Error(message);
     }
 }
+
+export const getEntrenadorsDisponibles = async (): Promise<{ total: number; entrenadors: any[] }> => {
+    try {
+        const res = await backend_rapid.get(`/invitacions/entrenadors-disponibles`);
+        return res.data;
+    } catch (err: any) {
+        const message = err.response?.data?.message || "Error al trobar els entrenadors disponibles";
+        console.error("Error en getEntrenadorsDisponibles:", err);
+        throw new Error(message);
+    }
+};

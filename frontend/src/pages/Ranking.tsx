@@ -1,11 +1,8 @@
 import { useGetRankingGlobal } from "@/queries/ranking.queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy, User, TrendingUp, Loader2 } from "lucide-react";
-
 const Ranking = () => {
     const { data: rankingData, isLoading, isError } = useGetRankingGlobal();
-
-
     const getRankBadgeStyle = (position: number) => {
         switch (position) {
             case 1:
@@ -18,7 +15,6 @@ const Ranking = () => {
                 return "";
         }
     };
-
     const getRowStyle = (position: number) => {
         switch (position) {
             case 1:
@@ -31,7 +27,6 @@ const Ranking = () => {
                 return "bg-card hover:bg-muted/50 border-border";
         }
     };
-
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
@@ -42,7 +37,6 @@ const Ranking = () => {
             </div>
         );
     }
-
     if (isError) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
@@ -64,10 +58,9 @@ const Ranking = () => {
             </div>
         );
     }
-
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl">
-            {/* Header */}
+            {}
             <div className="text-center mb-8">
                 <div className="inline-flex items-center justify-center gap-3 mb-4">
                     <Trophy className="w-10 h-10 text-yellow-500" />
@@ -80,8 +73,7 @@ const Ranking = () => {
                     Classificació dels millors jugadors de la temporada
                 </p>
             </div>
-
-            {/* Lista completa del ranking */}
+            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -129,5 +121,4 @@ const Ranking = () => {
         </div>
     );
 };
-
 export default Ranking;

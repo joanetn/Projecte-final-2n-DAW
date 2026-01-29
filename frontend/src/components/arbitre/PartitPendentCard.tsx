@@ -1,14 +1,9 @@
 import { PartitPendentActa } from "@/types/acta";
+import { type PartitPendentCardProps } from "@/types/components.arbitre";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, FileText } from "lucide-react";
-
-interface PartitPendentCardProps {
-    partit: PartitPendentActa;
-    onCrearActa: (partitId: string | number) => void;
-}
-
 export function PartitPendentCard({ partit, onCrearActa }: PartitPendentCardProps) {
     const dataPartit = new Date(partit.dataHora);
     const dataFormatejada = dataPartit.toLocaleDateString("ca-ES", {
@@ -21,7 +16,6 @@ export function PartitPendentCard({ partit, onCrearActa }: PartitPendentCardProp
         hour: "2-digit",
         minute: "2-digit",
     });
-
     return (
         <Card className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
@@ -39,12 +33,10 @@ export function PartitPendentCard({ partit, onCrearActa }: PartitPendentCardProp
                     <Calendar className="h-4 w-4" />
                     <span>{dataFormatejada} - {horaFormatejada}</span>
                 </div>
-
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <MapPin className="h-4 w-4" />
                     <span>Jornada {partit.jornadaId}</span>
                 </div>
-
                 <div className="pt-2">
                     <Button
                         onClick={() => onCrearActa(partit.id)}

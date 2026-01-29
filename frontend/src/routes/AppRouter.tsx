@@ -11,12 +11,10 @@ import DashboardArbitre from "@/pages/DashboardArbitre";
 import DashboardEntrenador from "@/pages/DashboardEntrenador";
 import DashboardAdminEquip from "@/pages/DashboardAdminEquip";
 import AlineacioPartit from "@/components/partits/AlineacioPartit";
-// import PropostesTest from "@/pages/PropostesTest";
 import Ranking from "@/pages/Ranking";
 import Invitacions from "@/components/entrenador/Invitacions";
 import InvitacionsJugador from "@/components/jugadors/Invitacions";
 import SeguroPage from "@/pages/SeguroPage";
-
 const AppRouter = () => {
     return (
         <BrowserRouter>
@@ -63,7 +61,7 @@ const AppRouter = () => {
                             path="/entrenador/partits/:partitId/alineacio"
                             element={<AlineacioPartit />}
                         />
-                        {/* <Route path="/propostes-test" element={<PropostesTest />} /> */}
+                        {}
                         <Route
                             path="/ranking"
                             element={<Ranking />}
@@ -91,5 +89,4 @@ const AppRouter = () => {
         </BrowserRouter>
     );
 };
-
 export default AppRouter;

@@ -1,32 +1,15 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { io as ioClient, type Socket } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
-
-type Toast = {
-    id: string;
-    title?: string;
-    description?: string;
-    type?: "info" | "success" | "error" | "warning";
-    duration?: number;
-};
-
-type ToastContextType = {
-    toasts: Toast[];
-    showToast: (toast: Omit<Toast, "id">) => string;
-    removeToast: (id: string) => void;
-};
-
+import { type Toast, type ToastContextType } from "@/types/ui";
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
-
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [toasts, setToasts] = useState<Toast[]>([]);
     const { user } = useAuth();
     const [socket, setSocket] = useState<Socket | null>(null);
-
     const removeToast = useCallback((id: string) => {
         setToasts(prev => prev.filter(t => t.id !== id));
     }, []);
-
     const showToast = useCallback((toast: Omit<Toast, "id">) => {
         const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
         const t: Toast = { id, duration: 3000, ...toast };
@@ -36,17 +19,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
         return id;
     }, [removeToast]);
-
     useEffect(() => {
         const s = ioClient("http://localhost:3001");
         setSocket(s);
-
         s.on("connect", () => {
             if (user && user.id) {
                 s.emit('identify', user.id);
             }
         });
-
         s.on('notificacio', (data: any) => {
             const title = data.titol || 'Notificació';
             const msg = data.missatge || '';
@@ -57,7 +37,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             } catch (e) {
             }
         });
-
         s.on('proposta-acceptada', () => {
             try {
                 const ev = new CustomEvent('proposta-acceptada', {});
@@ -65,7 +44,6 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             } catch (e) {
             }
         });
-
         s.on('proposta-rebutjada', () => {
             try {
                 const ev = new CustomEvent('proposta-rebutjada', {});
@@ -73,12 +51,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             } catch (e) {
             }
         });
-
         return () => {
             s.disconnect();
         };
     }, [user]);
-
     return (
         <ToastContext.Provider value={{ toasts, showToast, removeToast }}>
             {children}
@@ -103,11 +79,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         </ToastContext.Provider>
     );
 };
-
 export const useToast = () => {
     const ctx = useContext(ToastContext);
     if (!ctx) throw new Error("useToast must be used within ToastProvider");
     return ctx;
 };
-
 export default ToastProvider;

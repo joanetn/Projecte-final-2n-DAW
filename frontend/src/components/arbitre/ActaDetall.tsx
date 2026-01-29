@@ -1,4 +1,5 @@
 import { Acta, Incidencia, SetResultat } from "@/types/acta";
+import { type ActaDetallProps } from "@/types/components.arbitre";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,16 +13,6 @@ import {
     Edit,
     Lock,
 } from "lucide-react";
-
-interface ActaDetallProps {
-    acta: Acta;
-    onTornar: () => void;
-    onEditar?: (actaId: string) => void;
-    onValidar?: (actaId: string) => void;
-    isValidating?: boolean;
-}
-
-// Colors i labels per incidències de PÀDEL
 const TIPUS_INCIDENCIA_COLORS: Record<string, string> = {
     ADVERTENCIA: "bg-yellow-100 text-yellow-700",
     CONDUCTA_ANTIESPORTIVA: "bg-red-100 text-red-700",
@@ -30,7 +21,6 @@ const TIPUS_INCIDENCIA_COLORS: Record<string, string> = {
     RETARD: "bg-purple-100 text-purple-700",
     ALTRE: "bg-gray-100 text-gray-700",
 };
-
 const TIPUS_INCIDENCIA_LABELS: Record<string, string> = {
     ADVERTENCIA: "Advertència",
     CONDUCTA_ANTIESPORTIVA: "Conducta antiesportiva",
@@ -39,11 +29,9 @@ const TIPUS_INCIDENCIA_LABELS: Record<string, string> = {
     RETARD: "Retard",
     ALTRE: "Altre",
 };
-
 export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }: ActaDetallProps) {
     const dataCreacio = new Date(acta.created_at);
     const dataPartit = acta.partit?.dataHora ? new Date(acta.partit.dataHora) : null;
-
     const formatDate = (date: Date) => {
         return date.toLocaleDateString("ca-ES", {
             weekday: "long",
@@ -52,10 +40,9 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
             year: "numeric",
         });
     };
-
     return (
         <div className="space-y-6">
-            {/* Capçalera */}
+            {}
             <div className="flex items-center gap-4">
                 <Button variant="ghost" size="icon" onClick={onTornar}>
                     <ArrowLeft className="h-5 w-5" />
@@ -81,8 +68,7 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     </Badge>
                 )}
             </div>
-
-            {/* Info del partit */}
+            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg">Informació del Partit</CardTitle>
@@ -105,8 +91,7 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     )}
                 </CardContent>
             </Card>
-
-            {/* Resultat per Sets */}
+            {}
             <Card className="border-primary/20">
                 <CardHeader>
                     <div className="flex items-center justify-between">
@@ -117,7 +102,7 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     </div>
                 </CardHeader>
                 <CardContent>
-                    {/* Taula de sets */}
+                    {}
                     <div className="space-y-2">
                         <div className="grid grid-cols-[1fr_80px_80px] gap-2 text-sm font-medium text-center border-b pb-2">
                             <div></div>
@@ -145,8 +130,7 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     </div>
                 </CardContent>
             </Card>
-
-            {/* Observacions */}
+            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg">Observacions Reglamentàries</CardTitle>
@@ -166,8 +150,7 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     )}
                 </CardContent>
             </Card>
-
-            {/* Incidències */}
+            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -207,8 +190,7 @@ export function ActaDetall({ acta, onTornar, onEditar, onValidar, isValidating }
                     )}
                 </CardContent>
             </Card>
-
-            {/* Accions */}
+            {}
             {!acta.validada && (
                 <Card className="border-yellow-200 bg-yellow-50/50">
                     <CardContent className="pt-6">

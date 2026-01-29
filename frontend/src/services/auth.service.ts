@@ -1,22 +1,18 @@
 import { laravel, backend_rapid } from '../api/axios';
 import { User, RegisterResponse, RegisterData, LoginData, LoginResponse } from '../types/auth';
 import { clearCurrentUser, getCurrentUser, setCurrentUser } from '@/lib/utils';
-
 export const getUsuaris = async (): Promise<User[]> => {
     const res = await laravel.get<User[]>('/usuaris');
     return res.data;
 }
-
 export const registerUser = async (data: RegisterData): Promise<RegisterResponse> => {
     try {
         console.log("DATA DEL REGISTRE", data);
         const res = await backend_rapid.post<RegisterResponse>("/auth/register", data);
         console.log("Resposta del backend:", res.data);
-
         if (res.data.usuari?.token) {
             setCurrentUser(res.data.usuari);
         }
-
         return res.data;
     } catch (err: any) {
         const message = err.response?.data?.message || "Error al registrar l'usuari";
@@ -24,16 +20,13 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
         throw new Error(message);
     }
 };
-
 export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
     try {
         const res = await backend_rapid.post<LoginResponse>("/auth/login", data);
-
         if (res.data.usuari) {
             setCurrentUser(res.data.usuari);
             return res.data;
         }
-
         throw new Error("Resposta invàlida del servidor");
     } catch (err: any) {
         console.error("Error de login:", err);
@@ -41,16 +34,13 @@ export const loginUser = async (data: LoginData): Promise<LoginResponse> => {
         throw new Error(message);
     }
 }
-
 export const getCurrentUserData = async (): Promise<User> => {
     try {
         const res = await backend_rapid.get<{ usuari: User }>("/auth/me");
-
         if (res.data.usuari) {
             setCurrentUser(res.data.usuari);
             return res.data.usuari;
         }
-
         throw new Error("Resposta invàlida del servidor");
     } catch (err: any) {
         console.error("Error obtenint usuari actual:", err);
@@ -58,12 +48,10 @@ export const getCurrentUserData = async (): Promise<User> => {
         throw new Error(message);
     }
 }
-
 export const useCurrentUser = () => {
     const user = getCurrentUser();
     return user;
 }
-
 export const logoutUser = () => {
     clearCurrentUser();
 }

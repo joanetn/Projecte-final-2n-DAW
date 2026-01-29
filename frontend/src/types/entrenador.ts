@@ -9,30 +9,25 @@ export interface MembrePlantilla {
     rolEquip: "JUGADOR" | "ENTRENADOR" | "ADMIN_EQUIP";
     rolsGlobals: string[];
 }
-
 export interface PlantillaAgrupada {
     entrenadors: MembrePlantilla[];
     jugadors: MembrePlantilla[];
     administradors: MembrePlantilla[];
 }
-
 export interface EquipInfo {
     id: number;
     nom: string;
     categoria: string;
 }
-
 export interface PlantillaResponse {
     equip: EquipInfo | null;
     plantilla: PlantillaAgrupada;
     total: number;
 }
-
 export interface AlineacioData {
     jugadorsId: string[];
     partitId: string;
 }
-
 export interface Alineacio {
     id: string;
     jugadorId: string;
@@ -41,17 +36,13 @@ export interface Alineacio {
     equipId: number;
     creada_at: Date;
 }
-
 export interface AlineacioResponse {
     alineacions: Alineacio[];
 }
-
 export interface CompAlineacioResponse {
     slot1: string;
     slot2: string;
 }
-
-// Classificació types
 export interface ClassificacioEquip {
     id: string;
     lligaId: number;
@@ -73,7 +64,6 @@ export interface ClassificacioEquip {
         categoria: string;
     } | null;
 }
-
 export interface ClassificacioResponse {
     lliga: {
         id: string;
@@ -83,8 +73,6 @@ export interface ClassificacioResponse {
     classificacio: ClassificacioEquip[];
     total: number;
 }
-
-// Calendari types
 export interface PartitCalendari {
     id: string;
     dataHora: string;
@@ -97,7 +85,6 @@ export interface PartitCalendari {
     resultatLocal?: number;
     resultatVisitant?: number;
 }
-
 export interface JornadaCalendari {
     jornada: {
         id: string;
@@ -107,7 +94,6 @@ export interface JornadaCalendari {
     };
     partits: PartitCalendari[];
 }
-
 export interface CalendariResponse {
     lliga: {
         id: string;
@@ -118,7 +104,6 @@ export interface CalendariResponse {
     partitsSenseJornada: PartitCalendari[];
     totalPartits: number;
 }
-
 export interface EstadisticaJugador {
     id: string;
     nom: string;
@@ -131,7 +116,6 @@ export interface EstadisticaJugador {
     setsPerduts: number;
     winRate: number;
 }
-
 export interface EstadistiquesResponse {
     estadistiques: EstadisticaJugador[];
     total: number;

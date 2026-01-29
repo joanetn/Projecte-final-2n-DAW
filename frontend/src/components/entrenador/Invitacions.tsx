@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useCancelarInvitacio, useEnviarInvitacio } from "@/mutations/invitacions.mutations";
 import { InvitacioData } from "@/types/invitacions";
 import { useToast } from "../ui/Toast";
-
 const Invitacions = () => {
     const { data: jugadorsDisponibles, isLoading: jugadorsIsLoading, isError: jugadorsIsError } = useJugadorsDisponibles();
     const jugadors = jugadorsDisponibles?.jugadors || [];
@@ -17,7 +16,6 @@ const Invitacions = () => {
     const { showToast } = useToast();
     const mutationEnviar = useEnviarInvitacio();
     const mutationCancelar = useCancelarInvitacio();
-
     const enviarInvitacio = (body: InvitacioData) => {
         console.log(body);
         mutationEnviar.mutate(body, {
@@ -32,7 +30,6 @@ const Invitacions = () => {
             }
         })
     }
-
     const cancelarInvitacio = (id: string) => {
         console.log(id);
         mutationCancelar.mutate(id, {
@@ -45,7 +42,6 @@ const Invitacions = () => {
             }
         })
     }
-
     return (
         <Tabs className="w-full" defaultValue="jugadors">
             <TabsList className="flex flex-wrap items-center justify-center gap-3 mb-6">
@@ -56,7 +52,6 @@ const Invitacions = () => {
                     <Users className="w-4 h-4 hidden sm:inline" />
                     <span>Jugadors</span>
                 </TabsTrigger>
-
                 <TabsTrigger
                     value="invitacions"
                     className="flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors border border-transparent shadow-sm bg-transparent hover:bg-muted/5 data-[state=active]:bg-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-lg"
@@ -74,19 +69,16 @@ const Invitacions = () => {
                         </span>
                     </div>
                 )}
-
                 {jugadorsIsError && (
                     <div className="text-center text-red-600">
                         Error carregant jugadors disponibles
                     </div>
                 )}
-
                 {!jugadorsIsLoading && jugadorsDisponibles && jugadorsDisponibles.total === 0 && (
                     <div className="text-center text-muted-foreground">
                         No hi ha jugadors disponibles
                     </div>
                 )}
-
                 {!jugadorsIsLoading && jugadorsDisponibles && jugadorsDisponibles.total > 0 && (
                     <div className="space-y-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -110,8 +102,7 @@ const Invitacions = () => {
                                         {j.nivell && (
                                             <p className="text-sm text-muted-foreground mb-2">Nivell: {j.nivell}</p>
                                         )}
-
-                                        {/* Botón para abrir el formulario desplegable */}
+                                        {}
                                         <div className="mt-3">
                                             <button
                                                 type="button"
@@ -123,7 +114,6 @@ const Invitacions = () => {
                                             >
                                                 Contactar
                                             </button>
-
                                             {openFormFor === String(j.id) && (
                                                 <div className="mt-3 p-3 border border-muted/30 rounded-md bg-white shadow-sm">
                                                     <label className="block text-sm font-medium text-muted-foreground mb-1">Missatge</label>
@@ -134,7 +124,6 @@ const Invitacions = () => {
                                                         className="w-full rounded-md border px-2 py-1 text-sm resize-y"
                                                         placeholder="Escriu el missatge que vols manar-li al jugador..."
                                                     />
-
                                                     <div className="mt-2 flex gap-2 justify-end">
                                                         <button
                                                             type="button"
@@ -146,7 +135,6 @@ const Invitacions = () => {
                                                         >
                                                             Cancel·la
                                                         </button>
-
                                                         <button
                                                             type="button"
                                                             onClick={() => {
@@ -176,22 +164,19 @@ const Invitacions = () => {
                         </span>
                     </div>
                 )}
-
                 {invitacionsIsError && (
                     <div className="text-center text-red-600">
                         Error carregant invitacions enviades
                     </div>
                 )}
-
                 {!invitacionsIsLoading && invitacions && invitacions.total === 0 && (
                     <div className="text-center text-muted-foreground">
                         No hi ha invitacions enviades per ara
                     </div>
                 )}
-
                 {!invitacionsIsLoading && invitacions && invitacions.total > 0 && (
                     <div className="space-y-4">
-                        {/* Header de resumen */}
+                        {}
                         <div className="flex items-center justify-between mb-6">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-indigo-100 rounded-lg">
@@ -203,8 +188,7 @@ const Invitacions = () => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Grid de invitaciones */}
+                        {}
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                             {invitacions.invitacions.map((inv) => {
                                 const estatColors: Record<string, { bg: string; text: string; border: string }> = {
@@ -214,8 +198,6 @@ const Invitacions = () => {
                                     CANCELADA: { bg: 'bg-gray-50', text: 'text-gray-600', border: 'border-gray-200' },
                                 };
                                 const estatStyle = estatColors[inv.estat] || estatColors.PENDENT;
-
-                                // Formatear fecha
                                 const dataEnviament = new Date(inv.created_at);
                                 const dataFormatejada = dataEnviament.toLocaleDateString('ca-ES', {
                                     day: '2-digit',
@@ -224,18 +206,15 @@ const Invitacions = () => {
                                     hour: '2-digit',
                                     minute: '2-digit'
                                 });
-
                                 return (
                                     <Card
                                         key={inv.id}
                                         className="group relative overflow-hidden border border-gray-100 hover:border-indigo-200 hover:shadow-lg transition-all duration-300"
                                     >
-                                        {/* Línea decorativa superior */}
+                                        {}
                                         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-
                                         <CardHeader className="pb-3">
                                             <div className="flex items-start gap-4">
-
                                                 <div className="relative">
                                                     {inv.jugador.avatar ? (
                                                         <img
@@ -250,14 +229,11 @@ const Invitacions = () => {
                                                             </span>
                                                         </div>
                                                     )}
-
                                                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${inv.estat === 'PENDENT' ? 'bg-amber-400' :
                                                         inv.estat === 'ACCEPTADA' ? 'bg-emerald-400' :
                                                             inv.estat === 'REBUTJADA' ? 'bg-red-400' : 'bg-gray-400'
                                                         }`} />
                                                 </div>
-
-
                                                 <div className="flex-1 min-w-0">
                                                     <CardTitle className="text-base font-semibold text-gray-800 truncate">
                                                         {inv.jugador.nom}
@@ -269,8 +245,6 @@ const Invitacions = () => {
                                                         </span>
                                                     </div>
                                                 </div>
-
-
                                                 <Badge
                                                     variant="outline"
                                                     className={`${estatStyle.bg} ${estatStyle.text} ${estatStyle.border} text-xs font-medium px-2.5 py-0.5`}
@@ -279,7 +253,6 @@ const Invitacions = () => {
                                                 </Badge>
                                             </div>
                                         </CardHeader>
-
                                         <CardContent className="pt-0 space-y-4">
                                             {inv.jugador.nivell && (
                                                 <div className="flex items-center gap-2">
@@ -289,7 +262,6 @@ const Invitacions = () => {
                                                     </span>
                                                 </div>
                                             )}
-
                                             {inv.missatge && (
                                                 <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
                                                     <div className="flex items-start gap-2">
@@ -300,13 +272,11 @@ const Invitacions = () => {
                                                     </div>
                                                 </div>
                                             )}
-
                                             <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                                                 <div className="flex items-center gap-1.5 text-muted-foreground">
                                                     <Clock className="w-3.5 h-3.5" />
                                                     <span className="text-xs">{dataFormatejada}</span>
                                                 </div>
-
                                                 {inv.estat === 'PENDENT' && (
                                                     <button
                                                         type="button"
@@ -331,5 +301,4 @@ const Invitacions = () => {
         </Tabs >
     );
 }
-
 export default Invitacions;

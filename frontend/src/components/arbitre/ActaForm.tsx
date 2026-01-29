@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { PartitPendentActa, Incidencia, SetResultat, Acta } from "@/types/acta";
+import { type ActaFormProps } from "@/types/components.arbitre";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,21 +15,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Calendar, Plus, Trash2, AlertTriangle, FileText, X, Edit } from "lucide-react";
-
-interface ActaFormProps {
-    partit: PartitPendentActa;
-    actaExistent?: Acta; // Per a edició
-    onSubmit: (data: {
-        partitId: string | number;
-        sets: SetResultat[];
-        observacions: string;
-        incidencies: Incidencia[];
-    }) => void;
-    onCancel: () => void;
-    isLoading?: boolean;
-}
-
-// Tipus d'incidències apropiades per a PÀDEL
 const TIPUS_INCIDENCIA = [
     { value: "ADVERTENCIA", label: "Advertència", color: "bg-yellow-100 text-yellow-700" },
     { value: "CONDUCTA_ANTIESPORTIVA", label: "Conducta antiesportiva", color: "bg-red-100 text-red-700" },
@@ -37,8 +23,6 @@ const TIPUS_INCIDENCIA = [
     { value: "RETARD", label: "Retard", color: "bg-purple-100 text-purple-700" },
     { value: "ALTRE", label: "Altre", color: "bg-gray-100 text-gray-700" },
 ];
-
-// Set buit inicial
 const createEmptySet = (numeroSet: number): SetResultat => ({
     numeroSet,
     jocsLocal: 0,
@@ -47,19 +31,14 @@ const createEmptySet = (numeroSet: number): SetResultat => ({
     puntsLocalTiebreak: null,
     puntsVisitantTiebreak: null,
 });
-
 export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }: ActaFormProps) {
     const esEdicio = !!actaExistent;
-
-    // Estat per als sets (mínim 2, màxim 3)
     const [sets, setSets] = useState<SetResultat[]>([
         createEmptySet(1),
         createEmptySet(2),
     ]);
     const [observacions, setObservacions] = useState<string>("");
     const [incidencies, setIncidencies] = useState<Incidencia[]>([]);
-
-    // Carregar dades existents si estem editant
     useEffect(() => {
         if (actaExistent) {
             setSets(actaExistent.sets.length > 0 ? actaExistent.sets : [createEmptySet(1), createEmptySet(2)]);
@@ -67,14 +46,11 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
             setIncidencies(actaExistent.incidencies || []);
         }
     }, [actaExistent]);
-
-    // Formulari nova incidència
     const [novaIncidencia, setNovaIncidencia] = useState({
         set: "1",
         tipus: "ADVERTENCIA" as Incidencia["tipus"],
         descripcio: "",
     });
-
     const dataPartit = new Date(partit.dataHora);
     const dataFormatejada = dataPartit.toLocaleDateString("ca-ES", {
         weekday: "long",
@@ -82,8 +58,6 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
         month: "long",
         year: "numeric",
     });
-
-    // Calcular sets guanyats
     const calcularSetsGuanyats = () => {
         let setsLocal = 0;
         let setsVisitant = 0;
@@ -93,46 +67,35 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
         });
         return { setsLocal, setsVisitant };
     };
-
-    // Actualitzar un set
     const updateSet = (index: number, field: keyof SetResultat, value: number | boolean | null) => {
         const newSets = [...sets];
         newSets[index] = { ...newSets[index], [field]: value };
         setSets(newSets);
     };
-
-    // Afegir tercer set
     const afegirTercerSet = () => {
         if (sets.length < 3) {
             setSets([...sets, createEmptySet(3)]);
         }
     };
-
-    // Eliminar tercer set
     const eliminarTercerSet = () => {
         if (sets.length === 3) {
             setSets(sets.slice(0, 2));
         }
     };
-
     const afegirIncidencia = () => {
         if (!novaIncidencia.descripcio.trim()) return;
-
         const incidencia: Incidencia = {
             id: `inc-${Date.now()}`,
             set: parseInt(novaIncidencia.set) || undefined,
             tipus: novaIncidencia.tipus,
             descripcio: novaIncidencia.descripcio,
         };
-
         setIncidencies([...incidencies, incidencia]);
         setNovaIncidencia({ set: "1", tipus: "ADVERTENCIA", descripcio: "" });
     };
-
     const eliminarIncidencia = (id: string) => {
         setIncidencies(incidencies.filter((i) => i.id !== id));
     };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit({
@@ -142,18 +105,14 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
             incidencies,
         });
     };
-
     const tipusToColor = (tipus: string) => {
         return TIPUS_INCIDENCIA.find((t) => t.value === tipus)?.color || "bg-gray-100";
     };
-
-    // Validar que almenys un set estigui complet
     const algunSetComplet = sets.some(s => s.jocsLocal > 0 || s.jocsVisitant > 0);
     const { setsLocal, setsVisitant } = calcularSetsGuanyats();
-
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Capçalera del partit */}
+            {}
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
@@ -183,8 +142,7 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     </div>
                 </CardContent>
             </Card>
-
-            {/* Resultat per Sets */}
+            {}
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
@@ -200,15 +158,14 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {/* Header amb noms */}
+                    {}
                     <div className="grid grid-cols-[1fr_80px_80px_100px] gap-2 text-sm font-medium text-center">
                         <div></div>
                         <div className="truncate">{partit.local?.nom || "Local"}</div>
                         <div className="truncate">{partit.visitant?.nom || "Visitant"}</div>
                         <div>Tiebreak</div>
                     </div>
-
-                    {/* Sets */}
+                    {}
                     {sets.map((set, index) => (
                         <div key={set.numeroSet} className="space-y-2">
                             <div className="grid grid-cols-[1fr_80px_80px_100px] gap-2 items-center">
@@ -253,8 +210,7 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                                     />
                                 </div>
                             </div>
-
-                            {/* Tiebreak punts */}
+                            {}
                             {set.tiebreak && (
                                 <div className="grid grid-cols-[1fr_80px_80px_100px] gap-2 items-center pl-4">
                                     <div className="text-xs text-muted-foreground">Punts tiebreak:</div>
@@ -279,8 +235,7 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                             )}
                         </div>
                     ))}
-
-                    {/* Botó afegir 3r set */}
+                    {}
                     {sets.length < 3 && (
                         <Button
                             type="button"
@@ -295,8 +250,7 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     )}
                 </CardContent>
             </Card>
-
-            {/* Observacions */}
+            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg">Observacions Reglamentàries</CardTitle>
@@ -314,8 +268,7 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     />
                 </CardContent>
             </Card>
-
-            {/* Incidències */}
+            {}
             <Card>
                 <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -327,7 +280,7 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {/* Llista d'incidències */}
+                    {}
                     {incidencies.length > 0 && (
                         <div className="space-y-2 mb-4">
                             {incidencies.map((inc) => (
@@ -361,8 +314,7 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                             ))}
                         </div>
                     )}
-
-                    {/* Formulari nova incidència */}
+                    {}
                     <div className="border rounded-lg p-4 space-y-3 bg-muted/30">
                         <div className="grid grid-cols-2 gap-3">
                             <div>
@@ -430,8 +382,7 @@ export function ActaForm({ partit, actaExistent, onSubmit, onCancel, isLoading }
                     </div>
                 </CardContent>
             </Card>
-
-            {/* Botons d'acció */}
+            {}
             <div className="flex gap-3 pt-4">
                 <Button
                     type="button"

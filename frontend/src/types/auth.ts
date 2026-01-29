@@ -12,7 +12,6 @@ export interface User {
     created_at?: string;
     updated_at?: string;
 }
-
 export interface RegisterData {
     nom: string;
     email: string;
@@ -22,20 +21,16 @@ export interface RegisterData {
     dataNaixement?: string;
     nivell?: string;
 }
-
 export interface RegisterResponse {
     usuari: User;
 }
-
 export interface LoginData {
     email: string;
     contrasenya: string;
 }
-
 export interface LoginResponse {
     usuari: User;
 }
-
 export interface CurrentData {
     usuari: User;
 }
