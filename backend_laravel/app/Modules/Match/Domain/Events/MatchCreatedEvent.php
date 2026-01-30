@@ -6,7 +6,7 @@ use Modules\Match\Domain\Entities\Matches;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PartitCreatedEvent
+class MatchCreatedEvent
 {
     use Dispatchable, SerializesModels;
 
