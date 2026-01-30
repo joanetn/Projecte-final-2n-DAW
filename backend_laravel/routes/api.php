@@ -2,4 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
-require __DIR__ . '/api/usuaris.php';
+/**
+ * API GATEWAY - Punto de entrada centralizado
+ * Todos los módulos se registran aquí
+ */
+
+Route::middleware('api')->prefix('api')->group(function () {
+    // Módulos
+    require __DIR__ . '/api/users.php';
+});

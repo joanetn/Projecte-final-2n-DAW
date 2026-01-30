@@ -1,0 +1,63 @@
+Modules/Match/
+├── Application/
+│   ├── Commands/
+│   │   ├── CreatePartitCommand.php
+│   │   ├── UpdatePartitCommand.php
+│   │   └── AssignArbitreCommand.php
+│   ├── Queries/
+│   │   ├── GetPartitQuery.php
+│   │   ├── GetPartitsQuery.php
+│   │   └── GetPartitDetailQuery.php
+│   └── DTOs/
+│       ├── CreatePartitDTO.php
+│       ├── UpdatePartitDTO.php
+│       └── PartitDTO.php
+│
+├── Domain/
+│   ├── Entities/
+│   │   ├── Partit.php
+│   │   └── SetPartit.php
+│   ├── Repositories/
+│   │   ├── PartitRepositoryInterface.php
+│   │   └── SetPartitRepositoryInterface.php
+│   ├── Services/
+│   │   └── PartitDomainService.php
+│   ├── Events/
+│   │   ├── PartitCreatedEvent.php
+│   │   └── ArbitreAssignedEvent.php
+│   └── Exceptions/
+│       ├── PartitNotFoundException.php
+│       └── InvalidPartitDateException.php
+│
+├── Infrastructure/
+│   └── Persistence/
+│       ├── Eloquent/
+│       │   ├── Models/
+│       │   │   ├── PartitModel.php
+│       │   │   └── SetPartitModel.php
+│       │   └── Repositories/
+│       │       ├── EloquentPartitRepository.php
+│       │       └── EloquentSetPartitRepository.php
+│       └── Mappers/
+│           ├── PartitMapper.php
+│           └── SetPartitMapper.php
+│
+├── Presentation/
+│   └── Http/
+│       ├── Controllers/
+│       │   └── PartitController.php
+│       ├── Requests/
+│       │   ├── CreatePartitRequest.php
+│       │   └── UpdatePartitRequest.php
+│       └── Resources/
+│           ├── PartitResource.php
+│           └── PartitDetailResource.php
+│
+├── Providers/
+│   ├── MatchServiceProvider.php
+│   └── RouteServiceProvider.php
+│
+├── Routes/
+│   └── api.php
+│
+└── module.json

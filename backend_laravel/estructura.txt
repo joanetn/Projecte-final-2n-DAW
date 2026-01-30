@@ -1,0 +1,14 @@
+app/
+├── Presentation/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   ├── Requests/
+│   │   ├── Resources/
+├── Application/
+│   ├── Services/
+├── Domain/
+│   ├── Entities/
+│   ├── DTOs/*
+├── Infrastructure/
+│   │   │   ├── Repositories/
+│   │   │   └── Mappers/*

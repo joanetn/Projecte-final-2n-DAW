@@ -29,177 +29,306 @@ enum Status {
 }
 
 model Usuari {
-  id            Int             @id @default(autoincrement())
-  nom           String
-  email         String          @unique
-  contrasenya   String
-  rols          UsuariRol[]
-  equips        EquipUsuari[]
-  notificacions Notificacio[]
-  puntuacions   Puntuacio[]
-  compres       Compra[]
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @updatedAt
-  isActive      Boolean         @default(true)
-  PartitJugador PartitJugador[]
-  Acta          Acta[]
-  Alineacio     Alineacio[]
+  id             String          @id @default(cuid())
+  nom            String
+  email          String          @unique
+  contrasenya    String
+  telefon        String?
+  dataNaixement  DateTime?
+  nivell         String?
+  avatar         String?
+  dni            String?
+  rols           UsuariRol[]
+  equips         EquipUsuari[]
+  notificacions  Notificacio[]
+  puntuacions    Puntuacio[]
+  compres        Compra[]
+  partitsJugador PartitJugador[]
+  actes          Acta[]
+  alineacions    Alineacio[]
+  arbitrages     Partit[]        @relation("arbitre_partit")
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  isActive       Boolean         @default(true)
+  Partit         Partit[]
 }
 
 model UsuariRol {
-  id       Int       @id @default(autoincrement())
-  usuari   Usuari    @relation(fields: [usuariId], references: [id])
-  usuariId Int
-  rol      RolGlobal
-  isActive Boolean   @default(true)
+  id         String    @id @default(cuid())
+  usuari     Usuari    @relation(fields: [usuariId], references: [id])
+  usuariId   String
+  rol        RolGlobal
+  isActive   Boolean   @default(true)
+  created_at DateTime? @default(now())
 }
 
 model Club {
-  id       Int     @id @default(autoincrement())
-  nom      String
-  equips   Equip[]
-  isActive Boolean @default(true)
+  id          String       @id @default(cuid())
+  nom         String
+  descripcio  String?
+  adreca      String?
+  ciutat      String?
+  codiPostal  String?
+  provincia   String?
+  telefon     String?
+  email       String?
+  web         String?
+  anyFundacio Int?
+  creadorId   String?
+  equips      Equip[]
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  isActive    Boolean      @default(true)
+  Instalacio  Instalacio[]
 }
 
 model Equip {
-  id               Int             @id @default(autoincrement())
+  id               String          @id @default(cuid())
   nom              String
   categoria        String
+  clubId           String
   club             Club            @relation(fields: [clubId], references: [id])
-  clubId           Int
+  lligaId          String?
   usuaris          EquipUsuari[]
   partitsLocals    Partit[]        @relation("local_partits")
   partitsVisitants Partit[]        @relation("visitante_partits")
   lligues          Lliga[]
+  classificacions  Classificacio[]
+  partitJugadors   PartitJugador[]
+  alineacions      Alineacio[]
+  created_at       DateTime        @default(now())
+  updated_at       DateTime        @updatedAt
   isActive         Boolean         @default(true)
-  PartitJugador    PartitJugador[]
-  Alineacio        Alineacio[]
 }
 
 model EquipUsuari {
-  id       Int      @id @default(autoincrement())
-  equip    Equip    @relation(fields: [equipId], references: [id])
-  equipId  Int
-  usuari   Usuari   @relation(fields: [usuariId], references: [id])
-  usuariId Int
-  rolEquip RolEquip
-  isActive Boolean  @default(true)
+  id         String    @id @default(cuid())
+  equipId    String
+  equip      Equip     @relation(fields: [equipId], references: [id])
+  usuariId   String
+  usuari     Usuari    @relation(fields: [usuariId], references: [id])
+  rolEquip   RolEquip
+  isActive   Boolean   @default(true)
+  created_at DateTime? @default(now())
 }
 
 model Lliga {
-  id        Int       @id @default(autoincrement())
-  nom       String
-  categoria String
-  jornades  Jornada[]
-  equips    Equip[]
-  isActive  Boolean   @default(true)
+  id              String          @id @default(cuid())
+  nom             String
+  categoria       String
+  jornades        Jornada[]
+  equips          Equip[]
+  classificacions Classificacio[]
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+  isActive        Boolean         @default(true)
 }
 
 model Jornada {
-  id       Int      @id @default(autoincrement())
+  id       String   @id @default(cuid())
   nom      String
   data     DateTime
   lliga    Lliga    @relation(fields: [lligaId], references: [id])
-  lligaId  Int
+  lligaId  String
   partits  Partit[]
   status   Status   @default(PENDENT)
   isActive Boolean  @default(true)
 }
 
 model Partit {
-  id             Int             @id @default(autoincrement())
-  jornada        Jornada         @relation(fields: [jornadaId], references: [id])
-  jornadaId      Int
+  id             String          @id @default(cuid())
+  jornada        Jornada?        @relation(fields: [jornadaId], references: [id])
+  jornadaId      String?
   local          Equip           @relation("local_partits", fields: [localId], references: [id])
-  localId        Int
+  localId        String
   visitant       Equip           @relation("visitante_partits", fields: [visitantId], references: [id])
-  visitantId     Int
+  visitantId     String
+  dataHora       DateTime?
+  pista          Pista?          @relation(fields: [pistaId], references: [id])
+  pistaId        String?
+  arbitre        Usuari?         @relation("arbitre_partit", fields: [arbitreId], references: [id])
+  arbitreId      String?
   partitJugadors PartitJugador[]
   acta           Acta?
+  setPartits     SetPartit[]
+  alineacions    Alineacio[]
+  puntuacions    Puntuacio[]
   status         Status          @default(PENDENT)
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
   isActive       Boolean         @default(true)
-  Puntuacio      Puntuacio[]
-  Alineacio      Alineacio[]
+  Usuari         Usuari?         @relation(fields: [usuariId], references: [id])
+  usuariId       String?
 }
 
 model Alineacio {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   partit    Partit   @relation(fields: [partitId], references: [id])
-  partitId  Int
+  partitId  String
   jugador   Usuari   @relation(fields: [jugadorId], references: [id])
-  jugadorId Int
+  jugadorId String
   equip     Equip    @relation(fields: [equipId], references: [id])
-  equipId   Int
+  equipId   String
+  posicio   String?
   isActive  Boolean  @default(true)
   creada_at DateTime @default(now())
 }
 
 model PartitJugador {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(cuid())
   partit    Partit  @relation(fields: [partitId], references: [id])
-  partitId  Int
+  partitId  String
   jugador   Usuari  @relation(fields: [jugadorId], references: [id])
-  jugadorId Int
+  jugadorId String
   equip     Equip   @relation(fields: [equipId], references: [id])
-  equipId   Int
+  equipId   String
   punts     Int     @default(0)
   isActive  Boolean @default(true)
 }
 
 model Acta {
-  id           Int      @id @default(autoincrement())
-  partit       Partit   @relation(fields: [partitId], references: [id])
-  partitId     Int      @unique
-  arbitre      Usuari   @relation(fields: [arbitreId], references: [id])
-  arbitreId    Int
-  observacions String?
-  incidencies  String?
-  resultat     String? // ej: "6-4 3-6 10-8"
-  created_at   DateTime @default(now())
-  isActive     Boolean  @default(true)
+  id            String    @id @default(cuid())
+  partit        Partit    @relation(fields: [partitId], references: [id])
+  partitId      String    @unique
+  arbitre       Usuari    @relation(fields: [arbitreId], references: [id])
+  arbitreId     String
+  setsLocal     Int?
+  setsVisitant  Int?
+  observacions  String?
+  incidencies   String?
+  validada      Boolean   @default(false)
+  dataValidacio DateTime?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  isActive      Boolean   @default(true)
 }
 
 model Puntuacio {
-  id        Int     @id @default(autoincrement())
+  id        String  @id @default(cuid())
   partit    Partit  @relation(fields: [partitId], references: [id])
-  partitId  Int
+  partitId  String
   jugador   Usuari  @relation(fields: [jugadorId], references: [id])
-  jugadorId Int
+  jugadorId String
   punts     Int     @default(0)
   isActive  Boolean @default(true)
 }
 
 model Notificacio {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   usuari     Usuari   @relation(fields: [usuariId], references: [id])
-  usuariId   Int
+  usuariId   String
   titol      String
   missatge   String
+  tipus      String?
+  read       Boolean  @default(false)
   llegit     Boolean  @default(false)
+  extra      String? // JSON stored as string
   created_at DateTime @default(now())
   isActive   Boolean  @default(true)
 }
 
 model Merch {
-  id       Int      @id @default(autoincrement())
-  nom      String
-  marca    String
-  preu     Float
-  stock    Int
-  compres  Compra[]
-  isActive Boolean  @default(true)
+  id         String   @id @default(cuid())
+  nom        String
+  marca      String?
+  preu       Float?
+  stock      Int?
+  compres    Compra[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  isActive   Boolean  @default(true)
 }
 
 model Compra {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   usuari     Usuari   @relation(fields: [usuariId], references: [id])
-  usuariId   Int
+  usuariId   String
   merch      Merch    @relation(fields: [merchId], references: [id])
-  merchId    Int
+  merchId    String
   quantitat  Int
   total      Float
   created_at DateTime @default(now())
   pagat      Boolean  @default(false)
   status     Status   @default(PENDENT)
   isActive   Boolean  @default(true)
+}
+
+model Instalacio {
+  id         String   @id @default(cuid())
+  nom        String
+  adreca     String?
+  telefon    String?
+  tipusPista String?
+  numPistes  Int?
+  club       Club?    @relation(fields: [clubId], references: [id])
+  clubId     String?
+  pistes     Pista[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  isActive   Boolean  @default(true)
+}
+
+model Pista {
+  id           String     @id @default(cuid())
+  nom          String
+  tipus        String?
+  instalacio   Instalacio @relation(fields: [instalacioId], references: [id])
+  instalacioId String
+  partits      Partit[]
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @updatedAt
+  isActive     Boolean    @default(true)
+}
+
+model Classificacio {
+  id              String   @id @default(cuid())
+  lliga           Lliga    @relation(fields: [lligaId], references: [id])
+  lligaId         String
+  equip           Equip    @relation(fields: [equipId], references: [id])
+  equipId         String
+  partitsJugats   Int      @default(0)
+  partitsGuanyats Int      @default(0)
+  partitsPerduts  Int      @default(0)
+  partitsEmpatats Int      @default(0)
+  setsGuanyats    Int      @default(0)
+  setsPerduts     Int      @default(0)
+  jocsGuanyats    Int      @default(0)
+  jocsPerduts     Int      @default(0)
+  punts           Int      @default(0)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  isActive        Boolean  @default(true)
+}
+
+model SetPartit {
+  id                 String  @id @default(cuid())
+  partit             Partit  @relation(fields: [partitId], references: [id])
+  partitId           String
+  numeroSet          Int
+  jocsLocal          Int?
+  jocsVisit          Int?
+  tiebreak           Boolean @default(false)
+  puntsLocalTiebreak Int?
+  puntsVisitTiebreak Int?
+}
+
+model InvitacioEquip {
+  id         String   @id @default(cuid())
+  equipId    String
+  usuariId   String
+  missatge   String?
+  estat      String? // PENDENT, ACCEPTADA, REBUTJADA
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  isActive   Boolean  @default(true)
+}
+
+model Seguro {
+  id            String    @id @default(cuid())
+  usuariId      String?
+  dataExpiracio DateTime?
+  pagat         Boolean   @default(false)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  isActive      Boolean   @default(true)
 }

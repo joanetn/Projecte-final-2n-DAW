@@ -1,0 +1,15 @@
+{
+    "name": "Match",
+    "alias": "match",
+    "description": "Módulo de gestión de partidos",
+    "keywords": [
+        "partits",
+        "jornades",
+        "actes"
+    ],
+    "priority": 0,
+    "providers": [
+        "Modules\\Match\\Providers\\MatchServiceProvider"
+    ],
+    "files": []
+}

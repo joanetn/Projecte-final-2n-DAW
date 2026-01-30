@@ -5,8 +5,8 @@ export interface PartitCardProps {
 
 export interface DraggableJugadorProps {
     jugador: any;
-    isSelected?: boolean;
-    isDragging?: boolean;
+    teSeguro?: boolean;
+    disabled?: boolean;
 }
 
 export interface DropPistaProps {

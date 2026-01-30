@@ -9,10 +9,12 @@
         "run": "php artisan migrate && php artisan config:cache && php artisan route:cache && php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:clear && php artisan cache:clear && php artisan serve --port=4004"
     },
     "devDependencies": {
+        "@prisma/client": "^7.3.0",
         "@tailwindcss/vite": "^4.0.0",
         "axios": "^1.11.0",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0.0",
+        "prisma": "^7.3.0",
         "tailwindcss": "^4.0.0",
         "vite": "^7.0.7"
     }
