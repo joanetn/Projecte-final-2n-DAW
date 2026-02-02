@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Match\Domain\Events;
+namespace App\Modules\Match\Domain\Events;
 
-use Modules\Match\Domain\Entities\Matches;
+use App\Modules\Match\Domain\Entities\Matches;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,6 +12,5 @@ class MatchCreatedEvent
 
     public function __construct(
         public readonly Matches $partit
-    ) {
-    }
+    ) {}
 }

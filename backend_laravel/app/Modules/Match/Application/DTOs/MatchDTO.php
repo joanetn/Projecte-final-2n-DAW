@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Match\Application\DTOs;
+namespace App\Modules\Match\Application\DTOs;
 
-use Modules\Match\Domain\Entities\Matches;
+use App\Modules\Match\Domain\Entities\Matches;
 
 class MatchDTO
 {
@@ -17,8 +17,7 @@ class MatchDTO
         public readonly string $status,
         public readonly string $createdAt,
         public readonly string $updatedAt
-    ) {
-    }
+    ) {}
 
     public static function fromEntity(Matches $partit): self
     {

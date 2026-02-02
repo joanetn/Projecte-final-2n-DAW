@@ -1,9 +1,8 @@
 <?php
 
-namespace Modules\Match\Domain\Repositories;
+namespace App\Modules\Match\Domain\Repositories;
 
-use Modules\Match\Domain\Entities\Matches;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Modules\Match\Domain\Entities\Matches;
 
 interface MatchRepositoryInterface
 {
@@ -11,7 +10,7 @@ interface MatchRepositoryInterface
 
     public function findByIdWithRelations(string $id, array $relations): ?Matches;
 
-    public function findAll(array $filters = [], int $perPage = 15): LengthAwarePaginator;
+    public function findAll(): array;
 
     public function create(array $data): Matches;
 

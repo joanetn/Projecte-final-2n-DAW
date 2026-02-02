@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Match\Application\DTOs;
+namespace App\Modules\Match\Application\DTOs;
 
 class UpdateMatchDTO
 {
@@ -12,8 +12,7 @@ class UpdateMatchDTO
         public readonly ?string $pistaId = null,
         public readonly ?string $arbitreId = null,
         public readonly ?string $status = null
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {

@@ -1,16 +1,16 @@
 <?php
 
-namespace Modules\Match\Domain\Repositories;
+namespace App\Modules\Match\Domain\Repositories;
 
-use Modules\Match\Domain\Entities\SetPartit;
+use App\Modules\Match\Domain\Entities\MatchSet;
 
-interface SetPartitRepositoryInterface
+interface MatchSetRepositoryInterface
 {
-    public function findById(string $id): ?SetPartit;
+    public function findById(string $id): ?MatchSet;
 
     public function findByPartit(string $partitId): array;
 
-    public function create(array $data): SetPartit;
+    public function create(array $data): MatchSet;
 
     public function update(string $id, array $data): bool;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Match\Domain\Entities;
+namespace App\Modules\Match\Domain\Entities;
 
 class Matches
 {
@@ -24,8 +24,7 @@ class Matches
         public readonly ?object $arbitre = null,
         public readonly ?object $acta = null,
         public readonly ?array $alineacions = null
-    ) {
-    }
+    ) {}
 
     public function isPendent(): bool
     {

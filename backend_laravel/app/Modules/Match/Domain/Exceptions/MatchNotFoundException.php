@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Match\Domain\Exceptions;
+namespace App\Modules\Match\Domain\Exceptions;
 
 use DomainException;
 

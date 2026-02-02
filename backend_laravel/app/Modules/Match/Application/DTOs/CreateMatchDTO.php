@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Match\Application\DTOs;
+namespace App\Modules\Match\Application\DTOs;
 
 class CreateMatchDTO
 {
@@ -12,8 +12,7 @@ class CreateMatchDTO
         public readonly ?string $pistaId,
         public readonly ?string $arbitreId,
         public readonly ?string $status = 'PENDENT'
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {

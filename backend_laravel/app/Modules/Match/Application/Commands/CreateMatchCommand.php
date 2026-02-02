@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Match\Application\Commands;
+namespace App\Modules\Match\Application\Commands;
 
-use Modules\Match\Application\DTOs\CreateMatchDTO;
-use Modules\Match\Domain\Repositories\MatchRepositoryInterface;
-use Modules\Match\Domain\Events\MatchCreatedEvent;
-use Modules\Match\Domain\Services\MatchDomainService;
+use App\Modules\Match\Application\DTOs\CreateMatchDTO;
+use App\Modules\Match\Domain\Repositories\MatchRepositoryInterface;
+use App\Modules\Match\Domain\Events\MatchCreatedEvent;
+use App\Modules\Match\Domain\Services\MatchDomainService;
 use Illuminate\Support\Facades\Event;
 
 class CreateMatchCommand
@@ -13,8 +13,7 @@ class CreateMatchCommand
     public function __construct(
         private MatchRepositoryInterface $matchRepoInterf,
         private MatchDomainService $domainService
-    ) {
-    }
+    ) {}
 
     public function execute(CreateMatchDTO $dto): string
     {

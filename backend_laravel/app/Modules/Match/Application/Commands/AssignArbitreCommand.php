@@ -3,19 +3,20 @@
 namespace App\Modules\Match\Application\Commands;
 
 use Illuminate\Support\Facades\Event;
-use Modules\Match\Domain\Repositories\MatchRepositoryInterface;
-use Modules\Match\Domain\Services\MatchDomainService;
-use Modules\Match\Domain\Exceptions\MatchNotFoundException;
-use Modules\Match\Domain\Events\ArbitreAssignedEvent;
+use App\Modules\Match\Domain\Repositories\MatchRepositoryInterface;
+use App\Modules\Match\Domain\Services\MatchDomainService;
+use App\Modules\Match\Domain\Exceptions\MatchNotFoundException;
+use App\Modules\Match\Domain\Events\ArbitreAssignedEvent;
 
-class AssignArbitreCommand {
+class AssignArbitreCommand
+{
     public function __construct(
         private MatchRepositoryInterface $matchRepositoryInterface,
         private MatchDomainService $matchDomainService
-    )
-    {}
+    ) {}
 
-    public function execute(string $matchId, string $arbitreId): void {
+    public function execute(string $matchId, string $arbitreId): void
+    {
         $match = $this->matchRepositoryInterface->findById($matchId);
 
         if (!$match) {

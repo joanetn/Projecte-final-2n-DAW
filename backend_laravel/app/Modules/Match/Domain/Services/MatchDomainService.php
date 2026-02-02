@@ -1,9 +1,9 @@
 <?php
 
-namespace Modules\Match\Domain\Services;
+namespace App\Modules\Match\Domain\Services;
 
-use Modules\Match\Domain\Entities\Matches;
-use Modules\Match\Domain\Exceptions\InvalidMatchDateException;
+use App\Modules\Match\Domain\Entities\Matches;
+use App\Modules\Match\Domain\Exceptions\InvalidMatchDateException;
 
 class MatchDomainService
 {

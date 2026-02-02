@@ -1,0 +1,225 @@
+========================================
+REQUESTS PARA POSTMAN - MÓDULO MATCH (PARTITS)
+========================================
+Base URL: http://127.0.0.1:8000/api
+
+Headers para TODAS las requests:
+Accept: application/json
+Content-Type: application/json
+
+
+========================================
+1. LISTAR TODOS LOS PARTIDOS
+========================================
+Method: GET
+URL: http://127.0.0.1:8000/api/partits
+
+Expected Response:
+{
+    "success": true,
+    "data": [
+        {
+            "id": "uuid-1",
+            "jornadaId": "uuid-jornada",
+            "localId": "uuid-equip-1",
+            "visitantId": "uuid-equip-2",
+            "dataHora": "2026-02-15 18:00:00",
+            "pistaId": "uuid-pista",
+            "arbitreId": null,
+            "status": "PENDENT",
+            "createdAt": "2026-02-02T10:00:00",
+            "updatedAt": "2026-02-02T10:00:00"
+        }
+    ]
+}
+
+
+========================================
+2. VER UN PARTIDO ESPECÍFICO
+========================================
+Method: GET
+URL: http://127.0.0.1:8000/api/partits/{id}
+
+Ejemplos:
+- http://127.0.0.1:8000/api/partits/123e4567-e89b-12d3-a456-426614174000
+
+Expected Response:
+{
+    "success": true,
+    "data": {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "jornadaId": "uuid-jornada",
+        "localId": "uuid-equip-1",
+        "visitantId": "uuid-equip-2",
+        "dataHora": "2026-02-15 18:00:00",
+        "pistaId": "uuid-pista",
+        "arbitreId": null,
+        "status": "PENDENT",
+        "createdAt": "2026-02-02T10:00:00",
+        "updatedAt": "2026-02-02T10:00:00"
+    }
+}
+
+
+========================================
+3. VER PARTIDO CON DETALLES
+========================================
+Method: GET
+URL: http://127.0.0.1:8000/api/partits/{id}/detail
+
+Ejemplos:
+- http://127.0.0.1:8000/api/partits/123e4567-e89b-12d3-a456-426614174000/detail
+
+Expected Response:
+{
+    "success": true,
+    "data": {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "jornadaId": "uuid-jornada",
+        "localId": "uuid-equip-1",
+        "visitantId": "uuid-equip-2",
+        "dataHora": "2026-02-15 18:00:00",
+        "pistaId": "uuid-pista",
+        "arbitreId": null,
+        "status": "PENDENT",
+        "createdAt": "2026-02-02T10:00:00",
+        "updatedAt": "2026-02-02T10:00:00",
+        "local": { ... },
+        "visitant": { ... },
+        "jornada": { ... },
+        "arbitre": null,
+        "pista": { ... }
+    }
+}
+
+
+========================================
+4. CREAR NUEVO PARTIDO
+========================================
+Method: POST
+URL: http://127.0.0.1:8000/api/partits
+
+Body (JSON):
+{
+    "jornadaId": "uuid-jornada-1",
+    "localId": "uuid-equip-local",
+    "visitantId": "uuid-equip-visitant",
+    "dataHora": "2026-03-15 18:00:00",
+    "pistaId": "uuid-pista-1",
+    "status": "PENDENT"
+}
+
+Campos opcionales:
+- arbitreId: "uuid-arbitre" (si quieres asignar árbitro al crear)
+
+Expected Response (201 Created):
+{
+    "success": true,
+    "message": "Partit creat correctament",
+    "data": {
+        "id": "newly-generated-uuid"
+    }
+}
+
+
+========================================
+5. ACTUALIZAR UN PARTIDO
+========================================
+Method: PUT
+URL: http://127.0.0.1:8000/api/partits/{id}
+
+Ejemplos:
+- http://127.0.0.1:8000/api/partits/123e4567-e89b-12d3-a456-426614174000
+
+Body (JSON) - Puedes actualizar cualquiera de estos campos:
+{
+    "dataHora": "2026-03-20 19:00:00",
+    "pistaId": "nuevo-uuid-pista",
+    "status": "EN_CURS",
+    "arbitreId": "uuid-arbitre"
+}
+
+Expected Response:
+{
+    "success": true,
+    "message": "Partit actualitzat correctament"
+}
+
+
+========================================
+6. ELIMINAR UN PARTIDO
+========================================
+Method: DELETE
+URL: http://127.0.0.1:8000/api/partits/{id}
+
+Ejemplos:
+- http://127.0.0.1:8000/api/partits/123e4567-e89b-12d3-a456-426614174000
+
+Expected Response:
+{
+    "success": true,
+    "message": "Partit eliminat correctament"
+}
+
+
+========================================
+7. ASIGNAR ÁRBITRO A UN PARTIDO
+========================================
+Method: POST
+URL: http://127.0.0.1:8000/api/partits/{id}/assign-arbitre
+
+Ejemplos:
+- http://127.0.0.1:8000/api/partits/123e4567-e89b-12d3-a456-426614174000/assign-arbitre
+
+Body (JSON):
+{
+    "arbitreId": "uuid-del-arbitre"
+}
+
+Expected Response:
+{
+    "success": true,
+    "message": "Àrbitre assignat correctament"
+}
+
+
+========================================
+NOTAS IMPORTANTES
+========================================
+
+1. Los UUIDs deben ser válidos y existir en la base de datos
+2. Los campos obligatorios al crear un partido son:
+   - jornadaId
+   - localId
+   - visitantId
+   - dataHora
+   - pistaId
+
+3. Estados de partido válidos:
+   - PENDENT
+   - EN_CURS
+   - COMPLETAT
+   - CANCEL·LAT
+
+4. Si obtienes un error 404, verifica que el ID existe en la BD
+
+5. Si obtienes un error 422, revisa los datos enviados en el Body
+
+6. Si obtienes un error 500, revisa los logs de Laravel:
+   storage/logs/laravel.log
+
+
+========================================
+ÓRDENES RECOMENDADAS PARA PROBAR
+========================================
+
+1. Primero hacer GET /partits para ver todos (sin filtros ni paginación)
+2. Luego GET /partits/{id} con un id real
+3. POST /partits para crear uno nuevo (nota el ID retornado)
+4. GET /partits/{id-nuevo} para verificar que se creó
+5. GET /partits/{id-nuevo}/detail para ver los detalles
+6. PUT /partits/{id-nuevo} para actualizar
+7. POST /partits/{id-nuevo}/assign-arbitre para asignar árbitro
+8. DELETE /partits/{id-nuevo} para eliminar
+
+========================================

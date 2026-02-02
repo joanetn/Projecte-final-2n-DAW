@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Match\Application\Commands;
+namespace App\Modules\Match\Application\Commands;
 
-use Modules\Match\Application\DTOs\UpdateMatchDTO;
-use Modules\Match\Domain\Services\MatchDomainService;
-use Modules\Match\Domain\Exceptions\MatchNotFoundException;
-use Modules\Match\Domain\Repositories\MatchRepositoryInterface;
+use App\Modules\Match\Application\DTOs\UpdateMatchDTO;
+use App\Modules\Match\Domain\Services\MatchDomainService;
+use App\Modules\Match\Domain\Exceptions\MatchNotFoundException;
+use App\Modules\Match\Domain\Repositories\MatchRepositoryInterface;
 
 
 class UpdateMatchCommand
@@ -13,10 +13,10 @@ class UpdateMatchCommand
     public function __construct(
         private MatchRepositoryInterface $matchRepoInterf,
         private MatchDomainService $domainService
-    ) {
-    }
+    ) {}
 
-    public function execute(string $matchId, UpdateMatchDTO $dto): void {
+    public function execute(string $matchId, UpdateMatchDTO $dto): void
+    {
         $match = $this->matchRepoInterf->findById($matchId);
 
         if (!$match) {

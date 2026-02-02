@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Match\Domain\Events;
+namespace App\Modules\Match\Domain\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -12,6 +12,5 @@ class ArbitreAssignedEvent
     public function __construct(
         public readonly string $partitId,
         public readonly string $arbitreId
-    ) {
-    }
+    ) {}
 }

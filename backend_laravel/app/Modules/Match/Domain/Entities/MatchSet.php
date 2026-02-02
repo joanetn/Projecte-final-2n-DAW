@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Match\Domain\Entities;
+namespace App\Modules\Match\Domain\Entities;
 
 class MatchSet
 {
@@ -13,8 +13,7 @@ class MatchSet
         public readonly bool $tiebreak,
         public readonly ?int $puntsLocalTiebreak,
         public readonly ?int $puntsVisitTiebreak
-    ) {
-    }
+    ) {}
 
     public function getWinner(): ?string
     {
