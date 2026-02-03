@@ -10,7 +10,8 @@ return new class extends Migration {
         Schema::create('jornadas', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('nom');
-            $table->dateTime('data');
+            $table->dateTime('dataInici');
+            $table->dateTime('dataFi')->nullable();
             $table->string('lligaId');
             $table->string('status')->default('PENDENT');
             $table->boolean('isActive')->default(true);

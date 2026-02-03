@@ -1,0 +1,439 @@
+================================================================================
+                    GUÍA PARA CREAR UN MÓDULO - ORDEN DE ARCHIVOS
+================================================================================
+
+ESTRUCTURA DE UN MÓDULO:
+------------------------
+NombreModulo/
+├── Domain/           ← PRIMERO (lógica pura)
+├── Application/      ← SEGUNDO (casos de uso)
+├── Infrastructure/   ← TERCERO (BD, APIs externas)
+├── Presentation/     ← CUARTO (HTTP, controllers)
+├── Providers/        ← QUINTO (registro en Laravel)
+└── Routes/           ← SEXTO (rutas API)
+
+
+================================================================================
+PASO 1: MIGRACIÓN (database/migrations/)
+================================================================================
+ANTES de empezar el módulo, mira o crea la migración.
+
+¿Qué te dice la migración?
+- Campos de la tabla = propiedades de tu Entity
+- Foreign keys = relaciones con otras entidades
+- Campos de "status" = estados/transiciones posibles
+- Campos booleanos = predicados potenciales
+
+EJEMPLO:
+Schema::create('jornadas', function (Blueprint $table) {
+    $table->string('id')->primary();
+    $table->string('nom');                    ← Propiedad
+    $table->dateTime('data');                 ← Propiedad + validación de fecha
+    $table->string('lligaId');                ← Propiedad + relación
+    $table->string('status')->default('PENDENT'); ← TRANSICIONES
+    $table->boolean('isActive');              ← Predicado (soft delete)
+});
+
+De aquí sacas:
+- Entity: id, nom, data, lligaId, status, isActive
+- Métodos: isPendent(), isActiva(), etc.
+- Validaciones: isValidDate(), canChangeStatus()
+
+
+================================================================================
+PASO 2: DOMAIN/ENTITIES/ (crear primero)
+================================================================================
+ARCHIVO: Round.php, League.php, Standing.php
+
+¿QUÉ PONER?
+1. Propiedades readonly (de la migración)
+2. Constructor privado (inmutabilidad)
+3. Métodos predicados simples
+
+PREGÚNTATE:
+- ¿Qué datos tiene esta entidad? → Propiedades
+- ¿Qué estados puede tener? → Métodos is___()
+- ¿Tiene relaciones? → Propiedades nullable con arrays
+
+EJEMPLO Round:
+- Propiedades: id, nom, data, lligaId, status, isActive
+- Estados: PENDENT, ACTIVA, FINALITZADA, CANCELADA
+- Métodos: isPendent(), isActiva(), isFinalitzada(), isCancelada()
+- Relación: partits (array de partidos)
+
+CÓDIGO BASE:
+class Round {
+    public function __construct(
+        public readonly string $id,
+        public readonly string $nom,
+        // ... propiedades de migración
+    ) {}
+
+    // Un método por cada estado
+    public function isPendent(): bool { return $this->status === 'PENDENT'; }
+}
+
+
+================================================================================
+PASO 3: DOMAIN/REPOSITORIES/ (interfaces)
+================================================================================
+ARCHIVO: RoundRepositoryInterface.php
+
+¿QUÉ PONER?
+Métodos CRUD básicos + métodos de búsqueda específicos
+
+PREGÚNTATE:
+- ¿Cómo buscaré esta entidad? → findBy___()
+- ¿Qué relaciones necesito cargar? → findByIdWithRelations()
+- ¿Necesito búsquedas especiales? → findActive(), findByStatus()
+
+CÓDIGO BASE:
+interface RoundRepositoryInterface {
+    public function findById(string $id): ?Round;
+    public function findByIdWithRelations(string $id, array $relations): ?Round;
+    public function findAll(): array;
+    public function create(array $data): Round;
+    public function update(string $id, array $data): bool;
+    public function delete(string $id): bool;
+    
+    // Específicos de la entidad
+    public function findByLeague(string $lligaId): array;
+    public function findByStatus(string $status): array;
+}
+
+
+================================================================================
+PASO 4: DOMAIN/EXCEPTIONS/
+================================================================================
+ARCHIVO: RoundNotFoundException.php, InvalidRoundStatusException.php
+
+¿QUÉ PONER?
+Una excepción por cada error de negocio posible
+
+PREGÚNTATE:
+- ¿Qué puede fallar? → Excepciones
+- ¿Qué validaciones lanzan error? → Excepciones específicas
+
+EJEMPLO:
+- RoundNotFoundException (no existe)
+- InvalidRoundStatusException (transición inválida)
+- InvalidRoundDateException (fecha pasada)
+
+CÓDIGO BASE:
+class RoundNotFoundException extends \Exception {
+    public function __construct(string $id) {
+        parent::__construct("Round amb id {$id} no trobat");
+    }
+}
+
+
+================================================================================
+PASO 5: DOMAIN/SERVICES/ (lógica de negocio)
+================================================================================
+ARCHIVO: RoundDomainService.php
+
+*** ESTE ES EL ARCHIVO QUE TE CUESTA ***
+
+¿CUÁNDO CREAR ESTE ARCHIVO?
+- Si tienes estados/transiciones → SÍ
+- Si necesitas validaciones complejas → SÍ
+- Si tienes cálculos reutilizables → SÍ
+- Si solo es CRUD simple → NO necesitas
+
+¿QUÉ MÉTODOS PONER?
+Mira tus ESTADOS de la migración y pregúntate:
+
+1. TRANSICIONES (can___)
+   - ¿Puedo pasar de PENDENT a ACTIVA? → canStartRound()
+   - ¿Puedo pasar de ACTIVA a FINALITZADA? → canCompleteRound()
+   - ¿Puedo cancelar? → canCancelRound()
+
+2. VALIDACIONES (validate___, isValid___)
+   - ¿Los datos son correctos? → isValidRound()
+   - ¿La fecha es válida? → validateDate()
+
+3. CÁLCULOS (calculate___, get___)
+   - ¿Porcentaje completado? → getCompletionPercentage()
+   - ¿Todos los partidos jugados? → areAllMatchesCompleted()
+
+4. PREDICADOS COMPLEJOS
+   - ¿Es accesible? → isRoundAccessible()
+
+MÉTODO PARA IDENTIFICAR:
+1. Haz lista de COMANDOS que tendrás (Create, Update, Start, Complete, Cancel)
+2. Por cada comando pregunta: ¿Qué debo validar ANTES de ejecutar?
+3. Cada validación = un método en DomainService
+
+CÓDIGO BASE:
+class RoundDomainService {
+    // Por cada transición de estado
+    public function canStartRound(Round $round): bool {
+        return $round->isPendent() && $round->hasMatches();
+    }
+    
+    // Por cada validación de datos
+    public function isValidDate(string $data): bool {
+        // lógica
+    }
+    
+    // Por cada cálculo
+    public function getCompletionPercentage(...): float {
+        // lógica
+    }
+}
+
+
+================================================================================
+PASO 6: DOMAIN/EVENTS/
+================================================================================
+ARCHIVO: RoundCreatedEvent.php, RoundStartedEvent.php
+
+¿QUÉ PONER?
+Un evento por cada acción importante que otros módulos deben conocer
+
+PREGÚNTATE:
+- ¿Qué acciones afectan a otros módulos? → Eventos
+- ¿Qué necesito notificar? → Eventos
+
+EJEMPLO:
+- RoundCreatedEvent → Notificar creación
+- RoundStartedEvent → Los partidos pueden comenzar
+- RoundCompletedEvent → Actualizar standings
+
+CÓDIGO BASE:
+class RoundStartedEvent {
+    use Dispatchable, SerializesModels;
+    
+    public function __construct(
+        public readonly string $roundId,
+        public readonly string $lligaId
+    ) {}
+}
+
+
+================================================================================
+PASO 7: APPLICATION/DTOS/
+================================================================================
+ARCHIVO: CreateRoundDTO.php, UpdateRoundDTO.php
+
+¿QUÉ PONER?
+Objetos que transportan datos del request al comando
+
+PREGÚNTATE:
+- ¿Qué datos necesito para crear? → CreateDTO
+- ¿Qué datos necesito para actualizar? → UpdateDTO
+
+CÓDIGO BASE:
+readonly class CreateRoundDTO {
+    public function __construct(
+        public string $nom,
+        public string $data,
+        public string $lligaId,
+    ) {}
+}
+
+
+================================================================================
+PASO 8: APPLICATION/COMMANDS/
+================================================================================
+ARCHIVO: CreateRoundCommand.php, StartRoundCommand.php
+
+¿QUÉ PONER?
+Casos de uso que MODIFICAN datos
+
+PREGÚNTATE:
+- ¿Qué acciones puedo hacer con esta entidad?
+- Create, Update, Delete, Start, Complete, Cancel...
+
+CADA COMANDO:
+1. Recibe Repository + DomainService en constructor
+2. Ejecuta validación con DomainService
+3. Llama al Repository para persistir
+4. Dispara Evento
+
+CÓDIGO BASE:
+class StartRoundCommand {
+    public function __construct(
+        private RoundRepositoryInterface $repo,
+        private RoundDomainService $domainService
+    ) {}
+    
+    public function execute(string $roundId): void {
+        $round = $this->repo->findById($roundId);
+        
+        if (!$this->domainService->canStartRound($round)) {
+            throw new InvalidRoundStatusException();
+        }
+        
+        $this->repo->update($roundId, ['status' => 'ACTIVA']);
+        
+        Event::dispatch(new RoundStartedEvent($roundId));
+    }
+}
+
+
+================================================================================
+PASO 9: APPLICATION/QUERIES/
+================================================================================
+ARCHIVO: GetRoundByIdQuery.php, GetRoundsByLeagueQuery.php
+
+¿QUÉ PONER?
+Casos de uso que LEEN datos (sin modificar)
+
+PREGÚNTATE:
+- ¿Qué consultas necesito?
+- GetById, GetAll, GetByLeague, GetByStatus...
+
+CÓDIGO BASE:
+class GetRoundByIdQuery {
+    public function __construct(
+        private RoundRepositoryInterface $repo
+    ) {}
+    
+    public function execute(string $id): ?Round {
+        return $this->repo->findById($id);
+    }
+}
+
+
+================================================================================
+PASO 10: INFRASTRUCTURE/PERSISTENCE/
+================================================================================
+ARCHIVO: EloquentRoundRepository.php
+
+¿QUÉ PONER?
+Implementación real del repositorio usando Eloquent
+
+CÓDIGO BASE:
+class EloquentRoundRepository implements RoundRepositoryInterface {
+    public function findById(string $id): ?Round {
+        $model = Jornada::find($id);
+        return $model ? $this->toEntity($model) : null;
+    }
+    
+    private function toEntity(Jornada $model): Round {
+        return new Round(
+            $model->id,
+            $model->nom,
+            // ... mapear campos
+        );
+    }
+}
+
+
+================================================================================
+PASO 11: PRESENTATION/HTTP/CONTROLLERS/
+================================================================================
+ARCHIVO: RoundController.php
+
+¿QUÉ PONER?
+Controlador que recibe requests y llama a Commands/Queries
+
+CÓDIGO BASE:
+class RoundController {
+    public function store(Request $request, CreateRoundCommand $command) {
+        $dto = new CreateRoundDTO(...$request->validated());
+        $id = $command->execute($dto);
+        return response()->json(['id' => $id], 201);
+    }
+}
+
+
+================================================================================
+PASO 12: PRESENTATION/HTTP/REQUESTS/
+================================================================================
+ARCHIVO: CreateRoundRequest.php
+
+¿QUÉ PONER?
+Validación de datos HTTP antes de llegar al controller
+
+CÓDIGO BASE:
+class CreateRoundRequest extends FormRequest {
+    public function rules(): array {
+        return [
+            'nom' => 'required|string',
+            'data' => 'required|date',
+            'lligaId' => 'required|exists:lligas,id',
+        ];
+    }
+}
+
+
+================================================================================
+PASO 13: PROVIDERS/
+================================================================================
+ARCHIVO: LeagueServiceProvider.php
+
+¿QUÉ PONER?
+Registro de bindings (Repository interface → implementación)
+
+CÓDIGO BASE:
+class LeagueServiceProvider extends ServiceProvider {
+    public function register(): void {
+        $this->app->bind(
+            RoundRepositoryInterface::class,
+            EloquentRoundRepository::class
+        );
+    }
+}
+
+
+================================================================================
+PASO 14: ROUTES/
+================================================================================
+ARCHIVO: api.php
+
+¿QUÉ PONER?
+Rutas del módulo
+
+CÓDIGO BASE:
+Route::prefix('rounds')->group(function () {
+    Route::get('/', [RoundController::class, 'index']);
+    Route::post('/', [RoundController::class, 'store']);
+    Route::get('/{id}', [RoundController::class, 'show']);
+    Route::put('/{id}', [RoundController::class, 'update']);
+    Route::delete('/{id}', [RoundController::class, 'destroy']);
+    Route::post('/{id}/start', [RoundController::class, 'start']);
+});
+
+
+================================================================================
+RESUMEN - ORDEN DE CREACIÓN
+================================================================================
+
+1. Migración (database/migrations/)     ← Define la estructura de datos
+2. Entity (Domain/Entities/)            ← Propiedades + predicados simples
+3. Repository Interface (Domain/Repositories/) ← Contrato de acceso a datos
+4. Exceptions (Domain/Exceptions/)      ← Errores de negocio
+5. DomainService (Domain/Services/)     ← Lógica de negocio pura
+6. Events (Domain/Events/)              ← Notificaciones entre módulos
+7. DTOs (Application/DTOs/)             ← Objetos de transferencia
+8. Commands (Application/Commands/)     ← Acciones que modifican
+9. Queries (Application/Queries/)       ← Acciones que leen
+10. Repository Impl (Infrastructure/)   ← Implementación con Eloquent
+11. Controller (Presentation/)          ← Maneja HTTP
+12. Requests (Presentation/)            ← Valida HTTP
+13. Provider (Providers/)               ← Registra en Laravel
+14. Routes (Routes/)                    ← Define endpoints
+
+
+================================================================================
+REGLA DE ORO PARA DOMAIN/SERVICES
+================================================================================
+
+¿NECESITO DOMAIN SERVICE?
+- ¿Tiene estados/transiciones? → SÍ
+- ¿Hay validaciones complejas? → SÍ
+- ¿Hay cálculos reutilizables? → SÍ
+- ¿Solo CRUD simple? → NO
+
+¿QUÉ MÉTODOS?
+1. Por cada TRANSICIÓN → can___()
+2. Por cada VALIDACIÓN → validate___() o isValid___()
+3. Por cada CÁLCULO → calculate___() o get___()
+
+¿CÓMO SABER QUÉ VALIDACIONES?
+1. Lista tus COMANDOS (Create, Update, Start, Cancel...)
+2. Por cada comando: ¿Qué debo comprobar ANTES de ejecutar?
+3. Cada comprobación = un método
+
