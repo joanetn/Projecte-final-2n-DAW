@@ -141,9 +141,20 @@ const TestimonialCard = ({
 );
 const Home = () => {
     const { user } = useAuth();
-    const { data: dataTeEquip, isLoading } = useTeEquip();
     const isLoggedIn = !!user;
-    console.log(dataTeEquip);
+    const { data: dataTeEquip, isLoading } = useTeEquip(isLoggedIn);
+    const isJugador = user?.rols?.includes("JUGADOR");
+    const [valido, setValido] = useState(false);
+    useEffect(() => {
+        if (isJugador && dataTeEquip?.teSegur === true) {
+            setValido(true);
+        } else if (isJugador && dataTeEquip?.teSegur === false) {
+            setValido(false);
+        } else if (!isJugador) {
+            setValido(true);
+        }
+    }, [useAuth]);
+
     const HeroSection = () => (
         <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden hero-gradient-bg">
             { }
@@ -283,7 +294,7 @@ const Home = () => {
 
                     {!isLoading && (
                         <>
-                            {!isArbitre && dataTeEquip === false && (
+                            {!isArbitre && dataTeEquip?.teEquip === false && valido && (
                                 <div className="max-w-md mx-auto mt-8">
                                     <CrearClubForm />
                                 </div>
@@ -601,33 +612,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            { }
-            <section className="py-20 section-gradient-amber relative overflow-hidden">
-                { }
-                <div className="absolute top-1/2 left-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2" />
-                <div className="absolute top-1/2 right-0 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                <div className="container mx-auto px-4 relative">
-                    <div className="text-center mb-12">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 mb-4 backdrop-blur-sm">
-                            <BarChart3 className="w-4 h-4 text-amber-500" />
-                            <span className="text-sm font-medium text-amber-600 dark:text-amber-400">Estadístiques</span>
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                            La nostra comunitat en xifres
-                        </h2>
-                        <p className="text-muted-foreground">
-                            Una plataforma en creixement amb una comunitat activa
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-                        <StatCard value={500} label="Usuaris registrats" icon={Users} />
-                        <StatCard value={1200} label="Partits organitzats" icon={Trophy} />
-                        <StatCard value={50} label="Equips actius" icon={Target} />
-                        <StatCard value={98} label="% Satisfacció" icon={Award} />
-                    </div>
-                </div>
-            </section>
-            { }
             {!isLoggedIn && (
                 <section className="py-20 section-gradient-blue relative overflow-hidden">
                     { }

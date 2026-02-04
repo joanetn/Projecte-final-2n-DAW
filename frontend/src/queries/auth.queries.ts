@@ -13,8 +13,9 @@ export const useCurrentUserQuery = () =>
         queryFn: getCurrentUserData,
     });
 
-export const useTeEquip = () =>
+export const useTeEquip = (enabled: boolean = true) =>
     useQuery<any>({
         queryKey: ["teEquip"],
-        queryFn: getTeEquip
+        queryFn: getTeEquip,
+        enabled: enabled,
     })

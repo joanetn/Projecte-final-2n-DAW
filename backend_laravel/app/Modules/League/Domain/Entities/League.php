@@ -8,12 +8,14 @@ class League
         public readonly string $id,
         public readonly string $nom,
         public readonly string $categoria,
+        public readonly string $dataInici,
+        public readonly string $status,
         public readonly bool $isActive,
         public readonly string $createdAt,
         public readonly string $updatedAt,
         public readonly ?array $jornades = null,
         public readonly ?array $equips = null,
-        public readonly ?array $classificacions = null
+        public readonly ?array $classificacions = null,
     ) {}
 
     public function hasTeams(): bool
@@ -26,10 +28,31 @@ class League
         return $this->equips ? count($this->equips) : 0;
     }
 
+    public function isNotStarted(): bool
+    {
+        return $this->status === 'NOT_STARTED';
+    }
+
+    public function isOnProgress(): bool
+    {
+        return $this->status === 'ON_PROGRESS';
+    }
+
+    public function isFinished(): bool
+    {
+        return $this->status === 'FINISHED';
+    }
+
     public function isValidCategory(): bool
     {
         $validCategories = ['SENIOR', 'JUNIOR', 'CADET', 'INFANTIL', 'ALEVÍ'];
         return in_array(strtoupper($this->categoria), $validCategories);
+    }
+
+    public function isValidStatus(): bool
+    {
+        $validStatus = ['NOT_STARTED', 'ON_PROGRESS', 'FINISHED'];
+        return in_array(strtoupper($this->status), $validStatus);
     }
 
     public function isActive(): bool

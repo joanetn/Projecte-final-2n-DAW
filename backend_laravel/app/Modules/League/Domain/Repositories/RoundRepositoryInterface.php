@@ -18,5 +18,7 @@ interface RoundRepositoryInterface
 
     public function delete(string $id): bool;
 
+    public function findByLeague(string $lligaId): array;
+
     public function findByStatus(string $status): array;
 }

@@ -129,11 +129,10 @@ exports.crearAlineacio = async (req, res) => {
 
         const { jugadorsId, partitId } = req.body;
 
-        if (!Array.isArray(jugadorsId) || jugadorsId.length === 0) {
-            return res.status(400).json({ message: "Has d'enviar un array de jugadorsId" });
+        if (!jugadorsId || (!jugadorsId.slot1 && !jugadorsId.slot2)) {
+            return res.status(400).json({ message: "Has d'enviar almenys un jugador a l'alineació" });
         }
 
-        // Validamos que el partido existe y está activo
         const partitResponse = await api.get(`/Partit?id=${partitId}`);
         const partit = Array.isArray(partitResponse)
             ? partitResponse.find(p => p.id == partitId && p.isActive)
@@ -141,25 +140,6 @@ exports.crearAlineacio = async (req, res) => {
 
         if (!partit) return res.status(404).json({ message: "Partit no trobat o inactiu" });
 
-        // Validamos los jugadores
-        const jugadors = await Promise.all(jugadorsId.map(async (id) => {
-            const usuariResponse = await api.get(`/Usuari?id=${id}`);
-            const usuari = Array.isArray(usuariResponse)
-                ? usuariResponse.find(u => u.id == id && u.isActive)
-                : (usuariResponse && usuariResponse.isActive ? usuariResponse : null);
-
-            if (!usuari) return null;
-
-            return usuari;
-        }));
-
-        const jugadorsValid = jugadors.filter(Boolean);
-
-        if (jugadorsValid.length !== jugadorsId.length) {
-            return res.status(404).json({ message: "Algún jugador no existe o está inactivo" });
-        }
-
-        // Antes de crear, desactivar alineaciones existentes para este partido y equipo
         const existents = await api.get(`/Alineacio?partitId=${partitId}&equipId=${equipId}&isActive=true`);
         const alineacionsExistents = Array.isArray(existents) ? existents : (existents ? [existents] : []);
 
@@ -173,24 +153,37 @@ exports.crearAlineacio = async (req, res) => {
             }));
         }
 
-        // Crear nuevas alineaciones
-        const alineacions = await Promise.all(jugadorsValid.map(async (j, index) => {
-            const pos = index === 0 ? "REVES" : (index === 1 ? "DRETA" : null);
+        const alineacions = [];
+
+        if (jugadorsId.slot1) {
             const payload = {
                 partitId,
-                jugadorId: j.id,
+                jugadorId: jugadorsId.slot1.id,
                 equipId,
+                posicio: "REVES",
                 isActive: true,
                 creada_at: new Date()
             };
-            if (pos) payload.posicio = pos;
             const response = await api.post("/Alineacio", payload);
-            return response;
-        }));
+            alineacions.push(response);
+        }
+
+        if (jugadorsId.slot2) {
+            const payload = {
+                partitId,
+                jugadorId: jugadorsId.slot2.id,
+                equipId,
+                posicio: "DRETA",
+                isActive: true,
+                creada_at: new Date()
+            };
+            const response = await api.post("/Alineacio", payload);
+            alineacions.push(response);
+        }
 
         // Responder con slots para que el frontend pueda actualizar inmediatamente
-        const slot1 = jugadorsValid[0] ? jugadorsValid[0].id : null;
-        const slot2 = jugadorsValid[1] ? jugadorsValid[1].id : null;
+        const slot1 = jugadorsId.slot1 ? jugadorsId.slot1.id : null;
+        const slot2 = jugadorsId.slot2 ? jugadorsId.slot2.id : null;
 
         res.status(201).json({ slot1, slot2, alineacions: alineacions });
 

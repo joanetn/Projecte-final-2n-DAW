@@ -232,17 +232,35 @@ exports.teEquip = async (req, res) => {
         }
 
         // return res.json(user);
+        const segur = await api.get(`/Seguro?usuariId=${user.id}`);
+        // return res.json(segur);
 
         const equip = await api.get(`/EquipUsuari?usuariId=${user.id}`);
 
         if (equip && equip.length != 0) {
-            return res.status(200).json({
-                teEquip: true
-            })
+            if (segur && segur.length != 0) {
+                return res.status(200).json({
+                    teEquip: true,
+                    teSegur: true
+                });
+            } else {
+                return res.status(200).json({
+                    teEquip: true,
+                    teSegur: false
+                });
+            }
         } else {
-            return res.status(200).json({
-                teEquip: false
-            })
+            if (segur && segur.length != 0) {
+                return res.status(200).json({
+                    teEquip: false,
+                    teSegur: true
+                });
+            } else {
+                return res.status(200).json({
+                    teEquip: false,
+                    teSegur: false
+                });
+            }
         }
     } catch (err) {
         if (err.name === "JsonWebTokenError") {

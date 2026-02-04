@@ -39,7 +39,7 @@ export function PartitPendentCard({ partit, onCrearActa }: PartitPendentCardProp
                 </div>
                 <div className="pt-2">
                     <Button
-                        onClick={() => onCrearActa(partit.id)}
+                        onClick={() => onCrearActa(partit)}
                         className="w-full gap-2"
                     >
                         <FileText className="h-4 w-4" />

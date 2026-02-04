@@ -9,7 +9,7 @@ router.get("/partitsPendents", verifyToken, roleMiddleware("ENTRENADOR"), contro
 router.get("/classificacio", verifyToken, roleMiddleware("ENTRENADOR"), controller.classificacio);
 router.get("/calendari", verifyToken, roleMiddleware("ENTRENADOR"), controller.calendari);
 router.get("/estadistiques", verifyToken, roleMiddleware("ENTRENADOR"), controller.estadistiques);
-router.post("/enviarAlineacio", verifyToken, roleMiddleware("ENTRENADOR"), controller.crearAlineacio);
+router.post("/enviarAlineacio", verifyToken, roleMiddleware("ENTRENADOR", "ADMIN_EQUIP"), controller.crearAlineacio);
 router.get("/:partitId", verifyToken, roleMiddleware("ENTRENADOR"), controller.comprovarAlineacio);
 
 module.exports = router;

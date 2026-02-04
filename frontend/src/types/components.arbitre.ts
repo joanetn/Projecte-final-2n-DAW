@@ -29,5 +29,5 @@ export interface ActaDetallProps {
 
 export interface PartitPendentCardProps {
     partit: PartitPendentActa;
-    onSelectPartit: (partit: PartitPendentActa) => void;
+    onCrearActa: (partit: PartitPendentActa) => void;
 }

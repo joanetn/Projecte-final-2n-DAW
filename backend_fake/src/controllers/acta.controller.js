@@ -49,6 +49,54 @@ const verificarArbitre = async (req) => {
 };
 
 /**
+ * Marcar un partit com a completat
+ * PATCH /actes/partit/:id/completar
+ */
+exports.marcarPartitCompletat = async (req, res) => {
+    try {
+        const user = await verificarArbitre(req);
+        const { id } = req.params;
+
+        // Verificar que el partit existeix i està assignat a aquest àrbitre
+        const partitResp = await api.get(`/Partit?id=${id}`);
+        const partit = Array.isArray(partitResp) ? partitResp[0] : partitResp;
+
+        if (!partit) {
+            return res.status(404).json({ error: "Partit no trobat" });
+        }
+
+        if (String(partit.arbitreId) !== String(user.id)) {
+            return res.status(403).json({ error: "No tens permís per modificar aquest partit" });
+        }
+
+        if (partit.status === "COMPLETAT") {
+            return res.status(400).json({ error: "El partit ja està marcat com a completat" });
+        }
+
+        // Marcar com a completat
+        await api.patch(`/Partit/${id}`, {
+            status: "COMPLETAT",
+            updated_at: new Date().toISOString()
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Partit marcat com a completat"
+        });
+
+    } catch (error) {
+        console.error("Error marcant partit com a completat:", error);
+        if (error.message === "TOKEN_NO_PROPORCIONAT") {
+            return res.status(401).json({ error: "Token no proporcionat" });
+        }
+        if (error.message === "NO_ES_ARBITRE") {
+            return res.status(403).json({ error: "No tens permisos d'àrbitre" });
+        }
+        return res.status(500).json({ error: "Error intern del servidor" });
+    }
+};
+
+/**
  * Obtenir partits on l'àrbitre ha arbitrat (completats sense acta)
  * GET /actes/partits-pendents
  */
@@ -56,17 +104,16 @@ exports.getPartitsPendentsActa = async (req, res) => {
     try {
         const user = await verificarArbitre(req);
 
-        // Obtenir tots els partits completats
-        const partits = await api.get(`/Partit?status=COMPLETAT&isActive=true`);
+        // Obtenir tots els partits assignats a aquest àrbitre
+        const partits = await api.get(`/Partit?arbitreId=${user.id}&isActive=true`);
         const partitsArray = Array.isArray(partits) ? partits : [];
 
-        // Obtenir actes existents
+        // Obtenir actes existents d'aquest àrbitre
         const actes = await api.get(`/Acta?arbitreId=${user.id}&isActive=true`);
         const actesArray = Array.isArray(actes) ? actes : [];
         const partitsAmbActa = new Set(actesArray.map(a => String(a.partitId)));
 
-        // Filtrar partits sense acta (per ara, tots els completats on podria ser àrbitre)
-        // En un sistema real, filtraríem per partits assignats a aquest àrbitre
+        // Filtrar partits sense acta (tant pendents com completats)
         const partitsSenseActa = partitsArray.filter(p => !partitsAmbActa.has(String(p.id)));
 
         // Enriquir amb info dels equips
@@ -438,11 +485,76 @@ exports.validarActa = async (req, res) => {
             updated_at: ara.toISOString()
         });
 
-        // Actualizar partit a status COMPLETAT_ACTA_VALIDADA
+        // Actualizar partit amb el resultat i status
         await api.patch(`/Partit/${acta.partitId}`, {
             status: "COMPLETAT_ACTA_VALIDADA",
+            resultatLocal: acta.setsLocal,
+            resultatVisitant: acta.setsVisitant,
             updated_at: ara.toISOString()
         });
+
+        // Calcular jocs totals de l'acta
+        let jocsLocalTotal = 0;
+        let jocsVisitantTotal = 0;
+        if (acta.sets && Array.isArray(acta.sets)) {
+            acta.sets.forEach(set => {
+                jocsLocalTotal += set.jocsLocal || 0;
+                jocsVisitantTotal += set.jocsVisitant || 0;
+            });
+        }
+
+        // Actualitzar classificació dels equips
+        try {
+            const lligaId = partit.lligaId;
+
+            if (lligaId) {
+                const classificacionsResp = await api.get(`/Classificacio?lligaId=${lligaId}`);
+                const classificacions = Array.isArray(classificacionsResp) ? classificacionsResp : [];
+
+                const classLocal = classificacions.find(c => String(c.equipId) === String(partit.localId));
+                const classVisitant = classificacions.find(c => String(c.equipId) === String(partit.visitantId));
+
+                if (classLocal) {
+                    const guanyat = acta.setsLocal > acta.setsVisitant ? 1 : 0;
+                    const perdut = acta.setsLocal < acta.setsVisitant ? 1 : 0;
+                    const empatat = acta.setsLocal === acta.setsVisitant ? 1 : 0;
+
+                    await api.patch(`/Classificacio/${classLocal.id}`, {
+                        partitsJugats: (classLocal.partitsJugats || 0) + 1,
+                        partitsGuanyats: (classLocal.partitsGuanyats || 0) + guanyat,
+                        partitsPerduts: (classLocal.partitsPerduts || 0) + perdut,
+                        partitsEmpatats: (classLocal.partitsEmpatats || 0) + empatat,
+                        setsGuanyats: (classLocal.setsGuanyats || 0) + acta.setsLocal,
+                        setsPerduts: (classLocal.setsPerduts || 0) + acta.setsVisitant,
+                        jocsGuanyats: (classLocal.jocsGuanyats || 0) + jocsLocalTotal,
+                        jocsPerduts: (classLocal.jocsPerduts || 0) + jocsVisitantTotal,
+                        punts: (classLocal.punts || 0) + puntsLocal,
+                        updated_at: ara.toISOString()
+                    });
+                }
+
+                if (classVisitant) {
+                    const guanyat = acta.setsVisitant > acta.setsLocal ? 1 : 0;
+                    const perdut = acta.setsVisitant < acta.setsLocal ? 1 : 0;
+                    const empatat = acta.setsVisitant === acta.setsLocal ? 1 : 0;
+
+                    await api.patch(`/Classificacio/${classVisitant.id}`, {
+                        partitsJugats: (classVisitant.partitsJugats || 0) + 1,
+                        partitsGuanyats: (classVisitant.partitsGuanyats || 0) + guanyat,
+                        partitsPerduts: (classVisitant.partitsPerduts || 0) + perdut,
+                        partitsEmpatats: (classVisitant.partitsEmpatats || 0) + empatat,
+                        setsGuanyats: (classVisitant.setsGuanyats || 0) + acta.setsVisitant,
+                        setsPerduts: (classVisitant.setsPerduts || 0) + acta.setsLocal,
+                        jocsGuanyats: (classVisitant.jocsGuanyats || 0) + jocsVisitantTotal,
+                        jocsPerduts: (classVisitant.jocsPerduts || 0) + jocsLocalTotal,
+                        punts: (classVisitant.punts || 0) + puntsVisitant,
+                        updated_at: ara.toISOString()
+                    });
+                }
+            }
+        } catch (classError) {
+            console.error("Error actualitzant classificació:", classError);
+        }
 
         // Guardar punts dels equips en la base de dades
         try {
@@ -452,7 +564,7 @@ exports.validarActa = async (req, res) => {
 
             // Verificar que no existan ja puntuacions per aquest partit
             const puntuacioExistent = puntuacionsActuals.filter(p => String(p.partitId) === String(acta.partitId));
-            
+
             if (puntuacioExistent.length === 0) {
                 // Crear entrada per equip local
                 if (puntsLocal > 0 || puntsVisitant >= 0) {

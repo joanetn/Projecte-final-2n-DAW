@@ -1,5 +1,5 @@
 import { queryClient } from "@/lib/utils"
-import { actualitzarActa, crearActa, eliminarActa, validarActa } from "@/services/acta.service"
+import { actualitzarActa, crearActa, eliminarActa, marcarPartitCompletat, validarActa } from "@/services/acta.service"
 import { ActaResponse, ActualitzarActaRequest, CrearActaRequest } from "@/types/acta"
 import { useMutation } from "@tanstack/react-query"
 export const useCrearActa = () => {
@@ -25,8 +25,13 @@ export const useValidarActa = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["mevesActes"] });
             queryClient.invalidateQueries({ queryKey: ["partitsPendentsActa"] });
-            // Invalidar classificacions quan es valida una acta
             queryClient.invalidateQueries({ queryKey: ["admin-web", "classificacions"] });
+            queryClient.invalidateQueries({ queryKey: ["admin-web", "partits"] });
+            queryClient.invalidateQueries({ queryKey: ["calendariAdminEquip"] });
+            queryClient.invalidateQueries({ queryKey: ["classificacioAdminEquip"] });
+            queryClient.invalidateQueries({ queryKey: ["estadistiquesAdminEquip"] });
+            queryClient.invalidateQueries({ queryKey: ["calendari"] });
+            queryClient.invalidateQueries({ queryKey: ["partitsJugats"] });
         }
     })
 }
@@ -35,6 +40,15 @@ export const useEliminarActa = () => {
         mutationFn: ({ id }) => eliminarActa(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["mevesActes"] });
+            queryClient.invalidateQueries({ queryKey: ["partitsPendentsActa"] });
+        }
+    })
+}
+
+export const useMarcarPartitCompletat = () => {
+    return useMutation<{ success: boolean, message: string }, Error, string>({
+        mutationFn: (id: string) => marcarPartitCompletat(id),
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["partitsPendentsActa"] });
         }
     })

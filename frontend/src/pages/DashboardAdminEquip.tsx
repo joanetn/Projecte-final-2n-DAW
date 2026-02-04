@@ -35,6 +35,7 @@ const DashboardAdminEquip = () => {
     useEffect(() => {
         const handler = () => {
             queryClient.invalidateQueries({ queryKey: ["plantilla"] });
+            queryClient.invalidateQueries({ queryKey: ["plantillaAdminEquip"] });
             queryClient.invalidateQueries({ queryKey: ["invitacionsEnviades"] });
             queryClient.invalidateQueries({ queryKey: ["jugadors-disponibles"] });
         }
@@ -92,7 +93,6 @@ const DashboardAdminEquip = () => {
                 </h2>
             </div>
             <Tabs defaultValue="plantilla" className="w-full">
-                { }
                 <TabsList className="grid w-full grid-cols-5 mb-6">
                     <TabsTrigger value="plantilla" className="flex items-center gap-1">
                         <Users className="w-4 h-4 hidden sm:inline" />

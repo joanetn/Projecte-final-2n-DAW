@@ -16,14 +16,16 @@ class Jornada extends Model
     protected $fillable = [
         'id',
         'nom',
-        'data',
+        'dataInici',
+        'dataFi',
         'lligaId',
         'status',
         'isActive',
     ];
 
     protected $casts = [
-        'data' => 'datetime',
+        'dataInici' => 'datetime',
+        'dataFi' => 'datetime',
         'isActive' => 'boolean',
     ];
 

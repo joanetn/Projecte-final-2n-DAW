@@ -279,6 +279,104 @@
       "created_at": "2026-01-29T16:35:01.470Z",
       "updated_at": "2026-01-29T16:35:01.470Z",
       "id": "Kok5QOX"
+    },
+    {
+      "nom": "Prova Prova",
+      "email": "prova@gmail.com",
+      "contrasenya": "prova123",
+      "telefon": "32443234",
+      "dataNaixement": null,
+      "nivell": "Intermedi",
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-02-03T14:21:11.785Z",
+      "updated_at": "2026-02-03T14:21:11.785Z",
+      "id": "RbYBGpt"
+    },
+    {
+      "nom": "Prova 100% real",
+      "email": "prova2@gmail.com",
+      "contrasenya": "prova123",
+      "telefon": "34343434",
+      "dataNaixement": null,
+      "nivell": "Principiant",
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-02-03T14:36:48.547Z",
+      "updated_at": "2026-02-03T14:36:48.548Z",
+      "id": "h4Cj6U3"
+    },
+    {
+      "nom": "Joan jugador 2",
+      "email": "jugadorrrr@gmail.com",
+      "contrasenya": "jugador",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-02-03T14:42:12.001Z",
+      "updated_at": "2026-02-03T14:42:12.001Z",
+      "id": "cAFFdHq"
+    },
+    {
+      "nom": "Joan Jugador",
+      "email": "joanjugador@gmail.com",
+      "contrasenya": "123456",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-02-03T15:17:40.036Z",
+      "updated_at": "2026-02-03T15:17:40.036Z",
+      "id": "SnDqpbr"
+    },
+    {
+      "nom": "Joan Nácher",
+      "email": "prova4@gmail.com",
+      "contrasenya": "123456",
+      "telefon": "2321332",
+      "dataNaixement": null,
+      "nivell": "Principiant",
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-02-03T15:25:47.496Z",
+      "updated_at": "2026-02-03T15:25:47.496Z",
+      "id": "zCpAquy"
+    },
+    {
+      "nom": "Sense segur",
+      "email": "senses@gmail.com",
+      "contrasenya": "123456",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-02-03T15:53:00.285Z",
+      "updated_at": "2026-02-03T15:53:00.285Z",
+      "id": "UWPTv30"
+    },
+    {
+      "nom": "fvfdfv",
+      "email": "jugador@web.com",
+      "contrasenya": "123456",
+      "telefon": null,
+      "dataNaixement": null,
+      "nivell": null,
+      "avatar": null,
+      "dni": null,
+      "isActive": true,
+      "created_at": "2026-02-03T16:52:02.681Z",
+      "updated_at": "2026-02-03T16:52:02.681Z",
+      "id": "DgmsYpo"
     }
   ],
   "UsuariRol": [
@@ -453,6 +551,69 @@
       "rol": "JUGADOR",
       "isActive": true,
       "id": "IadjaZy"
+    },
+    {
+      "usuariId": "RbYBGpt",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "7dqinXV"
+    },
+    {
+      "usuariId": "h4Cj6U3",
+      "rol": "ENTRENADOR",
+      "isActive": true,
+      "id": "OM4-3bq"
+    },
+    {
+      "id": "2165b976",
+      "usuariId": "h4Cj6U3",
+      "rol": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-02-03T14:37:53.743Z"
+    },
+    {
+      "id": "02eea4e3",
+      "usuariId": "RbYBGpt",
+      "rol": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-02-03T14:40:52.222Z"
+    },
+    {
+      "usuariId": "cAFFdHq",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "zNyRWDA"
+    },
+    {
+      "usuariId": "SnDqpbr",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "6cYxnZS"
+    },
+    {
+      "usuariId": "zCpAquy",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "bk7-pgR"
+    },
+    {
+      "id": "b60f126f",
+      "usuariId": "zCpAquy",
+      "rol": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:56.664Z"
+    },
+    {
+      "usuariId": "UWPTv30",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "L3bZ2sY"
+    },
+    {
+      "usuariId": "DgmsYpo",
+      "rol": "JUGADOR",
+      "isActive": true,
+      "id": "nDvjYIs"
     }
   ],
   "Club": [
@@ -589,6 +750,74 @@
       "isActive": true,
       "created_at": "2026-01-29T14:29:59.147Z",
       "updated_at": "2026-01-29T14:29:59.147Z"
+    },
+    {
+      "id": "0c1d89d6",
+      "nom": "Club de Prova",
+      "descripcio": "prova",
+      "adreca": "Carrer, 1222",
+      "ciutat": "12212",
+      "codiPostal": "34343",
+      "provincia": "2343ewdf",
+      "telefon": "2132333",
+      "email": "prova2@gmail.com",
+      "web": "23dffs",
+      "anyFundacio": 2026,
+      "creadorId": "h4Cj6U3",
+      "isActive": true,
+      "created_at": "2026-02-03T14:37:53.679Z",
+      "updated_at": "2026-02-03T14:37:53.679Z"
+    },
+    {
+      "id": "54fc9a2c",
+      "nom": "sddsdsa",
+      "descripcio": "dassada",
+      "adreca": "dsff",
+      "ciutat": "dsfdfs",
+      "codiPostal": "34344",
+      "provincia": "dsvv",
+      "telefon": "435554",
+      "email": "prova@gmail.com",
+      "web": "324423rfwd",
+      "anyFundacio": 2026,
+      "creadorId": "RbYBGpt",
+      "isActive": true,
+      "created_at": "2026-02-03T14:40:52.113Z",
+      "updated_at": "2026-02-03T14:40:52.113Z"
+    },
+    {
+      "id": "79734fd9",
+      "nom": "Club Voleibol Amateur Ontinyent",
+      "descripcio": "Club nou",
+      "adreca": "Ma casa",
+      "ciutat": "Ontinyent",
+      "codiPostal": "34344",
+      "provincia": "fvvdf",
+      "telefon": "32454",
+      "email": "prova4@gmail.com",
+      "web": "vfvvf",
+      "anyFundacio": 1989,
+      "creadorId": "zCpAquy",
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:56.552Z",
+      "updated_at": "2026-02-03T15:28:56.552Z"
+    },
+    {
+      "id": "16b97a11",
+      "nom": "Club Voleibol Amateur Ontinyent",
+      "descripcio": "Club nou",
+      "adreca": "Ma casa",
+      "ciutat": "Ontinyent",
+      "codiPostal": "34344",
+      "provincia": "fvvdf",
+      "telefon": "32454",
+      "email": "prova4@gmail.com",
+      "web": "vfvvf",
+      "anyFundacio": 1989,
+      "creadorId": "zCpAquy",
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:59.922Z",
+      "updated_at": "2026-02-03T15:28:59.922Z"
     }
   ],
   "Equip": [
@@ -773,6 +1002,78 @@
       "isActive": true,
       "created_at": "2026-01-29T14:29:59.180Z",
       "updated_at": "2026-01-29T14:29:59.414Z"
+    },
+    {
+      "id": "46c64ca8",
+      "nom": "Club de prova",
+      "categoria": "Veterà Masculí",
+      "clubId": "0c1d89d6",
+      "lligaId": "1",
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-02-03T14:37:53.698Z",
+      "updated_at": "2026-02-03T14:37:53.926Z"
+    },
+    {
+      "id": "a003119f",
+      "nom": "dvdvfd",
+      "categoria": "Senior Femení",
+      "clubId": "54fc9a2c",
+      "lligaId": "1",
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-02-03T14:40:52.174Z",
+      "updated_at": "2026-02-03T14:40:52.379Z"
+    },
+    {
+      "id": "b7f563c8",
+      "nom": "Equip 1",
+      "categoria": "Senior Masculí",
+      "clubId": "79734fd9",
+      "lligaId": "1",
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:56.585Z",
+      "updated_at": "2026-02-03T15:28:56.848Z"
+    },
+    {
+      "id": "8421bb6c",
+      "nom": "Equip 1",
+      "categoria": "Senior Masculí",
+      "clubId": "16b97a11",
+      "lligaId": "1",
+      "usuaris": [],
+      "partitsLocals": [],
+      "partitsVisitants": [],
+      "lligues": [],
+      "classificacions": [],
+      "PartitJugador": [],
+      "Alineacio": [],
+      "Notificacio": [],
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:59.956Z",
+      "updated_at": "2026-02-03T15:29:00.171Z"
     }
   ],
   "EquipUsuari": [
@@ -1012,7 +1313,7 @@
       "equipId": "bc8e1701",
       "usuariId": "9",
       "rolEquip": "JUGADOR",
-      "isActive": true
+      "isActive": false
     },
     {
       "id": "cfec0f22",
@@ -1027,6 +1328,132 @@
       "usuariId": "Kok5QOX",
       "rolEquip": "JUGADOR",
       "isActive": true
+    },
+    {
+      "id": "53c3e43d",
+      "equipId": "46c64ca8",
+      "usuariId": "h4Cj6U3",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-02-03T14:37:53.714Z"
+    },
+    {
+      "id": "f67b024d",
+      "equipId": "a003119f",
+      "usuariId": "RbYBGpt",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-02-03T14:40:52.185Z"
+    },
+    {
+      "id": "e6e35f63",
+      "equipId": "a003119f",
+      "usuariId": "RbYBGpt",
+      "rolEquip": "JUGADOR",
+      "isActive": true,
+      "created_at": "2026-02-03T14:40:52.203Z"
+    },
+    {
+      "id": "1695ce0a",
+      "equipId": "a003119f",
+      "usuariId": "cAFFdHq",
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "equipId": "a003119f",
+      "usuariId": "cAFFdHq",
+      "rolEquip": "ENTRENADOR",
+      "isActive": true,
+      "id": "TQ1TXpt"
+    },
+    {
+      "id": "9600646b",
+      "equipId": "a003119f",
+      "usuariId": "cAFFdHq",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "ac984f7e",
+      "equipId": "a003119f",
+      "usuariId": "cAFFdHq",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "918b86ad",
+      "equipId": "a003119f",
+      "usuariId": "cAFFdHq",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "8709f153",
+      "equipId": "a003119f",
+      "usuariId": "cAFFdHq",
+      "rolEquip": "JUGADOR",
+      "isActive": false
+    },
+    {
+      "id": "98a0da5a",
+      "equipId": "bc8e1701",
+      "usuariId": "SnDqpbr",
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "equipId": "bc8e1701",
+      "usuariId": "SnDqpbr",
+      "rolEquip": "ENTRENADOR",
+      "isActive": true,
+      "id": "DQEVpeY"
+    },
+    {
+      "id": "db8b0084",
+      "equipId": "b7f563c8",
+      "usuariId": "zCpAquy",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:56.618Z"
+    },
+    {
+      "id": "a9670dbe",
+      "equipId": "b7f563c8",
+      "usuariId": "zCpAquy",
+      "rolEquip": "JUGADOR",
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:56.636Z"
+    },
+    {
+      "id": "8e183f27",
+      "equipId": "8421bb6c",
+      "usuariId": "zCpAquy",
+      "rolEquip": "ADMIN_EQUIP",
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:59.988Z"
+    },
+    {
+      "id": "2a320744",
+      "equipId": "8421bb6c",
+      "usuariId": "zCpAquy",
+      "rolEquip": "JUGADOR",
+      "isActive": true,
+      "created_at": "2026-02-03T15:29:00.006Z"
+    },
+    {
+      "id": "ae462e0c",
+      "equipId": "b7f563c8",
+      "usuariId": "9",
+      "rolEquip": "JUGADOR",
+      "isActive": true
+    },
+    {
+      "equipId": "b7f563c8",
+      "usuariId": "9",
+      "rolEquip": "ENTRENADOR",
+      "isActive": true,
+      "id": "Lx7A0p9"
     }
   ],
   "Lliga": [
@@ -1101,6 +1528,70 @@
       "punts": 0,
       "isActive": true,
       "created_at": "2026-01-29T14:29:59.449Z"
+    },
+    {
+      "id": "7d431af6",
+      "lligaId": "1",
+      "equipId": "46c64ca8",
+      "partitsJugats": 0,
+      "partitsGuanyats": 0,
+      "partitsPerduts": 0,
+      "partitsEmpatats": 0,
+      "setsGuanyats": 0,
+      "setsPerduts": 0,
+      "jocsGuanyats": 0,
+      "jocsPerduts": 0,
+      "punts": 0,
+      "isActive": true,
+      "created_at": "2026-02-03T14:37:53.962Z"
+    },
+    {
+      "id": "5ae0f748",
+      "lligaId": "1",
+      "equipId": "a003119f",
+      "partitsJugats": 0,
+      "partitsGuanyats": 0,
+      "partitsPerduts": 0,
+      "partitsEmpatats": 0,
+      "setsGuanyats": 0,
+      "setsPerduts": 0,
+      "jocsGuanyats": 0,
+      "jocsPerduts": 0,
+      "punts": 0,
+      "isActive": true,
+      "created_at": "2026-02-03T14:40:52.398Z"
+    },
+    {
+      "id": "420d6e79",
+      "lligaId": "1",
+      "equipId": "b7f563c8",
+      "partitsJugats": 0,
+      "partitsGuanyats": 0,
+      "partitsPerduts": 0,
+      "partitsEmpatats": 0,
+      "setsGuanyats": 0,
+      "setsPerduts": 0,
+      "jocsGuanyats": 0,
+      "jocsPerduts": 0,
+      "punts": 0,
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:56.889Z"
+    },
+    {
+      "id": "243c8ea0",
+      "lligaId": "1",
+      "equipId": "8421bb6c",
+      "partitsJugats": 0,
+      "partitsGuanyats": 0,
+      "partitsPerduts": 0,
+      "partitsEmpatats": 0,
+      "setsGuanyats": 0,
+      "setsPerduts": 0,
+      "jocsGuanyats": 0,
+      "jocsPerduts": 0,
+      "punts": 0,
+      "isActive": true,
+      "created_at": "2026-02-03T15:29:00.209Z"
     }
   ],
   "Jornada": [
@@ -1175,6 +1666,50 @@
       "clubId": "aacedd48",
       "isActive": true,
       "created_at": "2026-01-29T14:29:59.259Z"
+    },
+    {
+      "id": "62d8768c",
+      "nom": "vvvvdvd",
+      "adreca": "dvdsvd",
+      "telefon": "2132333",
+      "tipusPista": "Coberta",
+      "numPistes": 10,
+      "clubId": "0c1d89d6",
+      "isActive": true,
+      "created_at": "2026-02-03T14:37:53.772Z"
+    },
+    {
+      "id": "3e3d574b",
+      "nom": "fdsfds",
+      "adreca": "dfsdf",
+      "telefon": "435554",
+      "tipusPista": "Outdoor",
+      "numPistes": 10,
+      "clubId": "54fc9a2c",
+      "isActive": true,
+      "created_at": "2026-02-03T14:40:52.237Z"
+    },
+    {
+      "id": "e4b695e4",
+      "nom": "Pista 1",
+      "adreca": "Mateixa",
+      "telefon": "32454",
+      "tipusPista": "Coberta",
+      "numPistes": 3,
+      "clubId": "79734fd9",
+      "isActive": true,
+      "created_at": "2026-02-03T15:28:56.693Z"
+    },
+    {
+      "id": "f29864aa",
+      "nom": "Pista 1",
+      "adreca": "Mateixa",
+      "telefon": "32454",
+      "tipusPista": "Coberta",
+      "numPistes": 3,
+      "clubId": "16b97a11",
+      "isActive": true,
+      "created_at": "2026-02-03T15:29:00.025Z"
     }
   ],
   "Pista": [
@@ -1318,6 +1853,67 @@
       "pistaId": null,
       "status": "PENDENT",
       "isActive": true
+    },
+    {
+      "localId": "379a7545",
+      "visitantId": "a003119f",
+      "dataHora": "2026-02-11T18:54:00.000Z",
+      "pistaId": null,
+      "lligaId": null,
+      "status": "COMPLETAT_ACTA_VALIDADA",
+      "isActive": true,
+      "id": "qWLMCis",
+      "arbitreId": "iwovBM5",
+      "updated_at": "2026-02-03T15:04:58.700Z",
+      "ubicacio": ""
+    },
+    {
+      "localId": "46c64ca8",
+      "visitantId": "a003119f",
+      "dataHora": "2026-02-11T16:54:00.000Z",
+      "pistaId": null,
+      "lligaId": null,
+      "status": "PENDENT",
+      "isActive": true,
+      "id": "ie2x7cU",
+      "arbitreId": "iwovBM5",
+      "updated_at": "2026-02-03T14:53:57.899Z"
+    },
+    {
+      "localId": "46c64ca8",
+      "visitantId": "a003119f",
+      "dataHora": "2026-02-03T18:26:00.000Z",
+      "pistaId": null,
+      "lligaId": null,
+      "status": "PENDENT",
+      "isActive": true,
+      "id": "LxCuSyD"
+    },
+    {
+      "localId": "46c64ca8",
+      "visitantId": "b7f563c8",
+      "dataHora": "2026-02-04T18:36:00.000Z",
+      "pistaId": null,
+      "lligaId": null,
+      "status": "COMPLETAT_ACTA_VALIDADA",
+      "isActive": true,
+      "id": "Y0K4npw",
+      "arbitreId": "iwovBM5",
+      "updated_at": "2026-02-03T15:41:09.794Z",
+      "resultatLocal": 2,
+      "resultatVisitant": 0
+    },
+    {
+      "localId": "46c64ca8",
+      "visitantId": "b7f563c8",
+      "dataHora": "2026-02-03T19:20:00.000Z",
+      "pistaId": null,
+      "lligaId": null,
+      "status": "PENDENT",
+      "isActive": true,
+      "id": "83eiTf0",
+      "arbitreId": "iwovBM5",
+      "updated_at": "2026-02-03T16:18:06.718Z"
     }
   ],
   "SetPartit": [
@@ -2022,6 +2618,420 @@
       "creada_at": "2026-01-29T14:25:03.638Z",
       "posicio": "DRETA",
       "id": "FoA_IHo"
+    },
+    {
+      "partitId": "ie2x7cU",
+      "jugadorId": "RbYBGpt",
+      "equipId": "a003119f",
+      "isActive": true,
+      "creada_at": "2026-02-03T14:54:22.560Z",
+      "posicio": "REVES",
+      "id": "MWg7wfv"
+    },
+    {
+      "partitId": "ie2x7cU",
+      "jugadorId": "cAFFdHq",
+      "equipId": "a003119f",
+      "isActive": true,
+      "creada_at": "2026-02-03T14:54:22.561Z",
+      "posicio": "DRETA",
+      "id": "c9Jrm3p"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T15:38:23.517Z",
+      "posicio": "REVES",
+      "id": "9pRvZSS"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T15:38:23.519Z",
+      "posicio": "DRETA",
+      "id": "qHCdFny"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T15:39:06.357Z",
+      "posicio": "REVES",
+      "id": "EMzgaz1"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T15:39:06.357Z",
+      "posicio": "DRETA",
+      "id": "IZU-5sK"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T15:39:21.276Z",
+      "posicio": "REVES",
+      "id": "Kg3YrKm"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T15:39:21.277Z",
+      "posicio": "DRETA",
+      "id": "7v6aSkg"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": true,
+      "creada_at": "2026-02-03T15:39:22.231Z",
+      "posicio": "REVES",
+      "id": "ePem_ki"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": true,
+      "creada_at": "2026-02-03T15:39:22.234Z",
+      "posicio": "DRETA",
+      "id": "tQgnFd9"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:18:31.220Z",
+      "posicio": "REVES",
+      "id": "hqPQCaU"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:18:31.222Z",
+      "posicio": "DRETA",
+      "id": "6l6j2d2"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:18:38.985Z",
+      "posicio": "REVES",
+      "id": "W1RUhvi"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:18:38.986Z",
+      "posicio": "DRETA",
+      "id": "doZ-mTQ"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:18:49.576Z",
+      "posicio": "REVES",
+      "id": "zDFRXkM"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:18:49.577Z",
+      "posicio": "DRETA",
+      "id": "jusutj4"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:19:01.069Z",
+      "posicio": "REVES",
+      "id": "DY4TPfS"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:19:01.070Z",
+      "posicio": "DRETA",
+      "id": "9Qv6UhS"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:19:11.007Z",
+      "posicio": "REVES",
+      "id": "jnwzL1b"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:19:11.008Z",
+      "posicio": "DRETA",
+      "id": "IDNj34Q"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:20:30.533Z",
+      "posicio": "REVES",
+      "id": "au1geAG"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:20:30.534Z",
+      "posicio": "DRETA",
+      "id": "s3jXh76"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:20:38.771Z",
+      "posicio": "REVES",
+      "id": "Bst4Zjd"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:20:38.773Z",
+      "posicio": "DRETA",
+      "id": "hvAmUMj"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:20:42.816Z",
+      "posicio": "REVES",
+      "id": "Ve4G3iL"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:20:42.818Z",
+      "posicio": "DRETA",
+      "id": "987OF5e"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:21:00.016Z",
+      "posicio": "REVES",
+      "id": "VbY4y-4"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:21:00.018Z",
+      "posicio": "DRETA",
+      "id": "3hI6Yqx"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:21:13.734Z",
+      "posicio": "REVES",
+      "id": "XSO3R4p"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:21:13.737Z",
+      "posicio": "DRETA",
+      "id": "vAogjLz"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:22:19.202Z",
+      "posicio": "REVES",
+      "id": "DYqVTDh"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:22:19.205Z",
+      "posicio": "DRETA",
+      "id": "Df1r1SZ"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:40:20.603Z",
+      "id": "TZ6XASM"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:40:20.626Z",
+      "id": "XTaYzu8"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:40:31.009Z",
+      "id": "mHycYAi"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:40:31.021Z",
+      "id": "es99Z0N"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:48:22.513Z",
+      "id": "4IRfi1l"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:48:22.525Z",
+      "id": "zJkh5hx"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:48:54.880Z",
+      "id": "s6Z3roR"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:48:54.887Z",
+      "id": "kiq-uX7"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:49:06.336Z",
+      "id": "t__QECe"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:49:06.346Z",
+      "id": "D3OTf9q"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:50:56.655Z",
+      "id": "k5ThKPB"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-03T16:50:56.662Z",
+      "id": "IyLkATQ"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": true,
+      "creada_at": "2026-02-03T16:51:19.546Z",
+      "id": "i-s0-uY"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": true,
+      "creada_at": "2026-02-03T16:51:19.552Z",
+      "id": "WzK5jmF"
     }
   ],
   "PartitJugador": [
@@ -2167,6 +3177,84 @@
       "created_at": "2026-01-26T17:20:42.162Z",
       "updated_at": "2026-01-26T17:20:49.228Z",
       "isActive": true
+    },
+    {
+      "id": "6657d1e3",
+      "partitId": "qWLMCis",
+      "arbitreId": "iwovBM5",
+      "sets": [
+        {
+          "numeroSet": 1,
+          "jocsLocal": 7,
+          "jocsVisitant": 6,
+          "tiebreak": true,
+          "puntsLocalTiebreak": 7,
+          "puntsVisitantTiebreak": 3
+        },
+        {
+          "numeroSet": 2,
+          "jocsLocal": 7,
+          "jocsVisitant": 6,
+          "tiebreak": true,
+          "puntsLocalTiebreak": 7,
+          "puntsVisitantTiebreak": 5
+        }
+      ],
+      "setsLocal": 2,
+      "setsVisitant": 0,
+      "observacions": "Partit violent",
+      "incidencies": [
+        {
+          "id": "inc-1770131072151",
+          "set": 2,
+          "tipus": "ADVERTENCIA",
+          "descripcio": "Jugador m'ha insultat"
+        }
+      ],
+      "validada": true,
+      "dataValidacio": "2026-02-03T15:04:58.700Z",
+      "created_at": "2026-02-03T15:04:35.082Z",
+      "updated_at": "2026-02-03T15:04:58.700Z",
+      "isActive": true
+    },
+    {
+      "id": "1cf3d80a",
+      "partitId": "Y0K4npw",
+      "arbitreId": "iwovBM5",
+      "sets": [
+        {
+          "numeroSet": 1,
+          "jocsLocal": 7,
+          "jocsVisitant": 6,
+          "tiebreak": true,
+          "puntsLocalTiebreak": 7,
+          "puntsVisitantTiebreak": 5
+        },
+        {
+          "numeroSet": 2,
+          "jocsLocal": 6,
+          "jocsVisitant": 2,
+          "tiebreak": false,
+          "puntsLocalTiebreak": null,
+          "puntsVisitantTiebreak": null
+        }
+      ],
+      "setsLocal": 2,
+      "setsVisitant": 0,
+      "observacions": "",
+      "incidencies": [
+        {
+          "id": "inc-1770133247949",
+          "set": 1,
+          "tipus": "ADVERTENCIA",
+          "descripcio": "Man insultat"
+        }
+      ],
+      "validada": true,
+      "dataValidacio": "2026-02-03T15:41:09.794Z",
+      "created_at": "2026-02-03T15:40:49.987Z",
+      "updated_at": "2026-02-03T15:41:09.794Z",
+      "isActive": true
     }
   ],
   "Puntuacio": [
@@ -2218,6 +3306,22 @@
       "jugadorId": 6,
       "punts": 16,
       "isActive": true
+    },
+    {
+      "partitId": "Y0K4npw",
+      "equipId": "46c64ca8",
+      "punts": 3,
+      "created_at": "2026-02-03T15:41:09.794Z",
+      "isActive": true,
+      "id": "9TccGLM"
+    },
+    {
+      "partitId": "Y0K4npw",
+      "equipId": "b7f563c8",
+      "punts": 0,
+      "created_at": "2026-02-03T15:41:09.794Z",
+      "isActive": true,
+      "id": "AbPw6IY"
     }
   ],
   "Notificacio": [
@@ -5174,8 +6278,9 @@
       "titol": "Segur pagat correctament",
       "missatge": "El teu segur ha estat activat i és vàlid fins 29/1/2027.",
       "tipus": "SEGURO",
-      "llegida": false,
-      "created_at": "2026-01-29T16:16:12.897Z"
+      "llegida": true,
+      "created_at": "2026-01-29T16:16:12.897Z",
+      "read": true
     },
     {
       "id": "45e444c9",
@@ -5297,6 +6402,337 @@
         "jugadorNom": "Sense Segur Jr",
         "equipId": "bc8e1701"
       }
+    },
+    {
+      "id": "91bd9868",
+      "usuariId": "RbYBGpt",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 3/2/2027.",
+      "tipus": "SEGURO",
+      "llegida": true,
+      "created_at": "2026-02-03T14:21:35.151Z",
+      "read": true
+    },
+    {
+      "id": "ceae26a7",
+      "usuariId": "cAFFdHq",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 3/2/2027.",
+      "tipus": "SEGURO",
+      "llegida": true,
+      "created_at": "2026-02-03T14:42:30.200Z",
+      "read": true
+    },
+    {
+      "id": "3247ba82",
+      "usuariId": "cAFFdHq",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip dvdvfd",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T14:42:53.494Z",
+      "extra": {
+        "invitacioId": "8d66c05e",
+        "equipId": "a003119f",
+        "equipNom": "dvdvfd",
+        "missatge": "fitxa per mi tio"
+      }
+    },
+    {
+      "id": "d2034a5c",
+      "usuariId": "RbYBGpt",
+      "titol": "Invitació rebutjada",
+      "missatge": "Joan jugador 2 ha rebutjat la invitació per unir-se a dvdvfd",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T14:43:00.947Z",
+      "extra": {
+        "jugadorId": "cAFFdHq",
+        "jugadorNom": "Joan jugador 2",
+        "equipId": "a003119f"
+      }
+    },
+    {
+      "id": "e36977fb",
+      "usuariId": "cAFFdHq",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip dvdvfd",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T14:43:09.604Z",
+      "extra": {
+        "invitacioId": "e20e824d",
+        "equipId": "a003119f",
+        "equipNom": "dvdvfd",
+        "missatge": "va tio perfa"
+      }
+    },
+    {
+      "id": "377051b6",
+      "usuariId": "RbYBGpt",
+      "titol": "Invitació acceptada",
+      "missatge": "Joan jugador 2 ha acceptat unir-se a dvdvfd",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T14:43:14.353Z",
+      "extra": {
+        "jugadorId": "cAFFdHq",
+        "jugadorNom": "Joan jugador 2",
+        "equipId": "a003119f"
+      }
+    },
+    {
+      "id": "223f1681",
+      "usuariId": "cAFFdHq",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip dvdvfd",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T14:46:31.875Z",
+      "extra": {
+        "invitacioId": "b64a5702",
+        "equipId": "a003119f",
+        "equipNom": "dvdvfd",
+        "missatge": "hOLAAAAAAAAAA"
+      },
+      "llegida": true
+    },
+    {
+      "id": "05d57079",
+      "usuariId": "RbYBGpt",
+      "titol": "Invitació acceptada",
+      "missatge": "Joan jugador 2 ha acceptat unir-se a dvdvfd",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T14:46:42.504Z",
+      "extra": {
+        "jugadorId": "cAFFdHq",
+        "jugadorNom": "Joan jugador 2",
+        "equipId": "a003119f"
+      },
+      "llegida": true
+    },
+    {
+      "id": "a0da9bb7",
+      "usuariId": "cAFFdHq",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip dvdvfd",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T14:47:51.075Z",
+      "extra": {
+        "invitacioId": "ea21086d",
+        "equipId": "a003119f",
+        "equipNom": "dvdvfd",
+        "missatge": "fitxa per tercera vegada"
+      },
+      "llegida": true
+    },
+    {
+      "id": "dffa3019",
+      "usuariId": "RbYBGpt",
+      "titol": "Invitació acceptada",
+      "missatge": "Joan jugador 2 ha acceptat unir-se a dvdvfd",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T14:48:02.668Z",
+      "extra": {
+        "jugadorId": "cAFFdHq",
+        "jugadorNom": "Joan jugador 2",
+        "equipId": "a003119f"
+      },
+      "llegida": true
+    },
+    {
+      "id": "334a139a",
+      "usuariId": "cAFFdHq",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip dvdvfd",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T14:49:11.044Z",
+      "extra": {
+        "invitacioId": "accf6f22",
+        "equipId": "a003119f",
+        "equipNom": "dvdvfd",
+        "missatge": "dcdsvd"
+      },
+      "llegida": true
+    },
+    {
+      "id": "d49e3369",
+      "usuariId": "cAFFdHq",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip dvdvfd",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T14:49:17.881Z",
+      "extra": {
+        "invitacioId": "cd1d0931",
+        "equipId": "a003119f",
+        "equipNom": "dvdvfd",
+        "missatge": "dvdvvd"
+      },
+      "llegida": true
+    },
+    {
+      "id": "78e74fbb",
+      "usuariId": "RbYBGpt",
+      "titol": "Invitació acceptada",
+      "missatge": "Joan jugador 2 ha acceptat unir-se a dvdvfd",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T14:49:55.278Z",
+      "extra": {
+        "jugadorId": "cAFFdHq",
+        "jugadorNom": "Joan jugador 2",
+        "equipId": "a003119f"
+      },
+      "llegida": true
+    },
+    {
+      "id": "e14b902c",
+      "usuariId": "cAFFdHq",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip dvdvfd",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T14:50:35.344Z",
+      "extra": {
+        "invitacioId": "38373f4d",
+        "equipId": "a003119f",
+        "equipNom": "dvdvfd",
+        "missatge": "valeeeeeeeeee"
+      },
+      "llegida": true
+    },
+    {
+      "id": "1c2a76f1",
+      "usuariId": "RbYBGpt",
+      "titol": "Invitació acceptada",
+      "missatge": "Joan jugador 2 ha acceptat unir-se a dvdvfd",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T14:50:41.731Z",
+      "extra": {
+        "jugadorId": "cAFFdHq",
+        "jugadorNom": "Joan jugador 2",
+        "equipId": "a003119f"
+      },
+      "llegida": true
+    },
+    {
+      "id": "5847f434",
+      "usuariId": "SnDqpbr",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T15:21:03.869Z",
+      "extra": {
+        "invitacioId": "5e9160af",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "Vols vindre?"
+      },
+      "llegida": true
+    },
+    {
+      "id": "1dc1a30b",
+      "usuariId": "PGEAato",
+      "titol": "Invitació rebutjada",
+      "missatge": "Joan Jugador ha rebutjat la invitació per unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T15:21:41.098Z",
+      "extra": {
+        "jugadorId": "SnDqpbr",
+        "jugadorNom": "Joan Jugador",
+        "equipId": "bc8e1701"
+      },
+      "llegida": true
+    },
+    {
+      "id": "5fdaa3c5",
+      "usuariId": "SnDqpbr",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip fnhnfgn",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T15:21:54.282Z",
+      "extra": {
+        "invitacioId": "c204a698",
+        "equipId": "bc8e1701",
+        "equipNom": "fnhnfgn",
+        "missatge": "Vine"
+      },
+      "llegida": true
+    },
+    {
+      "id": "d8e37343",
+      "usuariId": "PGEAato",
+      "titol": "Invitació acceptada",
+      "missatge": "Joan Jugador ha acceptat unir-se a fnhnfgn",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T15:22:00.189Z",
+      "extra": {
+        "jugadorId": "SnDqpbr",
+        "jugadorNom": "Joan Jugador",
+        "equipId": "bc8e1701"
+      },
+      "llegida": true
+    },
+    {
+      "id": "c23c34ac",
+      "usuariId": "9",
+      "titol": "Invitació a equip",
+      "missatge": "Has rebut una invitació per unir-te a l'equip Equip 1",
+      "tipus": "invitacio_equip",
+      "read": true,
+      "created_at": "2026-02-03T15:30:43.106Z",
+      "extra": {
+        "invitacioId": "7cc5a746",
+        "equipId": "b7f563c8",
+        "equipNom": "Equip 1",
+        "missatge": "Vine"
+      },
+      "llegida": true
+    },
+    {
+      "id": "79067b1b",
+      "usuariId": "zCpAquy",
+      "titol": "Invitació acceptada",
+      "missatge": "Núria Soler ha acceptat unir-se a Equip 1",
+      "tipus": "info",
+      "read": true,
+      "created_at": "2026-02-03T15:31:23.996Z",
+      "extra": {
+        "jugadorId": "9",
+        "jugadorNom": "Núria Soler",
+        "equipId": "b7f563c8"
+      },
+      "llegida": true
+    },
+    {
+      "id": "b04df3eb",
+      "usuariId": "zCpAquy",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 3/2/2027.",
+      "tipus": "SEGURO",
+      "llegida": true,
+      "created_at": "2026-02-03T15:37:39.458Z",
+      "read": true
+    },
+    {
+      "id": "f2d6d8f9",
+      "usuariId": "UWPTv30",
+      "titol": "Segur pagat correctament",
+      "missatge": "El teu segur ha estat activat i és vàlid fins 3/2/2027.",
+      "tipus": "SEGURO",
+      "llegida": true,
+      "created_at": "2026-02-03T15:58:30.062Z",
+      "read": true
     }
   ],
   "Merch": [
@@ -5762,6 +7198,116 @@
       "created_at": "2026-01-29T16:39:21.011Z",
       "updated_at": "2026-01-29T16:39:58.070Z",
       "isActive": true
+    },
+    {
+      "id": "8d66c05e",
+      "equipId": "a003119f",
+      "jugadorId": "cAFFdHq",
+      "enviadaPer": "RbYBGpt",
+      "missatge": "fitxa per mi tio",
+      "estat": "REBUTJADA",
+      "created_at": "2026-02-03T14:42:53.461Z",
+      "updated_at": "2026-02-03T14:43:00.900Z",
+      "isActive": true
+    },
+    {
+      "id": "e20e824d",
+      "equipId": "a003119f",
+      "jugadorId": "cAFFdHq",
+      "enviadaPer": "RbYBGpt",
+      "missatge": "va tio perfa",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-02-03T14:43:09.570Z",
+      "updated_at": "2026-02-03T14:43:14.260Z",
+      "isActive": true
+    },
+    {
+      "id": "b64a5702",
+      "equipId": "a003119f",
+      "jugadorId": "cAFFdHq",
+      "enviadaPer": "RbYBGpt",
+      "missatge": "hOLAAAAAAAAAA",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-02-03T14:46:31.858Z",
+      "updated_at": "2026-02-03T14:46:42.410Z",
+      "isActive": true
+    },
+    {
+      "id": "ea21086d",
+      "equipId": "a003119f",
+      "jugadorId": "cAFFdHq",
+      "enviadaPer": "RbYBGpt",
+      "missatge": "fitxa per tercera vegada",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-02-03T14:47:51.056Z",
+      "updated_at": "2026-02-03T14:48:02.591Z",
+      "isActive": true
+    },
+    {
+      "id": "accf6f22",
+      "equipId": "a003119f",
+      "jugadorId": "cAFFdHq",
+      "enviadaPer": "RbYBGpt",
+      "missatge": "dcdsvd",
+      "estat": "CANCEL·LADA",
+      "created_at": "2026-02-03T14:49:11.011Z",
+      "updated_at": "2026-02-03T14:49:13.321Z",
+      "isActive": false
+    },
+    {
+      "id": "cd1d0931",
+      "equipId": "a003119f",
+      "jugadorId": "cAFFdHq",
+      "enviadaPer": "RbYBGpt",
+      "missatge": "dvdvvd",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-02-03T14:49:17.848Z",
+      "updated_at": "2026-02-03T14:49:55.200Z",
+      "isActive": true
+    },
+    {
+      "id": "38373f4d",
+      "equipId": "a003119f",
+      "jugadorId": "cAFFdHq",
+      "enviadaPer": "RbYBGpt",
+      "missatge": "valeeeeeeeeee",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-02-03T14:50:35.308Z",
+      "updated_at": "2026-02-03T14:50:41.653Z",
+      "isActive": true
+    },
+    {
+      "id": "5e9160af",
+      "equipId": "bc8e1701",
+      "jugadorId": "SnDqpbr",
+      "enviadaPer": "PGEAato",
+      "missatge": "Vols vindre?",
+      "estat": "REBUTJADA",
+      "created_at": "2026-02-03T15:21:03.841Z",
+      "updated_at": "2026-02-03T15:21:41.036Z",
+      "isActive": true
+    },
+    {
+      "id": "c204a698",
+      "equipId": "bc8e1701",
+      "jugadorId": "SnDqpbr",
+      "enviadaPer": "PGEAato",
+      "missatge": "Vine",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-02-03T15:21:54.251Z",
+      "updated_at": "2026-02-03T15:22:00.120Z",
+      "isActive": true
+    },
+    {
+      "id": "7cc5a746",
+      "equipId": "b7f563c8",
+      "jugadorId": "9",
+      "enviadaPer": "zCpAquy",
+      "missatge": "Vine",
+      "estat": "ACCEPTADA",
+      "created_at": "2026-02-03T15:30:43.074Z",
+      "updated_at": "2026-02-03T15:31:23.919Z",
+      "isActive": true
     }
   ],
   "Seguro": [
@@ -5959,6 +7505,76 @@
       "stripeSessionId": null,
       "created_at": "2026-01-29T16:39:41.370Z",
       "updated_at": "2026-01-29T16:39:41.370Z",
+      "isActive": true
+    },
+    {
+      "id": "68ce70a0",
+      "usuariId": "RbYBGpt",
+      "dataInici": "2026-02-03T14:21:35.151Z",
+      "dataFi": "2027-02-03T14:21:35.151Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-02-03T14:21:35.151Z",
+      "updated_at": "2026-02-03T14:21:35.151Z",
+      "isActive": true
+    },
+    {
+      "id": "e0c720ab",
+      "usuariId": "cAFFdHq",
+      "dataInici": "2026-02-03T14:42:30.200Z",
+      "dataFi": "2027-02-03T14:42:30.200Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-02-03T14:42:30.200Z",
+      "updated_at": "2026-02-03T14:42:30.200Z",
+      "isActive": true
+    },
+    {
+      "id": "fd3f552c",
+      "usuariId": "SnDqpbr",
+      "dataInici": "2026-02-03T15:18:37.400Z",
+      "dataFi": "2027-02-03T15:18:37.400Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "STRIPE",
+      "stripePaymentId": "pi_3SwlN8Ed7XCgbD1o17JvuZAx",
+      "stripeSessionId": "cs_test_a1MkXYJKL6j7ohV78ygcaPapltXrhjlxx4GHVXWIya52T0qCrxIOOQt02t",
+      "created_at": "2026-02-03T15:18:37.400Z",
+      "updated_at": "2026-02-03T15:18:37.400Z",
+      "isActive": true
+    },
+    {
+      "id": "fdea47b4",
+      "usuariId": "zCpAquy",
+      "dataInici": "2026-02-03T15:37:39.458Z",
+      "dataFi": "2027-02-03T15:37:39.458Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-02-03T15:37:39.458Z",
+      "updated_at": "2026-02-03T15:37:39.458Z",
+      "isActive": true
+    },
+    {
+      "id": "6c2fed84",
+      "usuariId": "UWPTv30",
+      "dataInici": "2026-02-03T15:58:30.062Z",
+      "dataFi": "2027-02-03T15:58:30.062Z",
+      "preu": 25,
+      "estatPagament": "PAGAT",
+      "metodePagament": "SIMULAT",
+      "stripePaymentId": null,
+      "stripeSessionId": null,
+      "created_at": "2026-02-03T15:58:30.062Z",
+      "updated_at": "2026-02-03T15:58:30.062Z",
       "isActive": true
     }
   ]

@@ -5,6 +5,9 @@ const actaController = require("../controllers/acta.controller");
 // Obtenir partits pendents d'acta
 router.get("/partits-pendents", actaController.getPartitsPendentsActa);
 
+// Marcar partit com a completat
+router.patch("/partit/:id/completar", actaController.marcarPartitCompletat);
+
 // Obtenir totes les meves actes
 router.get("/meves", actaController.getMevesActes);
 

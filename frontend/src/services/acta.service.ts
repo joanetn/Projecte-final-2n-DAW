@@ -39,3 +39,8 @@ export const eliminarActa = async (id: string): Promise<{ success: boolean; miss
     const response = await backend_rapid.delete(`${BASE_URL}/${id}`);
     return response.data;
 };
+
+export const marcarPartitCompletat = async (id: string): Promise<{ success: boolean; message: string }> => {
+    const response = await backend_rapid.patch(`${BASE_URL}/partit/${id}/completar`);
+    return response.data;
+};

@@ -69,17 +69,17 @@ exports.marcarTotesComLlegides = async (req, res) => {
         // Obtenir totes les notificacions de l'usuari
         const notificacions = await api.get(`/Notificacio?usuariId=${usuariId}`);
 
-        // Assegurar-se que és un array i filtrar les no llegides
+        // Assegurar-se que és un array i filtrar les no llegides (comprovar tant 'read' com 'llegida')
         let notifs = [];
         if (Array.isArray(notificacions)) {
-            notifs = notificacions.filter(n => n && n.read === false);
-        } else if (notificacions && notificacions.id && notificacions.read === false) {
+            notifs = notificacions.filter(n => n && (n.read === false || n.llegida === false));
+        } else if (notificacions && notificacions.id && (notificacions.read === false || notificacions.llegida === false)) {
             notifs = [notificacions];
         }
 
-        // Marcar totes com a llegides en paral·lel per ser més ràpid
+        // Marcar totes com a llegides en paral·lel per ser més ràpid (actualitzar tant 'read' com 'llegida')
         const updatePromises = notifs.map(notif =>
-            api.patch(`/Notificacio/${notif.id}`, { read: true })
+            api.patch(`/Notificacio/${notif.id}`, { read: true, llegida: true })
         );
         await Promise.all(updatePromises);
 

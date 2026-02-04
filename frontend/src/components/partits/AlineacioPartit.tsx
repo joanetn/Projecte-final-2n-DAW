@@ -47,7 +47,7 @@ const AlineacioPartit = () => {
     }, [plantilla, segurosMap]);
     const guardarAlineacio = () => {
         const body = {
-            jugadorsId: jugadoresUsados,
+            jugadorsId: alineacio,
             partitId
         };
         mutation.mutate(body, {

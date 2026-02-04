@@ -15,6 +15,8 @@ class Lliga extends Model
         'id',
         'nom',
         'categoria',
+        'dataInici',
+        'status',
         'isActive',
     ];
 

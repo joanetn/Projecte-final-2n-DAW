@@ -13,7 +13,7 @@ class Matches
         public readonly ?string $pistaId,
         public readonly ?string $arbitreId,
         public readonly string $status,
-        public readonly bool $isActive,
+        public readonly bool $isActive = false,
         public readonly string $createdAt,
         public readonly string $updatedAt,
         public readonly ?array $setPartits = null,

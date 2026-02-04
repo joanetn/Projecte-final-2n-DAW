@@ -25,7 +25,7 @@ export interface PlantillaResponse {
     total: number;
 }
 export interface AlineacioData {
-    jugadorsId: string[];
+    jugadorsId: any;
     partitId: string;
 }
 export interface Alineacio {

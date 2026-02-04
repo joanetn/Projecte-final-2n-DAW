@@ -11,7 +11,9 @@ return new class extends Migration {
             $table->string('id')->primary();
             $table->string('nom');
             $table->string('categoria');
+            $table->dateTime('dataInici');
             $table->timestamps();
+            $table->string('status')->default('NOT_STARTED');
             $table->boolean('isActive')->default(true);
         });
     }

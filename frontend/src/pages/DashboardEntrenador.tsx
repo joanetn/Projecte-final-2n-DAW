@@ -19,6 +19,7 @@ const DashboardEntrenador = () => {
     useEffect(() => {
         const handler = () => {
             queryClient.invalidateQueries({ queryKey: ["plantilla"] });
+            queryClient.invalidateQueries({ queryKey: ["plantillaAdminEquip"] });
             queryClient.invalidateQueries({ queryKey: ["invitacionsEnviades"] });
             queryClient.invalidateQueries({ queryKey: ["jugadors-disponibles"] });
         }

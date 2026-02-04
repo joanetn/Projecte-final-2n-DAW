@@ -87,6 +87,34 @@ exports.crearClub = async (req, res) => {
             created_at: new Date().toISOString(),
         });
 
+        // Si l'usuari és ENTRENADOR o JUGADOR, afegir-lo també amb aquest rol a l'equip
+        const esEntrenador = rols.some((r) => r.rol === "ENTRENADOR" && r.isActive);
+        const esJugador = rols.some((r) => r.rol === "JUGADOR" && r.isActive);
+
+        if (esEntrenador) {
+            const equipUsuariEntrenadorId = uuidv4().slice(0, 8);
+            await api.post("/EquipUsuari", {
+                id: equipUsuariEntrenadorId,
+                equipId: equipId,
+                usuariId: user.id,
+                rolEquip: "ENTRENADOR",
+                isActive: true,
+                created_at: new Date().toISOString(),
+            });
+        }
+
+        if (esJugador) {
+            const equipUsuariJugadorId = uuidv4().slice(0, 8);
+            await api.post("/EquipUsuari", {
+                id: equipUsuariJugadorId,
+                equipId: equipId,
+                usuariId: user.id,
+                rolEquip: "JUGADOR",
+                isActive: true,
+                created_at: new Date().toISOString(),
+            });
+        }
+
         // Afegir rol global ADMIN_EQUIP si no el té
         const teRolAdminEquip = rols.some((r) => r.rol === "ADMIN_EQUIP" && r.isActive);
         if (!teRolAdminEquip) {
