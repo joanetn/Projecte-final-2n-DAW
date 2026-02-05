@@ -16,4 +16,20 @@ class StandingDTO
         public readonly int $jocsPerduts = 0,
         public readonly int $punts = 0,
     ) {}
+
+    public static function fromEntity($standing): self
+    {
+        return new self(
+            id: $standing->id,
+            lligaId: $standing->lligaId,
+            equipId: $standing->equipId,
+            partitsJugats: $standing->partitsJugats,
+            partitsGuanyats: $standing->partitsGuanyats,
+            setsGuanyats: $standing->setsGuanyats,
+            setsPerduts: $standing->setPerduts,
+            jocsGuanyats: $standing->jocsGuanyats,
+            jocsPerduts: $standing->jocsPerduts,
+            punts: $standing->punts,
+        );
+    }
 }

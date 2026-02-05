@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('lligas', function (Blueprint $table) {
+        Schema::create('lligues', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('nom');
             $table->string('categoria');
             $table->dateTime('dataInici');
+            $table->dateTime('dataFi');
             $table->timestamps();
             $table->string('status')->default('NOT_STARTED');
             $table->boolean('isActive')->default(true);

@@ -18,10 +18,10 @@ class UpdateLeagueDTO
         return new self(
             nom: $data['nom'] ?? null,
             categoria: $data['categoria'] ?? null,
-            dataInici: $data['data_inici'] ?? null,
-            dataFi: $data['data_fi'] ?? null,
+            dataInici: $data['dataInici'] ?? null,
+            dataFi: $data['dataFi'] ?? null,
             status: $data['status'] ?? null,
-            isActive: isset($data['is_active']) ? (bool) $data['is_active'] : null,
+            isActive: isset($data['isActive']) ? (bool) $data['is_active'] : null,
         );
     }
 }

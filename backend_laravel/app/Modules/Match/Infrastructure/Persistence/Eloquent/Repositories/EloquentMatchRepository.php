@@ -39,7 +39,7 @@ class EloquentMatchRepository implements MatchRepositoryInterface
             ->orderBy('dataHora', 'desc')
             ->get();
 
-        return $models->map(fn(MatchModel $model) => $this->mapper->toDomain($model))->toArray();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
 
     public function create(array $data): Matches
@@ -70,7 +70,7 @@ class EloquentMatchRepository implements MatchRepositoryInterface
             ->with(['local', 'visitant', 'jornada'])
             ->get();
 
-        return $models->map(fn(MatchModel $model) => $this->mapper->toDomain($model))->toArray();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
 
     public function findByArbitre(string $arbitreId): array
@@ -81,7 +81,7 @@ class EloquentMatchRepository implements MatchRepositoryInterface
             ->with(['local', 'visitant', 'jornada'])
             ->get();
 
-        return $models->map(fn(MatchModel $model) => $this->mapper->toDomain($model))->toArray();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
 
     public function findByJornada(string $jornadaId): array
@@ -92,6 +92,6 @@ class EloquentMatchRepository implements MatchRepositoryInterface
             ->with(['local', 'visitant'])
             ->get();
 
-        return $models->map(fn(MatchModel $model) => $this->mapper->toDomain($model))->toArray();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
 }

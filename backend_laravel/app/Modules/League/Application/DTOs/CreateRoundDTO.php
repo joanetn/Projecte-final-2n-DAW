@@ -17,8 +17,8 @@ class CreateRoundDTO
         return new self(
             nom: $data['nom'],
             lligaId: $data['lliga_id'],
-            dataInici: $data['data_inici'],
-            dataFi: $data['data_fi'],
+            dataInici: $data['dataInici'],
+            dataFi: $data['dataFi'],
             status: $data['status'] ?? 'PENDENT',
         );
     }

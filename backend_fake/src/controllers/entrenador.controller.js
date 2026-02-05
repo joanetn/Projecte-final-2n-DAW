@@ -56,7 +56,6 @@ exports.comprovarAlineacio = async (req, res) => {
 
         const { partitId } = req.params;
 
-        // Buscar alineaciones activas para el partido y el equipo del usuario
         const alineacionsResponse = await api.get(`/Alineacio?partitId=${partitId}&equipId=${equipId}&isActive=true`);
         const alineacions = Array.isArray(alineacionsResponse) ? alineacionsResponse : (alineacionsResponse ? [alineacionsResponse] : []);
 
@@ -64,16 +63,13 @@ exports.comprovarAlineacio = async (req, res) => {
             return res.json({ slot1: null, slot2: null, alineacions: [] });
         }
 
-        // Cargar datos de los jugadores y mapear posiciones
         const jugadores = await Promise.all(alineacions.map(async (a) => {
             const usuariResp = await api.get(`/Usuari?id=${a.jugadorId}`);
             const usuari = Array.isArray(usuariResp) ? usuariResp[0] : usuariResp;
 
-            // Obtener roles globales del usuario
             const rolsResp = await api.get(`/UsuariRol?usuariId=${a.jugadorId}`);
             const rolsFiltrados = Array.isArray(rolsResp) ? rolsResp.filter(r => String(r.usuariId) == String(a.jugadorId) && r.isActive) : [];
 
-            // Obtener rol dentro del equipo (si existe)
             const equipUsuariResp = await api.get(`/EquipUsuari?usuariId=${a.jugadorId}&equipId=${equipId}`);
             const equipUsuari = Array.isArray(equipUsuariResp) ? equipUsuariResp.find(e => String(e.equipId) == String(equipId) && String(e.usuariId) == String(a.jugadorId) && e.isActive) : (equipUsuariResp && equipUsuariResp.isActive ? equipUsuariResp : null);
 
@@ -89,7 +85,6 @@ exports.comprovarAlineacio = async (req, res) => {
             };
         }));
 
-        // Mapear a slots: si hay campo posicio lo usamos, si no, asignamos por orden (primero -> slot1, segundo -> slot2)
         const result = { slot1: null, slot2: null, alineacions: jugadores };
 
         jugadores.forEach((a, idx) => {

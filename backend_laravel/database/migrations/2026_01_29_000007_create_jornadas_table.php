@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->string('id')->primary();
             $table->string('nom');
             $table->dateTime('dataInici');
-            $table->dateTime('dataFi')->nullable();
+            $table->dateTime('dataFi');
             $table->string('lligaId');
             $table->string('status')->default('PENDENT');
             $table->boolean('isActive')->default(true);

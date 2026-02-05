@@ -27,7 +27,11 @@ class UpdateLeagueCommand
         }
 
         if ($dto->dataInici !== null) {
-            $this->leagueDomainService->validLeagueDate($dto->dataInici);
+            $this->leagueDomainService->validLeagueIniDate($dto->dataInici);
+        }
+
+        if ($dto->dataInici !== null && $dto->dataFi !== null) {
+            $this->leagueDomainService->validLeagueEndDate($dto->dataInici, $dto->dataFi);
         }
 
         $updateData = array_filter([
@@ -36,6 +40,7 @@ class UpdateLeagueCommand
             'dataInici' => $dto->dataInici,
             'status' => $dto->status,
             'dataFi' => $dto->dataFi,
+            'isActive' => $dto->isActive
         ], fn($value) => $value !== null);
 
         $this->leagueRepositoryInterface->update($leagueId, $updateData);

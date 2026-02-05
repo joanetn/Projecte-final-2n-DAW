@@ -3020,7 +3020,7 @@
       "jugadorId": "zCpAquy",
       "equipId": "b7f563c8",
       "posicio": "REVES",
-      "isActive": true,
+      "isActive": false,
       "creada_at": "2026-02-03T16:51:19.546Z",
       "id": "i-s0-uY"
     },
@@ -3029,9 +3029,153 @@
       "jugadorId": "9",
       "equipId": "b7f563c8",
       "posicio": "DRETA",
-      "isActive": true,
+      "isActive": false,
       "creada_at": "2026-02-03T16:51:19.552Z",
       "id": "WzK5jmF"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:11.081Z",
+      "id": "greTDhi"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:11.089Z",
+      "id": "wep5-OW"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:18.389Z",
+      "id": "-WwanZX"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:18.396Z",
+      "id": "IJKndhx"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:27.465Z",
+      "id": "BPivnWt"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:27.472Z",
+      "id": "LUGxqv0"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:49.419Z",
+      "id": "-UoHPhB"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:49.427Z",
+      "id": "asw0BND"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:59.893Z",
+      "id": "SVQTsQT"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:22:59.900Z",
+      "id": "MR2lVc7"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:23:06.589Z",
+      "id": "2Fe3NII"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:23:06.596Z",
+      "id": "YMduOLj"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:24:46.898Z",
+      "id": "cad8biw"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": false,
+      "creada_at": "2026-02-05T14:24:46.911Z",
+      "id": "sp8Y06G"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "9",
+      "equipId": "b7f563c8",
+      "posicio": "REVES",
+      "isActive": true,
+      "creada_at": "2026-02-05T14:57:53.563Z",
+      "id": "K3sNwAL"
+    },
+    {
+      "partitId": "83eiTf0",
+      "jugadorId": "zCpAquy",
+      "equipId": "b7f563c8",
+      "posicio": "DRETA",
+      "isActive": true,
+      "creada_at": "2026-02-05T14:57:53.570Z",
+      "id": "gV4OGSa"
     }
   ],
   "PartitJugador": [

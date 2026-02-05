@@ -17,9 +17,9 @@ class CreateLeagueDTO
         return new self(
             nom: $data['nom'],
             categoria: $data['categoria'],
-            dataInici: $data['data_inici'],
+            dataInici: $data['dataInici'],
             status: $data['status'] ?? 'NOT_STARTED',
-            dataFi: $data['data_fi'] ?? null,
+            dataFi: $data['dataFi'] ?? null,
         );
     }
 }

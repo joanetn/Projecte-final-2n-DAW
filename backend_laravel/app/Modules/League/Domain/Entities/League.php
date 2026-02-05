@@ -4,13 +4,14 @@ namespace App\Modules\League\Domain\Entities;
 
 class League
 {
-    private function __construct(
+    public function __construct(
         public readonly string $id,
         public readonly string $nom,
         public readonly string $categoria,
         public readonly string $dataInici,
+        public readonly string $dataFi,
         public readonly string $status,
-        public readonly bool $isActive,
+        public readonly bool $isActive = false,
         public readonly string $createdAt,
         public readonly string $updatedAt,
         public readonly ?array $jornades = null,

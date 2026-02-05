@@ -15,7 +15,8 @@ class CreateLeagueCommand
 
     public function execute(CreateLeagueDTO $dto): string
     {
-        $this->leagueDomainService->validLeagueDate($dto->dataInici);
+        $this->leagueDomainService->validLeagueIniDate($dto->dataInici);
+        $this->leagueDomainService->validLeagueEndDate($dto->dataInici, $dto->dataFi);
 
         $league = $this->leagueRepositoryInterface->create([
             'nom' => $dto->nom,

@@ -4,9 +4,9 @@ namespace App\Modules\League\Domain\Entities;
 
 class Standing
 {
-    private function __construct(
+    public function __construct(
         public readonly string $id,
-        public readonly ?object $Lliga,
+        public readonly ?object $lliga,
         public readonly string $lligaId,
         public readonly ?object $equip,
         public readonly string $equipId,
