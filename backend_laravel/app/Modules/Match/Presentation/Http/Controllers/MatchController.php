@@ -3,28 +3,30 @@
 namespace App\Modules\Match\Presentation\Http\Controllers;
 
 use App\Modules\Match\Application\Commands\AssignArbitreCommand;
+use App\Modules\Match\Application\Commands\CreateMatchCommand;
+use App\Modules\Match\Application\Commands\UpdateMatchCommand;
+use App\Modules\Match\Application\Commands\DestroyMatchCommand;
+use App\Modules\Match\Application\DTOs\CreateMatchDTO;
+use App\Modules\Match\Application\DTOs\UpdateMatchDTO;
 use App\Modules\Match\Application\Queries\GetMatchesDetailQuery;
 use App\Modules\Match\Application\Queries\GetMatchesQuery;
 use App\Modules\Match\Application\Queries\GetMatchQuery;
+use App\Modules\Match\Domain\Exceptions\MatchNotFoundException;
+use App\Modules\Match\Domain\Exceptions\InvalidMatchDateException;
 use App\Modules\Match\Presentation\Http\Requests\CreateMatchRequest;
 use App\Modules\Match\Presentation\Http\Requests\UpdateMatchRequest;
 use App\Modules\Match\Presentation\Http\Resources\MatchResource;
+use App\Modules\Match\Presentation\Http\Resources\MatchDetailResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Modules\Match\Application\Commands\CreateMatchCommand;
-use App\Modules\Match\Application\Commands\UpdateMatchCommand;
-use App\Modules\Match\Domain\Exceptions\MatchNotFoundException;
-use App\Modules\Match\Presentation\Http\Resources\MatchDetailResource;
-use App\Modules\Match\Application\DTOs\CreateMatchDTO;
-use App\Modules\Match\Application\DTOs\UpdateMatchDTO;
-use App\Modules\Match\Domain\Exceptions\InvalidMatchDateException;
 
 class MatchController extends Controller
 {
     public function __construct(
         private CreateMatchCommand $createMatchCommand,
         private UpdateMatchCommand $updateMatchCommand,
+        private DestroyMatchCommand $destroyMatchCommand,
         private AssignArbitreCommand $assignArbitreCommand,
         private GetMatchQuery $getMatchQuery,
         private GetMatchesQuery $getMatchesQuery,
@@ -130,7 +132,7 @@ class MatchController extends Controller
     public function destroy(string $id): JsonResponse
     {
         try {
-            $match = $this->getMatchQuery->execute($id);
+            $this->destroyMatchCommand->execute($id);
 
             return response()->json([
                 'success' => true,
@@ -144,8 +146,8 @@ class MatchController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al actualitzar el partit'
-            ], $e->getCode());
+                'message' => $e->getMessage() ?? 'Error al eliminar el partit'
+            ], 400);
         }
     }
 
