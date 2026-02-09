@@ -1,0 +1,7 @@
+{
+    "name": "User",
+    "description": "User Module - Usuaris, roles, and user management",
+    "version": "1.0.0",
+    "provider": "App\\Modules\\User\\Providers\\UserServiceProvider",
+    "routes": "Routes/api.php"
+}

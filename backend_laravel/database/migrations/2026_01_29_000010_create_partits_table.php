@@ -8,14 +8,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('partits', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('jornadaId')->nullable();
-            $table->string('localId');
-            $table->string('visitantId');
+            $table->uuid('id')->primary();
+            $table->uuid('jornadaId')->nullable();
+            $table->uuid('localId');
+            $table->uuid('visitantId');
             $table->dateTime('dataHora')->nullable();
-            $table->string('pistaId')->nullable();
-            $table->string('arbitreId')->nullable();
-            $table->string('usuariId')->nullable();
+            $table->uuid('pistaId')->nullable();
+            $table->uuid('arbitreId')->nullable();
+            $table->uuid('usuariId')->nullable();
             $table->string('status')->default('PENDENT');
             $table->timestamps();
             $table->boolean('isActive')->default(true);

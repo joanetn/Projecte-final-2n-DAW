@@ -14,7 +14,7 @@ class RoundMapper
             nom: $roundModel->nom,
             lligaId: $roundModel->lligaId,
             dataInici: $roundModel->dataInici->toIso8601String(),
-            dataFi: $roundModel->dataFi->toIso8601String(),
+            dataFi: $roundModel->dataFi ? $roundModel->dataFi->toIso8601String() : null,
             status: $roundModel->status,
             createdAt: $roundModel->created_at->toIso8601String(),
             updatedAt: $roundModel->updated_at->toIso8601String(),

@@ -8,11 +8,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('equips', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->uuid('id')->primary();
             $table->string('nom');
             $table->string('categoria');
-            $table->string('clubId');
-            $table->string('lligaId')->nullable();
+            $table->uuid('clubId');
+            $table->uuid('lligaId')->nullable();
             $table->timestamps();
             $table->boolean('isActive')->default(true);
 

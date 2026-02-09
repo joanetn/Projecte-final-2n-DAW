@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class InvitacioEquip extends Model
 {
+    use HasUuids;
+
     protected $table = 'invitacio_equips';
-    protected $keyType = 'string';
-    public $incrementing = false;
 
     protected $fillable = [
         'id',

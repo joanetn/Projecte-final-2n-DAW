@@ -35,7 +35,6 @@ class EloquentLeagueRepository implements LeagueRepositoryInterface
     {
         $models = $this->leagueModel
             ->where('isActive', true)
-            ->with(['equips', 'jornades', 'classificacions'])
             ->orderBy('dataInici', 'desc')
             ->get();
 
@@ -64,7 +63,6 @@ class EloquentLeagueRepository implements LeagueRepositoryInterface
         $models = $this->leagueModel
             ->where('categoria', $categoria)
             ->where('isActive', true)
-            ->with(['equips', 'jornades', 'classificacions'])
             ->get();
 
         return $models->map([$this->leagueMapper, 'toDomain'])->toArray();

@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Acta extends Model
 {
+    use HasUuids;
+
     protected $table = 'actas';
-    protected $keyType = 'string';
-    public $incrementing = false;
 
     protected $fillable = [
         'id',

@@ -8,9 +8,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('classificacions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('lligaId');
-            $table->string('equipId');
+            $table->uuid('id')->primary();
+            $table->uuid('lligaId');
+            $table->uuid('equipId');
             $table->integer('partitsJugats')->default(0);
             $table->integer('partitsGuanyats')->default(0);
             $table->integer('partitsPerduts')->default(0);
@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->boolean('isActive')->default(true);
 
-            $table->foreign('lligaId')->references('id')->on('lligas')->onDelete('cascade');
+            $table->foreign('lligaId')->references('id')->on('lligues')->onDelete('cascade');
             $table->foreign('equipId')->references('id')->on('equips')->onDelete('cascade');
         });
     }

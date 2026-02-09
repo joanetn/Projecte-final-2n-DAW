@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::middleware('api')->prefix('api')->group(function () {
-    // Módulos
-    require __DIR__ . '/api/users.php';
+    // Cargar dinámicamente las rutas de cada módulo si existen
+    foreach (glob(base_path('app/Modules/*/Routes/api.php')) as $routesFile) {
+        require $routesFile;
+    }
 });

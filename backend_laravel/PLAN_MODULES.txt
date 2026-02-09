@@ -1,0 +1,219 @@
+================================================================================
+                    PLAN DE IMPLEMENTACIÓN DE MÓDULOS
+================================================================================
+
+MÓDULOS YA COMPLETADOS:
+✅ League (Lligas, Jornadas, Classificacions)
+✅ Match (Partits, SetPartits, Actas)
+
+================================================================================
+                          ORDEN DE IMPLEMENTACIÓN
+================================================================================
+
+1. USER (Usuarios)
+   ├── Tablas:
+   │   ├── usuaris (id, nom, email, password, telefon, foto, isActive, createdAt, updatedAt)
+   │   └── usuari_rols (id, usuariId, rol, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── CRUD completo
+   │   ├── Login/Register (opcional aquí o después)
+   │   ├── Asignar/revocar roles
+   │   └── Listar por rol
+   │
+   ├── Relaciones:
+   │   ├── usuariRols (1:N)
+   │   ├── equipUsuaris (1:N - después)
+   │   ├── partidosLocal (1:N - después)
+   │   └── partidosVisitant (1:N - después)
+   │
+   └── Dependencias: NINGUNA
+
+--------------------------------------------------------------------------------
+
+2. CLUB (Clubes)
+   ├── Tablas:
+   │   └── clubs (id, nom, provincia, telefon, web, logo, isActive, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── CRUD completo
+   │   ├── Listar equipos del club
+   │   └── Filtros por provincia
+   │
+   ├── Relaciones:
+   │   └── equips (1:N)
+   │
+   └── Dependencias: NINGUNA
+
+--------------------------------------------------------------------------------
+
+3. EQUIPMENT (Equipos)
+   ├── Tablas:
+   │   ├── equips (id, clubId, nom, categoria, fundacio, isActive, createdAt, updatedAt)
+   │   └── equip_usuaris (id, equipId, usuariId, rol, isActive, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── CRUD de equips
+   │   ├── Gestión de miembros (equip_usuaris)
+   │   ├── Asignar/revocar jugadores
+   │   ├── Listar jugadores por rol
+   │   └── Invitaciones (invitacio_equips)
+   │
+   ├── Relaciones:
+   │   ├── club (N:1)
+   │   ├── usuaris (N:N via equip_usuaris)
+   │   ├── partitsLocal (1:N)
+   │   ├── partitsVisitant (1:N)
+   │   └── classificacions (1:N)
+   │
+   └── Dependencias: USER (1), CLUB (2)
+
+--------------------------------------------------------------------------------
+
+4. VENUE (Instalaciones y Pistas)
+   ├── Tablas:
+   │   ├── instalacions (id, nom, provincia, municipi, adreca, telefon, web, isActive, createdAt, updatedAt)
+   │   └── pistes (id, instalacioId, nom, tipus, capacitat, isActive, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── CRUD de instalaciones
+   │   ├── CRUD de pistas
+   │   ├── Disponibilidad de pistas
+   │   └── Asignar pistas a nuevos partidos
+   │
+   ├── Relaciones:
+   │   ├── pistes (1:N)
+   │   └── partits (1:N via pista)
+   │
+   └── Dependencias: NINGUNA
+
+--------------------------------------------------------------------------------
+
+5. LINEUP (Alineaciones - Jugadores por Partido)
+   ├── Tablas:
+   │   ├── alineacions (id, equipId, jornadaId, formacio, observacions, isActive, createdAt, updatedAt)
+   │   └── partit_jugadors (id, partidId, usuariId, numero, posicio, minuts, estado, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── CRUD de alineaciones
+   │   ├── Añadir/quitar jugadores del partido
+   │   ├── Registrar estadísticas del jugador (minutos, estado)
+   │   └── Listar jugadores por partido
+   │
+   ├── Relaciones:
+   │   ├── equip (N:1)
+   │   ├── jornada (N:1)
+   │   ├── partit (1:N via partit_jugadors)
+   │   └── usuaris (N:N via partit_jugadors)
+   │
+   └── Dependencias: USER (1), EQUIPMENT (3), LEAGUE (✅ hecho)
+
+--------------------------------------------------------------------------------
+
+6. SCORING (Puntuaciones)
+   ├── Tablas:
+   │   └── puntuacions (id, partidId, usuariId, punts, assist, setsGuanyats, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── CRUD de puntuaciones
+   │   ├── Actualizar estadísticas
+   │   ├── Ranking individual
+   │   └── Estadísticas por jugador/partido
+   │
+   ├── Relaciones:
+   │   ├── partit (N:1)
+   │   └── usuari (N:1)
+   │
+   └── Dependencias: USER (1), MATCH (✅ hecho)
+
+--------------------------------------------------------------------------------
+
+7. EQUIPMENT_INVITATIONS (Invitaciones a Equipos)
+   ├── Tablas:
+   │   └── invitacio_equips (id, equipId, usuariId, status, missatge, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── Crear invitación
+   │   ├── Aceptar/rechazar
+   │   ├── Listar invitaciones pendientes
+   │   └── Cancelar invitación
+   │
+   ├── Relaciones:
+   │   ├── equip (N:1)
+   │   └── usuari (N:1)
+   │
+   └── Dependencias: USER (1), EQUIPMENT (3)
+
+--------------------------------------------------------------------------------
+
+8. MERCHANDISE (Tienda - Artículos y Compras)
+   ├── Tablas:
+   │   ├── merchs (id, nom, descripcion, preu, estoc, imatge, isActive, createdAt, updatedAt)
+   │   └── compras (id, usuariId, merchId, quantitat, preu, data, isActive, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── CRUD de merchandise
+   │   ├── Gestión de inventario
+   │   ├── CRUD de compras
+   │   ├── Historial de compras por usuario
+   │   └── Reportes de ventas
+   │
+   ├── Relaciones:
+   │   ├── usuari (N:1)
+   │   └── merch (N:1)
+   │
+   └── Dependencias: USER (1)
+
+--------------------------------------------------------------------------------
+
+9. INSURANCE (Seguros)
+   ├── Tablas:
+   │   └── seguros (id, usuariId, tipo, numeroPoliza, fechaInicio, fechaFin, proveedor, isActive, createdAt, updatedAt)
+   │
+   ├── Operaciones:
+   │   ├── CRUD de seguros
+   │   ├── Validar vigencia
+   │   ├── Listar seguros activos
+   │   └── Alertas de vencimiento
+   │
+   ├── Relaciones:
+   │   └── usuari (N:1)
+   │
+   └── Dependencias: USER (1)
+
+================================================================================
+                            RESUMEN DEPENDENCIAS
+================================================================================
+
+Independientes (sin dependencias):
+  • USER (1)
+  • CLUB (2)
+  • VENUE (4)
+
+Primer Nivel (dependen de Independientes):
+  • EQUIPMENT (3) ← USER + CLUB
+  • MERCHANDISE (8) ← USER
+  • INSURANCE (9) ← USER
+
+Segundo Nivel (dependen de anteriores):
+  • LINEUP (5) ← USER + EQUIPMENT + LEAGUE ✅
+  • SCORING (6) ← USER + MATCH ✅
+  • EQUIPMENT_INVITATIONS (7) ← USER + EQUIPMENT
+
+================================================================================
+                          ORDEN RECOMENDADO FINAL
+================================================================================
+
+1️⃣  USER
+2️⃣  CLUB
+3️⃣  EQUIPMENT
+4️⃣  VENUE
+5️⃣  LINEUP (o SCORING, son independientes entre sí)
+6️⃣  SCORING
+7️⃣  EQUIPMENT_INVITATIONS
+8️⃣  MERCHANDISE
+9️⃣  INSURANCE
+
+⚠️  NOTA: Notificaciones irán en otro servidor (servidor independiente)
+
+================================================================================

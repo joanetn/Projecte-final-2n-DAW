@@ -10,6 +10,7 @@ class CreateLeagueDTO
         public readonly string $dataInici,
         public readonly string $status = 'NOT_STARTED',
         public readonly ?string $dataFi = null,
+        public readonly bool $isActive = true,
     ) {}
 
     public static function fromArray(array $data): self
@@ -20,6 +21,7 @@ class CreateLeagueDTO
             dataInici: $data['dataInici'],
             status: $data['status'] ?? 'NOT_STARTED',
             dataFi: $data['dataFi'] ?? null,
+            isActive: $data['isActive'] ?? true,
         );
     }
 }

@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Jornada extends Model
 {
+    use HasUuids;
+
     protected $table = 'jornadas';
-    protected $keyType = 'string';
-    public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [

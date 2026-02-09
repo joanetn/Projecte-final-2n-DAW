@@ -3,12 +3,16 @@
 namespace App\Modules\League\Infrastructure\Peristence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class StandingModel extends Model
 {
+    use HasUuids;
+
     protected $table = 'classificacions';
 
     protected $fillable = [
+        'id',
         'lligaId',
         'equipId',
         'partitsJugats',
@@ -37,8 +41,8 @@ class StandingModel extends Model
         return $this->belongsTo(LeagueModel::class, 'lligaId');
     }
 
-    // public function equip()
-    // {
-    //     return $this->belongsTo(EquipModel::class, 'equipId');
-    // }
+    public function equip()
+    {
+        return $this->belongsTo(\App\Models\Equip::class, 'equipId');
+    }
 }

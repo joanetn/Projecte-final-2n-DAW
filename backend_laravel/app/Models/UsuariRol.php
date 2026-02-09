@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UsuariRol extends Model
 {
+    use HasUuids;
+
     protected $table = 'usuari_rols';
-    protected $keyType = 'string';
-    public $incrementing = false;
-    public $timestamps = false;
 
     protected $fillable = [
         'id',
@@ -21,7 +21,8 @@ class UsuariRol extends Model
 
     protected $casts = [
         'isActive' => 'boolean',
-        'created_at' => 'datetime',
+        'createdAt' => 'datetime',
+        'updatedAt' => 'datetime',
     ];
 
     public function usuari(): BelongsTo

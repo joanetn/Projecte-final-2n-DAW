@@ -35,7 +35,6 @@ class EloquentMatchRepository implements MatchRepositoryInterface
     {
         $models = $this->model
             ->where('isActive', true)
-            ->with(['local', 'visitant', 'jornada', 'arbitre', 'pista'])
             ->orderBy('dataHora', 'desc')
             ->get();
 
@@ -67,7 +66,7 @@ class EloquentMatchRepository implements MatchRepositoryInterface
                     ->orWhere('visitantId', $equipId);
             })
             ->where('isActive', true)
-            ->with(['local', 'visitant', 'jornada'])
+            ->with(['local', 'visitant', 'jornada', 'pista', 'arbitre'])
             ->get();
 
         return $models->map([$this->mapper, 'toDomain'])->toArray();
@@ -78,7 +77,7 @@ class EloquentMatchRepository implements MatchRepositoryInterface
         $models = $this->model
             ->where('arbitreId', $arbitreId)
             ->where('isActive', true)
-            ->with(['local', 'visitant', 'jornada'])
+            ->with(['local', 'visitant', 'jornada', 'pista', 'arbitre'])
             ->get();
 
         return $models->map([$this->mapper, 'toDomain'])->toArray();
@@ -89,7 +88,7 @@ class EloquentMatchRepository implements MatchRepositoryInterface
         $models = $this->model
             ->where('jornadaId', $jornadaId)
             ->where('isActive', true)
-            ->with(['local', 'visitant'])
+            ->with(['local', 'visitant', 'jornada', 'pista', 'arbitre'])
             ->get();
 
         return $models->map([$this->mapper, 'toDomain'])->toArray();

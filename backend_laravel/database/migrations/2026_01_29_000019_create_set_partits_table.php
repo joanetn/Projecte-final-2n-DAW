@@ -8,8 +8,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('set_partits', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('partitId');
+            $table->uuid('id')->primary();
+            $table->uuid('partitId');
             $table->integer('numeroSet');
             $table->integer('jocsLocal')->nullable();
             $table->integer('jocsVisit')->nullable();

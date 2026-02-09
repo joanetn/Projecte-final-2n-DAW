@@ -39,6 +39,7 @@ class UpdateMatchCommand
             'pistaId' => $dto->pistaId,
             'arbitreId' => $dto->arbitreId,
             'status' => $dto->status,
+            'isActive' => $dto->isActive
         ], fn($value) => $value !== null);
 
         $this->matchRepoInterf->update($matchId, $updateData);

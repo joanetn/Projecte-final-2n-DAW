@@ -1,16 +1,19 @@
 <?php
+
 namespace App\Modules\Match\Infrastructure\Persistence\Eloquent\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class MatchModel extends Model {
+class MatchModel extends Model
+{
     use HasUuids;
 
     protected $table = 'partits';
 
     protected $fillable = [
+        'id',
         'jornadaId',
         'localId',
         'visitantId',
@@ -28,23 +31,28 @@ class MatchModel extends Model {
         'updated_at' => 'datetime',
     ];
 
-    public function jornada(): BelongsTo {
+    public function jornada(): BelongsTo
+    {
         return $this->belongsTo(\App\Models\Jornada::class, 'jornadaId');
     }
 
-    public function local(): BelongsTo {
+    public function local(): BelongsTo
+    {
         return $this->belongsTo(\App\Models\Equip::class, 'localId');
     }
 
-    public function visitant(): BelongsTo {
+    public function visitant(): BelongsTo
+    {
         return $this->belongsTo(\App\Models\Equip::class, 'visitantId');
     }
 
-    public function pista(): BelongsTo {
+    public function pista(): BelongsTo
+    {
         return $this->belongsTo(\App\Models\Pista::class, 'pistaId');
     }
 
-    public function arbitre():BelongsTo {
+    public function arbitre(): BelongsTo
+    {
         return $this->belongsTo(\App\Models\Usuari::class, 'arbitreId');
     }
 

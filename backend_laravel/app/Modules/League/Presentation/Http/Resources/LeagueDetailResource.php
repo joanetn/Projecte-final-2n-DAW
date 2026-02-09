@@ -17,41 +17,35 @@ class LeagueDetailResource extends JsonResource
             'dataFi' => $this->dataFi,
             'status' => $this->status,
             'isActive' => $this->isActive,
-            'jornades' => $this->when($this->jornades, function () {
-                return collect($this->jornades)->map(function ($jornada) {
-                    return [
-                        'id' => $jornada['id'] ?? $jornada->id,
-                        'nom' => $jornada['nom'] ?? $jornada->nom,
-                        'dataInici' => $jornada['dataInici'] ?? $jornada->dataInici,
-                        'dataFi' => $jornada['dataFi'] ?? $jornada->dataFi,
-                        'status' => $jornada['status'] ?? $jornada->status,
-                    ];
-                });
-            }),
-            'equips' => $this->when($this->equips, function () {
-                return collect($this->equips)->map(function ($equip) {
-                    return [
-                        'id' => $equip['id'] ?? $equip->id,
-                        'nom' => $equip['nom'] ?? $equip->nom,
-                        'categoria' => $equip['categoria'] ?? $equip->categoria,
-                    ];
-                });
-            }),
-            'classificacions' => $this->when($this->classificacions, function () {
-                return collect($this->classificacions)->map(function ($classificacio) {
-                    return [
-                        'id' => $classificacio['id'] ?? $classificacio->id,
-                        'equipId' => $classificacio['equipId'] ?? $classificacio->equipId,
-                        'partitsJugats' => $classificacio['partitsJugats'] ?? $classificacio->partitsJugats,
-                        'partitsGuanyats' => $classificacio['partitsGuanyats'] ?? $classificacio->partitsGuanyats,
-                        'setsGuanyats' => $classificacio['setsGuanyats'] ?? $classificacio->setsGuanyats,
-                        'setPerduts' => $classificacio['setPerduts'] ?? $classificacio->setPerduts,
-                        'punts' => $classificacio['punts'] ?? $classificacio->punts,
-                    ];
-                });
-            }),
-            'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
+            'jornades' => collect($this->jornades ?? [])->map(function ($jornada) {
+                return [
+                    'id' => $jornada['id'] ?? $jornada->id,
+                    'nom' => $jornada['nom'] ?? $jornada->nom,
+                    'dataInici' => $jornada['dataInici'] ?? $jornada->dataInici,
+                    'dataFi' => $jornada['dataFi'] ?? $jornada->dataFi,
+                    'status' => $jornada['status'] ?? $jornada->status,
+                ];
+            })->toArray(),
+            'equips' => collect($this->equips ?? [])->map(function ($equip) {
+                return [
+                    'id' => $equip['id'] ?? $equip->id,
+                    'nom' => $equip['nom'] ?? $equip->nom,
+                    'categoria' => $equip['categoria'] ?? $equip->categoria,
+                ];
+            })->toArray(),
+            'classificacions' => collect($this->classificacions ?? [])->map(function ($classificacio) {
+                return [
+                    'id' => $classificacio['id'] ?? $classificacio->id,
+                    'equipId' => $classificacio['equipId'] ?? $classificacio->equipId,
+                    'partitsJugats' => $classificacio['partitsJugats'] ?? $classificacio->partitsJugats,
+                    'partitsGuanyats' => $classificacio['partitsGuanyats'] ?? $classificacio->partitsGuanyats,
+                    'setsGuanyats' => $classificacio['setsGuanyats'] ?? $classificacio->setsGuanyats,
+                    'setPerduts' => $classificacio['setPerduts'] ?? $classificacio->setPerduts,
+                    'punts' => $classificacio['punts'] ?? $classificacio->punts,
+                ];
+            })->toArray(),
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }

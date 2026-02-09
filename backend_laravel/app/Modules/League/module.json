@@ -1,0 +1,11 @@
+{
+    "name": "League",
+    "alias": "league",
+    "description": "Módulo de ligas, jornades i classificacions",
+    "priority": 0,
+    "providers": [
+        "Modules\\League\\Providers\\LeagueServiceProvider",
+        "Modules\\League\\Providers\\RouteServiceProvider"
+    ],
+    "files": []
+}

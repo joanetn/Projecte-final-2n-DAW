@@ -7,6 +7,7 @@ use App\Modules\Match\Domain\Repositories\MatchRepositoryInterface;
 use App\Modules\Match\Domain\Events\MatchCreatedEvent;
 use App\Modules\Match\Domain\Services\MatchDomainService;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Str;
 
 class CreateMatchCommand
 {
@@ -20,6 +21,7 @@ class CreateMatchCommand
         $this->domainService->validateMatchDate($dto->dataHora);
 
         $match = $this->matchRepoInterf->create([
+            'id' => Str::uuid()->toString(),
             'jornadaId' => $dto->jornadaId,
             'localId' => $dto->localId,
             'visitantId' => $dto->visitantId,

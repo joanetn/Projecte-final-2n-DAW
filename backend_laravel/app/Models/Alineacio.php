@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Alineacio extends Model
 {
+    use HasUuids;
+
     protected $table = 'alineacions';
-    protected $keyType = 'string';
-    public $incrementing = false;
     public $timestamps = false;
 
     const CREATED_AT = 'creada_at';

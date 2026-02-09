@@ -8,10 +8,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('pistes', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->uuid('id')->primary();
             $table->string('nom');
             $table->string('tipus')->nullable();
-            $table->string('instalacioId');
+            $table->uuid('instalacioId');
             $table->timestamps();
             $table->boolean('isActive')->default(true);
 

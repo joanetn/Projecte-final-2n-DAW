@@ -9,9 +9,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('compras', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('usuariId');
-            $table->string('merchId');
+            $table->uuid('id')->primary();
+            $table->uuid('usuariId');
+            $table->uuid('merchId');
             $table->integer('quantitat');
             $table->float('total');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));

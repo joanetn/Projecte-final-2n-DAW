@@ -15,13 +15,13 @@ class LeagueMapper
             categoria: $leagueModel->categoria,
             isActive: $leagueModel->isActive,
             dataInici: $leagueModel->dataInici->toIso8601String(),
-            dataFi: $leagueModel->dataFi->toIso8601String(),
+            dataFi: $leagueModel->dataFi ? $leagueModel->dataFi->toIso8601String() : null,
             status: $leagueModel->status,
             createdAt: $leagueModel->created_at->toIso8601String(),
             updatedAt: $leagueModel->updated_at->toIso8601String(),
-            classificacions: $leagueModel->relationLoaded('classificacions') ? $leagueModel->classificacions->toArray() : null,
-            jornades: $leagueModel->relationLoaded('jornades') ? $leagueModel->jornades->toArray() : null,
-            equips: $leagueModel->relationLoaded('equips') ? $leagueModel->equips->toArray() : null
+            classificacions: $leagueModel->classificacions->toArray() ?? [],
+            jornades: $leagueModel->jornades->toArray() ?? [],
+            equips: $leagueModel->equips->toArray() ?? []
         );
     }
 

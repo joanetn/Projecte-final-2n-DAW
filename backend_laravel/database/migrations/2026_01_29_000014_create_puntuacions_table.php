@@ -8,9 +8,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('puntuacions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('partitId');
-            $table->string('jugadorId');
+            $table->uuid('id')->primary();
+            $table->uuid('partitId');
+            $table->uuid('jugadorId');
             $table->integer('punts')->default(0);
             $table->boolean('isActive')->default(true);
 

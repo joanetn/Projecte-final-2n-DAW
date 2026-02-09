@@ -9,8 +9,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('notificacions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('usuariId');
+            $table->uuid('id')->primary();
+            $table->uuid('usuariId');
             $table->string('titol');
             $table->text('missatge');
             $table->string('tipus')->nullable();

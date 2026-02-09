@@ -9,7 +9,7 @@ class League
         public readonly string $nom,
         public readonly string $categoria,
         public readonly string $dataInici,
-        public readonly string $dataFi,
+        public readonly ?string $dataFi,
         public readonly string $status,
         public readonly bool $isActive = false,
         public readonly string $createdAt,

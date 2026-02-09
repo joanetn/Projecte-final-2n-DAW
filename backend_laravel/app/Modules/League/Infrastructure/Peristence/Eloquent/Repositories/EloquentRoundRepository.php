@@ -35,7 +35,6 @@ class EloquentRoundRepository implements RoundRepositoryInterface
     {
         $models = $this->model
             ->where('isActive', true)
-            ->with(['partits'])
             ->orderBy('dataInici', 'asc')
             ->get();
 

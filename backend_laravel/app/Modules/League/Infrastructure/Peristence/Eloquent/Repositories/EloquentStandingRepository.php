@@ -25,7 +25,6 @@ class EloquentStandingRepository implements StandingRepositoryInterface
     {
         $models = $this->model
             ->where('isActive', true)
-            ->with(['lliga', 'equip'])
             ->orderBy('punts', 'desc')
             ->get();
 

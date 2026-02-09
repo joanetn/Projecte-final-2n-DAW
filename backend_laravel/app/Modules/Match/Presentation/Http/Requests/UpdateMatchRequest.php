@@ -1,14 +1,18 @@
 <?php
+
 namespace App\Modules\Match\Presentation\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateMatchRequest extends FormRequest {
-    public function authorize(): bool {
+class UpdateMatchRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
         return true;
     }
 
-    public function rules(): array {
+    public function rules(): array
+    {
         return [
             'jornadaId' => 'nullable|string|exists:jornadas,id',
             'localId' => 'nullable|string|exists:equips,id',
@@ -17,11 +21,12 @@ class UpdateMatchRequest extends FormRequest {
             'pistaId' => 'nullable|string|exists:pistas,id',
             'arbitreId' => 'nullable|string|exists:usuaris,id',
             'status' => 'nullable|in:PENDENT,COMPLETAT,CANCELAT',
+            'isActive' => 'nullable|boolean',
         ];
     }
 
     public function messages(): array
-    {   
+    {
         return [
             'localId.exists' => 'L\'equip local no existeix',
             'visitantId.exists' => 'L\'equip visitant no existeix',

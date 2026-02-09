@@ -8,10 +8,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('partit_jugadors', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('partitId');
-            $table->string('jugadorId');
-            $table->string('equipId');
+            $table->uuid('id')->primary();
+            $table->uuid('partitId');
+            $table->uuid('jugadorId');
+            $table->uuid('equipId');
             $table->integer('punts')->default(0);
             $table->boolean('isActive')->default(true);
 

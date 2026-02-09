@@ -5,6 +5,7 @@ namespace App\Modules\League\Application\Commands;
 use App\Modules\League\Application\DTOs\CreateStandingDTO;
 use App\Modules\League\Domain\Repositories\StandingRepositoryInterface;
 use App\Modules\League\Domain\Services\StandingDomainService;
+use Illuminate\Support\Str;
 
 class CreateStandingCommand
 {
@@ -20,6 +21,7 @@ class CreateStandingCommand
         $this->standingDomainService->validateTeamCanJoinLeague($teamAlreadyExists);
 
         $standing = $this->standingRepositoryInterface->create([
+            'id' => Str::uuid()->toString(),
             'lligaId' => $dto->lligaId,
             'equipId' => $dto->equipId,
             'partitsJugats' => 0,

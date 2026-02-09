@@ -8,9 +8,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('equip_usuaris', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('equipId');
-            $table->string('usuariId');
+            $table->uuid('id')->primary();
+            $table->uuid('equipId');
+            $table->uuid('usuariId');
             $table->string('rolEquip');
             $table->boolean('isActive')->default(true);
             $table->timestamp('created_at')->nullable();

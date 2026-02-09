@@ -10,10 +10,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('alineacions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('partitId');
-            $table->string('jugadorId');
-            $table->string('equipId');
+            $table->uuid('id')->primary();
+            $table->uuid('partitId');
+            $table->uuid('jugadorId');
+            $table->uuid('equipId');
             $table->string('posicio')->nullable();
             $table->boolean('isActive')->default(true);
             $table->timestamp('creada_at')->default(DB::raw('CURRENT_TIMESTAMP'));

@@ -18,39 +18,29 @@ class MatchResource extends JsonResource
             'arbitreId' => $this->arbitreId,
             'status' => $this->status,
             'isActive' => $this->isActive,
-            'local' => $this->when($this->local, function () {
-                return [
-                    'id' => $this->local->id,
-                    'nom' => $this->local->nom,
-                    'categoria' => $this->local->categoria,
-                ];
-            }),
-            'visitant' => $this->when($this->visitant, function () {
-                return [
-                    'id' => $this->visitant->id,
-                    'nom' => $this->visitant->nom,
-                    'categoria' => $this->visitant->categoria,
-                ];
-            }),
-            'jornada' => $this->when($this->jornada, function () {
-                return [
-                    'id' => $this->jornada->id,
-                    'nom' => $this->jornada->nom,
-                    'data' => $this->jornada->data,
-                ];
-            }),
-            'arbitre' => $this->when($this->arbitre, function () {
-                return [
-                    'id' => $this->arbitre->id,
-                    'nom' => $this->arbitre->nom,
-                ];
-            }),
-            'pista' => $this->when($this->pista, function () {
-                return [
-                    'id' => $this->pista->id,
-                    'nom' => $this->pista->nom,
-                ];
-            }),
+            'local' => $this->local ? [
+                'id' => $this->local->id,
+                'nom' => $this->local->nom,
+                'categoria' => $this->local->categoria,
+            ] : null,
+            'visitant' => $this->visitant ? [
+                'id' => $this->visitant->id,
+                'nom' => $this->visitant->nom,
+                'categoria' => $this->visitant->categoria,
+            ] : null,
+            'jornada' => $this->jornada ? [
+                'id' => $this->jornada->id,
+                'nom' => $this->jornada->nom,
+                'data' => $this->jornada->data,
+            ] : null,
+            'arbitre' => $this->arbitre ? [
+                'id' => $this->arbitre->id,
+                'nom' => $this->arbitre->nom,
+            ] : null,
+            'pista' => $this->pista ? [
+                'id' => $this->pista->id,
+                'nom' => $this->pista->nom,
+            ] : null,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
         ];

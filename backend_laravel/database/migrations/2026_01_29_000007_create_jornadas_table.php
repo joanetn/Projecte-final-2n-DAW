@@ -8,15 +8,15 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('jornadas', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->uuid('id')->primary();
             $table->string('nom');
             $table->dateTime('dataInici');
-            $table->dateTime('dataFi');
-            $table->string('lligaId');
+            $table->dateTime('dataFi')->nullable();
+            $table->uuid('lligaId');
             $table->string('status')->default('PENDENT');
             $table->boolean('isActive')->default(true);
 
-            $table->foreign('lligaId')->references('id')->on('lligas')->onDelete('cascade');
+            $table->foreign('lligaId')->references('id')->on('lligues')->onDelete('cascade');
         });
     }
 

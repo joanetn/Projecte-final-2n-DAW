@@ -7,9 +7,6 @@ use App\Modules\League\Domain\Exceptions\InvalidStandingException;
 
 class StandingDomainService
 {
-    /**
-     * Actualizar standing después de un partido
-     */
     public function updateStandingAfterMatch(
         Standing $standing,
         int $setsWon,
@@ -34,9 +31,6 @@ class StandingDomainService
         ];
     }
 
-    /**
-     * Calcular puntos según resultado del partido
-     */
     public function calculatePoints(int $currentPoints, bool $matchWon): int
     {
         if ($matchWon) {
@@ -46,9 +40,6 @@ class StandingDomainService
         return $currentPoints;
     }
 
-    /**
-     * Validar sets
-     */
     public function validateSets(int $setsWon, int $setsLost): void
     {
         if ($setsWon < 0 || $setsLost < 0) {
@@ -60,9 +51,6 @@ class StandingDomainService
         }
     }
 
-    /**
-     * Validar juegos
-     */
     public function validateGames(int $gamesWon, int $gamesLost): void
     {
         if ($gamesWon < 0 || $gamesLost < 0) {
@@ -70,25 +58,16 @@ class StandingDomainService
         }
     }
 
-    /**
-     * Calcular diferencia de sets (para ordenar tabla)
-     */
     public function calculateSetDifference(Standing $standing): int
     {
         return $standing->setsGuanyats - $standing->setPerduts;
     }
 
-    /**
-     * Calcular diferencia de juegos (desempate)
-     */
     public function calculateGameDifference(Standing $standing): int
     {
         return $standing->jocsGuanyats - $standing->jocsPerduts;
     }
 
-    /**
-     * Validar que el equipo puede participar en la liga
-     */
     public function validateTeamCanJoinLeague(bool $teamAlreadyInLeague): void
     {
         if ($teamAlreadyInLeague) {
@@ -96,9 +75,6 @@ class StandingDomainService
         }
     }
 
-    /**
-     * Validar que se puede desactivar un standing
-     */
     public function validateCanDeactivate(Standing $standing): void
     {
         if ($standing->partitsJugats > 0) {
@@ -106,9 +82,6 @@ class StandingDomainService
         }
     }
 
-    /**
-     * Resetear estadísticas del standing
-     */
     public function getResetStats(): array
     {
         return [

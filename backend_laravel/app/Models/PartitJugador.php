@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PartitJugador extends Model
 {
+    use HasUuids;
+
     protected $table = 'partit_jugadors';
-    protected $keyType = 'string';
-    public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [

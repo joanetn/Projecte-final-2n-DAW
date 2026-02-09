@@ -8,13 +8,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('instalacions', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->uuid('id')->primary();
             $table->string('nom');
             $table->string('adreca')->nullable();
             $table->string('telefon')->nullable();
             $table->string('tipusPista')->nullable();
             $table->integer('numPistes')->nullable();
-            $table->string('clubId')->nullable();
+            $table->uuid('clubId')->nullable();
             $table->timestamps();
             $table->boolean('isActive')->default(true);
 

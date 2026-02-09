@@ -11,7 +11,8 @@ class UpdateMatchDTO
         public readonly ?string $dataHora = null,
         public readonly ?string $pistaId = null,
         public readonly ?string $arbitreId = null,
-        public readonly ?string $status = null
+        public readonly ?string $status = null,
+        public readonly ?bool $isActive = null
     ) {}
 
     public static function fromArray(array $data): self
@@ -23,7 +24,8 @@ class UpdateMatchDTO
             dataHora: $data['dataHora'] ?? null,
             pistaId: $data['pistaId'] ?? null,
             arbitreId: $data['arbitreId'] ?? null,
-            status: $data['status'] ?? null
+            status: $data['status'] ?? null,
+            isActive: isset($data['isActive']) ? (bool) $data['isActive'] : null
         );
     }
 }

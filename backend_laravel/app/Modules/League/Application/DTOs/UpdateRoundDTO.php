@@ -19,7 +19,7 @@ class UpdateRoundDTO
             dataInici: $data['dataInici'] ?? null,
             dataFi: $data['dataFi'] ?? null,
             status: $data['status'] ?? null,
-            isActive: isset($data['isActive']) ? (bool) $data['is_active'] : null,
+            isActive: isset($data['isActive']) ? (bool) $data['isActive'] : null,
         );
     }
 }

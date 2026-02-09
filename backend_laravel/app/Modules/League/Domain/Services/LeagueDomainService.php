@@ -13,7 +13,7 @@ class LeagueDomainService
 
     public function canStartLeague(object $league): bool
     {
-        return $league->status === 'NOT_STARTED' && $league->teamCount >= 2;
+        return $league->status === 'NOT_STARTED' && $league->getTeamCount() >= 2;
     }
 
     public function validLeagueIniDate(?string $dateHour): void

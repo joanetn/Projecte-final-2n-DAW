@@ -8,9 +8,9 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('actas', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('partitId')->unique();
-            $table->string('arbitreId');
+            $table->uuid('id')->primary();
+            $table->uuid('partitId')->unique();
+            $table->uuid('arbitreId');
             $table->integer('setsLocal')->nullable();
             $table->integer('setsVisitant')->nullable();
             $table->text('observacions')->nullable();
