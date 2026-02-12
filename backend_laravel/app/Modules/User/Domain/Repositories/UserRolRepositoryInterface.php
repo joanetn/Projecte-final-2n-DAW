@@ -10,6 +10,10 @@ interface UserRolRepositoryInterface
 
     public function findByUser(string $usuariId): array;
 
+    public function findByUserId(string $usuariId): array;
+
+    public function findByUserIdAndRol(string $usuariId, string $rol): ?UserRol;
+
     public function create(array $data): UserRol;
 
     public function update(string $id, array $data): bool;

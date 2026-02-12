@@ -28,7 +28,7 @@ class EloquentSetMatchRepository implements MatchSetRepositoryInterface
             ->orderBy('numeroSet')
             ->get();
 
-        return $models->map(fn(SetMatchModel $model) => $this->mapper->toDomain($model))->toArray();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
 
     public function create(array $data): MatchSet

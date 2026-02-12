@@ -8,11 +8,13 @@ interface UserRepositoryInterface
 {
     public function findById(string $id): ?User;
 
-    public function findByEmail(string $email): ?User;
+    public function findByEmail(string $email): array;
 
     public function findByIdWithRelations(string $id, array $relations);
 
     public function findAll(): array;
+
+    public function findAllWithRelations(array $relations): array;
 
     public function create(array $data): User;
 

@@ -1,0 +1,607 @@
+========================================
+REQUESTS PARA POSTMAN - MÓDULO USER (USUARIOS)
+========================================
+Base URL: http://localhost:8000/api
+
+Headers para TODAS las requests:
+Accept: application/json
+Content-Type: application/json
+
+IMPORTANTE - MAPEO DE CAMPOS:
+En el HTTP REQUEST (lo que envías a Postman) usas:  "password" y "foto"
+En la BASE DE DATOS se almacenan como:              "contrasenya" y "avatar"
+
+
+========================================
+1. LISTAR TODOS LOS USUARIOS
+========================================
+Method: GET
+URL: http://localhost:8000/api/usuaris
+
+Expected Response:
+{
+    "success": true,
+    "data": [
+        {
+            "id": "uuid-1",
+            "nom": "Juan Perez",
+            "email": "juan.perez@example.com",
+            "telefon": "+34123456789",
+            "dataNaixement": "1990-05-10",
+            "nivell": null,
+            "avatar": "https://example.com/avatar.jpg",
+            "dni": "12345678A",
+            "isActive": true,
+            "rols": [ ... ],
+            "equipUsuaris": [ ... ],
+            "compras": [ ... ],
+            "seguros": [ ... ],
+            "createdAt": "2026-01-29T10:00:00",
+            "updatedAt": "2026-01-29T10:00:00"
+        }
+    ]
+}
+
+
+========================================
+2. VER UN USUARIO ESPECÍFICO
+========================================
+Method: GET
+URL: http://localhost:8000/api/usuaris/{id}
+
+Ejemplos:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000
+
+Expected Response:
+{
+    "success": true,
+    "data": {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "nom": "Juan Perez",
+        "email": "juan.perez@example.com",
+        "telefon": "+34123456789",
+        "dataNaixement": "1990-05-10",
+        "nivell": "INICI",
+        "avatar": "https://example.com/avatar.jpg",
+        "dni": "12345678A",
+        "isActive": true,
+        "createdAt": "2026-01-29T10:00:00",
+        "updatedAt": "2026-01-29T10:00:00"
+    }
+}
+
+
+========================================
+3. VER USUARIO CON DETALLES (RELACIONES)
+========================================
+Method: GET
+URL: http://localhost:8000/api/usuaris/{id}/detail
+
+Ejemplos:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000/detail
+
+Expected Response:
+{
+    "success": true,
+    "data": {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "nom": "Juan Perez",
+        "email": "juan.perez@example.com",
+        "telefon": "+34123456789",
+        "dataNaixement": "1990-05-10",
+        "nivell": "INICI",
+        "avatar": "https://example.com/avatar.jpg",
+        "dni": "12345678A",
+        "isActive": true,
+        "rols": [
+            { "id": "rol-uuid-1", "rol": "ADMIN", "isActive": true }
+        ],
+        "equipUsuaris": [
+            { "id": "eu-uuid-1", "equipId": "equip-uuid-1", "rolEquip": "JUGADOR", "isActive": true }
+        ],
+        "compras": [
+            { "id": "compra-uuid-1", "merchId": "merch-uuid-1", "quantitat": 2, "total": 39.98, "pagat": true, "status": "COMPLETAT" }
+        ],
+        "seguros": [
+            { "id": "seguro-uuid-1", "dataExpiracio": "2026-12-31", "pagat": true }
+        ],
+        "createdAt": "2026-01-29T10:00:00",
+        "updatedAt": "2026-01-29T10:00:00"
+    }
+}
+
+
+========================================
+4. CREAR NUEVO USUARIO
+========================================
+Method: POST
+URL: http://localhost:8000/api/usuaris
+
+Body (JSON):
+{
+    "nom": "Test User",
+    "email": "test.user+postman@example.com",
+    "contrasenya": "Password123!",
+    "telefon": "+34123456789",
+    "dataNaixement": "1990-01-01",
+    "avatar": "https://example.com/avatar.jpg",
+    "dni": "12345678A"
+}
+
+Campos obligatorios en HTTP (según CreateUserRequest):
+- nom (string, min:5, max:255)
+- email (email, unique, max:255)
+- contrasenya (string, min:8)
+- dataNaixement (date YYYY-MM-DD, before_or_equal:today)
+
+Campos opcionales en HTTP:
+- telefon (string, max:20)
+- avatar (string, max:500)
+- dni (string, max:20)
+
+Expected Response (201 Created):
+{
+    "success": true,
+    "message": "User creat correctament",
+    "data": { "id": "newly-generated-uuid" }
+}
+
+
+========================================
+5. ACTUALIZAR UN USUARIO
+========================================
+Method: PUT
+URL: http://localhost:8000/api/usuaris/{id}
+
+Ejemplo:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000
+
+Body (JSON) - Campos permitidos para actualizar:
+{
+    "nom": "Test User Updated",
+    "email": "updated.email@example.com",
+    "contrasenya": "NewPass123!",
+    "telefon": "+34987654321",
+    "dataNaixement": "1990-02-02",
+    "avatar": "https://example.com/new_avatar.jpg",
+    "dni": "87654321B",
+    "isActive": true
+}
+
+Campos en HTTP (UpdateUserRequest - TODOS OPCIONALES):
+- nom (string, min:5, max:255)
+- email (email, unique except current, max:255)
+- contrasenya (string, min:8)
+- telefon (string, max:20)
+- dataNaixement (date YYYY-MM-DD, before_or_equal:today)
+- avatar (string, max:500)
+- dni (string, max:20)
+- isActive (boolean)
+
+Expected Response:
+{
+    "success": true,
+    "message": "User actualitzat correctament"
+}
+
+
+========================================
+6. ELIMINAR UN USUARIO (soft delete)
+========================================
+Method: DELETE
+URL: http://localhost:8000/api/usuaris/{id}
+
+Ejemplo:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000
+
+Expected Response:
+{
+    "success": true,
+    "message": "User eliminat correctament"
+}
+
+
+========================================
+7. LISTAR ROLES DE UN USUARIO
+========================================
+Method: GET
+URL: http://localhost:8000/api/usuaris/{usuariId}/rols
+
+Ejemplo:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000/rols
+
+Expected Response:
+{
+    "success": true,
+    "data": [
+        {
+            "id": "rol-uuid-1",
+            "usuariId": "123e4567-e89b-12d3-a456-426614174000",
+            "rol": "admin",
+            "isActive": true,
+            "createdAt": "2026-01-29T10:00:00"
+        },
+        {
+            "id": "rol-uuid-2",
+            "usuariId": "123e4567-e89b-12d3-a456-426614174000",
+            "rol": "jugador",
+            "isActive": true,
+            "createdAt": "2026-01-29T10:01:00"
+        }
+    ]
+}
+
+
+========================================
+8. CREAR NUEVO ROL PARA UN USUARIO
+========================================
+Method: POST
+URL: http://localhost:8000/api/usuaris/{usuariId}/rols
+
+Ejemplo:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000/rols
+
+Body (JSON):
+{
+    "rol": "entrenador"
+}
+
+Roles permitidos:
+- "admin"         (Role de administrador web)
+- "admin_club"    (Role de administrador de club)
+- "entrenador"    (Role de entrenador)
+- "arbitre"       (Role de árbitro - EXCLUSIVO, solo puede ser árbitro)
+- "jugador"       (Role de jugador)
+
+REGLAS DE NEGOCIO (TOGGLE):
+- Si el rol NO existe para el usuario: LO CREA (201 Created)
+- Si el rol YA existe: TOGGLEA su estado isActive (200 OK)
+  * Si estaba activo (isActive=true) → lo desactiva (isActive=false)
+  * Si estaba inactivo (isActive=false) → lo activa (isActive=true)
+- Un árbitra SOLO puede tener el rol "arbitre" (no puede tener otros roles activos)
+- Si intenta asignar "arbitre" a un usuario que tiene otros roles activos, fallará
+- Un jugador SÍ puede ser entrenador (roles combinables)
+- El usuario debe tener al menos 1 rol (validado en crear usuario)
+
+Expected Response (201 - Si se CREA):
+{
+    "success": true,
+    "message": "Rol creat correctament",
+    "data": {
+        "action": "created",
+        "rolId": "newly-generated-rol-uuid",
+        "isActive": true
+    }
+}
+
+Expected Response (200 - Si se TOGGLEA):
+{
+    "success": true,
+    "message": "Rol actualitzat correctament",
+    "data": {
+        "action": "toggled",
+        "rolId": "existing-rol-uuid",
+        "isActive": true/false
+    }
+}
+
+Posibles errores:
+- "L'usuari no existeix" (400)
+- "Un àrbitre només pot tenir el rol d'àrbitre" (400)
+- "No es pot assignar el rol d'àrbitre a un usuari que ja té altres rols actius" (400)
+- Validation: "El camp 'rol' és obligatori" (422)
+- Validation: "El camp 'rol' no és vàlid" (422)
+
+
+========================================
+9. ACTUALIZAR/CAMBIAR ESTADO DE UN ROL
+========================================
+Method: PUT
+URL: http://localhost:8000/api/usuaris/{usuariId}/rols/{rolId}
+
+Ejemplo:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000/rols/rol-uuid-1
+
+Body (JSON):
+{
+    "isActive": false
+}
+
+Campos permitidos:
+- isActive (boolean, requerido)
+
+Expected Response:
+{
+    "success": true,
+    "message": "Rol actualitzat correctament"
+}
+
+Posibles errores:
+- "El rol no existeix per a aquest usuari" (400)
+- Validation: "El camp 'isActive' és obligatori" (422)
+- Validation: "El camp 'isActive' ha de ser booleà" (422)
+
+
+========================================
+10. ELIMINAR UN ROL DE UN USUARIO
+========================================
+Method: DELETE
+URL: http://localhost:8000/api/usuaris/{usuariId}/rols/{rolId}
+
+Ejemplo:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000/rols/rol-uuid-1
+
+Expected Response:
+{
+    "success": true,
+    "message": "Rol eliminat correctament"
+}
+
+REGLAS DE NEGOCIO:
+- NO puedes eliminar el último rol de un usuario
+- El usuario debe mantener al menos 1 rol activo
+- Si intenta eliminar el único rol, fallará con error
+
+Posibles errores:
+- "El rol no existeix per a aquest usuari" (400)
+- "L'usuari ha de mantenir almenys un rol" (400)
+
+
+========================================
+11. CREAR/ACTUALIZAR MÚLTIPLES ROLES (BULK)
+========================================
+Method: POST
+URL: http://localhost:8000/api/usuaris/{usuariId}/rols/bulk
+
+Descripción:
+Permite crear o actualizar múltiples roles de un usuario en una sola petición.
+Para cada rol:
+- Si NO existe → se CREA
+- Si YA existe → se ACTIVA/DESACTIVA (toggle)
+
+Ejemplo:
+- http://localhost:8000/api/usuaris/123e4567-e89b-12d3-a456-426614174000/rols/bulk
+
+Body (JSON):
+{
+    "roles": ["jugador", "entrenador", "admin_club"]
+}
+
+Campos requeridos:
+- roles (array, min 1 elemento, required)
+  Valores válidos: admin, admin_club, entrenador, arbitre, jugador
+
+Expected Response (200):
+{
+    "success": true,
+    "message": "Se han procesado 3 roles correctamente. Errores: 0",
+    "data": {
+        "usuariId": "123e4567-e89b-12d3-a456-426614174000",
+        "successful": 3,
+        "failed": 0,
+        "results": [
+            {
+                "rol": "jugador",
+                "result": {
+                    "action": "created",
+                    "rolId": "rol-uuid-1",
+                    "isActive": true
+                },
+                "success": true
+            },
+            {
+                "rol": "entrenador",
+                "result": {
+                    "action": "created",
+                    "rolId": "rol-uuid-2",
+                    "isActive": true
+                },
+                "success": true
+            },
+            {
+                "rol": "admin_club",
+                "result": {
+                    "action": "toggled",
+                    "rolId": "rol-uuid-3",
+                    "isActive": false
+                },
+                "success": true
+            }
+        ],
+        "errors": []
+    }
+}
+
+CASO CON ERRORES:
+{
+    "success": true,
+    "message": "Se han procesado 2 roles correctamente. Errores: 1",
+    "data": {
+        "usuariId": "123e4567-e89b-12d3-a456-426614174000",
+        "successful": 2,
+        "failed": 1,
+        "results": [
+            {
+                "rol": "jugador",
+                "result": { ... },
+                "success": true
+            },
+            {
+                "rol": "entrenador",
+                "result": { ... },
+                "success": true
+            }
+        ],
+        "errors": [
+            {
+                "rol": "arbitre",
+                "error": "No es pot assignar el rol d'àrbitre a un usuari que ja té altres rols actius",
+                "success": false
+            }
+        ]
+    }
+}
+
+REGLAS DE NEGOCIO APLICADAS EN BULK:
+- Si un rol YA existe para el usuario, se toglea (activa/desactiva)
+- Un árbitre NO puede tener otros roles (validación por cada rol)
+- No se puede asignar "arbitre" si ya tiene otros roles activos
+- Cada rol se procesa independientemente
+- Si hay errores, se continúa procesando los demás roles
+- La respuesta indica cuántos roles se procesaron correctamente y cuántos fallaron
+
+Posibles errores en array "errors":
+- "L'usuari no existeix" (400)
+- "Un àrbitre només pot tenir el rol d'àrbitre" (400)
+- "No es pot assignar el rol d'àrbitre a un usuari que ja té altres rols actius" (400)
+- Validation: "El camp 'roles' és obligatori" (422)
+- Validation: "El camp 'roles' ha de ser un array" (422)
+- Validation: "Ha de proporcionar almenys un rol" (422)
+- Validation: "Un o més rols no són vàlids. Rols permesos: ..." (422)
+
+
+========================================
+FLUJO DE PRUEBAS RECOMENDADO
+========================================
+
+1. Crear un usuario:
+   POST /api/usuaris con un usuario nuevo
+
+2. Asignar múltiples roles de una vez (BULK):
+   POST /api/usuaris/{usuariId}/rols/bulk
+   Body: { "roles": ["jugador", "entrenador"] }
+
+3. Listar roles del usuario:
+   GET /api/usuaris/{usuariId}/rols
+
+4. Actualizar estado de un rol específico:
+   PUT /api/usuaris/{usuariId}/rols/{rolId}
+   Body: { "isActive": false }
+
+5. Crear/Toggle un rol individual:
+   POST /api/usuaris/{usuariId}/rols
+   Body: { "rol": "admin_club" }
+
+6. Eliminar un rol:
+   DELETE /api/usuaris/{usuariId}/rols/{rolId}
+
+
+   POST /api/usuaris/{usuariId}/rols
+   Body: { "rol": "jugador" }
+
+4. Crear un segundo rol (p.ej. "entrenador"):
+   POST /api/usuaris/{usuariId}/rols
+   Body: { "rol": "entrenador" }
+
+5. Listar roles nuevamente:
+   GET /api/usuaris/{usuariId}/rols
+   ✓ Debería mostrar 2 roles: jugador y entrenador
+
+6. Desactivar un rol:
+   PUT /api/usuaris/{usuariId}/rols/{rolId}
+   Body: { "isActive": false }
+
+7. Intentar eliminar el rol (si es uno de dos):
+   DELETE /api/usuaris/{usuariId}/rols/{rolId}
+   ✓ Debería exitoso
+
+8. Intentar eliminar el último rol restante:
+   DELETE /api/usuaris/{usuariId}/rols/{rolId_del_ultimo}
+   ✗ Debería FALLAR con "L'usuari ha de mantenir almenys un rol"
+
+
+========================================
+CASOS DE ERROR FRECUENTES
+========================================
+
+CASO 1: Intentar asignar "arbitre" a alguien con otros roles
+POST /api/usuaris/{usuariId}/rols
+Body: { "rol": "arbitre" }
+✗ Error: "No es pot assignar el rol d'àrbitre a un usuari que ja té altres rols"
+
+CASO 2: Intentar asignar otros roles a un árbitra
+- Usuario con rol "arbitre"
+POST /api/usuaris/{usuariId}/rols
+Body: { "rol": "jugador" }
+✗ Error: "Un àrbitre només pot tenir el rol d'àrbitre"
+
+CASO 3: Intentar eliminar el último rol
+- Usuario con solo 1 rol
+DELETE /api/usuaris/{usuariId}/rols/{rolId}
+✗ Error: "L'usuari ha de mantenir almenys un rol"
+
+CASO 4: Duplicar un rol
+- Usuario ya tiene rol "jugador"
+POST /api/usuaris/{usuariId}/rols
+Body: { "rol": "jugador" }
+✗ Error: "L'usuari ja té aquest rol"
+}
+
+
+========================================
+NOTAS IMPORTANTES - MAPEO DE CAMPOS
+========================================
+
+TABLA USUARIS (según migration 2026_01_29_000001_create_usuaris_table.php):
+Columnas en BD:
+- id (uuid, primary)
+- nom (string)
+- email (string, unique)
+- contrasenya (string) ← NOTA: NO HAY "password" EN LA BD
+- telefon (string, nullable)
+- dataNaixement (dateTime, nullable)
+- nivell (string, nullable)
+- avatar (string, nullable) ← NOTA: NO HAY "foto" EN LA BD
+- dni (string, nullable)
+- created_at, updated_at (timestamps)
+- isActive (boolean, default: true)
+
+TABLA USUARI_ROLS (según migration 2026_01_29_000002_create_usuari_rols_table.php):
+Columnas en BD:
+- id (uuid, primary)
+- usuariId (uuid, foreign key)
+- rol (string)
+- isActive (boolean, default: true)
+- createdAt (timestamp, nullable)
+
+FLUJO DE DATOS - HTTP REQUEST → DTO → BASE DE DATOS:
+
+1. Cliente envía en Postman (HTTP):
+   - password (se valida con @confirmed)
+   - foto
+
+2. CreateUserRequest / UpdateUserRequest reciben y validan:
+   - password ✓
+   - foto ✓
+
+3. CreateUserDTO::fromArray() mapea:
+   - password → contrasenya
+   - foto → avatar
+
+4. Se almacena en BD como:
+   - contrasenya ✓
+   - avatar ✓
+
+POR ESTO EN EL HTTP REQUEST USAMOS "password" Y "foto":
+Aunque la BD tiene "contrasenya" y "avatar", Laravel espera "password" y "foto" como nombres estándar en los formularios HTTP,
+y el DTO se encarga de mapear a los nombres reales de la BD.
+
+ERRORES COMUNES:
+- Error 422 (validación): Revisa que los campos sean exactamente: nom, email, password, password_confirmation, dataNaixement, telefon?, foto?, dni?
+- Error 404 (no encontrado): El UUID no existe en la BD
+- Error 500 (servidor): Revisa storage/logs/laravel.log
+
+
+========================================
+ÓRDENES RECOMENDADAS PARA PROBAR
+========================================
+
+1. Primero hacer GET /api/usuaris para ver todos
+2. Luego POST /api/usuaris para crear uno nuevo (copia el id de la respuesta)
+3. GET /api/usuaris/{id} para verificar
+4. GET /api/usuaris/{id}/detail para comprobar relaciones
+5. PUT /api/usuaris/{id} para actualizar
+6. DELETE /api/usuaris/{id} para eliminar (soft delete)
+
+
+FIN

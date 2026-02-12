@@ -16,11 +16,10 @@ class CreateUserRequest extends FormRequest
         return [
             'nom' => 'required|string|min:5|max:255',
             'email' => 'required|email|unique:usuaris,email|max:255',
-            'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required',
+            'contrasenya' => 'required|string|min:8',
             'telefon' => 'nullable|string|max:20',
             'dataNaixement' => 'required|date|before_or_equal:today',
-            'foto' => 'nullable|string|max:500',
+            'avatar' => 'nullable|string|max:500',
             'dni' => 'nullable|string|max:20',
         ];
     }
@@ -35,10 +34,8 @@ class CreateUserRequest extends FormRequest
             'email.required' => 'L\'email és obligatori',
             'email.email' => 'L\'email ha de ser vàlid',
             'email.unique' => 'L\'email ja està registrat',
-            'password.required' => 'La contrasenya és obligatòria',
-            'password.min' => 'La contrasenya ha de tenir almenys 8 caràcters',
-            'password.confirmed' => 'Les contrasenyes no coincideixen',
-            'password_confirmation.required' => 'La confirmació de contrasenya és obligatòria',
+            'contrasenya.required' => 'La contrasenya és obligatòria',
+            'contrasenya.min' => 'La contrasenya ha de tenir almenys 8 caràcters',
             'telefon.string' => 'El telèfon ha de ser una cadena de text',
             'telefon.max' => 'El telèfon no pot excedir 20 caràcters',
             'dataNaixement.required' => 'La data de naixement és obligatòria',

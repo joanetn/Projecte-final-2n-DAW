@@ -1,0 +1,7 @@
+{
+    "name": "Club",
+    "description": "Club Module - Clubs, equips i membres d'equip",
+    "version": "1.0.0",
+    "provider": "App\\Modules\\Club\\Providers\\ClubServiceProvider",
+    "routes": "Routes/api.php"
+}

@@ -20,10 +20,10 @@ class UpdateUserDTO
         return new self(
             nom: $data['nom'] ?? null,
             email: $data['email'] ?? null,
-            contrasenya: $data['password'] ?? null,
+            contrasenya: $data['contrasenya'] ?? null,
             telefon: $data['telefon'] ?? null,
             dataNaixement: $data['dataNaixement'] ?? null,
-            avatar: $data['foto'] ?? null,
+            avatar: $data['avatar'] ?? null,
             dni: $data['dni'] ?? null,
             isActive: isset($data['isActive']) ? (bool) $data['isActive'] : null,
         );

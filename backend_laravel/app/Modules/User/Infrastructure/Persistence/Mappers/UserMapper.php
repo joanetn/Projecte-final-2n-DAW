@@ -2,12 +2,12 @@
 
 namespace App\Modules\User\Infrastructure\Persistence\Mappers;
 
-use App\Models\Usuari;
 use App\Modules\User\Domain\Entities\User;
+use App\Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
 
 class UserMapper
 {
-    public static function toDomain(Usuari $usuari): User
+    public static function toDomain(UserModel $usuari): User
     {
         return new User(
             id: $usuari->id,

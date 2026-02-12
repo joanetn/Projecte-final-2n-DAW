@@ -19,10 +19,10 @@ class CreateUserDTO
         return new self(
             nom: $data['nom'],
             email: $data['email'],
-            contrasenya: $data['password'],
+            contrasenya: $data['contrasenya'],
             telefon: $data['telefon'] ?? null,
             dataNaixement: $data['dataNaixement'] ?? null,
-            avatar: $data['foto'] ?? null,
+            avatar: $data['avatar'] ?? null,
             dni: $data['dni'] ?? null,
         );
     }

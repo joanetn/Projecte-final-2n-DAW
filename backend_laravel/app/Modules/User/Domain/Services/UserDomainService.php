@@ -52,7 +52,7 @@ class UserDomainService
         }
 
         $existingUser = $this->userRepository->findByEmail($email);
-        if ($existingUser && (!$excludeUserId || $existingUser->id !== $excludeUserId)) {
+        if ($existingUser && (!$excludeUserId)) {
             throw new \Exception("L'email '$email' ja està registrat");
         }
     }
@@ -116,6 +116,6 @@ class UserDomainService
     public function canUserBeCreated(string $email): bool
     {
         $existingUser = $this->userRepository->findByEmail($email);
-        return $existingUser === null;
+        return $existingUser !== null;
     }
 }

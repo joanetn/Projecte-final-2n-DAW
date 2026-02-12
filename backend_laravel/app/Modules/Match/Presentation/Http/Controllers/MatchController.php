@@ -46,7 +46,7 @@ class MatchController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
-            $match = $this->getMatchQuery->execute($id);
+            $match = $this->getMatchQuery->execute(matchId: $id);
 
             return response()->json([
                 'success' => true,

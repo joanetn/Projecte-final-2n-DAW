@@ -12,6 +12,11 @@ class GetUsersQuery
 
     public function execute(): array
     {
-        return $this->userRepositoryInterface->findAll();
+        return $this->userRepositoryInterface->findAllWithRelations([
+            'rols',
+            'equipUsuaris',
+            'compras',
+            'seguros'
+        ]);
     }
 }

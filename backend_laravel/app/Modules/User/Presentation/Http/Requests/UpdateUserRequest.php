@@ -18,10 +18,10 @@ class UpdateUserRequest extends FormRequest
         return [
             'nom' => 'nullable|string|min:5|max:255',
             'email' => "nullable|email|unique:usuaris,email,$userId|max:255",
-            'password' => 'nullable|string|min:8|confirmed',
+            'contrasenya' => 'nullable|string|min:8',
             'telefon' => 'nullable|string|max:20',
             'dataNaixement' => 'nullable|date|before_or_equal:today',
-            'foto' => 'nullable|string|max:500',
+            'avatar' => 'nullable|string|max:500',
             'dni' => 'nullable|string|max:20',
             'isActive' => 'nullable|boolean',
         ];
@@ -35,8 +35,7 @@ class UpdateUserRequest extends FormRequest
             'nom.max' => 'El nom no pot excedir 255 caràcters',
             'email.email' => 'L\'email ha de ser vàlid',
             'email.unique' => 'L\'email ja està registrat',
-            'password.min' => 'La contrasenya ha de tenir almenys 8 caràcters',
-            'password.confirmed' => 'Les contrasenyes no coincideixen',
+            'contrasenya.min' => 'La contrasenya ha de tenir almenys 8 caràcters',
             'telefon.string' => 'El telèfon ha de ser una cadena de text',
             'telefon.max' => 'El telèfon no pot excedir 20 caràcters',
             'dataNaixement.date' => 'La data de naixement ha de ser una data vàlida',
