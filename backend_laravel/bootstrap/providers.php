@@ -6,4 +6,5 @@ return [
     App\Modules\Match\Providers\MatchServiceProvider::class,
     App\Modules\User\Providers\UserServiceProvider::class,
     App\Modules\Club\Providers\ClubServiceProvider::class,
+    App\Modules\Venue\Providers\VenueServiceProvider::class,
 ];

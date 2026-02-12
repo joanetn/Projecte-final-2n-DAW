@@ -1,0 +1,7 @@
+{
+    "name": "Venue",
+    "description": "Venue Module - Instal·lacions i pistes esportives",
+    "version": "1.0.0",
+    "provider": "App\\Modules\\Venue\\Providers\\VenueServiceProvider",
+    "routes": "Routes/api.php"
+}

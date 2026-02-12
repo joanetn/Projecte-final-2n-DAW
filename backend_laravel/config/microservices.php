@@ -58,6 +58,15 @@ return [
             'retries'   => env('SERVICE_MATCH_RETRIES', 2),
         ],
 
+        // Servei de Venues: gestiona instal·lacions i pistes esportives (port 8005)
+        'venue' => [
+            'name'      => 'Venue Service',
+            'base_url'  => env('SERVICE_VENUE_URL', 'http://localhost:8005'),
+            'prefixes'  => ['instalacions'],
+            'timeout'   => env('SERVICE_VENUE_TIMEOUT', 10),
+            'retries'   => env('SERVICE_VENUE_RETRIES', 2),
+        ],
+
     ],
 
     /*
