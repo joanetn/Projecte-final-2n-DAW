@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Request de validació per actualitzar una Instal·lació.
- *
- * Tots els camps són nullable perquè es pot fer un update parcial (PATCH).
- * Només els camps enviats es validen i s'actualitzen.
- */
-
 namespace App\Modules\Venue\Presentation\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,7 +24,6 @@ class UpdateInstalacioRequest extends FormRequest
         ];
     }
 
-    // Missatges d'error personalitzats en català
     public function messages(): array
     {
         return [

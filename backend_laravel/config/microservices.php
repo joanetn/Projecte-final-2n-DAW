@@ -67,6 +67,31 @@ return [
             'retries'   => env('SERVICE_VENUE_RETRIES', 2),
         ],
 
+        // Servei de Lineup: gestiona alineacions de jugadors en partits (port 8006)
+        'lineup' => [
+            'name'      => 'Lineup Service',
+            'base_url'  => env('SERVICE_LINEUP_URL', 'http://localhost:8006'),
+            'prefixes'  => ['alineacions'],
+            'timeout'   => env('SERVICE_LINEUP_TIMEOUT', 10),
+            'retries'   => env('SERVICE_LINEUP_RETRIES', 2),
+        ],
+
+        'invitation' => [
+            'name'      => 'Invitation Service',
+            'base_url'  => env('SERVICE_INVITATION_URL', 'http://localhost:8007'),
+            'prefixes'  => ['invitacions'],
+            'timeout'   => env('SERVICE_INVITATION_TIMEOUT', 10),
+            'retries'   => env('SERVICE_INVITATION_RETRIES', 2),
+        ],
+
+        'merchandise' => [
+            'name'      => 'Merchandise Service',
+            'base_url'  => env('SERVICE_MERCHANDISE_URL', 'http://localhost:8008'),
+            'prefixes'  => ['merchs', 'compras'],
+            'timeout'   => env('SERVICE_MERCHANDISE_TIMEOUT', 10),
+            'retries'   => env('SERVICE_MERCHANDISE_RETRIES', 2),
+        ],
+
     ],
 
     /*

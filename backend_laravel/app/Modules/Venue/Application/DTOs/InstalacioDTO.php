@@ -1,14 +1,5 @@
 <?php
 
-/**
- * DTO d'Instal·lació per a respostes.
- *
- * Data Transfer Object que encapsula les dades d'una Instal·lació
- * per retornar al client. Converteix l'entitat de domini a un format
- * segur per transportar (sense lògica de negoci).
- * Patró DTO del CQRS per separar lectura d'escriptura.
- */
-
 namespace App\Modules\Venue\Application\DTOs;
 
 use App\Modules\Venue\Domain\Entities\Instalacio;
@@ -28,10 +19,6 @@ class InstalacioDTO
         public readonly string $updatedAt = '',
     ) {}
 
-    /**
-     * Crea un DTO a partir d'una entitat de domini.
-     * Separa la capa d'aplicació del domini.
-     */
     public static function fromEntity(Instalacio $instalacio): self
     {
         return new self(

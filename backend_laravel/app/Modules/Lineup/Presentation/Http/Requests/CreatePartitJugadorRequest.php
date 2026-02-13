@@ -1,23 +1,12 @@
 <?php
-
-/**
- * Request de validació per crear un PartitJugador.
- *
- * Valida que el partit, jugador i equip existeixin a la base de dades.
- * Els punts per defecte són 0 si no es proporcionen.
- */
-
 namespace App\Modules\Lineup\Presentation\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
-
 class CreatePartitJugadorRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
     }
-
     public function rules(): array
     {
         return [
@@ -27,7 +16,6 @@ class CreatePartitJugadorRequest extends FormRequest
             'punts' => 'nullable|integer|min:0',
         ];
     }
-
     public function messages(): array
     {
         return [

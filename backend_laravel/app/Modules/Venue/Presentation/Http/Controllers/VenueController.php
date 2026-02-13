@@ -1,59 +1,27 @@
 <?php
 
-/**
- * Controlador del mòdul Venue.
- *
- * Gestiona totes les peticions HTTP per a instal·lacions i pistes esportives.
- * Segueix el patró CQRS: Commands per escriure, Queries per llegir.
- * Laravel injecta automàticament totes les dependències al constructor
- * gràcies al Service Container.
- *
- * Rutes gestionades:
- *   GET    /instalacions                           → index()
- *   GET    /instalacions/{id}                      → show()
- *   POST   /instalacions                           → store()
- *   PUT    /instalacions/{id}                      → update()
- *   DELETE /instalacions/{id}                      → destroy()
- *   GET    /instalacions/{id}/pistes              → indexPistes()
- *   GET    /instalacions/{id}/pistes/{pistaId}    → showPista()
- *   POST   /instalacions/{id}/pistes              → storePista()
- *   PUT    /instalacions/{id}/pistes/{pistaId}    → updatePista()
- *   DELETE /instalacions/{id}/pistes/{pistaId}    → destroyPista()
- */
-
 namespace App\Modules\Venue\Presentation\Http\Controllers;
 
-// --- Commands: classes que executen accions d'escriptura (crear, actualitzar, eliminar) ---
 use App\Modules\Venue\Application\Commands\CreateInstalacioCommand;
 use App\Modules\Venue\Application\Commands\UpdateInstalacioCommand;
 use App\Modules\Venue\Application\Commands\DestroyInstalacioCommand;
 use App\Modules\Venue\Application\Commands\CreatePistaCommand;
 use App\Modules\Venue\Application\Commands\UpdatePistaCommand;
 use App\Modules\Venue\Application\Commands\DestroyPistaCommand;
-
-// --- DTOs: objectes que transporten les dades entre capes ---
 use App\Modules\Venue\Application\DTOs\CreateInstalacioDTO;
 use App\Modules\Venue\Application\DTOs\UpdateInstalacioDTO;
 use App\Modules\Venue\Application\DTOs\CreatePistaDTO;
 use App\Modules\Venue\Application\DTOs\UpdatePistaDTO;
-
-// --- Queries: classes que executen consultes de lectura ---
 use App\Modules\Venue\Application\Queries\GetInstalacionsQuery;
 use App\Modules\Venue\Application\Queries\GetInstalacioQuery;
 use App\Modules\Venue\Application\Queries\GetPistesByInstalacioQuery;
 use App\Modules\Venue\Application\Queries\GetPistaQuery;
-
-// --- Excepcions de domini ---
 use App\Modules\Venue\Domain\Exceptions\InstalacioNotFoundException;
 use App\Modules\Venue\Domain\Exceptions\PistaNotFoundException;
-
-// --- Requests de validació ---
 use App\Modules\Venue\Presentation\Http\Requests\CreateInstalacioRequest;
 use App\Modules\Venue\Presentation\Http\Requests\UpdateInstalacioRequest;
 use App\Modules\Venue\Presentation\Http\Requests\CreatePistaRequest;
 use App\Modules\Venue\Presentation\Http\Requests\UpdatePistaRequest;
-
-// --- Resources per formatejar la resposta JSON ---
 use App\Modules\Venue\Presentation\Http\Resources\InstalacioResource;
 use App\Modules\Venue\Presentation\Http\Resources\PistaResource;
 
@@ -63,28 +31,18 @@ use Illuminate\Routing\Controller;
 class VenueController extends Controller
 {
     public function __construct(
-        // Commands d'Instal·lació
         private CreateInstalacioCommand $createInstalacioCommand,
         private UpdateInstalacioCommand $updateInstalacioCommand,
         private DestroyInstalacioCommand $destroyInstalacioCommand,
-        // Commands de Pista
         private CreatePistaCommand $createPistaCommand,
         private UpdatePistaCommand $updatePistaCommand,
         private DestroyPistaCommand $destroyPistaCommand,
-        // Queries
         private GetInstalacionsQuery $getInstalacionsQuery,
         private GetInstalacioQuery $getInstalacioQuery,
         private GetPistesByInstalacioQuery $getPistesByInstalacioQuery,
         private GetPistaQuery $getPistaQuery,
     ) {}
 
-    // =====================================================================
-    // INSTAL·LACIÓ ENDPOINTS
-    // =====================================================================
-
-    /**
-     * GET /instalacions - Llistar totes les instal·lacions actives
-     */
     public function index(): JsonResponse
     {
         $instalacions = $this->getInstalacionsQuery->execute();
@@ -95,9 +53,6 @@ class VenueController extends Controller
         ]);
     }
 
-    /**
-     * GET /instalacions/{id} - Obtenir una instal·lació per ID amb les seves pistes
-     */
     public function show(string $id): JsonResponse
     {
         try {
@@ -115,15 +70,10 @@ class VenueController extends Controller
         }
     }
 
-    /**
-     * POST /instalacions - Crear una nova instal·lació
-     */
     public function store(CreateInstalacioRequest $request): JsonResponse
     {
         try {
-            // Convertim les dades validades a un DTO
             $dto = CreateInstalacioDTO::fromArray($request->validated());
-            // Executem el command que crea la instal·lació
             $instalacioId = $this->createInstalacioCommand->execute($dto);
 
             return response()->json([
@@ -141,9 +91,6 @@ class VenueController extends Controller
         }
     }
 
-    /**
-     * PUT /instalacions/{id} - Actualitzar una instal·lació
-     */
     public function update(UpdateInstalacioRequest $request, string $id): JsonResponse
     {
         try {
@@ -169,9 +116,6 @@ class VenueController extends Controller
         }
     }
 
-    /**
-     * DELETE /instalacions/{id} - Eliminar (soft delete) una instal·lació
-     */
     public function destroy(string $id): JsonResponse
     {
         try {
@@ -196,13 +140,6 @@ class VenueController extends Controller
         }
     }
 
-    // =====================================================================
-    // PISTA ENDPOINTS (dins d'una instal·lació)
-    // =====================================================================
-
-    /**
-     * GET /instalacions/{instalacioId}/pistes - Llistar pistes d'una instal·lació
-     */
     public function indexPistes(string $instalacioId): JsonResponse
     {
         try {
@@ -222,9 +159,6 @@ class VenueController extends Controller
         }
     }
 
-    /**
-     * GET /instalacions/{instalacioId}/pistes/{pistaId} - Obtenir una pista concreta
-     */
     public function showPista(string $instalacioId, string $pistaId): JsonResponse
     {
         try {
@@ -242,13 +176,9 @@ class VenueController extends Controller
         }
     }
 
-    /**
-     * POST /instalacions/{instalacioId}/pistes - Crear una pista dins d'una instal·lació
-     */
     public function storePista(string $instalacioId, CreatePistaRequest $request): JsonResponse
     {
         try {
-            // Afegim l'instalacioId de la ruta a les dades validades
             $dto = CreatePistaDTO::fromArray(array_merge(
                 $request->validated(),
                 ['instalacioId' => $instalacioId]
@@ -275,9 +205,6 @@ class VenueController extends Controller
         }
     }
 
-    /**
-     * PUT /instalacions/{instalacioId}/pistes/{pistaId} - Actualitzar una pista
-     */
     public function updatePista(string $instalacioId, string $pistaId, UpdatePistaRequest $request): JsonResponse
     {
         try {
@@ -303,9 +230,6 @@ class VenueController extends Controller
         }
     }
 
-    /**
-     * DELETE /instalacions/{instalacioId}/pistes/{pistaId} - Eliminar una pista
-     */
     public function destroyPista(string $instalacioId, string $pistaId): JsonResponse
     {
         try {

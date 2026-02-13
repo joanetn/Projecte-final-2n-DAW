@@ -1,13 +1,5 @@
 <?php
 
-/**
- * Command per crear una nova Instal·lació.
- *
- * Segueix el patró CQRS (Command): operació d'escriptura.
- * Primer valida les dades amb el servei de domini i després
- * crida al repositori per persistir la nova instal·lació.
- */
-
 namespace App\Modules\Venue\Application\Commands;
 
 use App\Modules\Venue\Application\DTOs\CreateInstalacioDTO;
@@ -23,16 +15,12 @@ class CreateInstalacioCommand
 
     public function execute(CreateInstalacioDTO $dto): string
     {
-        // Validar el nom de la instal·lació amb les regles de negoci
         $this->venueDomainService->validateInstalacioName($dto->nom);
 
-        // Validar el telèfon si s'ha proporcionat
         $this->venueDomainService->validatePhone($dto->telefon);
 
-        // Validar el número de pistes si s'ha proporcionat
         $this->venueDomainService->validateNumPistes($dto->numPistes);
 
-        // Crear la instal·lació a la base de dades
         $instalacio = $this->instalacioRepository->create([
             'nom' => $dto->nom,
             'adreca' => $dto->adreca,
@@ -43,7 +31,6 @@ class CreateInstalacioCommand
             'isActive' => true,
         ]);
 
-        // Retornem l'ID de la instal·lació creada
         return $instalacio->id;
     }
 }

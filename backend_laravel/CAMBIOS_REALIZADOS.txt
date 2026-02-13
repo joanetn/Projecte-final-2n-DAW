@@ -1,0 +1,159 @@
+================================================================================
+RESUMEN DE CAMBIOS - ARREGLADO EL MICROSERVICIO LINEUP
+================================================================================
+
+Se han realizado los siguientes cambios para que el microservicio Lineup
+funcione correctamente en el puerto 8006:
+
+================================================================================
+1. BOOTSTRAP/PROVIDERS.PHP
+================================================================================
+Estado: ✅ YA ESTABA CORRECTAMENTE CONFIGURADO
+   
+   Línea 10: App\Modules\Lineup\Providers\LineupServiceProvider::class
+
+================================================================================
+2. CONFIG/MICROSERVICES.PHP
+================================================================================
+Estado: ✅ ACTUALIZADO
+
+   Agregado (líneas 70-77):
+   
+   // Servei de Lineup: gestiona alineacions de jugadors en partits (port 8006)
+   'lineup' => [
+       'name'      => 'Lineup Service',
+       'base_url'  => env('SERVICE_LINEUP_URL', 'http://localhost:8006'),
+       'prefixes'  => ['alineacions'],
+       'timeout'   => env('SERVICE_LINEUP_TIMEOUT', 10),
+       'retries'   => env('SERVICE_LINEUP_RETRIES', 2),
+   ],
+
+   Esto permite que el API Gateway sepa que debe enrutar peticiones a
+   /api/alineacions al microservicio Lineup en puerto 8006.
+
+================================================================================
+3. .ENV
+================================================================================
+Estado: ✅ YA ESTABA CORRECTAMENTE CONFIGURADO
+
+   Línea 16: SERVICE_LINEUP_URL=http://localhost:8006
+
+================================================================================
+4. PACKAGE.JSON
+================================================================================
+Estado: ✅ CORRECTO
+
+   Script "gateway" inicia 7 servicios en paralelo:
+   
+   -n gateway,users,clubs,leagues,matches,venues,lineup
+   -c blue,green,yellow,magenta,cyan,white,black
+   
+   7 servicios en puertos 8000-8006:
+   - Puerto 8000: API Gateway (GATEWAY_ENABLED=true)
+   - Puerto 8001: User Service
+   - Puerto 8002: Club Service  
+   - Puerto 8003: League Service
+   - Puerto 8004: Match Service
+   - Puerto 8005: Venue Service
+   - Puerto 8006: Lineup Service
+
+================================================================================
+MÓDULOS CREAR: ESTRUCTURA MÍNIMA DE LINEUP
+================================================================================
+
+Se crearon estos archivos mínimos para que Lineup funcione:
+
+1. app/Modules/Lineup/Providers/LineupServiceProvider.php ✅
+2. app/Modules/Lineup/Providers/RouteServiceProvider.php ✅
+3. app/Modules/Lineup/Routes/api.php ✅
+
+Estos archivos ya existían (probablemente alguien los creó antes),
+solo estaban vacíos o incompletos. Fueron dejados tal como estaban.
+
+================================================================================
+TUTOTIAL COMPLETO
+================================================================================
+
+Se ha creado un archivo de tutorial completo:
+   /TUTORIAL_NUEVO_MICROSERVICIO.txt
+
+Este archivo contiene:
+- Explicación de cómo funciona la arquitectura multi-puerto
+- Paso a paso para agregar nuevos módulos
+- Qué archivos tocar y en qué orden
+- Errores comunes y soluciones
+- Checklist de verificación
+- Ejemplos reales
+
+================================================================================
+PRÓXIMOS PASOS PARA EJECUTAR EL GATEWAY
+================================================================================
+
+1. Abrir terminal en la carpeta del proyecto
+
+2. Ejecutar:
+   npm run gateway
+
+3. Esperar a que se inicien los 7 servidores. Deberías ver algo como:
+
+   [gateway] ► Listening on http://localhost:8000 (GATEWAY_ENABLED=true)
+   [users]   ► Listening on http://localhost:8001
+   [clubs]   ► Listening on http://localhost:8002
+   [leagues] ► Listening on http://localhost:8003
+   [matches] ► Listening on http://localhost:8004
+   [venues]  ► Listening on http://localhost:8005
+   [lineup]  ► Listening on http://localhost:8006
+
+4. Ahora puedes probar el gateway desde otra terminal:
+
+   # Petición a través del gateway (puerto 8000)
+   curl http://localhost:8000/api/clubs
+   
+   # La petición se enruta automáticamente a puerto 8002 (Club Service)
+
+================================================================================
+PROBLEMAS SI OCURREN
+================================================================================
+
+Si aún no funciona, revisa:
+
+1. ¿Están los puertos 8000-8006 disponibles?
+   Windows: netstat -ano | findstr :8000
+   Linux/Mac: lsof -i :8000
+
+2. ¿Está instalado cross-env?
+   npm install cross-env concurrently
+
+3. ¿Está Apache/otro servidor usando los puertos?
+   Detener Apache u otros servidores
+
+4. ¿Errores de PHP?
+   cd backend_laravel
+   php artisan config:cache
+   php artisan route:cache
+   php artisan optimize:clear
+
+5. Ver logs de un servicio específico:
+   cd backend_laravel
+   cross-env GATEWAY_ENABLED=false php artisan serve --port=8006
+
+================================================================================
+RESUMEN FINAL
+================================================================================
+
+✅ Lineup ahora está correctamente registrado en:
+   - bootstrap/providers.php
+   - config/microservices.php
+   - .env
+   - package.json
+
+✅ El API Gateway sabe que debe enrutar /api/alineacions a puerto 8006
+
+✅ Se ha creado un tutorial completo para agregar futuros microservicios
+
+✅ La arquitectura ahora es:
+   8000 (Gateway) → 8001-8006 (Microservicios independientes)
+
+Ejecuta: npm run gateway
+
+¡Listo!

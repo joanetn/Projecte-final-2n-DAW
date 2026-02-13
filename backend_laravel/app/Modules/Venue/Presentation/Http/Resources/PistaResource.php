@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Resource per a transformar una Pista a JSON per la resposta API.
- *
- * Formata les dades de la pista per retornar al client.
- * Inclou l'instalacioId per identificar a quina instal·lació pertany.
- */
-
 namespace App\Modules\Venue\Presentation\Http\Resources;
 
 use Illuminate\Http\Request;

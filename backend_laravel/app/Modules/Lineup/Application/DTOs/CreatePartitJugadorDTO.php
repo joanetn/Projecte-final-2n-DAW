@@ -1,14 +1,5 @@
 <?php
-
-/**
- * DTO per crear un nou PartitJugador.
- *
- * Encapsula les dades necessàries per registrar un jugador
- * dins un partit amb els seus punts inicials.
- */
-
 namespace App\Modules\Lineup\Application\DTOs;
-
 class CreatePartitJugadorDTO
 {
     public function __construct(
@@ -17,10 +8,6 @@ class CreatePartitJugadorDTO
         public readonly string $equipId,
         public readonly int $punts = 0
     ) {}
-
-    /**
-     * Crea el DTO a partir d'un array (normalment del request validat).
-     */
     public static function fromArray(array $data): self
     {
         return new self(

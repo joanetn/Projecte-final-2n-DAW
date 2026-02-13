@@ -7,7 +7,7 @@
         "dev": "vite",
         "migrar": "php artisan cache:table",
         "run": "php artisan migrate && php artisan config:cache && php artisan route:cache && php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:clear && php artisan cache:clear && php artisan serve --port=4004",
-        "gateway": "concurrently -k -n gateway,users,clubs,leagues,matches,venues -c blue,green,yellow,magenta,cyan,white \"cross-env GATEWAY_ENABLED=true php artisan serve --port=8000\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8001\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8002\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8003\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8004\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8005\""
+        "gateway": "concurrently -k -n gateway,users,clubs,leagues,matches,venues,lineup,invitation,merchandise -c blue,green,yellow,magenta,cyan,white,black,red,gray \"cross-env GATEWAY_ENABLED=true php artisan serve --port=8000\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8001\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8002\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8003\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8004\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8005\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8006\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8007\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8008\""
     },
     "devDependencies": {
         "@prisma/client": "^7.3.0",

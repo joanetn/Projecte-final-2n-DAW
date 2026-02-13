@@ -1,13 +1,5 @@
 <?php
 
-/**
- * DTO per crear una nova Instal·lació.
- *
- * Encapsula les dades necessàries per crear una instal·lació.
- * El mètode fromArray() facilita la conversió des de dades del Request.
- * Només conté camps d'entrada, NO l'ID (es genera automàticament).
- */
-
 namespace App\Modules\Venue\Application\DTOs;
 
 class CreateInstalacioDTO
@@ -21,9 +13,6 @@ class CreateInstalacioDTO
         public readonly ?string $clubId = null,
     ) {}
 
-    /**
-     * Factory method: crea el DTO des d'un array (normalment del Request validat).
-     */
     public static function fromArray(array $data): self
     {
         return new self(

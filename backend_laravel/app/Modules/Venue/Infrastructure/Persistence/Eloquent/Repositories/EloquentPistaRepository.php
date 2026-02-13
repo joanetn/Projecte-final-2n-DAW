@@ -1,15 +1,5 @@
 <?php
 
-/**
- * Repositori Eloquent de Pistes.
- *
- * Implementació concreta del PistaRepositoryInterface usant Eloquent ORM.
- * Segueix el mateix patró que EloquentInstalacioRepository:
- * - Filtra per isActive (soft delete manual)
- * - Utilitza el Mapper per convertir a entitats de domini
- * - Ordena per created_at desc per defecte
- */
-
 namespace App\Modules\Venue\Infrastructure\Persistence\Eloquent\Repositories;
 
 use App\Modules\Venue\Domain\Entities\Pista;
@@ -67,7 +57,6 @@ class EloquentPistaRepository implements PistaRepositoryInterface
 
     public function delete(string $id): bool
     {
-        // Soft delete: marca isActive = false
         return $this->model->where('id', $id)->update(['isActive' => false]);
     }
 }

@@ -1,17 +1,6 @@
 <?php
-
-/**
- * DTO de lectura per Alineació.
- *
- * S'utilitza per transformar l'entitat de domini en un objecte
- * de transferència llegible per la capa de presentació.
- * Desacobla l'entitat del format de resposta.
- */
-
 namespace App\Modules\Lineup\Application\DTOs;
-
 use App\Modules\Lineup\Domain\Entities\Alineacio;
-
 class AlineacioDTO
 {
     public function __construct(
@@ -23,10 +12,6 @@ class AlineacioDTO
         public readonly bool $isActive,
         public readonly ?string $creadaAt
     ) {}
-
-    /**
-     * Crea el DTO a partir de l'entitat de domini.
-     */
     public static function fromEntity(Alineacio $alineacio): self
     {
         return new self(

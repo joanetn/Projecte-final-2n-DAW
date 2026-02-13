@@ -1,0 +1,127 @@
+================================================================================
+QUICK REFERENCE: 4 ARCHIVOS QUE TOCAR PARA NUEVO MICROSERVICIO
+================================================================================
+
+Cuando agregues un nuevo módulo NINGUN, toca EXACTAMENTE estos 4 archivos:
+
+PUERTO A USAR: 800X (reemplazar X con el siguiente número disponible)
+
+================================================================================
+1️⃣  bootstrap/providers.php
+================================================================================
+QUÉ: Registrar el ServiceProvider del módulo
+DÓNDE: Última línea antes del cierre del array ]
+
+Agregar una línea:
+   App\Modules\TuModulo\Providers\TuModuloServiceProvider::class,
+
+Ejemplo completo:
+   return [
+       App\Providers\AppServiceProvider::class,
+       App\Modules\League\Providers\LeagueServiceProvider::class,
+       App\Modules\Match\Providers\MatchServiceProvider::class,
+       App\Modules\User\Providers\UserServiceProvider::class,
+       App\Modules\Club\Providers\ClubServiceProvider::class,
+       App\Modules\Venue\Providers\VenueServiceProvider::class,
+       App\Modules\Lineup\Providers\LineupServiceProvider::class,
+       App\Modules\TuModulo\Providers\TuModuloServiceProvider::class,  ← AQUÍ
+   ];
+
+================================================================================
+2️⃣  config/microservices.php
+================================================================================
+QUÉ: Registrar el parámetro del servicio en el API Gateway
+DÓNDE: Dentro del array 'services', antes del cierre ]
+
+Agregar entrada:
+   'tu_modulo' => [
+       'name'      => 'Tu Módulo Service',
+       'base_url'  => env('SERVICE_TU_MODULO_URL', 'http://localhost:800X'),
+       'prefixes'  => ['tu-recurso'],  ← DEBE COINCIDIR CON Routes/api.php
+       'timeout'   => env('SERVICE_TU_MODULO_TIMEOUT', 10),
+       'retries'   => env('SERVICE_TU_MODULO_RETRIES', 2),
+   ],
+
+Recuerda: El 'prefixes' debe ser exactamente el mismo que en:
+          Route::prefix('tu-recurso') en Routes/api.php
+
+================================================================================
+3️⃣  .env
+================================================================================
+QUÉ: Definir la URL del nuevo microservicio
+DÓNDE: Después de SERVICE_LINEUP_URL (o el último SERVICE_* que tengas)
+
+Agregar líneas:
+   SERVICE_TU_MODULO_URL=http://localhost:800X
+   SERVICE_TU_MODULO_TIMEOUT=10
+   SERVICE_TU_MODULO_RETRIES=2
+
+Los valores pueden ser sobrescritos en producción con variables de entorno.
+
+================================================================================
+4️⃣  package.json
+================================================================================
+QÉ: Agregar el nuevo servicio al script 'gateway'
+DÓNDE: Script 'gateway' → actualizar:
+       - Parámetro -n (nombres)
+       - Parámetro -c (colores)
+       - Agregar línea final con "cross-env ... --port=800X"
+
+Buscar esta línea:
+   "gateway": "concurrently -k -n gateway,users,clubs,leagues,matches,venues,lineup -c blue,green,yellow,magenta,cyan,white,black \"cross-env GATEWAY_ENABLED=true php artisan serve --port=8000\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8001\" ..."
+
+Cambiar a:
+   "gateway": "concurrently -k -n gateway,users,clubs,leagues,matches,venues,lineup,tu_modulo -c blue,green,yellow,magenta,cyan,white,black,red \"cross-env GATEWAY_ENABLED=true php artisan serve --port=8000\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8001\" ... \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8006\" \"cross-env GATEWAY_ENABLED=false php artisan serve --port=800X\""
+
+IMPORTANTE:
+- Agregar nombre en -n (con comas)
+- Agregar color único en -c
+- Agregar línea completa al final del comando
+
+Colores disponibles: blue, green, yellow, magenta, cyan, white, black, red, gray
+
+================================================================================
+VERIFICA ESTO ANTES DE npm run gateway
+================================================================================
+
+✅ ¿Existe app/Modules/TuModulo/Providers/TuModuloServiceProvider.php?
+✅ ¿Existe app/Modules/TuModulo/Routes/api.php?
+✅ ¿El puerto 800X está disponible (no lo usa otro proceso)?
+✅ ¿Coinciden los 'prefixes' en config/microservices.php y Routes/api.php?
+✅ ¿Están todos los 4 archivos actualizados?
+
+================================================================================
+ORDEN DE PRIORIDAD SI ALGO FALLA
+================================================================================
+
+1. Revisar que exista app/Modules/TuModulo/Providers/TuModuloServiceProvider.php
+2. Revisar que se agregó línea en bootstrap/providers.php
+3. Revisar que se agregó entrada en config/microservices.php
+4. Revisar que se agregó SERVICE_TU_MODULO_URL en .env
+5. Revisar que se actualizó script gateway en package.json
+6. npm install (si falta concurrently o cross-env)
+7. npm run gateway
+
+================================================================================
+PUERTOS DISPONIBLES AHORA
+================================================================================
+
+8000: Gateway
+8001: User
+8002: Club
+8003: League
+8004: Match
+8005: Venue
+8006: Lineup
+8007: ← PRÓXIMO DISPONIBLE
+8008+: Futuros módulos
+
+================================================================================
+ARCHIVO DE REFERENCIA COMPLETO
+================================================================================
+
+Tutorial completo: /TUTORIAL_NUEVO_MICROSERVICIO.txt
+Cambios realizados: /CAMBIOS_REALIZADOS.txt
+Este archivo: /QUICK_REFERENCE_MICROSERVICIO.txt
+
+================================================================================

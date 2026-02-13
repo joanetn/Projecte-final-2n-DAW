@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Query per obtenir una Pista per ID.
- *
- * Retorna l'entitat de domini Pista amb la instal·lació relacionada.
- * Llença PistaNotFoundException si no existeix.
- */
-
 namespace App\Modules\Venue\Application\Queries;
 
 use App\Modules\Venue\Domain\Entities\Pista;

@@ -1,26 +1,16 @@
 <?php
 
-/**
- * Request de validació per crear una Instal·lació.
- *
- * Laravel executa automàticament les regles de validació abans d'arribar al controlador.
- * Si la validació falla, retorna un error 422 amb els missatges personalitzats en català.
- * El camp 'nom' és obligatori; la resta són opcionals.
- */
-
 namespace App\Modules\Venue\Presentation\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateInstalacioRequest extends FormRequest
 {
-    // Permet que qualsevol enviï la petició (sense autenticació per ara)
     public function authorize(): bool
     {
         return true;
     }
 
-    // Regles de validació per cada camp de la instal·lació
     public function rules(): array
     {
         return [
@@ -33,7 +23,6 @@ class CreateInstalacioRequest extends FormRequest
         ];
     }
 
-    // Missatges d'error personalitzats en català
     public function messages(): array
     {
         return [

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Request de validació per crear una Pista.
- *
- * El camp instalacioId arriba per la ruta (URL), no pel body del request.
- * Per tant, validem nom i tipus (opcional).
- */
-
 namespace App\Modules\Venue\Presentation\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +19,6 @@ class CreatePistaRequest extends FormRequest
         ];
     }
 
-    // Missatges d'error personalitzats en català
     public function messages(): array
     {
         return [

@@ -1,25 +1,8 @@
 <?php
-
-/**
- * Rutes API del mòdul Lineup (Alineacions + Puntuacions).
- *
- * Defineix tots els endpoints REST per a:
- * - Alineacions: CRUD + consulta per partit
- * - PartitJugadors: CRUD + consulta per partit
- * - Puntuacions: CRUD + consulta per partit + rànquing
- *
- * Totes les rutes estan sota el prefix 'api/v1' definit al RouteServiceProvider.
- */
-
 use Illuminate\Support\Facades\Route;
 use App\Modules\Lineup\Presentation\Http\Controllers\AlineacioController;
 use App\Modules\Lineup\Presentation\Http\Controllers\PartitJugadorController;
 use App\Modules\Lineup\Presentation\Http\Controllers\PuntuacioController;
-
-// =====================================================================
-// RUTES D'ALINEACIONS (Lineup)
-// Gestió de les alineacions de jugadors en els partits
-// =====================================================================
 Route::prefix('alineacions')->group(function () {
     Route::get('/', [AlineacioController::class, 'index']);            // Llistar totes
     Route::get('/partit/{partitId}', [AlineacioController::class, 'byPartit']); // Per partit
@@ -28,11 +11,6 @@ Route::prefix('alineacions')->group(function () {
     Route::put('/{id}', [AlineacioController::class, 'update']);       // Actualitzar
     Route::delete('/{id}', [AlineacioController::class, 'destroy']);   // Eliminar (soft)
 });
-
-// =====================================================================
-// RUTES DE PARTIT-JUGADORS (Jugadors per Partit)
-// Gestió dels jugadors assignats a cada partit
-// =====================================================================
 Route::prefix('partit-jugadors')->group(function () {
     Route::get('/', [PartitJugadorController::class, 'index']);            // Llistar tots
     Route::get('/partit/{partitId}', [PartitJugadorController::class, 'byPartit']); // Per partit
@@ -41,11 +19,6 @@ Route::prefix('partit-jugadors')->group(function () {
     Route::put('/{id}', [PartitJugadorController::class, 'update']);       // Actualitzar
     Route::delete('/{id}', [PartitJugadorController::class, 'destroy']);   // Eliminar (soft)
 });
-
-// =====================================================================
-// RUTES DE PUNTUACIONS (Scoring)
-// Gestió de puntuacions i rànquing de jugadors
-// =====================================================================
 Route::prefix('puntuacions')->group(function () {
     Route::get('/', [PuntuacioController::class, 'index']);                // Llistar totes
     Route::get('/ranking', [PuntuacioController::class, 'ranking']);       // Rànquing global

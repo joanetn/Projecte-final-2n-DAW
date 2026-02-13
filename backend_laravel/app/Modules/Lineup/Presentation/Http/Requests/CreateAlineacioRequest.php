@@ -1,24 +1,12 @@
 <?php
-
-/**
- * Request de validació per crear una Alineació.
- *
- * Valida les dades d'entrada del request HTTP abans de passar-les al controller.
- * Assegura que el partitId, jugadorId i equipId existeixin a la base de dades.
- * Retorna missatges d'error personalitzats en català.
- */
-
 namespace App\Modules\Lineup\Presentation\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
-
 class CreateAlineacioRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return true;
     }
-
     public function rules(): array
     {
         return [
@@ -28,7 +16,6 @@ class CreateAlineacioRequest extends FormRequest
             'posicio' => 'nullable|string|max:50',
         ];
     }
-
     public function messages(): array
     {
         return [

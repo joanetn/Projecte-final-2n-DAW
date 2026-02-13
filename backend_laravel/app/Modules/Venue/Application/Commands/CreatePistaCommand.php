@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Command per crear una nova Pista dins d'una Instal·lació.
- *
- * Valida que la instal·lació existeixi i que el nom de la pista sigui vàlid.
- * Segueix el patró CQRS: les operacions d'escriptura són Commands.
- */
-
 namespace App\Modules\Venue\Application\Commands;
 
 use App\Modules\Venue\Application\DTOs\CreatePistaDTO;
@@ -25,16 +18,13 @@ class CreatePistaCommand
 
     public function execute(CreatePistaDTO $dto): string
     {
-        // Comprovar que la instal·lació existeix abans de crear la pista
         $instalacio = $this->instalacioRepository->findById($dto->instalacioId);
         if (!$instalacio) {
             throw new InstalacioNotFoundException();
         }
 
-        // Validar el nom de la pista
         $this->venueDomainService->validatePistaName($dto->nom);
 
-        // Crear la pista a la base de dades
         $pista = $this->pistaRepository->create([
             'nom' => $dto->nom,
             'tipus' => $dto->tipus,
@@ -42,7 +32,6 @@ class CreatePistaCommand
             'isActive' => true,
         ]);
 
-        // Retornem l'ID de la pista creada
         return $pista->id;
     }
 }

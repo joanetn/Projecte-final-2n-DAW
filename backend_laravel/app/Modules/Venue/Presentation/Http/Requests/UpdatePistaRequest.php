@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Request de validació per actualitzar una Pista.
- *
- * Tots els camps són nullable per permetre updates parcials (PATCH).
- * Només els camps enviats es validen i s'actualitzen.
- */
-
 namespace App\Modules\Venue\Presentation\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,7 +20,6 @@ class UpdatePistaRequest extends FormRequest
         ];
     }
 
-    // Missatges d'error personalitzats en català
     public function messages(): array
     {
         return [

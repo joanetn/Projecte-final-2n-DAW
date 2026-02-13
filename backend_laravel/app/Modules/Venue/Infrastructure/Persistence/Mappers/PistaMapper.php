@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Mapper de Pista: converteix entre Eloquent Model i Entitat de Domini.
- *
- * Igual que InstalacioMapper, serveix de pont entre infraestructura i domini.
- * Garanteix que el domini NO depèn d'Eloquent.
- */
-
 namespace App\Modules\Venue\Infrastructure\Persistence\Mappers;
 
 use App\Modules\Venue\Domain\Entities\Pista;
@@ -14,9 +7,6 @@ use App\Modules\Venue\Infrastructure\Persistence\Eloquent\Models\PistaModel;
 
 class PistaMapper
 {
-    /**
-     * Converteix un Model Eloquent a Entitat de Domini.
-     */
     public static function toDomain(PistaModel $model): Pista
     {
         return new Pista(
@@ -30,9 +20,6 @@ class PistaMapper
         );
     }
 
-    /**
-     * Converteix una Entitat de Domini a array per serialitzar.
-     */
     public static function toArray(Pista $pista): array
     {
         return [
