@@ -13,6 +13,12 @@ use App\Modules\Match\Domain\Repositories\MatchRepositoryInterface;
 use App\Modules\Match\Domain\Repositories\MatchSetRepositoryInterface;
 use App\Modules\Match\Infrastructure\Persistence\Eloquent\Repositories\EloquentMatchRepository;
 use App\Modules\Match\Infrastructure\Persistence\Eloquent\Repositories\EloquentSetMatchRepository;
+use App\Modules\Lineup\Domain\Repositories\AlineacioRepositoryInterface;
+use App\Modules\Lineup\Domain\Repositories\PartitJugadorRepositoryInterface;
+use App\Modules\Lineup\Domain\Repositories\PuntuacioRepositoryInterface;
+use App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Repositories\EloquentAlineacioRepository;
+use App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Repositories\EloquentPartitJugadorRepository;
+use App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Repositories\EloquentPuntuacioRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,6 +52,22 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             MatchSetRepositoryInterface::class,
             EloquentSetMatchRepository::class
+        );
+
+        // Lineup Module Bindings (Alineacions + Puntuacions)
+        $this->app->bind(
+            AlineacioRepositoryInterface::class,
+            EloquentAlineacioRepository::class
+        );
+
+        $this->app->bind(
+            PartitJugadorRepositoryInterface::class,
+            EloquentPartitJugadorRepository::class
+        );
+
+        $this->app->bind(
+            PuntuacioRepositoryInterface::class,
+            EloquentPuntuacioRepository::class
         );
     }
 

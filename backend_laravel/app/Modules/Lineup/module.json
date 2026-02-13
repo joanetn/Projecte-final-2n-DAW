@@ -1,0 +1,15 @@
+{
+    "name": "Lineup",
+    "alias": "lineup",
+    "description": "Módulo de gestión de alineaciones, jugadores por partido y puntuaciones",
+    "keywords": [
+        "alineacions",
+        "partit_jugadors",
+        "puntuacions"
+    ],
+    "priority": 0,
+    "providers": [
+        "Modules\\Lineup\\Providers\\LineupServiceProvider"
+    ],
+    "files": []
+}
