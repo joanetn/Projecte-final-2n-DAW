@@ -5,7 +5,6 @@ namespace App\Modules\Merchandise\Infrastructure\Persistence\Eloquent\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Modules\User\Infrastructure\Persistence\Eloquent\Models\UsuariModel;
 
 class CompraModel extends Model
 {
@@ -38,7 +37,7 @@ class CompraModel extends Model
 
     public function usuari(): BelongsTo
     {
-        return $this->belongsTo(UsuariModel::class, 'usuariId');
+        return $this->belongsTo(\App\Models\Usuari::class, 'usuariId');
     }
 
     public function merch(): BelongsTo
