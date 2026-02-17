@@ -247,19 +247,21 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                         </div>
                     </div>
 
-                    {/* Avatar */}
-                    <div className="space-y-1.5">
-                        <Label htmlFor="avatar" className="text-warm-800 dark:text-warm-200">
-                            Avatar (URL)
-                        </Label>
-                        <Input
-                            id="avatar"
-                            value={form.avatar}
-                            onChange={(e) => setForm({ ...form, avatar: e.target.value })}
-                            placeholder="https://ejemplo.com/avatar.jpg"
-                            className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100"
-                        />
-                    </div>
+                    {/* Avatar - Solo en edición */}
+                    {isEditing && (
+                        <div className="space-y-1.5">
+                            <Label htmlFor="avatar" className="text-warm-800 dark:text-warm-200">
+                                Avatar (URL)
+                            </Label>
+                            <Input
+                                id="avatar"
+                                value={form.avatar}
+                                onChange={(e) => setForm({ ...form, avatar: e.target.value })}
+                                placeholder="https://ejemplo.com/avatar.jpg"
+                                className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100"
+                            />
+                        </div>
+                    )}
 
                     <DialogFooter className="gap-2 pt-4">
                         <Button

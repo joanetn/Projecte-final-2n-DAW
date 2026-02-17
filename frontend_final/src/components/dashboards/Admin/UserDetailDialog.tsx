@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Loader2, User as UserIcon, Mail, Phone, Calendar, CreditCard, Shield } from 'lucide-react'
-import { useGetAdminUserDetail } from '@/queries/user.queries'
+import { useGetAdminUserDetail, useGetUserRoles } from '@/queries/user.queries'
 import type { User } from '@/types/users'
 
 interface UserDetailDialogProps {
@@ -18,6 +18,7 @@ interface UserDetailDialogProps {
 
 export function UserDetailDialog({ open, onOpenChange, user }: UserDetailDialogProps) {
     const { data: detail, isLoading } = useGetAdminUserDetail(open ? user?.id ?? null : null)
+    // const { data: roles = [] } = useGetUserRoles(open ? user?.id ?? null : null)
 
     if (!user) return null
 

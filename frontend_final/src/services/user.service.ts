@@ -43,6 +43,7 @@ export const getAdminUser = async (id: string): Promise<User> => {
 
 export const getAdminUserDetail = async (id: string): Promise<UserDetail> => {
     const res = await laravel.get<ApiResponse<UserDetail>>(`/api/admin/usuaris/${id}/detail`)
+    console.log(res.data.data!)
     return res.data.data!
 }
 

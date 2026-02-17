@@ -62,6 +62,7 @@ export const useCreateUserRole = () => {
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId, 'roles'] })
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId, 'detail'] })
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId] })
+            queryClient.invalidateQueries({ queryKey: ['admin', 'users', 'all'] })
         },
     })
 }
@@ -83,6 +84,7 @@ export const useUpdateUserRole = () => {
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId, 'roles'] })
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId, 'detail'] })
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId] })
+            queryClient.invalidateQueries({ queryKey: ['admin', 'users', 'all'] })
         },
     })
 }
@@ -97,6 +99,7 @@ export const useDeleteUserRole = () => {
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId, 'roles'] })
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId, 'detail'] })
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId] })
+            queryClient.invalidateQueries({ queryKey: ['admin', 'users', 'all'] })
         },
     })
 }
@@ -111,6 +114,7 @@ export const useBulkUpdateUserRoles = () => {
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId, 'roles'] })
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId, 'detail'] })
             queryClient.invalidateQueries({ queryKey: ['admin', 'users', usuariId] })
+            queryClient.invalidateQueries({ queryKey: ['admin', 'users', 'all'] })
         },
     })
 }
