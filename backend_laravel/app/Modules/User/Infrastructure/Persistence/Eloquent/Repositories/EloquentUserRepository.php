@@ -125,4 +125,27 @@ class EloquentUserRepository implements UserRepositoryInterface
 
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
+
+    public function searchWithFilters(
+        ?string $q,
+        ?string $nivell,
+        string $sort,
+        int $page,
+        int $limit
+    ): array {
+        $paginator = $this->model->query()
+            ->with(['rols', 'equipUsuaris', 'compras', 'seguros'])
+            ->search($q)
+            ->byNivell($nivell)
+            ->sorted($sort)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return [
+            'data'         => collect($paginator->items())->map([$this->mapper, 'toDomain'])->toArray(),
+            'current_page' => $paginator->currentPage(),
+            'per_page'     => $paginator->perPage(),
+            'last_page'    => $paginator->lastPage(),
+            'total'        => $paginator->total(),
+        ];
+    }
 }

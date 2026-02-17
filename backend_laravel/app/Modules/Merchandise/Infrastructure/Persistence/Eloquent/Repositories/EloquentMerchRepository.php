@@ -9,6 +9,11 @@ use App\Modules\Merchandise\Infrastructure\Persistence\Mappers\MerchMapper;
 
 class EloquentMerchRepository implements MerchRepositoryInterface
 {
+    public function __construct(
+        private MerchModel $model,
+        private MerchMapper $mapper
+    ) {}
+
     public function findAll(): array
     {
         return MerchModel::where('isActive', true)
@@ -57,5 +62,40 @@ class EloquentMerchRepository implements MerchRepositoryInterface
     public function delete(string $id): void
     {
         MerchModel::where('id', $id)->update(['isActive' => false]);
+    }
+
+    public function searchWithFilters(
+        ?string $q,
+        ?string $marca,
+        ?string $minPrice,
+        ?string $maxPrice,
+        string $sort,
+        int $page,
+        int $limit
+    ): array {
+        $priceRange = [];
+
+        if ($minPrice) {
+            $priceRange['min'] = (float) $minPrice;
+        }
+
+        if ($maxPrice) {
+            $priceRange['max'] = (float) $maxPrice;
+        }
+
+        $paginator = $this->model->query()
+            ->search($q)
+            ->byBrand($marca)
+            ->byPriceRange($priceRange)
+            ->sorted($sort)
+            ->paginate($limit, ['*'], 'page', $page);
+
+        return [
+            'data' => collect($paginator->items())->map([$this->mapper, 'toDomain'])->toArray(),
+            'current_page' => $paginator->currentPage(),
+            'per_page' => $paginator->perPage(),
+            'last_page'    => $paginator->lastPage(),
+            'total'        => $paginator->total(),
+        ];
     }
 }

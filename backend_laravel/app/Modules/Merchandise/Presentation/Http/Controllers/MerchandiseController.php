@@ -18,6 +18,7 @@ use App\Modules\Merchandise\Application\Queries\GetComprasQuery;
 use App\Modules\Merchandise\Application\Queries\GetCompraQuery;
 use App\Modules\Merchandise\Application\Queries\GetComprasByUsuariQuery;
 use App\Modules\Merchandise\Application\Queries\GetComprasByMerchQuery;
+use App\Modules\Merchandise\Application\Queries\SearchMerchQuery;
 use App\Modules\Merchandise\Domain\Exceptions\MerchNotFoundException;
 use App\Modules\Merchandise\Domain\Exceptions\CompraNotFoundException;
 use App\Modules\Merchandise\Domain\Exceptions\InsufficientStockException;
@@ -28,6 +29,7 @@ use App\Modules\Merchandise\Presentation\Http\Requests\UpdateCompraRequest;
 use App\Modules\Merchandise\Presentation\Http\Resources\MerchResource;
 use App\Modules\Merchandise\Presentation\Http\Resources\CompraResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class MerchandiseController extends Controller
@@ -45,16 +47,43 @@ class MerchandiseController extends Controller
         private GetCompraQuery $getCompraQuery,
         private GetComprasByUsuariQuery $getComprasByUsuariQuery,
         private GetComprasByMerchQuery $getComprasByMerchQuery,
+        private SearchMerchQuery $searchMerchQuery
     ) {}
 
-    public function indexMerchs(): JsonResponse
+    public function indexMerchs(Request $request): JsonResponse
     {
-        $merchs = $this->getMerchsQuery->execute();
+        $q = $request->query('q');
+        $marca = $request->query('marca');
+        $minPrice = $request->query('minPrice');
+        $maxPrice = $request->query('maxPrice');
+        $sort = $request->query('sort', 'id');
+        $page = (int) $request->query('page', 1);
+        $limit = (int) $request->query('limit', 20);
+
+        $result = $this->searchMerchQuery->execute(
+            q: $q,
+            marca: $marca,
+            minPrice: $minPrice,
+            maxPrice: $maxPrice,
+            sort: $sort,
+            page: $page,
+            limit: $limit
+        );
 
         return response()->json([
             'success' => true,
-            'data' => MerchResource::collection($merchs)
+            'data' => MerchResource::collection($result['data']),
+            'current_page' => $result['current_page'],
+            'per_page'     => $result['per_page'],
+            'last_page'    => $result['last_page'],
+            'total'        => $result['total'],
         ]);
+        // $merchs = $this->getMerchsQuery->execute();
+
+        // return response()->json([
+        //     'success' => true,
+        //     'data' => MerchResource::collection($merchs)
+        // ]);
     }
 
     public function showMerch(string $id): JsonResponse

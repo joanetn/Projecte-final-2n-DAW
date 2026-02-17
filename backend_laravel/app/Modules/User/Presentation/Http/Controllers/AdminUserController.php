@@ -3,7 +3,6 @@
 namespace App\Modules\User\Presentation\Http\Controllers;
 
 use App\Modules\User\Application\Commands\CreateUserCommand;
-use App\Modules\User\Application\Commands\CreateUserRolCommand;
 use App\Modules\User\Application\Commands\DestroyUserAdminCommand;
 use App\Modules\User\Application\Commands\DestroyUserRolCommand;
 use App\Modules\User\Application\Commands\ToggleUserRolCommand;
@@ -15,10 +14,10 @@ use App\Modules\User\Application\DTOs\CreateUserRolDTO;
 use App\Modules\User\Application\DTOs\CreateUserRolsBulkDTO;
 use App\Modules\User\Application\DTOs\UpdateUserDTO;
 use App\Modules\User\Application\DTOs\UpdateUserRolDTO;
-use App\Modules\User\Application\Queries\GetAllUsersAdminQuery;
 use App\Modules\User\Application\Queries\GetUserAdminQuery;
 use App\Modules\User\Application\Queries\GetUserDetailAdminQuery;
 use App\Modules\User\Application\Queries\GetUserRolsQuery;
+use App\Modules\User\Application\Queries\SearchUsersAdminQuery;
 use App\Modules\User\Domain\Exceptions\InvalidDateBirthException;
 use App\Modules\User\Domain\Exceptions\UserNotFoundException;
 use App\Modules\User\Presentation\Http\Requests\CreateUserRequest;
@@ -30,6 +29,7 @@ use App\Modules\User\Presentation\Http\Resources\UserDetailResource;
 use App\Modules\User\Presentation\Http\Resources\UserResource;
 use App\Modules\User\Presentation\Http\Resources\UserRolResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class AdminUserController extends Controller
@@ -38,24 +38,39 @@ class AdminUserController extends Controller
         private CreateUserCommand $createUserCommand,
         private UpdateUserAdminCommand $updateUserCommand,
         private DestroyUserAdminCommand $destroyUserCommand,
-        private CreateUserRolCommand $createUserRolCommand,
         private ToggleUserRolCommand $toggleUserRolCommand,
         private ToggleUserRolsBulkCommand $toggleUserRolsBulkCommand,
         private UpdateUserRolCommand $updateUserRolCommand,
         private DestroyUserRolCommand $destroyUserRolCommand,
-        private GetAllUsersAdminQuery $getAllUsersAdminQuery,
         private GetUserAdminQuery $getUserAdminQuery,
         private GetUserDetailAdminQuery $getUserDetailAdminQuery,
         private GetUserRolsQuery $getUserRolsQuery,
+        private SearchUsersAdminQuery $searchUsersAdminQuery,
     ) {}
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $users = $this->getAllUsersAdminQuery->execute();
+        $q      = $request->query('q');
+        $nivell = $request->query('nivell');
+        $sort   = $request->query('sort', 'created_at_desc');
+        $page   = (int) $request->query('page', 1);
+        $limit  = (int) $request->query('limit', 20);
+
+        $result = $this->searchUsersAdminQuery->execute(
+            q: $q,
+            nivell: $nivell,
+            sort: $sort,
+            page: $page,
+            limit: $limit
+        );
 
         return response()->json([
-            'success' => true,
-            'data' => UserResource::collection($users)
+            'success'      => true,
+            'data'         => UserResource::collection($result['data']),
+            'current_page' => $result['current_page'],
+            'per_page'     => $result['per_page'],
+            'last_page'    => $result['last_page'],
+            'total'        => $result['total'],
         ]);
     }
 

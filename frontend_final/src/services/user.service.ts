@@ -1,4 +1,4 @@
-import { laravel } from '../api/axios'
+import { laravel } from '@/api/axios'
 import type {
     User,
     UserDetail,

@@ -19,4 +19,14 @@ interface MerchRepositoryInterface
     public function update(string $id, array $data): void;
 
     public function delete(string $id): void;
+
+    public function searchWithFilters(
+        ?string $q,
+        ?string $marca,
+        ?string $minPrice,
+        ?string $maxPrice,
+        string $sort,
+        int $page,
+        int $limit
+    ): array;
 }

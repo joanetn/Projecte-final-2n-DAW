@@ -25,13 +25,16 @@ class CreateUserCommand
         $this->userDomainService->validateBirthDate($createUserDTO->dataNaixement);
         $this->userDomainService->validatePhone($createUserDTO->telefon);
 
+        $avatar = $createUserDTO->avatar
+            ?? 'https://ui-avatars.com/api/?name=' . urlencode($createUserDTO->nom) . '&background=random&size=128';
+
         $user = $this->userRepositoryInterface->create([
             'nom' => $createUserDTO->nom,
             'email' => $createUserDTO->email,
             'contrasenya' => bcrypt($createUserDTO->contrasenya),
             'telefon' => $createUserDTO->telefon,
             'dataNaixement' => $createUserDTO->dataNaixement,
-            'avatar' => $createUserDTO->avatar,
+            'avatar' => $avatar,
             'dni' => $createUserDTO->dni,
             'isActive' => true,
         ]);

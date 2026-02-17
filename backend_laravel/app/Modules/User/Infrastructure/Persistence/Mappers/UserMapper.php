@@ -21,6 +21,10 @@ class UserMapper
             isActive: $usuari->isActive,
             createdAt: $usuari->created_at?->format('Y-m-d H:i:s'),
             updatedAt: $usuari->updated_at?->format('Y-m-d H:i:s'),
+            rols: $usuari->relationLoaded('rols') ? $usuari->rols->toArray() : null,
+            equipUsuaris: $usuari->relationLoaded('equipUsuaris') ? $usuari->equipUsuaris->toArray() : null,
+            compras: $usuari->relationLoaded('compras') ? $usuari->compras->toArray() : null,
+            seguros: $usuari->relationLoaded('seguros') ? $usuari->seguros->toArray() : null,
         );
     }
 

@@ -42,6 +42,7 @@ export interface UpdateUserRequest {
     avatar?: string;
     dni?: string;
     isActive?: boolean;
+    nivell?: string;
 }
 
 // ========== REGISTRO (PARA AUTH) ==========

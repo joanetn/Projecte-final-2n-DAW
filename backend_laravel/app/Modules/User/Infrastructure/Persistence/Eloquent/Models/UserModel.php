@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Infrastructure\Persistence\Eloquent\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -59,5 +60,32 @@ class UserModel extends Model
     public function notificacions(): HasMany
     {
         return $this->hasMany(\App\Models\Notificacio::class, 'usuariId');
+    }
+
+    public function scopeSearch(Builder $query, ?string $q): Builder
+    {
+        return $query->when(
+            $q,
+            fn(Builder $qb) =>
+            $qb->where(function (Builder $w) use ($q) {
+                $w->where('nom', 'LIKE', "%{$q}%")
+                    ->orWhere('email', 'LIKE', "%{$q}%");
+            })
+        );
+    }
+
+    public function scopeByNivell(Builder $query, ?string $nivell): Builder
+    {
+        return $query->when($nivell, fn(Builder $qb) => $qb->where('nivell', $nivell));
+    }
+
+    public function scopeSorted(Builder $query, string $sort = 'created_at_desc'): Builder
+    {
+        return match ($sort) {
+            'nom_asc'        => $query->orderBy('nom', 'asc'),
+            'nom_desc'       => $query->orderBy('nom', 'desc'),
+            'created_at_asc' => $query->orderBy('created_at', 'asc'),
+            default          => $query->orderBy('created_at', 'desc'),
+        };
     }
 }

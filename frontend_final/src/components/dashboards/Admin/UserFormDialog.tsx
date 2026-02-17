@@ -33,6 +33,7 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
         dataNaixement: '',
         avatar: '',
         dni: '',
+        nivell: '',
     })
 
     const [errors, setErrors] = useState<Record<string, string>>({})
@@ -47,6 +48,7 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                 dataNaixement: user.dataNaixement?.split('T')[0] || '',
                 avatar: user.avatar || '',
                 dni: user.dni || '',
+                nivell: user.nivell || '',
             })
         } else {
             setForm({
@@ -57,6 +59,7 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                 dataNaixement: '',
                 avatar: '',
                 dni: '',
+                nivell: '',
             })
         }
         setErrors({})
@@ -85,7 +88,7 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
         return Object.keys(newErrors).length === 0
     }
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault()
         if (!validate()) return
 
@@ -100,6 +103,7 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                     data.dataNaixement = form.dataNaixement || undefined
                 if (form.avatar !== (user.avatar || '')) data.avatar = form.avatar || undefined
                 if (form.dni !== (user.dni || '')) data.dni = form.dni || undefined
+                if (form.nivell !== (user.nivell || '')) data.nivell = form.nivell || undefined
 
                 await updateMutation.mutateAsync({ id: user.id, data })
             } else {
@@ -242,6 +246,17 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                                 value={form.dni}
                                 onChange={(e) => setForm({ ...form, dni: e.target.value })}
                                 placeholder="12345678A"
+                                className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100"
+                            />
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor='nivell' className="text-warm-800 dark:text-warm-200">
+                                Nivell
+                            </Label>
+                            <Input
+                                id='nivell'
+                                value={form.nivell}
+                                onChange={(e) => setForm({ ...form, nivell: e.target.value })}
                                 className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100"
                             />
                         </div>

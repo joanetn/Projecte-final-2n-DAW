@@ -31,4 +31,12 @@ interface UserRepositoryInterface
     public function delete(string $id): bool;
 
     public function findByLevel(string $level): array;
+
+    public function searchWithFilters(
+        ?string $q,
+        ?string $nivell,
+        string $sort,
+        int $page,
+        int $limit
+    ): array;
 }

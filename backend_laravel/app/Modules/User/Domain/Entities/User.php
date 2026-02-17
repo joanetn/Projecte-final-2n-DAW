@@ -16,5 +16,9 @@ class User
         public readonly bool $isActive = true,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
+        public readonly ?array $rols = null,
+        public readonly ?array $equipUsuaris = null,
+        public readonly ?array $compras = null,
+        public readonly ?array $seguros = null,
     ) {}
 }

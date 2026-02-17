@@ -95,19 +95,19 @@ class UserDomainService
 
     public function validateName(string $name): void
     {
-        if (strlen($name) < 5) {
+        if (mb_strlen($name) < 5) {
             throw new \Exception("El nom ha de tenir almenys 5 caràcters (nom + primer cognom)");
         }
 
-        if (strlen($name) > 255) {
+        if (mb_strlen($name) > 255) {
             throw new \Exception("El nom no pot excedir 255 caràcters");
         }
 
-        if (!preg_match('/^[a-zA-Z\s]+$/', $name)) {
+        if (!preg_match('/^[\p{L}\s]+$/u', $name)) {
             throw new \Exception("El nom pot contenir només lletres i espais");
         }
 
-        $words = array_filter(explode(' ', trim($name)));
+        $words = array_filter(preg_split('/\\s+/', trim($name)));
         if (count($words) < 2) {
             throw new \Exception("El nom ha de tindre nom i primer cognom (almenys 2 paraules)");
         }
