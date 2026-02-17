@@ -1,14 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import {
     getUsers,
     getUser,
     getUserDetail,
-    getAdminUsers,
+    searchAdminUsers,
     getAdminUser,
     getAdminUserDetail,
     getUserRoles,
 } from '../services/user.service'
-import type { User, UserDetail, UserRole } from '../types/users'
+import type { User, UserDetail, UserRole, SearchUsersParams, SearchUsersResponse } from '../types/users'
 
 export const useGetUsers = () =>
     useQuery<User[]>({
@@ -30,10 +30,11 @@ export const useGetUserDetail = (id: string | null) =>
         enabled: !!id,
     })
 
-export const useGetAdminUsers = () =>
-    useQuery<User[]>({
-        queryKey: ['admin', 'users', 'all'],
-        queryFn: getAdminUsers,
+export const useSearchAdminUsers = (params: SearchUsersParams) =>
+    useQuery<SearchUsersResponse>({
+        queryKey: ['admin', 'users', 'all', params],
+        queryFn: () => searchAdminUsers(params),
+        placeholderData: keepPreviousData,
     })
 
 export const useGetAdminUser = (id: string | null) =>

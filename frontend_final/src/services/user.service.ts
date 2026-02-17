@@ -12,6 +12,8 @@ import type {
     ApiResponse,
     CreateUserResponse,
     RoleActionResponse,
+    SearchUsersParams,
+    SearchUsersResponse,
 } from '../types/users'
 
 // ========== ENDPOINTS PÚBLICOS (solo usuarios activos, para login etc.) ==========
@@ -31,9 +33,9 @@ export const getUserDetail = async (id: string): Promise<UserDetail> => {
 }
 
 // ========== ENDPOINTS ADMIN (todos los usuarios, incluidos inactivos) ==========
-export const getAdminUsers = async (): Promise<User[]> => {
-    const res = await laravel.get<ApiResponse<User[]>>('/api/admin/usuaris')
-    return res.data.data || []
+export const searchAdminUsers = async (params?: SearchUsersParams): Promise<SearchUsersResponse> => {
+    const res = await laravel.get<SearchUsersResponse>('/api/admin/usuaris', { params })
+    return res.data
 }
 
 export const getAdminUser = async (id: string): Promise<User> => {

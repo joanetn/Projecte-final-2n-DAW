@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { UsersTab } from "@/components/dashboards/Admin/UsersTab"
+import { UsersTab } from "@/components/dashboards/Admin/Users/UsersTab"
 
 const DashboardAdmin = () => {
     return (

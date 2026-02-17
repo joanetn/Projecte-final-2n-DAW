@@ -23,6 +23,7 @@ class UpdateUserRequest extends FormRequest
             'dataNaixement' => 'nullable|date|before_or_equal:today',
             'avatar' => 'nullable|string|max:500',
             'dni' => 'nullable|string|max:20',
+            'nivell' => 'nullable|string|in:principant,intermedi,avançat',
             'isActive' => 'nullable|boolean',
         ];
     }

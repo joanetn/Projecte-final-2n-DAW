@@ -24,6 +24,7 @@ class CreateUserCommand
         $this->userDomainService->validatePassword($createUserDTO->contrasenya);
         $this->userDomainService->validateBirthDate($createUserDTO->dataNaixement);
         $this->userDomainService->validatePhone($createUserDTO->telefon);
+        $this->userDomainService->validateLevel($createUserDTO->nivell);
 
         $avatar = $createUserDTO->avatar
             ?? 'https://ui-avatars.com/api/?name=' . urlencode($createUserDTO->nom) . '&background=random&size=128';
@@ -36,6 +37,7 @@ class CreateUserCommand
             'dataNaixement' => $createUserDTO->dataNaixement,
             'avatar' => $avatar,
             'dni' => $createUserDTO->dni,
+            'nivell' => $createUserDTO->nivell,
             'isActive' => true,
         ]);
 

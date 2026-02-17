@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Loader2, User as UserIcon, Mail, Phone, Calendar, CreditCard, Shield } from 'lucide-react'
-import { useGetAdminUserDetail, useGetUserRoles } from '@/queries/user.queries'
+import { useGetAdminUserDetail } from '@/queries/user.queries'
 import type { User } from '@/types/users'
 
 interface UserDetailDialogProps {
@@ -18,7 +18,6 @@ interface UserDetailDialogProps {
 
 export function UserDetailDialog({ open, onOpenChange, user }: UserDetailDialogProps) {
     const { data: detail, isLoading } = useGetAdminUserDetail(open ? user?.id ?? null : null)
-    // const { data: roles = [] } = useGetUserRoles(open ? user?.id ?? null : null)
 
     if (!user) return null
 
@@ -76,7 +75,7 @@ export function UserDetailDialog({ open, onOpenChange, user }: UserDetailDialogP
                             <InfoRow icon={<Phone className="w-4 h-4" />} label="Teléfono" value={detail.telefon || '—'} />
                             <InfoRow icon={<Calendar className="w-4 h-4" />} label="Fecha nacimiento" value={detail.dataNaixement?.split('T')[0] || '—'} />
                             <InfoRow icon={<CreditCard className="w-4 h-4" />} label="DNI" value={detail.dni || '—'} />
-                            <InfoRow icon={<Shield className="w-4 h-4" />} label="Nivel" value={detail.nivell || '—'} />
+                            <InfoRow icon={<Shield className="w-4 h-4" />} label="Nivel" value={detail.nivell ? detail.nivell.charAt(0).toUpperCase() + detail.nivell.slice(1) : '—'} />
                         </div>
 
                         {/* Roles */}

@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
-import { useGetAdminUsers } from '@/queries/user.queries'
+import { useState } from 'react'
+import { useSearchAdminUsers } from '@/queries/user.queries'
 import { useUpdateUser } from '@/mutations/user.mutations'
+import { useUsersState } from '@/hooks/useUsersState'
 import { UserFormDialog } from './UserFormDialog'
 import { UserDetailDialog } from './UserDetailDialog'
 import { UserRolesDialog } from './UserRolesDialog'
@@ -8,6 +9,14 @@ import { DeleteUserDialog } from './DeleteUserDialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
+import { Input } from '@/components/ui/input'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
 import {
     Plus,
     Eye,
@@ -19,12 +28,29 @@ import {
     Users,
     AlertCircle,
     CheckCircle,
+    Search,
+    X,
+    ChevronLeft,
+    ChevronRight,
 } from 'lucide-react'
 import type { User } from '@/types/users'
 
 export function UsersTab() {
-    const { data: users = [], isLoading, error, refetch } = useGetAdminUsers()
+    const {
+        qInput, setQInput,
+        nivell, setNivell,
+        sort, setSort,
+        page, limit, setPage, setLimit,
+        clearFilters,
+        apiParams,
+    } = useUsersState()
+
+    const { data: response, isLoading, error, refetch } = useSearchAdminUsers(apiParams)
     const updateUserMutation = useUpdateUser()
+
+    const users = response?.data ?? []
+    const totalPages = response?.last_page ?? 1
+    const total = response?.total ?? 0
 
     const [formDialogOpen, setFormDialogOpen] = useState(false)
     const [detailDialogOpen, setDetailDialogOpen] = useState(false)
@@ -37,7 +63,7 @@ export function UsersTab() {
         message: string
     } | null>(null)
 
-    const filteredUsers = useMemo(() => users, [users])
+    const hasActiveFilters = !!(apiParams.q || apiParams.nivell || apiParams.sort !== 'created_at_desc')
 
     const openCreate = () => {
         setSelectedUser(null)
@@ -87,17 +113,6 @@ export function UsersTab() {
         }
     }
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-48">
-                <div className="text-center">
-                    <Loader2 className="w-10 h-10 animate-spin text-warm-600 dark:text-warm-400 mx-auto mb-3" />
-                    <p className="text-warm-600 dark:text-warm-300">Cargando usuarios...</p>
-                </div>
-            </div>
-        )
-    }
-
     if (error) {
         return (
             <div className="alert alert-error">
@@ -134,42 +149,121 @@ export function UsersTab() {
                 </div>
             )}
 
-            <div className="flex flex-col md:flex-row gap-3 items-start md:items-center justify-between">
-                <div className="flex gap-2 flex-wrap">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => refetch()}
-                        className="border-warm-300 dark:border-slate-600 text-warm-700 dark:text-warm-300 hover:bg-warm-50 dark:hover:bg-slate-700"
-                    >
-                        <RefreshCw className="w-4 h-4" />
-                    </Button>
+            <div className="flex flex-col gap-3">
+                <div className="flex flex-col md:flex-row gap-3 items-start md:items-center justify-between">
+                    <div className="relative flex-1 max-w-sm">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-warm-400" />
+                        <Input
+                            placeholder="Buscar por nombre o email..."
+                            value={qInput}
+                            onChange={(e) => setQInput(e.target.value)}
+                            className="pl-9 bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100"
+                        />
+                    </div>
 
-                    <Button
-                        size="sm"
-                        onClick={openCreate}
-                        className="bg-warm-600 hover:bg-warm-700 dark:bg-warm-500 dark:hover:bg-warm-600 text-white"
-                    >
-                        <Plus className="w-4 h-4 mr-1" />
-                        Nuevo usuario
-                    </Button>
+                    <div className="flex gap-2 flex-wrap">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => refetch()}
+                            className="border-warm-300 dark:border-slate-600 text-warm-700 dark:text-warm-300 hover:bg-warm-50 dark:hover:bg-slate-700"
+                        >
+                            <RefreshCw className="w-4 h-4" />
+                        </Button>
+
+                        <Button
+                            size="sm"
+                            onClick={openCreate}
+                            className="bg-warm-600 hover:bg-warm-700 dark:bg-warm-500 dark:hover:bg-warm-600 text-white"
+                        >
+                            <Plus className="w-4 h-4 mr-1" />
+                            Nuevo usuario
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3 items-center">
+                    <Select value={nivell || 'all'} onValueChange={(v) => setNivell(v === 'all' ? '' : v)}>
+                        <SelectTrigger className="w-[160px] bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100">
+                            <SelectValue placeholder="Todos los niveles" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Todos los niveles</SelectItem>
+                            <SelectItem value="principant">Principant</SelectItem>
+                            <SelectItem value="intermedi">Intermedi</SelectItem>
+                            <SelectItem value="avançat">Avançat</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Select value={sort} onValueChange={setSort}>
+                        <SelectTrigger className="w-[180px] bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100">
+                            <SelectValue placeholder="Ordenar por..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="created_at_desc">Más recientes</SelectItem>
+                            <SelectItem value="created_at_asc">Más antiguos</SelectItem>
+                            <SelectItem value="nom_asc">Nombre A-Z</SelectItem>
+                            <SelectItem value="nom_desc">Nombre Z-A</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Select value={String(limit)} onValueChange={(v) => setLimit(Number(v))}>
+                        <SelectTrigger className="w-[120px] bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="10">10 / pág</SelectItem>
+                            <SelectItem value="20">20 / pág</SelectItem>
+                            <SelectItem value="50">50 / pág</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    {hasActiveFilters && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={clearFilters}
+                            className="text-warm-600 dark:text-warm-300 hover:bg-warm-100 dark:hover:bg-slate-700"
+                        >
+                            <X className="w-4 h-4 mr-1" />
+                            Limpiar filtros
+                        </Button>
+                    )}
                 </div>
             </div>
 
-            {filteredUsers.length === 0 ? (
+            {isLoading ? (
+                <div className="flex items-center justify-center h-48">
+                    <div className="text-center">
+                        <Loader2 className="w-10 h-10 animate-spin text-warm-600 dark:text-warm-400 mx-auto mb-3" />
+                        <p className="text-warm-600 dark:text-warm-300">Cargando usuarios...</p>
+                    </div>
+                </div>
+            ) : users.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-48 text-center">
                     <Users className="w-12 h-12 text-warm-300 dark:text-slate-600 mb-3" />
                     <p className="text-warm-600 dark:text-warm-300 text-lg font-medium">
-                        No hay usuarios registrados
+                        {hasActiveFilters ? 'No se encontraron usuarios con esos filtros' : 'No hay usuarios registrados'}
                     </p>
-                    <Button
-                        size="sm"
-                        onClick={openCreate}
-                        className="mt-4 bg-warm-600 hover:bg-warm-700 dark:bg-warm-500 dark:hover:bg-warm-600 text-white"
-                    >
-                        <Plus className="w-4 h-4 mr-1" />
-                        Crear primer usuario
-                    </Button>
+                    {hasActiveFilters ? (
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={clearFilters}
+                            className="mt-4 border-warm-300 dark:border-slate-600 text-warm-700 dark:text-warm-300"
+                        >
+                            Limpiar filtros
+                        </Button>
+                    ) : (
+                        <Button
+                            size="sm"
+                            onClick={openCreate}
+                            className="mt-4 bg-warm-600 hover:bg-warm-700 dark:bg-warm-500 dark:hover:bg-warm-600 text-white"
+                        >
+                            <Plus className="w-4 h-4 mr-1" />
+                            Crear primer usuario
+                        </Button>
+                    )}
                 </div>
             ) : (
                 <>
@@ -186,6 +280,9 @@ export function UsersTab() {
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-warm-900 dark:text-warm-100 uppercase tracking-wider hidden lg:table-cell">
                                         Teléfono
                                     </th>
+                                    <th className="px-4 py-3 text-center text-xs font-semibold text-warm-900 dark:text-warm-100 uppercase tracking-wider hidden md:table-cell">
+                                        Nivel
+                                    </th>
                                     <th className="px-4 py-3 text-center text-xs font-semibold text-warm-900 dark:text-warm-100 uppercase tracking-wider">
                                         Estado
                                     </th>
@@ -195,7 +292,7 @@ export function UsersTab() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredUsers.map((user) => (
+                                {users.map((user) => (
                                     <tr
                                         key={user.id}
                                         className="border-b border-warm-100 dark:border-slate-700 hover:bg-warm-50 dark:hover:bg-slate-800/50 transition-colors"
@@ -230,6 +327,16 @@ export function UsersTab() {
 
                                         <td className="px-4 py-3 text-sm text-warm-700 dark:text-warm-300 hidden lg:table-cell">
                                             {user.telefon || '—'}
+                                        </td>
+
+                                        <td className="px-4 py-3 text-center hidden md:table-cell">
+                                            {user.nivell ? (
+                                                <Badge className="bg-warm-100 text-warm-800 dark:bg-warm-900 dark:text-warm-200">
+                                                    {user.nivell.charAt(0).toUpperCase() + user.nivell.slice(1)}
+                                                </Badge>
+                                            ) : (
+                                                <span className="text-warm-400 text-sm">—</span>
+                                            )}
                                         </td>
 
                                         <td className="px-4 py-3 text-center">
@@ -300,10 +407,36 @@ export function UsersTab() {
                     <div className="p-3 bg-warm-50 dark:bg-slate-800/50 rounded-lg border border-warm-200 dark:border-slate-700 flex items-center justify-between">
                         <p className="text-sm text-warm-700 dark:text-warm-300">
                             Mostrando{' '}
-                            <strong>{filteredUsers.length}</strong>{' '}
-                            de <strong>{users.length}</strong>{' '}
-                            usuario{users.length !== 1 ? 's' : ''}
+                            <strong>{users.length}</strong>{' '}
+                            de <strong>{total}</strong>{' '}
+                            usuario{total !== 1 ? 's' : ''}
                         </p>
+
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={page <= 1}
+                                onClick={() => setPage(page - 1)}
+                                className="border-warm-300 dark:border-slate-600 text-warm-700 dark:text-warm-300 hover:bg-warm-50 dark:hover:bg-slate-700 disabled:opacity-50"
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                            </Button>
+
+                            <span className="text-sm text-warm-700 dark:text-warm-300 px-2">
+                                {page} / {totalPages}
+                            </span>
+
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                disabled={page >= totalPages}
+                                onClick={() => setPage(page + 1)}
+                                className="border-warm-300 dark:border-slate-600 text-warm-700 dark:text-warm-300 hover:bg-warm-50 dark:hover:bg-slate-700 disabled:opacity-50"
+                            >
+                                <ChevronRight className="w-4 h-4" />
+                            </Button>
+                        </div>
                     </div>
                 </>
             )}

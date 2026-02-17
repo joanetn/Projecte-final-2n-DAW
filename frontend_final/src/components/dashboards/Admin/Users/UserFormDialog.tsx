@@ -10,6 +10,13 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
 import { useCreateUser } from '@/mutations/user.mutations'
 import { useUpdateUser } from '@/mutations/user.mutations'
 import type { User, CreateUserRequest, UpdateUserRequest } from '@/types/users'
@@ -103,7 +110,7 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                     data.dataNaixement = form.dataNaixement || undefined
                 if (form.avatar !== (user.avatar || '')) data.avatar = form.avatar || undefined
                 if (form.dni !== (user.dni || '')) data.dni = form.dni || undefined
-                if (form.nivell !== (user.nivell || '')) data.nivell = form.nivell || undefined
+                if (form.nivell !== (user.nivell || '')) data.nivell = form.nivell
 
                 await updateMutation.mutateAsync({ id: user.id, data })
             } else {
@@ -115,6 +122,7 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                     ...(form.dataNaixement && { dataNaixement: form.dataNaixement }),
                     ...(form.avatar && { avatar: form.avatar }),
                     ...(form.dni && { dni: form.dni }),
+                    nivell: form.nivell
                 }
                 await createMutation.mutateAsync(data)
             }
@@ -223,8 +231,8 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                         )}
                     </div>
 
-                    {/* Telefon & DNI */}
-                    <div className="grid grid-cols-2 gap-3">
+                    {/* Telefon & DNI & Nivell */}
+                    <div className="grid grid-cols-3 gap-3">
                         <div className="space-y-1.5">
                             <Label htmlFor="telefon" className="text-warm-800 dark:text-warm-200">
                                 Teléfono
@@ -253,12 +261,16 @@ export function UserFormDialog({ open, onOpenChange, user }: UserFormDialogProps
                             <Label htmlFor='nivell' className="text-warm-800 dark:text-warm-200">
                                 Nivell
                             </Label>
-                            <Input
-                                id='nivell'
-                                value={form.nivell}
-                                onChange={(e) => setForm({ ...form, nivell: e.target.value })}
-                                className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100"
-                            />
+                            <Select value={form.nivell} onValueChange={(value) => setForm({ ...form, nivell: value })}>
+                                <SelectTrigger className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600 text-warm-900 dark:text-slate-100">
+                                    <SelectValue placeholder="Selecciona un nivel" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="principant">Principant</SelectItem>
+                                    <SelectItem value="intermedi">Intermedi</SelectItem>
+                                    <SelectItem value="avançat">Avançat</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
 

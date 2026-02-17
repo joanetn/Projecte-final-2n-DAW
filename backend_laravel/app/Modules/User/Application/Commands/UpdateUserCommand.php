@@ -42,12 +42,17 @@ class UpdateUserCommand
             $this->userDomainService->validatePhone($dto->telefon);
         }
 
+        if ($dto->nivell !== null) {
+            $this->userDomainService->validateLevel($dto->nivell);
+        }
+
         $updateData = array_filter([
             'nom' => $dto->nom,
             'email' => $dto->email,
             'contrasenya' => $dto->contrasenya ? bcrypt($dto->contrasenya) : null,
             'telefon' => $dto->telefon,
             'dataNaixement' => $dto->dataNaixement,
+            'nivell' => $dto->nivell,
             'avatar' => $dto->avatar,
             'dni' => $dto->dni,
             'isActive' => $dto->isActive,

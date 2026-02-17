@@ -12,6 +12,7 @@ class UpdateUserDTO
         public readonly ?string $dataNaixement = null,
         public readonly ?string $avatar = null,
         public readonly ?string $dni = null,
+        public readonly ?string $nivell = null,
         public readonly ?bool $isActive = null,
     ) {}
 
@@ -25,6 +26,7 @@ class UpdateUserDTO
             dataNaixement: $data['dataNaixement'] ?? null,
             avatar: $data['avatar'] ?? null,
             dni: $data['dni'] ?? null,
+            nivell: $data['nivell'] ?? null,
             isActive: isset($data['isActive']) ? (bool) $data['isActive'] : null,
         );
     }

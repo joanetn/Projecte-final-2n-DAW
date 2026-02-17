@@ -12,6 +12,7 @@ class CreateUserDTO
         public readonly ?string $dataNaixement = null,
         public readonly ?string $avatar = null,
         public readonly ?string $dni = null,
+        public readonly ?string $nivell = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -24,6 +25,7 @@ class CreateUserDTO
             dataNaixement: $data['dataNaixement'] ?? null,
             avatar: $data['avatar'] ?? null,
             dni: $data['dni'] ?? null,
+            nivell: $data['nivell'] ?? null,
         );
     }
 }

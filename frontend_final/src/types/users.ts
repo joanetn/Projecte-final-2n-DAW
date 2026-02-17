@@ -1,4 +1,3 @@
-// ========== USUARIO BASE ==========
 export interface User {
     id: string;
     nom: string;
@@ -13,7 +12,6 @@ export interface User {
     updatedAt?: string;
 }
 
-// ========== USUARIO CON RELACIONES ==========
 export interface UserDetail extends User {
     rols?: UserRole[];
     equipUsuaris?: any[];
@@ -21,7 +19,6 @@ export interface UserDetail extends User {
     seguros?: any[];
 }
 
-// ========== CREAR USUARIO ==========
 export interface CreateUserRequest {
     nom: string;
     email: string;
@@ -30,9 +27,9 @@ export interface CreateUserRequest {
     dataNaixement?: string;
     avatar?: string;
     dni?: string;
+    nivell?: string;
 }
 
-// ========== ACTUALIZAR USUARIO ==========
 export interface UpdateUserRequest {
     nom?: string;
     email?: string;
@@ -45,7 +42,6 @@ export interface UpdateUserRequest {
     nivell?: string;
 }
 
-// ========== REGISTRO (PARA AUTH) ==========
 export interface RegisterData {
     nom: string;
     email: string;
@@ -57,7 +53,6 @@ export interface RegisterData {
     nivell?: string;
 }
 
-// ========== ROLES ==========
 export interface UserRole {
     id: string;
     usuariId: string;
@@ -66,7 +61,6 @@ export interface UserRole {
     createdAt?: string;
 }
 
-// ========== CREAR/ACTUALIZAR ROL ==========
 export interface CreateRoleRequest {
     rol: string;
 }
@@ -75,7 +69,6 @@ export interface UpdateRoleRequest {
     isActive: boolean;
 }
 
-// ========== BULK ROLES ==========
 export interface BulkRolesRequest {
     roles: string[];
 }
@@ -101,7 +94,6 @@ export interface BulkRolesResponse {
     errors: any[];
 }
 
-// ========== RESPUESTAS GENÉRICAS ==========
 export interface ApiResponse<T> {
     success: boolean;
     message?: string;
@@ -124,4 +116,22 @@ export interface RoleActionResponse {
         rolId: string;
         isActive: boolean;
     };
+}
+
+// ========== BÚSQUEDA USUARIOS CON PAGINACIÓN ==========
+export interface SearchUsersParams {
+    q?: string;
+    nivell?: string;
+    sort?: 'nom_asc' | 'nom_desc' | 'created_at_asc' | 'created_at_desc';
+    page?: number;
+    limit?: number;
+}
+
+export interface SearchUsersResponse {
+    success: boolean;
+    data: User[];
+    current_page: number;
+    per_page: number;
+    last_page: number;
+    total: number;
 }

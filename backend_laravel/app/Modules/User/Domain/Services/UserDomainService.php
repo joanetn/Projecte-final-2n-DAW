@@ -113,6 +113,18 @@ class UserDomainService
         }
     }
 
+    public function validateLevel(?string $level): void
+    {
+        if (!$level) {
+            return;
+        }
+
+        $validLevels = ['principant', 'intermedi', 'avançat'];
+        if (!in_array($level, $validLevels, true)) {
+            throw new \Exception("El nivell ha de ser: " . implode(', ', $validLevels));
+        }
+    }
+
     public function canUserBeCreated(string $email): bool
     {
         $existingUser = $this->userRepository->findByEmail($email);

@@ -42,6 +42,10 @@ class UpdateUserAdminCommand
             $this->userDomainService->validatePhone($dto->telefon);
         }
 
+        if ($dto->nivell !== null) {
+            $this->userDomainService->validateLevel($dto->nivell);
+        }
+
         $updateData = array_filter([
             'nom' => $dto->nom,
             'email' => $dto->email,
@@ -50,6 +54,7 @@ class UpdateUserAdminCommand
             'dataNaixement' => $dto->dataNaixement,
             'avatar' => $dto->avatar,
             'dni' => $dto->dni,
+            'nivell' => $dto->nivell,
             'isActive' => $dto->isActive,
         ], fn($value) => $value !== null);
 
