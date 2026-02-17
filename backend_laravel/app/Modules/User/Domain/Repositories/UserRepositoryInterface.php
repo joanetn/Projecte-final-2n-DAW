@@ -16,6 +16,14 @@ interface UserRepositoryInterface
 
     public function findAllWithRelations(array $relations): array;
 
+    public function findAllIncludingInactive(): array;
+
+    public function findAllIncludingInactiveWithRelations(array $relations): array;
+
+    public function findByIdIncludingInactive(string $id): ?User;
+
+    public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?User;
+
     public function create(array $data): User;
 
     public function update(string $id, array $data): bool;

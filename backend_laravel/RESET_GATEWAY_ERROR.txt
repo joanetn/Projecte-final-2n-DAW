@@ -1,0 +1,34 @@
+================================================================================
+SOLUCIÓN ERROR: "rename(): Acceso denegado" en npm run gateway
+================================================================================
+
+El error pasa porque 9 instancias de Laravel intentan escribir
+bootstrap/cache/services.php al mismo tiempo.
+
+La solución ya está integrada en package.json:
+- "precache" limpia la caché y pre-genera services.php
+- "gateway" ejecuta precache antes de arrancar los servicios
+
+COMANDO PARA ARRANCAR (ya funciona directamente):
+================================================================================
+
+npm run gateway
+
+
+SI DA ERROR DE ACCESO DENEGADO:
+================================================================================
+
+1. Cierra todas las terminales con PHP corriendo
+2. Ejecuta:
+   php artisan optimize:clear && rm -rf bootstrap/cache/* && npm run gateway
+
+
+IMPORTANTE - NUNCA ejecutar:
+================================================================================
+
+php artisan config:cache   ← ROMPE el cross-env GATEWAY_ENABLED
+
+Porque config:cache guarda los valores del .env en un archivo estático
+y después Laravel IGNORA las variables de entorno en runtime.
+Esto hace que TODOS los servicios usen GATEWAY_ENABLED=true (del .env)
+en vez de respetar el cross-env de cada uno, causando un bucle infinito.

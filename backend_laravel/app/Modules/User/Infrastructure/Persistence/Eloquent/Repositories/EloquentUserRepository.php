@@ -52,6 +52,41 @@ class EloquentUserRepository implements UserRepositoryInterface
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
 
+    public function findAllIncludingInactive(): array
+    {
+        $models = $this->model
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
+    public function findAllIncludingInactiveWithRelations(array $relations): array
+    {
+        $models = $this->model
+            ->with($relations)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
+    public function findByIdIncludingInactive(string $id): ?User
+    {
+        $model = $this->model->find($id);
+
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
+
+    public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?User
+    {
+        $model = $this->model
+            ->with($relations)
+            ->find($id);
+
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
+
     public function create(array $data): User
     {
         $model = $this->model->create($data);

@@ -16,8 +16,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (saved === 'dark' || saved === 'light') {
             return saved
         }
-        // Si no, comprueba la preferencia del sistema
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        // Por defecto modo claro
+        return 'light'
     })
 
     useEffect(() => {

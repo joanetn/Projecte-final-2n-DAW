@@ -4,21 +4,21 @@ namespace App\Modules\User\Presentation\Http\Controllers;
 
 use App\Modules\User\Application\Commands\CreateUserCommand;
 use App\Modules\User\Application\Commands\CreateUserRolCommand;
-use App\Modules\User\Application\Commands\DestroyUserCommand;
+use App\Modules\User\Application\Commands\DestroyUserAdminCommand;
 use App\Modules\User\Application\Commands\DestroyUserRolCommand;
 use App\Modules\User\Application\Commands\ToggleUserRolCommand;
 use App\Modules\User\Application\Commands\ToggleUserRolsBulkCommand;
-use App\Modules\User\Application\Commands\UpdateUserCommand;
+use App\Modules\User\Application\Commands\UpdateUserAdminCommand;
 use App\Modules\User\Application\Commands\UpdateUserRolCommand;
 use App\Modules\User\Application\DTOs\CreateUserDTO;
 use App\Modules\User\Application\DTOs\CreateUserRolDTO;
 use App\Modules\User\Application\DTOs\CreateUserRolsBulkDTO;
 use App\Modules\User\Application\DTOs\UpdateUserDTO;
 use App\Modules\User\Application\DTOs\UpdateUserRolDTO;
-use App\Modules\User\Application\Queries\GetUserQuery;
+use App\Modules\User\Application\Queries\GetAllUsersAdminQuery;
+use App\Modules\User\Application\Queries\GetUserAdminQuery;
+use App\Modules\User\Application\Queries\GetUserDetailAdminQuery;
 use App\Modules\User\Application\Queries\GetUserRolsQuery;
-use App\Modules\User\Application\Queries\GetUsersDetailQuery;
-use App\Modules\User\Application\Queries\GetUsersQuery;
 use App\Modules\User\Domain\Exceptions\InvalidDateBirthException;
 use App\Modules\User\Domain\Exceptions\UserNotFoundException;
 use App\Modules\User\Presentation\Http\Requests\CreateUserRequest;
@@ -32,37 +32,37 @@ use App\Modules\User\Presentation\Http\Resources\UserRolResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
-class UserController extends Controller
+class AdminUserController extends Controller
 {
     public function __construct(
         private CreateUserCommand $createUserCommand,
-        private UpdateUserCommand $updateUserCommand,
-        private DestroyUserCommand $destroyUserCommand,
+        private UpdateUserAdminCommand $updateUserCommand,
+        private DestroyUserAdminCommand $destroyUserCommand,
         private CreateUserRolCommand $createUserRolCommand,
         private ToggleUserRolCommand $toggleUserRolCommand,
         private ToggleUserRolsBulkCommand $toggleUserRolsBulkCommand,
         private UpdateUserRolCommand $updateUserRolCommand,
         private DestroyUserRolCommand $destroyUserRolCommand,
-        private GetUserQuery $getUserQuery,
-        private GetUsersQuery $getUsersQuery,
-        private GetUsersDetailQuery $getUsersDetailQuery,
+        private GetAllUsersAdminQuery $getAllUsersAdminQuery,
+        private GetUserAdminQuery $getUserAdminQuery,
+        private GetUserDetailAdminQuery $getUserDetailAdminQuery,
         private GetUserRolsQuery $getUserRolsQuery,
     ) {}
 
     public function index(): JsonResponse
     {
-        $users = $this->getUsersQuery->execute();
+        $users = $this->getAllUsersAdminQuery->execute();
 
-        return response()->json(data: [
+        return response()->json([
             'success' => true,
-            'data' => UserResource::collection(resource: $users)
+            'data' => UserResource::collection($users)
         ]);
     }
 
     public function show(string $usuariId): JsonResponse
     {
         try {
-            $user = $this->getUserQuery->execute($usuariId);
+            $user = $this->getUserAdminQuery->execute($usuariId);
 
             return response()->json([
                 'success' => true,
@@ -79,7 +79,7 @@ class UserController extends Controller
     public function showDetail(string $usuariId): JsonResponse
     {
         try {
-            $user = $this->getUsersDetailQuery->execute($usuariId);
+            $user = $this->getUserDetailAdminQuery->execute($usuariId);
 
             return response()->json([
                 'success' => true,
@@ -112,9 +112,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'exception' => get_class($e),
-                'debug' => env('APP_DEBUG')
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -142,14 +140,12 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'exception' => get_class($e),
-                'debug' => env('APP_DEBUG')
+                'message' => $e->getMessage()
             ], 400);
         }
     }
 
-    public function destroy(string $usuariId)
+    public function destroy(string $usuariId): JsonResponse
     {
         try {
             $this->destroyUserCommand->execute($usuariId);
@@ -166,9 +162,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'exception' => get_class($e),
-                'debug' => env('APP_DEBUG')
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -185,9 +179,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'exception' => get_class($e),
-                'debug' => env('APP_DEBUG')
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -214,9 +206,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'exception' => get_class($e),
-                'debug' => env('APP_DEBUG')
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -238,9 +228,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'exception' => get_class($e),
-                'debug' => env('APP_DEBUG')
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -257,9 +245,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'exception' => get_class($e),
-                'debug' => env('APP_DEBUG')
+                'message' => $e->getMessage()
             ], 400);
         }
     }
@@ -281,9 +267,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
-                'exception' => get_class($e),
-                'debug' => env('APP_DEBUG')
+                'message' => $e->getMessage()
             ], 400);
         }
     }

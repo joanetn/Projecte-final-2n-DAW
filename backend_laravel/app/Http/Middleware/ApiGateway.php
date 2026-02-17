@@ -73,13 +73,11 @@ class ApiGateway
     {
         $path = ltrim($request->path(), '/');
 
-        // Strip leading "api/" if present
         if (str_starts_with($path, 'api/')) {
             $path = substr($path, 4);
         }
 
-        // Only gateway admin routes bypass proxying
-        return str_starts_with($path, 'gateway/');
+        return str_starts_with($path, 'gateway/') || str_starts_with($path, 'admin/');
     }
     private function buildPrefixMap(): array
     {
