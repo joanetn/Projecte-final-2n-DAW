@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchandise\Infrastructure\Persistence\Eloquent\Models;
 
+use App\Enums\MerchBrand;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -26,6 +27,7 @@ class MerchModel extends Model
         'preu' => 'float',
         'stock' => 'integer',
         'isActive' => 'boolean',
+        'marca' => MerchBrand::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

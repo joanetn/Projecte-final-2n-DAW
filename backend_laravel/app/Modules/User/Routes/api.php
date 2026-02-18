@@ -11,6 +11,7 @@ Route::prefix('usuaris')->group(function () {
     Route::post('/', [UserController::class, 'store']);
     Route::put('/{usuariId}', [UserController::class, 'update']);
     Route::delete('/{usuariId}', [UserController::class, 'destroy']);
+    Route::get('/nivells', [UserController::class, 'getLevels']);
 
     Route::prefix('{usuariId}/rols')->group(function () {
         Route::get('/', [UserController::class, 'indexRols']);

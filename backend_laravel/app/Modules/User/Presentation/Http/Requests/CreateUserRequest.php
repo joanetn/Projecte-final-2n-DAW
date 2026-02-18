@@ -2,7 +2,9 @@
 
 namespace App\Modules\User\Presentation\Http\Requests;
 
+use App\Enums\UserLevel;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class CreateUserRequest extends FormRequest
 {
@@ -21,7 +23,7 @@ class CreateUserRequest extends FormRequest
             'dataNaixement' => 'required|date|before_or_equal:today',
             'avatar' => 'nullable|string|max:500',
             'dni' => 'nullable|string|max:20',
-            'nivell' => 'required|string|in:principant,intermedi,avançat',
+            'nivell' => ['required', new Enum(UserLevel::class)],
         ];
     }
 

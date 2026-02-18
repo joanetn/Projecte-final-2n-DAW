@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UsersTab } from "@/components/dashboards/Admin/Users/UsersTab"
+import { MerchTab } from "@/components/dashboards/Admin/Merch/MerchTab"
 
 const DashboardAdmin = () => {
     return (
@@ -37,9 +38,18 @@ const DashboardAdmin = () => {
                             >
                                 👥 Usuarios
                             </TabsTrigger>
+                            <TabsTrigger
+                                value="merch"
+                                className="text-warm-700 dark:text-warm-300 data-[state=active]:text-warm-900 dark:data-[state=active]:text-warm-100 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700"
+                            >
+                                🛍️ Merchandaising
+                            </TabsTrigger>
                         </TabsList>
                         <TabsContent value="users" className="p-6">
                             <UsersTab />
+                        </TabsContent>
+                        <TabsContent value="merch" className="p-6">
+                            <MerchTab />
                         </TabsContent>
                     </Tabs>
                 </div>

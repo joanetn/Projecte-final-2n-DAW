@@ -5,6 +5,7 @@ use App\Modules\Merchandise\Presentation\Http\Controllers\MerchandiseController;
 
 Route::prefix('merchs')->group(function () {
     Route::get('/', [MerchandiseController::class, 'indexMerchs']);
+    Route::get('/brands', [MerchandiseController::class, 'getBrands']);
     Route::post('/', [MerchandiseController::class, 'storeMerch']);
     Route::get('/{id}', [MerchandiseController::class, 'showMerch']);
     Route::put('/{id}', [MerchandiseController::class, 'updateMerch']);

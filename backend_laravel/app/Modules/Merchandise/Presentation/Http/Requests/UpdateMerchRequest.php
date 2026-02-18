@@ -2,7 +2,9 @@
 
 namespace App\Modules\Merchandise\Presentation\Http\Requests;
 
+use App\Enums\MerchBrand;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class UpdateMerchRequest extends FormRequest
 {
@@ -15,7 +17,7 @@ class UpdateMerchRequest extends FormRequest
     {
         return [
             'nom' => 'nullable|string|max:255',
-            'marca' => 'nullable|string|max:255',
+            'marca' => ['nullable', new Enum(MerchBrand::class)],
             'preu' => 'nullable|numeric|min:0',
             'stock' => 'nullable|integer|min:0',
             'isActive' => 'nullable|boolean',
@@ -26,6 +28,7 @@ class UpdateMerchRequest extends FormRequest
     {
         return [
             'nom.max' => 'El nom no pot superar els 255 caràcters.',
+            'marca.enum' => 'La marca seleccionada no és vàlida. Marques disponibles: ' . implode(', ', MerchBrand::values()),
             'preu.numeric' => 'El preu ha de ser un valor numèric.',
             'preu.min' => 'El preu no pot ser negatiu.',
             'stock.integer' => "L'estoc ha de ser un nombre enter.",

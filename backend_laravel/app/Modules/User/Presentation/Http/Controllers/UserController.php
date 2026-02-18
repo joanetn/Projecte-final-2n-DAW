@@ -287,4 +287,14 @@ class UserController extends Controller
             ], 400);
         }
     }
+
+    public function getLevels(): JsonResponse
+    {
+        $levels = \App\Enums\UserLevel::options();
+
+        return response()->json([
+            'success' => true,
+            'data' => $levels
+        ]);
+    }
 }

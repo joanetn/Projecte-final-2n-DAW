@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Infrastructure\Persistence\Eloquent\Models;
 
+use App\Enums\UserLevel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,7 @@ class UserModel extends Model
     protected $casts = [
         'dataNaixement' => 'datetime',
         'isActive' => 'boolean',
+        'nivell' => UserLevel::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

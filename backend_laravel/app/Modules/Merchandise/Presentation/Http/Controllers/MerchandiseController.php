@@ -277,4 +277,14 @@ class MerchandiseController extends Controller
             ], $e->getCode());
         }
     }
+
+    public function getBrands(): JsonResponse
+    {
+        $brands = \App\Enums\MerchBrand::options();
+
+        return response()->json([
+            'success' => true,
+            'data' => $brands
+        ]);
+    }
 }
