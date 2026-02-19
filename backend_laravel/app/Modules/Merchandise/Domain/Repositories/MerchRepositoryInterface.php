@@ -29,4 +29,6 @@ interface MerchRepositoryInterface
         int $page,
         int $limit
     ): array;
+    public function findByIdIncludingInactive(string $id): ?Merch;
+    public function findAllIncludingInactive(): array;
 }

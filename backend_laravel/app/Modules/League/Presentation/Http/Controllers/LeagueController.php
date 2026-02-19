@@ -18,7 +18,6 @@ use App\Modules\League\Presentation\Http\Resources\LeagueResource;
 use App\Modules\League\Domain\Exceptions\InvalidLeagueDateException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Log;
 
 class LeagueController extends Controller
 {
@@ -89,7 +88,9 @@ class LeagueController extends Controller
         } catch (InvalidLeagueDateException $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'exception' => get_class($e),
+                'debug' => env('APP_DEBUG')
             ], 400);
         } catch (\Exception $e) {
             return response()->json([

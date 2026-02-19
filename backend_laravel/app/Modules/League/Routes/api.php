@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Modules\League\Presentation\Http\Controllers\LeagueController;
+use App\Modules\League\Presentation\Http\Controllers\AdminLeagueController;
 use App\Modules\League\Presentation\Http\Controllers\RoundController;
 use App\Modules\League\Presentation\Http\Controllers\StandingController;
 
@@ -30,4 +31,13 @@ Route::prefix('classificacions')->group(function () {
     Route::post('/', [StandingController::class, 'store']);
     Route::put('/{id}', [StandingController::class, 'update']);
     Route::delete('/{id}', [StandingController::class, 'destroy']);
+});
+
+Route::prefix('admin/lligues')->group(function () {
+    Route::get('/', [AdminLeagueController::class, 'index']);
+    Route::get('/{id}', [AdminLeagueController::class, 'show']);
+    Route::get('/{id}/detail', [AdminLeagueController::class, 'showDetail']);
+    Route::post('/', [AdminLeagueController::class, 'store']);
+    Route::put('/{id}', [AdminLeagueController::class, 'update']);
+    Route::delete('/{id}', [AdminLeagueController::class, 'destroy']);
 });

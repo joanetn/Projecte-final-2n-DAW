@@ -81,4 +81,16 @@ class EloquentEquipUsuariRepository implements EquipUsuariRepositoryInterface
 
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
+
+    public function findByIdIncludingInactive(string $id): ?EquipUsuari
+    {
+        $model = $this->model->find($id);
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
+
+    public function findAllIncludingInactive(): array
+    {
+        $models = $this->model->orderBy('created_at', 'desc')->get();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
 }

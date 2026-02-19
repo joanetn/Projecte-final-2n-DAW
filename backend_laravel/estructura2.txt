@@ -22,7 +22,7 @@ Modules/Match/
 │   └── Http/
 │       ├── Controllers/
 │       ├── Requests/
-│       └── Resources/
+│       └── Resources/  
 │
 ├── Providers/
 │

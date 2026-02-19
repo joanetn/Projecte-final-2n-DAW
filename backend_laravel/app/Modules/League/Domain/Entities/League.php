@@ -2,16 +2,19 @@
 
 namespace App\Modules\League\Domain\Entities;
 
+use App\Enums\LeagueCategory;
+
 class League
 {
     public function __construct(
         public readonly string $id,
         public readonly string $nom,
-        public readonly string $categoria,
+        public readonly LeagueCategory|string $categoria,
         public readonly string $dataInici,
         public readonly ?string $dataFi,
         public readonly string $status,
         public readonly bool $isActive = false,
+        public readonly ?string $logo_url = null,
         public readonly string $createdAt,
         public readonly string $updatedAt,
         public readonly ?array $jornades = null,
@@ -46,7 +49,7 @@ class League
 
     public function isValidCategory(): bool
     {
-        $validCategories = ['SENIOR', 'JUNIOR', 'CADET', 'INFANTIL', 'ALEVÍ'];
+        $validCategories = ['Senior', 'Junior', 'Cadet', 'Infantil', 'Aleví'];
         return in_array(strtoupper($this->categoria), $validCategories);
     }
 

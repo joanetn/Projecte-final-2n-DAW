@@ -2,12 +2,14 @@
 
 namespace App\Modules\Merchandise\Domain\Entities;
 
+use App\Enums\MerchBrand;
+
 class Merch
 {
     public function __construct(
         public readonly string $id,
         public readonly string $nom,
-        public readonly ?string $marca,
+        public readonly MerchBrand|string $marca,
         public readonly ?float $preu,
         public readonly ?int $stock,
         public readonly bool $isActive,

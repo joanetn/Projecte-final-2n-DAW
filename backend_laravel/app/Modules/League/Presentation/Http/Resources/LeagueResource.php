@@ -16,6 +16,7 @@ class LeagueResource extends JsonResource
             'dataFi' => $this->dataFi,
             'status' => $this->status,
             'isActive' => $this->isActive,
+            'logo_url' => $this->logo_url,
             'jornades' => collect($this->jornades ?? [])->map(function ($jornada) {
                 return [
                     'id' => $jornada['id'] ?? $jornada->id,

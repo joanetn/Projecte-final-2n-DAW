@@ -67,4 +67,26 @@ class EloquentLeagueRepository implements LeagueRepositoryInterface
 
         return $models->map([$this->leagueMapper, 'toDomain'])->toArray();
     }
+
+    public function findByIdIncludingInactive(string $id): ?League
+    {
+        $model = $this->leagueModel->find($id);
+        return $model ? $this->leagueMapper->toDomain($model) : null;
+    }
+
+    public function findAllIncludingInactive(): array
+    {
+        $models = $this->leagueModel
+            ->orderBy('dataInici', 'desc')
+            ->get();
+        return $models->map([$this->leagueMapper, 'toDomain'])->toArray();
+    }
+
+    public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?League
+    {
+        $model = $this->leagueModel
+            ->with($relations)
+            ->find($id);
+        return $model ? $this->leagueMapper->toDomain($model) : null;
+    }
 }

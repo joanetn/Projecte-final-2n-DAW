@@ -19,4 +19,8 @@ interface EquipUsuariRepositoryInterface
     public function update(string $id, array $data): bool;
     public function delete(string $id): bool;
     public function findByRolEquip(string $equipId, string $rolEquip): array;
+
+    public function findByIdIncludingInactive(string $id): ?EquipUsuari;
+
+    public function findAllIncludingInactive(): array;
 }

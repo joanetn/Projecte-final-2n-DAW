@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Repositories;
+
 use App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Models\AlineacioModel;
 use App\Modules\Lineup\Infrastructure\Persistence\Mappers\AlineacioMapper;
 use App\Modules\Lineup\Domain\Entities\Alineacio;
 use App\Modules\Lineup\Domain\Repositories\AlineacioRepositoryInterface;
+
 class EloquentAlineacioRepository implements AlineacioRepositoryInterface
 {
     public function __construct(
@@ -79,6 +82,21 @@ class EloquentAlineacioRepository implements AlineacioRepositoryInterface
             ->where('equipId', $equipId)
             ->where('isActive', true)
             ->with(['jugador'])
+            ->get();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
+    public function findByIdIncludingInactive(string $id): ?Alineacio
+    {
+        $model = $this->model->find($id);
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
+
+    public function findAllIncludingInactive(): array
+    {
+        $models = $this->model
+            ->with(['jugador', 'equip', 'partit'])
+            ->orderBy('creada_at', 'desc')
             ->get();
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }

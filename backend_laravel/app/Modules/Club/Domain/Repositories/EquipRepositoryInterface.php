@@ -20,4 +20,8 @@ interface EquipRepositoryInterface
     public function delete(string $id): bool;
 
     public function findByCategoria(string $categoria): array;
+
+    public function findByIdIncludingInactive(string $id): ?Equip;
+
+    public function findAllIncludingInactive(): array;
 }

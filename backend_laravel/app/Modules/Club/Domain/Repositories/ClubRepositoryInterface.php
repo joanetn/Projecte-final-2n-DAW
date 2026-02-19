@@ -21,4 +21,10 @@ interface ClubRepositoryInterface
     public function delete(string $id): bool;
 
     public function findByProvincia(string $provincia): array;
+
+    public function findByIdIncludingInactive(string $id): ?Club;
+
+    public function findAllIncludingInactive(): array;
+
+    public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?Club;
 }

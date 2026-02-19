@@ -21,4 +21,7 @@ interface InstalacioRepositoryInterface
     public function delete(string $id): bool;
 
     public function findByClubId(string $clubId): array;
+    public function findByIdIncludingInactive(string $id): ?Instalacio;
+    public function findAllIncludingInactive(): array;
+    public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?Instalacio;
 }

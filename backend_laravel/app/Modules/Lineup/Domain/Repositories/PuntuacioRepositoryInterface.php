@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Modules\Lineup\Domain\Repositories;
+
 use App\Modules\Lineup\Domain\Entities\Puntuacio;
+
 interface PuntuacioRepositoryInterface
 {
     public function findById(string $id): ?Puntuacio;
@@ -12,4 +15,8 @@ interface PuntuacioRepositoryInterface
     public function findByPartit(string $partitId): array;
     public function findByJugador(string $jugadorId): array;
     public function getRanking(): array;
+
+    public function findByIdIncludingInactive(string $id): ?Puntuacio;
+
+    public function findAllIncludingInactive(): array;
 }

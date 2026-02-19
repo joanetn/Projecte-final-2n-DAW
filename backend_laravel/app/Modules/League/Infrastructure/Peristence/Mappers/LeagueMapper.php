@@ -13,15 +13,16 @@ class LeagueMapper
             id: $leagueModel->id,
             nom: $leagueModel->nom,
             categoria: $leagueModel->categoria,
-            isActive: $leagueModel->isActive,
             dataInici: $leagueModel->dataInici->toIso8601String(),
             dataFi: $leagueModel->dataFi ? $leagueModel->dataFi->toIso8601String() : null,
             status: $leagueModel->status,
+            isActive: $leagueModel->isActive,
+            logo_url: $leagueModel->logo_url,
             createdAt: $leagueModel->created_at->toIso8601String(),
             updatedAt: $leagueModel->updated_at->toIso8601String(),
-            classificacions: $leagueModel->classificacions->toArray() ?? [],
             jornades: $leagueModel->jornades->toArray() ?? [],
-            equips: $leagueModel->equips->toArray() ?? []
+            equips: $leagueModel->equips->toArray() ?? [],
+            classificacions: $leagueModel->classificacions->toArray() ?? []
         );
     }
 
@@ -35,6 +36,7 @@ class LeagueMapper
             'dataInici' => $league->dataInici,
             'dataFi' => $league->dataFi,
             'status' => $league->status,
+            'logo_url' => $league->logo_url,
         ];
     }
 }

@@ -98,4 +98,18 @@ class EloquentMerchRepository implements MerchRepositoryInterface
             'total'        => $paginator->total(),
         ];
     }
+
+    public function findByIdIncludingInactive(string $id): ?Merch
+    {
+        $model = MerchModel::find($id);
+        return $model ? MerchMapper::toDomain($model) : null;
+    }
+
+    public function findAllIncludingInactive(): array
+    {
+        return MerchModel::orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn(MerchModel $model) => MerchMapper::toDomain($model))
+            ->toArray();
+    }
 }

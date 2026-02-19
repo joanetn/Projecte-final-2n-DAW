@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Repositories;
+
 use App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Models\PartitJugadorModel;
 use App\Modules\Lineup\Infrastructure\Persistence\Mappers\PartitJugadorMapper;
 use App\Modules\Lineup\Domain\Entities\PartitJugador;
 use App\Modules\Lineup\Domain\Repositories\PartitJugadorRepositoryInterface;
+
 class EloquentPartitJugadorRepository implements PartitJugadorRepositoryInterface
 {
     public function __construct(
@@ -69,6 +72,20 @@ class EloquentPartitJugadorRepository implements PartitJugadorRepositoryInterfac
             ->where('equipId', $equipId)
             ->where('isActive', true)
             ->with(['jugador'])
+            ->get();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
+    public function findByIdIncludingInactive(string $id): ?PartitJugador
+    {
+        $model = $this->model->find($id);
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
+
+    public function findAllIncludingInactive(): array
+    {
+        $models = $this->model
+            ->with(['jugador', 'equip', 'partit'])
             ->get();
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }

@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Modules\Lineup\Domain\Repositories;
+
 use App\Modules\Lineup\Domain\Entities\Alineacio;
+
 interface AlineacioRepositoryInterface
 {
     public function findById(string $id): ?Alineacio;
@@ -13,4 +16,8 @@ interface AlineacioRepositoryInterface
     public function findByEquip(string $equipId): array;
     public function findByJugador(string $jugadorId): array;
     public function findByPartitAndEquip(string $partitId, string $equipId): array;
+
+    public function findByIdIncludingInactive(string $id): ?Alineacio;
+
+    public function findAllIncludingInactive(): array;
 }

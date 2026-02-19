@@ -93,4 +93,26 @@ class EloquentMatchRepository implements MatchRepositoryInterface
 
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
+
+    public function findByIdIncludingInactive(string $id): ?Matches
+    {
+        $model = $this->model->find($id);
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
+
+    public function findAllIncludingInactive(): array
+    {
+        $models = $this->model
+            ->orderBy('dataHora', 'desc')
+            ->get();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
+    public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?Matches
+    {
+        $model = $this->model
+            ->with($relations)
+            ->find($id);
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
 }

@@ -79,4 +79,26 @@ class EloquentInstalacioRepository implements InstalacioRepositoryInterface
 
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
+
+    public function findByIdIncludingInactive(string $id): ?Instalacio
+    {
+        $model = $this->model->find($id);
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
+
+    public function findAllIncludingInactive(): array
+    {
+        $models = $this->model
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
+    public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?Instalacio
+    {
+        $model = $this->model
+            ->with($relations)
+            ->find($id);
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
 }

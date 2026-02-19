@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Modules\Lineup\Domain\Repositories;
+
 use App\Modules\Lineup\Domain\Entities\PartitJugador;
+
 interface PartitJugadorRepositoryInterface
 {
     public function findById(string $id): ?PartitJugador;
@@ -12,4 +15,8 @@ interface PartitJugadorRepositoryInterface
     public function findByPartit(string $partitId): array;
     public function findByJugador(string $jugadorId): array;
     public function findByPartitAndEquip(string $partitId, string $equipId): array;
+
+    public function findByIdIncludingInactive(string $id): ?PartitJugador;
+
+    public function findAllIncludingInactive(): array;
 }

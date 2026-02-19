@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Repositories;
+
 use App\Modules\Lineup\Infrastructure\Persistence\Eloquent\Models\PuntuacioModel;
 use App\Modules\Lineup\Infrastructure\Persistence\Mappers\PuntuacioMapper;
 use App\Modules\Lineup\Domain\Entities\Puntuacio;
 use App\Modules\Lineup\Domain\Repositories\PuntuacioRepositoryInterface;
 use Illuminate\Support\Facades\DB;
+
 class EloquentPuntuacioRepository implements PuntuacioRepositoryInterface
 {
     public function __construct(
@@ -75,6 +78,20 @@ class EloquentPuntuacioRepository implements PuntuacioRepositoryInterface
             )
             ->groupBy('puntuacions.jugadorId', 'usuaris.nom')
             ->orderByDesc('totalPunts')
+            ->get();
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
+    public function findByIdIncludingInactive(string $id): ?Puntuacio
+    {
+        $model = $this->model->find($id);
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
+
+    public function findAllIncludingInactive(): array
+    {
+        $models = $this->model
+            ->with(['jugador', 'partit'])
             ->get();
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }

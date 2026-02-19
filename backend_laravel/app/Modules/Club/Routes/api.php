@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Modules\Club\Presentation\Http\Controllers\ClubController;
+use App\Modules\Club\Presentation\Http\Controllers\AdminClubController;
 
 /**
  * Rutes del mòdul Club.
@@ -31,4 +32,21 @@ Route::prefix('clubs')->group(function () {
             Route::delete('/{membreId}', [ClubController::class, 'destroyMembre']); // Eliminar un membre
         });
     });
+});
+
+Route::prefix('admin/clubs')->group(function () {
+    Route::get('/', [AdminClubController::class, 'index']);
+    Route::get('/{id}', [AdminClubController::class, 'show']);
+    Route::get('/{id}/detail', [AdminClubController::class, 'showDetail']);
+    Route::post('/', [AdminClubController::class, 'store']);
+    Route::put('/{id}', [AdminClubController::class, 'update']);
+    Route::delete('/{id}', [AdminClubController::class, 'destroy']);
+});
+
+Route::prefix('admin/equips')->group(function () {
+    Route::get('/', [AdminClubController::class, 'indexEquips']);
+    Route::get('/{equipId}', [AdminClubController::class, 'showEquip']);
+    Route::put('/{equipId}', [AdminClubController::class, 'updateEquip']);
+    Route::delete('/{equipId}', [AdminClubController::class, 'destroyEquip']);
+    Route::get('/{equipId}/membres', [AdminClubController::class, 'indexMembres']);
 });
