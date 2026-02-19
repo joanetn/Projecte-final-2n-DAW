@@ -1,4 +1,40 @@
-node_modules
-# Keep environment variables out of version control
+# Entorno virtual
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Archivos locales
 .env
-comandos.txt
+.env.local
+.env.*.local
+
+# SQLite (si lo usas para testing)
+*.db
+*.sqlite
+*.sqlite3
+
+# Bases de datos
+migrations/versions/*
+
+# OS
+.DS_Store
+Thumbs.db

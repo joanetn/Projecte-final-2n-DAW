@@ -1,0 +1,172 @@
+================================================================================
+  BACKEND FASTAPI - ESTRUCTURA CLEAN ARCHITECTURE (LIGERO)
+================================================================================
+
+  Servidor ligero para consultas públicas (ligas, datos del home, etc.)
+  Sigue la misma arquitectura Clean por módulos que el backend Laravel.
+
+================================================================================
+  ESTRUCTURA DE CARPETAS
+================================================================================
+
+backend_fastapi/
+│
+├── app/
+│   │
+│   ├── main.py                        # Punto de entrada: crea la app FastAPI, registra routers
+│   ├── config.py                      # Configuración (DB URL, CORS, env vars)
+│   ├── dependencies.py                # Inyección de dependencias (get_db, repos, etc.)
+│   │
+│   ├── shared/                        # Código compartido entre módulos
+│   │   ├── __init__.py
+│   │   ├── database.py                # Conexión a la base de datos (engine, sessionmaker)
+│   │   ├── base_model.py              # Modelo base SQLAlchemy (declarative_base)
+│   │   ├── exceptions.py              # Excepciones globales (NotFoundException, etc.)
+│   │   └── responses.py               # Schemas de respuesta genéricos (ApiResponse, etc.)
+│   │
+│   └── modules/                       # Cada módulo = 1 feature (como en Laravel)
+│       │
+│       └── league/                    # --- MÓDULO LEAGUE (ejemplo) ---
+│           ├── __init__.py
+│           │
+│           ├── domain/                # Capa de dominio (entidades, contratos, reglas)
+│           │   ├── __init__.py
+│           │   ├── entities.py        # Entidad League (clase pura, sin ORM)
+│           │   ├── repositories.py    # Interfaz abstracta del repositorio (ABC)
+│           │   ├── services.py        # Lógica de dominio (si la hay)
+│           │   └── exceptions.py      # Excepciones propias del dominio (LeagueNotFound, etc.)
+│           │
+│           ├── application/           # Capa de aplicación (casos de uso)
+│           │   ├── __init__.py
+│           │   ├── dtos.py            # DTOs de entrada/salida (dataclasses o pydantic)
+│           │   └── queries.py         # Casos de uso de lectura (GetAllLeagues, GetLeagueById...)
+│           │
+│           ├── infrastructure/        # Capa de infraestructura (implementaciones)
+│           │   ├── __init__.py
+│           │   ├── models.py          # Modelo SQLAlchemy (tabla leagues)
+│           │   ├── mappers.py         # Mappers: Model <-> Entity
+│           │   └── repository.py      # Implementación concreta del repositorio
+│           │
+│           └── presentation/          # Capa de presentación (API)
+│               ├── __init__.py
+│               ├── router.py          # Endpoints FastAPI (APIRouter)
+│               └── schemas.py         # Schemas Pydantic (request/response de la API)
+│
+├── requirements.txt                   # Dependencias del proyecto
+├── .env                               # Variables de entorno (no subir a git)
+├── .env.example                       # Ejemplo de variables de entorno
+├── .gitignore
+└── README.md
+
+
+================================================================================
+  CUANDO AÑADAS UN NUEVO MÓDULO
+================================================================================
+
+  Solo tienes que copiar la carpeta league/ y renombrarla. Ejemplo para "club":
+
+  app/modules/club/
+  ├── domain/
+  │   ├── entities.py
+  │   ├── repositories.py
+  │   ├── services.py
+  │   └── exceptions.py
+  ├── application/
+  │   ├── dtos.py
+  │   └── queries.py
+  ├── infrastructure/
+  │   ├── models.py
+  │   ├── mappers.py
+  │   └── repository.py
+  └── presentation/
+      ├── router.py
+      └── schemas.py
+
+  Y registrar el router en main.py:
+    app.include_router(club_router, prefix="/api/clubs", tags=["Clubs"])
+
+
+================================================================================
+  INSTALACIÓN
+================================================================================
+
+  1. PYTHON 3.10+ (asegúrate de tenerlo instalado)
+     - Verificar: python --version
+
+  2. CREAR ENTORNO VIRTUAL (dentro de backend_fastapi/)
+     - python -m venv venv
+
+  3. ACTIVAR ENTORNO VIRTUAL
+     - Windows:   venv\Scripts\activate
+     - Linux/Mac: source venv/bin/activate
+
+  4. INSTALAR DEPENDENCIAS
+     - pip install -r requirements.txt
+
+  5. EJECUTAR EL SERVIDOR
+     - uvicorn app.main:app --reload --port 8000
+
+  6. VER DOCUMENTACIÓN AUTOMÁTICA
+     - Swagger UI:  http://localhost:8000/docs
+     - ReDoc:       http://localhost:8000/redoc
+
+
+================================================================================
+  DEPENDENCIAS (requirements.txt)
+================================================================================
+
+  fastapi              # Framework web async
+  uvicorn[standard]    # Servidor ASGI para correr FastAPI
+  sqlalchemy           # ORM para la base de datos
+  psycopg2-binary      # Driver PostgreSQL (cambiar si usas MySQL/SQLite)
+  python-dotenv        # Cargar variables de .env
+  pydantic-settings    # Configuración tipada con Pydantic
+  httpx                # Cliente HTTP async (por si necesitas llamar a otros servicios)
+
+  OPCIONAL (si lo necesitas más adelante):
+  alembic              # Migraciones de base de datos
+  prisma               # Si prefieres Prisma como ORM (como en tu schema.prisma)
+
+
+  Para instalar todo de golpe:
+     pip install fastapi "uvicorn[standard]" sqlalchemy psycopg2-binary python-dotenv pydantic-settings httpx
+
+
+================================================================================
+  FLUJO DE UNA PETICIÓN (GET /api/leagues)
+================================================================================
+
+  1. Request llega a presentation/router.py (endpoint)
+  2. Router llama al caso de uso en application/queries.py
+  3. Query usa el repositorio (interfaz en domain/repositories.py)
+  4. La implementación real está en infrastructure/repository.py
+  5. El repo usa infrastructure/models.py (SQLAlchemy) para la DB
+  6. Se mapea con infrastructure/mappers.py a domain/entities.py
+  7. Se devuelve al router que lo serializa con presentation/schemas.py
+
+  Router -> Query (UseCase) -> Repository (interfaz) -> RepositoryImpl (DB)
+                                                           ↓
+                                                    Mapper -> Entity
+                                                           ↓
+                                                    Schema (respuesta)
+
+
+================================================================================
+  VARIABLES DE ENTORNO (.env)
+================================================================================
+
+  DATABASE_URL=postgresql://user:password@localhost:5432/tu_base_de_datos
+  APP_ENV=development
+  CORS_ORIGINS=http://localhost:5173
+
+
+================================================================================
+  NOTAS
+================================================================================
+
+  - Este servidor es LIGERO: solo lectura (SELECT), sin auth, sin escritura.
+  - Si más adelante necesitas auth, añade un módulo shared/middleware/auth.py.
+  - La misma base de datos que usa Laravel, solo lectura desde FastAPI.
+  - FastAPI genera docs automáticamente en /docs (Swagger).
+
+================================================================================
