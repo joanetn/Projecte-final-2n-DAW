@@ -5,6 +5,11 @@ export const laravel = axios.create({
     withCredentials: true
 })
 
+export const fastapi = axios.create({
+    baseURL: "http://localhost:8001",
+    withCredentials: true
+})
+
 // laravel.interceptors.request.use(config => {
 //     const token = localStorage.getItem("token")
 //     if (token) {

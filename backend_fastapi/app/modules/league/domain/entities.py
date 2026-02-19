@@ -6,12 +6,15 @@ from typing import Optional
 @dataclass
 class League:
     id: int
-    name: str
-    category: str
+    nom: str
+    categoria: str
+    dataInici: datetime
     logo_url: Optional[str] = None
-    founded_year: Optional[int] = None
+    dataFi: Optional[datetime] = None
+    status: str = 'NOT_STARTED'
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    isActive: bool = True
     
     def __str__(self) -> str:
-        return f"Liga: {self.name} ({self.category})"
+        return f"Liga: {self.name} ({self.categoria})"

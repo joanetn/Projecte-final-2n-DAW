@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { useUrlState } from './useUrlState'
 import { useDebouncedValue } from './useDebouncedValue'
 import type { SearchUsersParams } from '@/types/users'
@@ -13,15 +13,19 @@ export function useUsersState() {
     const limit = Number(url.get('limit', '20'))
 
     const [qInput, setQInput] = useState(q)
+    const prevSearchRef = useRef(q)
     const debouncedQ = useDebouncedValue(qInput, 300)
 
     useEffect(() => {
         setQInput(q)
-    }, [q])
+        prevSearchRef.current = q
+    }, [])
 
     useEffect(() => {
+        if (debouncedQ === prevSearchRef.current) return
+        prevSearchRef.current = debouncedQ
         url.setMany({ q: debouncedQ, page: 1 }, { replace: true })
-    }, [debouncedQ])
+    }, [debouncedQ, url])
 
     const setNivell = (v: string) =>
         url.setMany({ nivell: v, page: 1 })
@@ -32,7 +36,7 @@ export function useUsersState() {
     const clearFilters = () =>
         url.setMany({ q: '', nivell: '', sort: 'created_at_desc', page: 1 })
 
-    const setPage = (p: number) => url.set('page', p)
+    const setPage = (p: number) => url.setMany({ page: p })
     const setLimit = (l: number) => url.setMany({ limit: l, page: 1 })
 
     const apiParams: SearchUsersParams = useMemo(() => ({

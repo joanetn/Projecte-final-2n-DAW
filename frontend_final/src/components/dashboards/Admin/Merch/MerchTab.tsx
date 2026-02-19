@@ -291,7 +291,7 @@ export function MerchTab() {
                                         Preu
                                     </th>
                                     <th className="px-4 py-3 text-center text-xs font-semibold text-warm-900 dark:text-warm-100 uppercase tracking-wider hidden md:table-cell">
-                                        Estoc
+                                        Stock
                                     </th>
                                     <th className="px-4 py-3 text-center text-xs font-semibold text-warm-900 dark:text-warm-100 uppercase tracking-wider">
                                         Estat
