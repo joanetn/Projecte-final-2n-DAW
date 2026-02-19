@@ -16,15 +16,19 @@ from datetime import datetime
 class LeagueDTO(BaseModel):
     """
     DTO de una Liga - para transferir datos de una liga.
+    Sincronizado con los campos de Laravel.
     
     Este DTO se usa internamente para pasar datos entre capas.
     Lo que el cliente (React) ve es un Schema diferente (ver presentation/schemas.py)
     """
-    id: int
-    name: str
-    country: str
+    id: str  # UUID
+    nom: str
+    categoria: str
+    dataInici: datetime
+    dataFi: Optional[datetime] = None
+    status: str
+    isActive: bool
     logo_url: Optional[str] = None
-    founded_year: Optional[int] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     

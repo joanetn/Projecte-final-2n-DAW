@@ -15,7 +15,7 @@ class UserMapper
             email: $usuari->email,
             telefon: $usuari->telefon,
             dataNaixement: $usuari->dataNaixement?->format('Y-m-d'),
-            nivell: $usuari->nivell,
+            nivell: $usuari->nivell?->value,
             avatar: $usuari->avatar,
             dni: $usuari->dni,
             isActive: $usuari->isActive,

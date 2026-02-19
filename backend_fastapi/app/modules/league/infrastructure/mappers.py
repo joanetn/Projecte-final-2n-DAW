@@ -28,10 +28,13 @@ class LeagueMapper:
         """
         return League(
             id=model.id,
-            name=model.name,
-            country=model.country,
+            nom=model.nom,
+            categoria=model.categoria,
+            dataInici=model.dataInici,
+            dataFi=model.dataFi,
+            status=model.status,
+            isActive=bool(model.isActive),  # Convertir de int a bool
             logo_url=model.logo_url,
-            founded_year=model.founded_year,
             created_at=model.created_at,
             updated_at=model.updated_at
         )
@@ -49,10 +52,13 @@ class LeagueMapper:
         """
         return LeagueModel(
             id=entity.id,
-            name=entity.name,
-            country=entity.country,
+            nom=entity.nom,
+            categoria=entity.categoria,
+            dataInici=entity.dataInici,
+            dataFi=entity.dataFi,
+            status=entity.status,
+            isActive=int(entity.isActive),  # Convertir bool a int para SQL
             logo_url=entity.logo_url,
-            founded_year=entity.founded_year,
             created_at=entity.created_at,
             updated_at=entity.updated_at
         )

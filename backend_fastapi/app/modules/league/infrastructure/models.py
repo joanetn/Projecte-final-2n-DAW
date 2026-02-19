@@ -30,38 +30,39 @@ class LeagueModel(Base):
     """
     
     # __tablename__ le dice a SQLAlchemy el nombre de la tabla en la BD
-    __tablename__ = "leagues"
+    # Coincide con la tabla lligues en Laravel
+    __tablename__ = "lligues"
     
-    # Columnas de la tabla
-    # Column(tipo_dato, argumentos)
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    # Columnas de la tabla (sincronizadas con Laravel)
+    # id: UUID en Laravel
+    id = Column(String(36), primary_key=True)
     
-    # name: string de máximo 255 caracteres, obligatorio
-    name = Column(String(255), nullable=False, unique=True, index=True)
+    # nom: nombre de la liga, obligatorio
+    nom = Column(String(255), nullable=False, index=True)
     
-    # country: string de máximo 255 caracteres, obligatorio
-    country = Column(String(255), nullable=False)
+    # categoria: categoría de la liga, obligatorio
+    categoria = Column(String(255), nullable=False)
     
-    # logo_url: string opcional para el URL del logo
+    # dataInici: fecha de inicio, obligatorio
+    dataInici = Column(DateTime, nullable=False)
+    
+    # dataFi: fecha de fin, opcional
+    dataFi = Column(DateTime, nullable=True)
+    
+    # status: estado de la liga, con valor por defecto
+    status = Column(String(255), nullable=False, default="NOT_STARTED")
+    
+    # isActive: si la liga está activa
+    isActive = Column(Integer, nullable=False, default=1)  # 1=True, 0=False en SQLAlchemy
+    
+    # logo_url: URL del logo, opcional
     logo_url = Column(String(500), nullable=True)
     
-    # founded_year: año de fundación (opcional)
-    founded_year = Column(Integer, nullable=True)
+    # created_at: fecha de creación automática
+    created_at = Column(DateTime, default=func.now(), nullable=False)
     
-    # created_at: fecha de creación, se asigna automáticamente al insertar
-    created_at = Column(
-        DateTime,
-        default=func.now(),  # func.now() = CURRENT_TIMESTAMP en SQL
-        nullable=False
-    )
-    
-    # updated_at: fecha de última actualización, se asigna automáticamente
-    updated_at = Column(
-        DateTime,
-        default=func.now(),  # Al insertar
-        onupdate=func.now(),  # Al actualizar
-        nullable=False
-    )
+    # updated_at: fecha de última actualización automática
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
     
     def __repr__(self) -> str:
         """Representación de debug del modelo"""

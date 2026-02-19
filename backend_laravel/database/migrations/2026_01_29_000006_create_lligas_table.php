@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->string('status')->default('NOT_STARTED');
             $table->boolean('isActive')->default(true);
+            $table->string('logo_url')->nullable();
         });
     }
 

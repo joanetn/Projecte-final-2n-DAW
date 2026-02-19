@@ -1,8 +1,3 @@
-"""
-Base Model para SQLAlchemy
-Define la clase base que todos los modelos (tablas) heredarán.
-"""
-
 from sqlalchemy.orm import declarative_base
 
 # declarative_base() crea una clase base que todos los modelos heredarán

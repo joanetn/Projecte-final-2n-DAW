@@ -55,18 +55,16 @@ def get_all_leagues(db: Session = Depends(get_db)):
             "status": "success",
             "data": [
                 {
-                    "id": 1,
-                    "name": "La Liga",
-                    "country": "España",
+                    "id": "550e8400-e29b-41d4-a716-446655440000",
+                    "nom": "La Liga",
+                    "categoria": "senior",
+                    "dataInici": "2025-01-01T00:00:00",
+                    "dataFi": "2025-05-31T23:59:59",
+                    "status": "IN_PROGRESS",
+                    "isActive": true,
                     "logo_url": "https://...",
-                    "founded_year": 1929
-                },
-                {
-                    "id": 2,
-                    "name": "Premier League",
-                    "country": "Inglaterra",
-                    "logo_url": "https://...",
-                    "founded_year": 1992
+                    "created_at": "2025-01-01T00:00:00",
+                    "updated_at": "2025-01-01T00:00:00"
                 }
             ],
             "message": "Ligas obtenidas correctamente"
@@ -90,10 +88,13 @@ def get_all_leagues(db: Session = Depends(get_db)):
         leagues_schemas = [
             LeagueSchema(
                 id=dto.id,
-                name=dto.name,
-                country=dto.country,
+                nom=dto.nom,
+                categoria=dto.categoria,
+                dataInici=dto.dataInici,
+                dataFi=dto.dataFi,
+                status=dto.status,
+                isActive=dto.isActive,
                 logo_url=dto.logo_url,
-                founded_year=dto.founded_year,
                 created_at=dto.created_at,
                 updated_at=dto.updated_at
             )
@@ -122,14 +123,14 @@ def get_all_leagues(db: Session = Depends(get_db)):
     summary="Obtener una liga por ID",
     description="Devuelve los detalles de una liga específica"
 )
-def get_league_by_id(league_id: int, db: Session = Depends(get_db)):
+def get_league_by_id(league_id: str, db: Session = Depends(get_db)):
     """
     Endpoint GET /api/leagues/{id}
     
     Obtiene UNA liga específica por su ID.
     
     Args:
-        league_id: ID de la liga (ej: 1)
+        league_id: ID UUID de la liga (ej: 550e8400-e29b-41d4-a716-446655440000)
         db: Sesión de BD inyectada automáticamente por FastAPI
     
     Returns:
@@ -140,16 +141,21 @@ def get_league_by_id(league_id: int, db: Session = Depends(get_db)):
         HTTPException 500: Si hay error en la BD
         
     Ejemplo:
-        GET /api/leagues/1
+        GET /api/leagues/550e8400-e29b-41d4-a716-446655440000
         Respuesta:
         {
             "status": "success",
             "data": {
-                "id": 1,
-                "name": "La Liga",
-                "country": "España",
+                "id": "550e8400-e29b-41d4-a716-446655440000",
+                "nom": "La Liga",
+                "categoria": "senior",
+                "dataInici": "2025-01-01T00:00:00",
+                "dataFi": "2025-05-31T23:59:59",
+                "status": "IN_PROGRESS",
+                "isActive": true,
                 "logo_url": "https://...",
-                "founded_year": 1929
+                "created_at": "2025-01-01T00:00:00",
+                "updated_at": "2025-01-01T00:00:00"
             }
         }
     """
@@ -166,10 +172,13 @@ def get_league_by_id(league_id: int, db: Session = Depends(get_db)):
         # 4. Convertir a schema
         league_schema = LeagueSchema(
             id=league_dto.id,
-            name=league_dto.name,
-            country=league_dto.country,
+            nom=league_dto.nom,
+            categoria=league_dto.categoria,
+            dataInici=league_dto.dataInici,
+            dataFi=league_dto.dataFi,
+            status=league_dto.status,
+            isActive=league_dto.isActive,
             logo_url=league_dto.logo_url,
-            founded_year=league_dto.founded_year,
             created_at=league_dto.created_at,
             updated_at=league_dto.updated_at
         )
@@ -178,7 +187,7 @@ def get_league_by_id(league_id: int, db: Session = Depends(get_db)):
         return ApiResponse(
             status=ResponseStatus.SUCCESS,
             data=league_schema,
-            message=f"Liga '{league_schema.name}' obtenida correctamente"
+            message="Liga '{league_schema.nom}' obtenida correctamente"
         )
     
     except LeagueNotFound as e:

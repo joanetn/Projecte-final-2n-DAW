@@ -19,6 +19,7 @@ class LeagueModel extends Model
         'dataInici',
         'dataFi',
         'status',
+        'logo_url',
     ];
 
     protected $casts = [
