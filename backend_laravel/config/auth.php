@@ -13,8 +13,9 @@ return [
     |
     */
 
+    // Guard por defecto: 'api' usa JWT para autenticación stateless
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        'guard' => env('AUTH_GUARD', 'api'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -40,6 +41,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Guard JWT de tymon: stateless, sin sesiones de servidor
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
     ],
 
     /*
@@ -59,16 +66,12 @@ return [
     |
     */
 
+    // Apuntar al UserModel del módulo User (tabla 'usuaris')
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

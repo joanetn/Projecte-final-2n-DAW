@@ -1,0 +1,7 @@
+{
+    "name": "Auth",
+    "description": "Auth Module - JWT authentication, refresh tokens, sessions management",
+    "version": "1.0.0",
+    "provider": "App\\Modules\\Auth\\Providers\\AuthServiceProvider",
+    "routes": "Routes/api.php"
+}

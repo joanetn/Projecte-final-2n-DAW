@@ -5,10 +5,13 @@ namespace App\Modules\User\Infrastructure\Persistence\Eloquent\Models;
 use App\Enums\UserLevel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+// Extender de Authenticatable en vez de Model para que tymon/jwt pueda usarlo
+use Illuminate\Foundation\Auth\User as Authenticatable;
+// Interfaz requerida por tymon/jwt-auth para saber cómo identificar al usuario
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class UserModel extends Model
+class UserModel extends Authenticatable implements JWTSubject
 {
     use HasUuids;
 
@@ -25,11 +28,13 @@ class UserModel extends Model
         'avatar',
         'dni',
         'isActive',
+        'session_version', // Contador para invalidar todas las sesiones del usuario
     ];
 
     protected $casts = [
         'dataNaixement' => 'datetime',
         'isActive' => 'boolean',
+        'session_version' => 'integer',
         'nivell' => UserLevel::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -89,5 +94,28 @@ class UserModel extends Model
             'created_at_asc' => $query->orderBy('created_at', 'asc'),
             default          => $query->orderBy('created_at', 'desc'),
         };
+    }
+
+    // ==========================================
+    // Métodos requeridos por JWTSubject (tymon)
+    // ==========================================
+
+    // Devuelve el identificador que se guarda en el claim "sub" del JWT
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey(); // El UUID del usuario
+    }
+
+    // Claims custom adicionales que se incluyen en cada JWT generado
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
+
+    // Tymon necesita saber cuál es el campo de la contraseña
+    // En nuestra BD se llama 'contrasenya', no 'password'
+    public function getAuthPassword(): string
+    {
+        return $this->contrasenya;
     }
 }

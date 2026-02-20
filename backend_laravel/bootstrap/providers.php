@@ -9,5 +9,6 @@ return [
     App\Modules\Venue\Providers\VenueServiceProvider::class,
     App\Modules\Lineup\Providers\LineupServiceProvider::class,
     App\Modules\Invitation\Providers\InvitationServiceProvider::class,
-    App\Modules\Merchandise\Providers\MerchandiseServiceProvider::class
+    App\Modules\Merchandise\Providers\MerchandiseServiceProvider::class,
+    App\Modules\Auth\Providers\AuthServiceProvider::class,
 ];
