@@ -77,7 +77,11 @@ class ApiGateway
             $path = substr($path, 4);
         }
 
-        return str_starts_with($path, 'gateway/') || str_starts_with($path, 'admin/');
+        // 'auth' siempre se procesa localmente en el gateway, nunca se proxya a un microservicio
+        return str_starts_with($path, 'gateway/')
+            || str_starts_with($path, 'admin/')
+            || str_starts_with($path, 'auth/')
+            || $path === 'auth';
     }
     private function buildPrefixMap(): array
     {
