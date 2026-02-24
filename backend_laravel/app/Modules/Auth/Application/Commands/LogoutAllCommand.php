@@ -13,7 +13,7 @@ class LogoutAllCommand
 
     public function execute(string $userId): void
     {
-        $this->authRepo->revokeAllUserSessions($userId);
+        $this->authRepo->revokeAllUserSessionsWithBlacklist($userId);
 
         try {
             JWTAuth::invalidate(true);

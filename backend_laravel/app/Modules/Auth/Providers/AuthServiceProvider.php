@@ -10,6 +10,7 @@ namespace App\Modules\Auth\Providers;
 use App\Modules\Auth\Domain\Repositories\AuthRepositoryInterface;
 use App\Modules\Auth\Infrastructure\Persistence\Eloquent\Repositories\EloquentAuthRepository;
 use App\Modules\Auth\Infrastructure\Middleware\JwtMiddleware;
+use App\Modules\Auth\Infrastructure\Middleware\ValidateSessionMiddleware;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,5 +32,6 @@ class AuthServiceProvider extends ServiceProvider
         // Así se puede usar en las rutas: Route::middleware('jwt.auth')
         $router = $this->app->make(Router::class);
         $router->aliasMiddleware('jwt.auth', JwtMiddleware::class);
+        $router->aliasMiddleware('validate.session', ValidateSessionMiddleware::class);
     }
 }

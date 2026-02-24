@@ -5,6 +5,7 @@ namespace App\Modules\Auth\Infrastructure\Persistence\Eloquent\Repositories;
 use App\Modules\Auth\Domain\Entities\RefreshSession;
 use App\Modules\Auth\Domain\Repositories\AuthRepositoryInterface;
 use App\Modules\Auth\Infrastructure\Persistence\Eloquent\Models\RefreshSessionModel;
+use App\Modules\Auth\Infrastructure\Persistence\Eloquent\Models\TokenBlacklistModel;
 use App\Modules\Auth\Infrastructure\Persistence\Mappers\RefreshSessionMapper;
 use App\Modules\User\Domain\Entities\User;
 use App\Modules\User\Infrastructure\Persistence\Eloquent\Models\UserModel;
@@ -15,6 +16,7 @@ class EloquentAuthRepository implements AuthRepositoryInterface
     public function __construct(
         private RefreshSessionModel $sessionModel,
         private UserModel $userModel,
+        private TokenBlacklistModel $blacklistModel,
     ) {}
 
     public function findUserByEmail(string $email): ?User
@@ -140,5 +142,36 @@ class EloquentAuthRepository implements AuthRepositoryInterface
         return (int) $this->userModel
             ->where('id', $userId)
             ->value('session_version');
+    }
+
+    public function addTokenToBlacklist(string $tokenHash, string $userId, string $familyId, \DateTime $expiresAt): void
+    {
+        $this->blacklistModel->create([
+            'token_hash' => $tokenHash,
+            'user_id' => $userId,
+            'family_id' => $familyId,
+            'expires_at' => $expiresAt,
+            'revoked_at' => now(),
+        ]);
+    }
+
+    public function isTokenBlacklisted(string $tokenHash): bool
+    {
+        return $this->blacklistModel
+            ->where('token_hash', $tokenHash)
+            ->where('expires_at', '>', now())
+            ->exists();
+    }
+
+    public function cleanupExpiredBlacklistTokens(): int
+    {
+        return $this->blacklistModel
+            ->where('expires_at', '<', now())
+            ->delete();
+    }
+
+    public function revokeAllUserSessionsWithBlacklist(string $userId): void
+    {
+        $this->revokeAllUserSessions($userId);
     }
 }

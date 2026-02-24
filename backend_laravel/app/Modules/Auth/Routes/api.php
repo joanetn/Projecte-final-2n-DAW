@@ -12,7 +12,10 @@ Route::prefix('auth')->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh']);
 });
 
-Route::prefix('auth')->middleware('jwt.auth')->group(function () {
+Route::prefix('auth')->middleware([
+    'jwt.auth',
+    \App\Modules\Auth\Infrastructure\Middleware\ValidateSessionMiddleware::class,
+])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 

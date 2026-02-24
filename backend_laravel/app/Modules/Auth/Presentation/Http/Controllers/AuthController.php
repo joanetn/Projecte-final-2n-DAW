@@ -1,16 +1,5 @@
 <?php
 
-// Controller principal de Auth
-// Maneja todas las peticiones HTTP de autenticación:
-// - POST /register   → Registrar nuevo usuario + tokens
-// - POST /login      → Login con email + password + deviceId
-// - POST /refresh    → Renovar tokens usando el refresh token de la cookie
-// - POST /logout     → Cerrar sesión actual (1 dispositivo)
-// - POST /logout-all → Cerrar sesión en TODOS los dispositivos
-// - POST /logout-device → Cerrar sesión de un dispositivo específico
-// - GET  /sessions   → Listar todas las sesiones activas del usuario
-// - GET  /me         → Obtener datos del usuario autenticado
-
 namespace App\Modules\Auth\Presentation\Http\Controllers;
 
 use App\Modules\Auth\Application\Commands\LoginCommand;
@@ -156,8 +145,10 @@ class AuthController extends Controller
     public function logout(Request $request): JsonResponse
     {
         $refreshToken = $request->cookie('refresh_token');
+        $deviceId = $request->input('deviceId');
+        $userId = JWTAuth::parseToken()->getPayload()->get('sub');
 
-        $this->logoutCommand->execute($refreshToken);
+        $this->logoutCommand->execute($refreshToken, $userId, $deviceId);
 
         return response()
             ->json(['message' => 'Sesión cerrada correctamente'])
@@ -183,10 +174,22 @@ class AuthController extends Controller
 
         $userId = JWTAuth::parseToken()->getPayload()->get('sub');
         $deviceId = $request->input('deviceId');
+        $refreshToken = $request->cookie('refresh_token');
 
-        $this->logoutDeviceCommand->execute($userId, $deviceId);
+        // Revocar la sesión del dispositivo (agregar token a blacklist si existe)
+        $this->logoutDeviceCommand->execute($userId, $deviceId, $refreshToken);
 
-        return response()->json(['message' => 'Sesión del dispositivo cerrada correctamente']);
+        // Siempre borrar la cookie y el access token
+        $response = response()
+            ->json(['message' => 'Sesión del dispositivo cerrada correctamente'])
+            ->withoutCookie('refresh_token', '/api/auth');
+
+        try {
+            JWTAuth::invalidate(true);
+        } catch (\Exception $e) {
+        }
+
+        return $response;
     }
 
     public function sessions(): JsonResponse

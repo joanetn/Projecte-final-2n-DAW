@@ -38,6 +38,9 @@ class LoginCommand
         $familyId = Str::uuid()->toString();
 
         $accessPayload = JWTFactory::sub($user->id)
+            ->claims([
+                'familyId' => $familyId,
+            ])
             ->make();
         $accessToken = JWTAuth::encode($accessPayload)->get();
 
@@ -52,10 +55,9 @@ class LoginCommand
 
         $tokenHash = hash(algo: 'sha256', data: $refreshToken);
 
-        $existingSession = $this->authRepo->findRefreshSessionByDeviceId($user->id, $deviceId);
-        if ($existingSession) {
-            $this->authRepo->revokeRefreshSession($existingSession->id);
-        }
+        // Revocar TODAS las sesiones existentes de este dispositivo (no solo la primera)
+        // Esto evita que queden sesiones huérfanas y aparezcan duplicadas
+        $this->authRepo->revokeDeviceSessions($user->id, $deviceId);
 
         $session = new RefreshSession(
             id: Str::uuid()->toString(),

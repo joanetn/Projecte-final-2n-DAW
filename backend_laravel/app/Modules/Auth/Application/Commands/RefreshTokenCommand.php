@@ -39,6 +39,12 @@ class RefreshTokenCommand
             throw new \Exception('Token no es de tipo refresh', 401);
         }
 
+        // Verificar que el token no esté en la blacklist
+        $tokenHash = hash('sha256', $refreshToken);
+        if ($this->authRepo->isTokenBlacklisted($tokenHash)) {
+            throw new \Exception('Token revocado. Por favor, inicia sesión nuevamente.', 401);
+        }
+
         $session = $this->authRepo->findRefreshSessionByFamilyId($familyId);
         if (!$session) {
             throw new \Exception('Sesión no encontrada', 401);
@@ -55,13 +61,16 @@ class RefreshTokenCommand
             throw new \Exception('Sesión invalidada globalmente', 401);
         }
 
-        $tokenHash = hash('sha256', $refreshToken);
         if ($tokenHash !== $session->current_token_hash) {
             $this->authRepo->revokeRefreshSession($session->id);
             throw new \Exception('Reuse detectado. Sesión revocada por seguridad.', 401);
         }
 
-        $accessPayload = JWTFactory::sub($userId)->make();
+        $accessPayload = JWTFactory::sub($userId)
+            ->claims([
+                'familyId' => $familyId,
+            ])
+            ->make();
         $newAccessToken = JWTAuth::encode($accessPayload)->get();
 
         $refreshPayload = JWTFactory::sub($userId)

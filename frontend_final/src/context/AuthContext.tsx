@@ -288,7 +288,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ deviceId }),
                 credentials: 'include', // Enviar cookie refresh_token para revocarla
             });
         } catch (error) {
@@ -299,7 +301,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setAccessToken(null);
             setUser(null);
         }
-    }, [accessToken]);
+    }, [accessToken, deviceId]);
 
     // ─── LOGOUT ALL (todos los dispositivos) ───
     // Incrementa session_version en la BD → invalida todos los refresh tokens
@@ -323,8 +325,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 method: 'POST',
                 body: JSON.stringify({ deviceId: targetDeviceId }),
             });
+
+            // Si estamos cerrando la sesión del dispositivo actual, limpiar estado local
+            if (targetDeviceId === deviceId) {
+                localStorage.removeItem('accessToken');
+                setAccessToken(null);
+                setUser(null);
+            }
         },
-        [apiCall],
+        [apiCall, deviceId],
     );
 
     // ─── GET SESSIONS ───

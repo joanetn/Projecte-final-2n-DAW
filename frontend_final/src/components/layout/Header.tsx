@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/ui/button'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Menu, X, LogOut, Shield } from 'lucide-react'
 
 export function Header() {
-    const { user, isAuthenticated, logout } = useAuth()
+    const { user, isAuthenticated, isLoading, logout } = useAuth()
     const navigate = useNavigate()
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -63,7 +64,12 @@ export function Header() {
                     <div className="hidden md:flex items-center gap-3">
                         <ThemeSwitcher />
 
-                        {isAuthenticated && user ? (
+                        {isLoading ? (
+                            <div className="flex items-center gap-3">
+                                <Skeleton className="h-8 w-20 rounded-md" />
+                                <Skeleton className="h-8 w-24 rounded-md" />
+                            </div>
+                        ) : isAuthenticated && user ? (
                             <>
                                 {user.nivell === 'admin' && (
                                     <Button
@@ -140,7 +146,12 @@ export function Header() {
                         </Link>
 
                         <div className="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2">
-                            {isAuthenticated && user ? (
+                            {isLoading ? (
+                                <div className="px-4 space-y-2">
+                                    <Skeleton className="h-8 w-full rounded-md" />
+                                    <Skeleton className="h-8 w-full rounded-md" />
+                                </div>
+                            ) : isAuthenticated && user ? (
                                 <>
                                     <div className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                                         {user.nom}

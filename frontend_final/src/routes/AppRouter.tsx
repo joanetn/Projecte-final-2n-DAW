@@ -4,6 +4,7 @@ import Home from "@/pages/Home"
 import LoginPage from "@/pages/LoginPage"
 import RegisterPage from "@/pages/RegisterPage"
 import { Layout } from "@/components/layout/Layout"
+import Profile from "@/pages/Profile"
 
 const AppRouter = () => {
     return (
@@ -25,6 +26,10 @@ const AppRouter = () => {
                     <Route
                         path="/register"
                         element={<RegisterPage />}
+                    />
+                    <Route
+                        path="/profile"
+                        element={<Profile />}
                     />
                 </Routes>
             </Layout>

@@ -52,7 +52,11 @@ class RegisterCommand
 
         $familyId = Str::uuid()->toString();
 
-        $accessPayload = JWTFactory::sub($userId)->make();
+        $accessPayload = JWTFactory::sub($userId)
+            ->claims([
+                'familyId' => $familyId,
+            ])
+            ->make();
         $accessToken   = JWTAuth::encode($accessPayload)->get();
 
         $refreshPayload = JWTFactory::sub($userId)
