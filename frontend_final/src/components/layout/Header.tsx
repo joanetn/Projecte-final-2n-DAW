@@ -36,6 +36,11 @@ export function Header() {
         setIsMobileMenuOpen(false)
     }
 
+    const handleProfileClick = () => {
+        navigate('/profile')
+        setIsMobileMenuOpen(false)
+    }
+
     return (
         <header className="sticky top-0 z-50 w-full border-b border-warm-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-warm-900/20 dark:bg-slate-950/95">
             <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -71,17 +76,15 @@ export function Header() {
                             </div>
                         ) : isAuthenticated && user ? (
                             <>
-                                {user.nivell === 'admin' && (
+                                <div className="flex items-center gap-2 pl-3 border-l border-slate-200 dark:border-slate-700">
                                     <Button
-                                        onClick={handleAdminClick}
+                                        onClick={handleProfileClick}
                                         variant="outline"
                                         size="sm"
-                                        className="gap-2"
                                     >
-                                        <Shield className="h-4 w-4" />
-                                        Admin
+                                        Profile
                                     </Button>
-                                )}
+                                </div>
                                 <div className="flex items-center gap-2 pl-3 border-l border-slate-200 dark:border-slate-700">
                                     <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                                         {user.nom}
