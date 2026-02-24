@@ -11,6 +11,7 @@ class CreateLeagueDTO
         public readonly string $status = 'NOT_STARTED',
         public readonly ?string $dataFi = null,
         public readonly bool $isActive = true,
+        public readonly ?string $logo_url = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -22,6 +23,7 @@ class CreateLeagueDTO
             status: $data['status'] ?? 'NOT_STARTED',
             dataFi: $data['dataFi'] ?? null,
             isActive: $data['isActive'] ?? true,
+            logo_url: $data['logo_url'] ?? null,
         );
     }
 }

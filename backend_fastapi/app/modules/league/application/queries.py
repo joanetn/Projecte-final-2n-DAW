@@ -11,7 +11,7 @@ class GetAllLeaguesQuery:
         self.repository = repository
     
     def execute(self) -> List[LeagueDTO]:
-        leagues: List[League] = self.repository.get_all()
+        leagues: List[League] = [league for league in self.repository.get_all() if league.isActive]
 
         leagues_dtos = [
             LeagueDTO(

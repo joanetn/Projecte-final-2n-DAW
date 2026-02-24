@@ -1,0 +1,213 @@
+Express + React:
+    * React **solo ve access token**.
+    * Refresh token en **httpOnly cookie**.
+    * Gestión de **sessionVersion**, **familyId** y **deviceId**.
+--------------------------------------------------------------------------------------------
+## 1️⃣ `db.js` – Conexión a la base de datos (PostgreSQL)
+import pkg from 'pg';
+const { Pool } = pkg;
+export const db = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'jwt_demo',
+  password: 'tu_password',
+  port: 5432,
+});
+--------------------------------------------------------------------------------------------
+## 2️⃣ `utils.js` – Helpers
+import crypto from "crypto";
+export function hash(token) {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
+export function compareHash(token, tokenHash) {
+  return hash(token) === tokenHash;
+}
+export function generateUUID() {
+  return crypto.randomUUID();
+}
+// Simulación check password
+export function checkPassword(plain, hash) {
+  return plain === hash; // reemplaza con bcrypt en producción
+}
+--------------------------------------------------------------------------------------------
+## 3️⃣ `sessionService.js`
+import { db } from "./db.js";
+import { hash } from "./utils.js";
+
+/** Crea o actualiza sesión */
+export async function saveTokenHash(userId, deviceId, familyId, tokenHash, sessionVersion) {
+  const existing = await db.query(
+    `SELECT * FROM refresh_sessions WHERE user_id = $1 AND device_id = $2`,
+    [userId, deviceId]
+  );
+
+  if (existing.rows.length > 0) {
+    await db.query(
+      `UPDATE refresh_sessions 
+       SET current_token_hash = $1, family_id = $2, revoked = FALSE, session_version = $3 
+       WHERE user_id = $4 AND device_id = $5`,
+      [tokenHash, familyId, sessionVersion, userId, deviceId]
+    );
+  } else {
+    await db.query(
+      `INSERT INTO refresh_sessions (user_id, device_id, family_id, current_token_hash, revoked, session_version)
+       VALUES ($1, $2, $3, $4, FALSE, $5)`,
+      [userId, deviceId, familyId, tokenHash, sessionVersion]
+    );
+  }
+}
+
+/** Actualiza fila existente de familia */
+export async function saveFamily(family) {
+  await db.query(
+    `UPDATE refresh_sessions 
+     SET current_token_hash = $1, revoked = $2, session_version = $3
+     WHERE user_id = $4 AND family_id = $5`,
+    [family.current_token_hash, family.revoked, family.session_version, family.user_id, family.family_id]
+  );
+}
+
+/** Logout global */
+export async function incrementSessionVersion(userId) {
+  await db.query(`UPDATE users SET session_version = session_version + 1 WHERE id = $1`, [userId]);
+  await db.query(`UPDATE refresh_sessions SET revoked = TRUE WHERE user_id = $1`, [userId]);
+}
+
+/** Logout por dispositivo */
+export async function revokeDevice(userId, deviceId) {
+  await db.query(
+    `UPDATE refresh_sessions SET revoked = TRUE WHERE user_id = $1 AND device_id = $2`,
+    [userId, deviceId]
+  );
+}
+
+/** Buscar familia por familyId */
+export async function findFamily(familyId) {
+  const result = await db.query(`SELECT * FROM refresh_sessions WHERE family_id = $1`, [familyId]);
+  return result.rows[0];
+}
+
+/** Buscar usuario */
+export async function getUser(email) {
+  const result = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
+  return result.rows[0];
+}
+
+/** Buscar usuario por id */
+export async function getUserById(userId) {
+  const result = await db.query(`SELECT * FROM users WHERE id = $1`, [userId]);
+  return result.rows[0];
+}
+--------------------------------------------------------------------------------------------
+## 4️⃣ `server.js`
+import express from "express";
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
+import { hash, checkPassword, generateUUID } from "./utils.js";
+import {
+  saveTokenHash, saveFamily, incrementSessionVersion, revokeDevice,
+  findFamily, getUser, getUserById
+} from "./sessionService.js";
+
+const app = express();
+app.use(express.json());
+app.use(cookieParser());
+
+/** LOGIN */
+app.post("/login", async (req, res) => {
+  const { email, password, deviceId } = req.body;
+  const user = await getUser(email);
+  if (!user || !checkPassword(password, user.password_hash)) return res.status(401).send();
+
+  const familyId = generateUUID();
+  const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
+  const refreshToken = jwt.sign({ userId: user.id, familyId }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
+
+  await saveTokenHash(user.id, deviceId, familyId, hash(refreshToken), user.session_version);
+  res.cookie("refreshToken", refreshToken, { httpOnly: true, sameSite: "strict", secure: true });
+  res.json({ accessToken });
+});
+
+/** REFRESH */
+app.post("/refresh", async (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (!token) return res.status(401).send();
+
+  let payload;
+  try { payload = jwt.verify(token, process.env.REFRESH_SECRET); } 
+  catch { return res.status(401).send(); }
+
+  const family = await findFamily(payload.familyId);
+  if (!family || family.revoked) return res.status(401).send();
+
+  const user = await getUserById(payload.userId);
+  if (family.session_version !== user.session_version) return res.status(401).send("Session invalidated globally");
+
+  if (hash(token) !== family.current_token_hash) {
+    family.revoked = true;
+    await saveFamily(family); //revocar familyId
+    return res.status(401).send("Token reuse detected");
+  }
+
+  // Rotar refresh token
+  const newRefreshToken = jwt.sign({ userId: payload.userId, familyId: payload.familyId }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
+  family.current_token_hash = hash(newRefreshToken);
+  await saveFamily(family); //actualizar hash en DB
+
+  const newAccessToken = jwt.sign({ userId: payload.userId }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
+  res.cookie("refreshToken", newRefreshToken, { httpOnly: true, sameSite: "strict", secure: true });
+  res.json({ accessToken: newAccessToken });
+});
+
+/** LOGOUT GLOBAL */
+app.post("/logoutAll", async (req, res) => {
+  const { userId } = req.body;
+  await incrementSessionVersion(userId);
+  res.send("All sessions revoked");
+});
+
+/** LOGOUT POR DISPOSITIVO */
+app.post("/logoutDevice", async (req, res) => {
+  const { userId, deviceId } = req.body;
+  await revokeDevice(userId, deviceId);
+  res.send("Device session revoked");
+});
+
+app.listen(4000, () => console.log("Server running on port 4000"));
+--------------------------------------------------------------------------------------------
+## 5️⃣ `App.js` – React
+import React from "react";
+
+async function login(email, password, deviceId) {
+  const res = await fetch("/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ email, password, deviceId }),
+    credentials: "include"
+  });
+  const data = await res.json();
+  localStorage.setItem("accessToken", data.accessToken);
+}
+
+async function apiCall(url, options = {}) {
+  const accessToken = localStorage.getItem("accessToken");
+  const res = await fetch(url, {
+    ...options,
+    headers: { ...options.headers, Authorization: `Bearer ${accessToken}` },
+    credentials: "include"
+  });
+
+  if (res.status === 401) {
+    const refreshRes = await fetch("/refresh", { method: "POST", credentials: "include" });
+    if (refreshRes.status === 401) {
+      alert("Session invalid, login again");
+      return;
+    }
+    const refreshData = await refreshRes.json();
+    localStorage.setItem("accessToken", refreshData.accessToken);
+    return apiCall(url, options);
+  }
+
+  return res.json();
+}
+export { login, apiCall };

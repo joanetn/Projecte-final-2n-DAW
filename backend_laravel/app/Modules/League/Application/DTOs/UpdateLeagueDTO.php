@@ -11,6 +11,7 @@ class UpdateLeagueDTO
         public readonly ?string $dataFi = null,
         public readonly ?string $status = null,
         public readonly ?bool $isActive = null,
+        public readonly ?string $logo_url = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -22,6 +23,7 @@ class UpdateLeagueDTO
             dataFi: $data['dataFi'] ?? null,
             status: $data['status'] ?? null,
             isActive: isset($data['isActive']) ? (bool) $data['isActive'] : null,
+            logo_url: $data['logo_url'] ?? null,
         );
     }
 }

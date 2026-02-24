@@ -2,6 +2,7 @@
 
 // Controller principal de Auth
 // Maneja todas las peticiones HTTP de autenticación:
+// - POST /register   → Registrar nuevo usuario + tokens
 // - POST /login      → Login con email + password + deviceId
 // - POST /refresh    → Renovar tokens usando el refresh token de la cookie
 // - POST /logout     → Cerrar sesión actual (1 dispositivo)
@@ -17,8 +18,10 @@ use App\Modules\Auth\Application\Commands\RefreshTokenCommand;
 use App\Modules\Auth\Application\Commands\LogoutCommand;
 use App\Modules\Auth\Application\Commands\LogoutAllCommand;
 use App\Modules\Auth\Application\Commands\LogoutDeviceCommand;
+use App\Modules\Auth\Application\Commands\RegisterCommand;
 use App\Modules\Auth\Application\Queries\GetActiveSessionsQuery;
 use App\Modules\Auth\Presentation\Http\Requests\LoginRequest;
+use App\Modules\Auth\Presentation\Http\Requests\RegisterRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -28,6 +31,7 @@ class AuthController extends Controller
 {
     public function __construct(
         private LoginCommand $loginCommand,
+        private RegisterCommand $registerCommand,
         private RefreshTokenCommand $refreshCommand,
         private LogoutCommand $logoutCommand,
         private LogoutAllCommand $logoutAllCommand,
@@ -72,6 +76,48 @@ class AuthController extends Controller
         }
     }
 
+    public function register(RegisterRequest $request): JsonResponse
+    {
+        try {
+            $result = $this->registerCommand->execute(
+                nom: $request->input('nom'),
+                email: $request->input('email'),
+                contrasenya: $request->input('contrasenya'),
+                deviceId: $request->input('deviceId'),
+                telefon: $request->input('telefon'),
+                dataNaixement: $request->input('dataNaixement'),
+                avatar: $request->input('avatar'),
+                dni: $request->input('dni'),
+                deviceType: $request->input('deviceType'),
+                browser: $request->input('browser'),
+                os: $request->input('os'),
+            );
+
+            return response()
+                ->json([
+                    'access_token' => $result['access_token'],
+                    'token_type'   => $result['token_type'],
+                    'expires_in'   => $result['expires_in'],
+                    'user'         => $result['user'],
+                ], 201)
+                ->cookie(
+                    'refresh_token',
+                    $result['refresh_token'],
+                    60 * 24 * 7,
+                    '/api/auth',
+                    null,
+                    false,
+                    true,
+                    false,
+                    'Lax'
+                );
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], $e->getCode() ?: 400);
+        }
+    }
+
     public function refresh(Request $request): JsonResponse
     {
         $refreshToken = $request->cookie('refresh_token');
@@ -93,7 +139,7 @@ class AuthController extends Controller
                     'refresh_token',
                     $result['refresh_token'],
                     60 * 24 * 7,
-                    '/api/v1/auth',
+                    '/api/auth',
                     null,
                     false,
                     true,
@@ -115,7 +161,7 @@ class AuthController extends Controller
 
         return response()
             ->json(['message' => 'Sesión cerrada correctamente'])
-            ->withoutCookie('refresh_token', '/api/v1/auth');
+            ->withoutCookie('refresh_token', '/api/auth');
     }
 
     public function logoutAll(Request $request): JsonResponse
@@ -126,7 +172,7 @@ class AuthController extends Controller
 
         return response()
             ->json(['message' => 'Todas las sesiones cerradas correctamente'])
-            ->withoutCookie('refresh_token', '/api/v1/auth');
+            ->withoutCookie('refresh_token', '/api/auth');
     }
 
     public function logoutDevice(Request $request): JsonResponse

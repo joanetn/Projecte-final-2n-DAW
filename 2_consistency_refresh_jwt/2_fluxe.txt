@@ -1,0 +1,40 @@
+[React App]
+     | 1️⃣ Login (email + password + deviceId)
+     |---------------------------------------->                                 
+[Express / Login]                                                        
+     | Genera:                             
+     | - accessToken (15m) -----------------→ React (almacena en localStorage)
+     | - refreshToken (7d) (httpOnly cookie)
+     |                                    
+     | Crea fila en refresh_sessions:       
+     | - user_id                              
+     | - device_id                             
+     | - family_id                             
+     | - current_token_hash                     
+     | - revoked = false                         
+     | - session_version (del usuario)          
+     v
+[DB refresh_sessions]
+
+[React App] → Llamada API (Authorization: Bearer accessToken)
+     | 2️⃣ Access Token válido?
+     |----✅ Sí → API responde
+     |----❌ No → token expirado → fetch("/refresh")
+                       |
+                       v
+[Express / Refresh] 
+     | Verifica refreshToken de cookie:
+     | - Busca familyId en DB
+     | - family.revoked? ❌ → 401
+     | - family.session_version == user.session_version? ❌ → 401
+     | - current_token_hash coincide? ❌ → reuse detectado → revoca family
+     |
+     | Si todo OK:
+     | - Genera nuevo accessToken
+     | - Genera nuevo refreshToken (rota)
+     | - Actualiza current_token_hash en DB
+     v
+[DB refresh_sessions actualizado]
+     |
+     v
+[React recibe nuevo accessToken en localStorage] → Reintenta API

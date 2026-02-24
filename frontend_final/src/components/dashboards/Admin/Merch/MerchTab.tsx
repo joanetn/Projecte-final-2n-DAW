@@ -51,8 +51,8 @@ export function MerchTab() {
     const total = response?.total ?? 0
 
     const [formDialogOpen, setFormDialogOpen] = useState(false)
-    const [detailDialogOpen, setDetailDialogOpen] = useState(false)
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+    const [_detailDialogOpen, setDetailDialogOpen] = useState(false)
+    const [_deleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [selectedMerch, setSelectedMerch] = useState<Merch | null>(null)
 
     const [notification, setNotification] = useState<{

@@ -1,7 +1,6 @@
 import { laravel } from "@/api/axios"
 import type {
     Merch,
-    MerchDetail,
     CreateMerchRequest,
     UpdateMerchRequest,
     CreateMerchResponse,

@@ -6,7 +6,7 @@ export const laravel = axios.create({
 })
 
 export const fastapi = axios.create({
-    baseURL: "http://localhost:8001",
+    baseURL: "http://localhost:5005",
     withCredentials: true
 })
 

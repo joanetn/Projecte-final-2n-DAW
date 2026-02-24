@@ -22,7 +22,7 @@ class CreateLeagueRequest extends FormRequest
             'dataFi' => 'nullable|date|after_or_equal:dataInici',
             'status' => 'required|string|in:NOT_STARTED,ON_PROGRESS,FINISHED',
             'isActive' => 'nullable|boolean',
-            'logo_url' => 'nullable|string|url|max:500',
+            'logo_url' => 'nullable|string',
         ];
     }
 
@@ -39,8 +39,6 @@ class CreateLeagueRequest extends FormRequest
             'status.required' => 'El estado de la lliga es obligatorio',
             'status.in' => 'El estado debe ser NOT_STARTED, ON_PROGRESS o FINISHED',
             'isActive.boolean' => 'El campo isActive debe ser un valor booleano',
-            'logo_url.url' => 'La URL del logo no es válida',
-            'logo_url.max' => 'La URL del logo no puede ser mayor a 500 carácteres',
         ];
     }
 }

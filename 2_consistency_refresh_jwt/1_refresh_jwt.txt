@@ -1,0 +1,52 @@
+* Cada refresh token “one-time use” con `family_id`, `device_id` y session_version
+---------------------------------------------------------------------------------------------------------------
+### 🔹 Tabla `refresh_sessions` (DB)
+| user_id | device_id   | family_id      | current_token_hash | revoked | session_version |
+| ------- | ----------- | -------------- | ------------------ | ------- | --------------- |
+| 1       | iPhone-UUID | f1a2b3c4-uuid1 | abc123             | false   | 3               |
+| 1       | Chrome-UUID | f5d6e7f8-uuid2 | def456             | false   | 3               |
+| 1       | iPad-UUID   | f9g0h1i2-uuid3 | ghi789             | false   | 3               |
+---------------------------------------------------------------------------------------------------------------
+1. **Revocar por `sessionVersion`**
+  * Número almacenado en la tabla `users`.
+  * Si incrementas la versión → invalidas *todos* los refresh tokens.
+  * Todas las filas de la tabla (iPhone, Chrome, iPad) quedan inválidas.
+  * Útil para “logout global manual” o cambio de contraseña.
+  * **Efecto global**.
+
+2. **Revocar por `familyId`**
+  * UUID en la tabla refresh_sessions.
+  * Detectas reuse del refresh token de iPhone (`f1a2b3c4-uuid1`).
+  * Solo marcas esa fila `revoked = true`.
+  * Chrome e iPad siguen activos.
+  * Protege contra robo de refresh token.
+  * **Efecto local a la sesión / token robado**.
+
+3. **Cerrar sesión por `deviceId`**
+  * Identifica **un dispositivo específico**.
+  * Se guarda en la tabla de refresh_sessions.
+  * Usuario quiere cerrar sesión solo en Chrome (`Chrome-UUID`).
+  * Buscas filas con ese `deviceId` y marcas `revoked = true`.
+  * iPhone e iPad siguen activos.
+  * **Efecto local a dispositivo**.
+---------------------------------------------------------------------------------------------------------------
+## 🔹 Tabla `users`
+| Columna           | Tipo          | Descripción                                   |
+| ----------------- | ------------- | --------------------------------------------- |
+| `id`              | UUID PK       | Identificador del usuario                     |
+| `email`           | VARCHAR       | Correo del usuario                            |
+| `password_hash`   | VARCHAR       | Hash de la contraseña                         |
+| `session_version` | INT DEFAULT 0 | Contador global para invalidación de sesiones |
+
+## 🔹 Tabla `refresh_sessions`
+| Columna              | Tipo                    | Descripción                                                             |
+| -------------------- | ----------------------- | ----------------------------------------------------------------------- |
+| `id`                 | UUID PK                 | Identificador de la sesión                                              |
+| `user_id`            | UUID FK → users         | Usuario dueño de la sesión                                              |
+| `device_id`          | VARCHAR                 | Identificador del dispositivo (iPhone, Chrome, etc.)                    |
+| `family_id`          | UUID                    | Identificador de la cadena de refresh tokens rotados                    |
+| `current_token_hash` | VARCHAR                 | Hash del refresh token actual                                           |
+| `revoked`            | BOOLEAN DEFAULT FALSE   | Si la sesión/familyId está revocada                                     |
+| `session_version`    | INT                     | Copia de la `session_version` del usuario al momento de crear la sesión |
+| `created_at`         | TIMESTAMP DEFAULT now() | Fecha de creación                                                       |
+| `last_used_at`       | TIMESTAMP               | Fecha del último uso del refresh token                                  |

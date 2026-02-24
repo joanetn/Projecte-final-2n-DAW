@@ -22,7 +22,7 @@ class UpdateLeagueRequest extends FormRequest
             'dataFi' => 'nullable|date|after_or_equal:dataInici',
             'status' => 'nullable|string|in:NOT_STARTED,ON_PROGRESS,FINISHED',
             'isActive' => 'nullable|boolean',
-            +'logo_url' => 'nullable|string|url|max:500',
+            'logo_url' => 'nullable|string',
         ];
     }
 
@@ -37,8 +37,6 @@ class UpdateLeagueRequest extends FormRequest
             'dataFi.after_or_equal' => 'La data de fi ha de ser igual o posterior a la data d\'inici',
             'status.in' => 'L\'estat ha de ser NOT_STARTED, ON_PROGRESS o FINISHED',
             'isActive.boolean' => 'El camp isActive ha de ser un valor booleà',
-            'logo_url.url' => 'La URL del logo no és vàlida',
-            'logo_url.max' => 'La URL del logo no pot tenir més de 500 caràcters',
         ];
     }
 }

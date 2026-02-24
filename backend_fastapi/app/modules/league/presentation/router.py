@@ -38,10 +38,7 @@ def get_all_leagues(db: Session = Depends(get_db)):
                 dataInici=dto.dataInici,
                 dataFi=dto.dataFi,
                 status=dto.status,
-                isActive=dto.isActive,
                 logo_url=dto.logo_url,
-                created_at=dto.created_at,
-                updated_at=dto.updated_at
             )
             for dto in leagues_dtos
         ]

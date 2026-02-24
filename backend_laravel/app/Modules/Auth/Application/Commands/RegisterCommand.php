@@ -2,64 +2,73 @@
 
 namespace App\Modules\Auth\Application\Commands;
 
+use App\Enums\UserLevel;
 use App\Modules\Auth\Domain\Entities\RefreshSession;
 use App\Modules\Auth\Infrastructure\Persistence\Eloquent\Repositories\EloquentAuthRepository;
-use Illuminate\Support\Facades\Hash;
+use App\Modules\User\Application\Commands\CreateUserCommand;
+use App\Modules\User\Application\DTOs\CreateUserDTO;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Facades\JWTFactory;
 
-class LoginCommand
+class RegisterCommand
 {
     public function __construct(
+        private CreateUserCommand $createUserCommand,
         private EloquentAuthRepository $authRepo,
     ) {}
 
     public function execute(
+        string $nom,
         string $email,
-        string $password,
+        string $contrasenya,
         string $deviceId,
+        ?string $telefon = null,
+        ?string $dataNaixement = null,
+        ?string $avatar = null,
+        ?string $dni = null,
         ?string $deviceType = null,
         ?string $browser = null,
         ?string $os = null,
     ): array {
-        $user = $this->authRepo->findUserByEmail($email);
-        if (!$user) {
-            throw new \Exception('Credenciales incorrectas', 401);
-        }
 
-        $passwordHash = $this->authRepo->getPasswordHash($email);
-        if (!$passwordHash || !Hash::check($password, $passwordHash)) {
-            throw new \Exception('Credenciales incorrectas', 401);
-        }
+        $avatarDEFAULT = $avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($nom) . '&background=random&size=128';
+        $dto = new CreateUserDTO(
+            nom: $nom,
+            email: $email,
+            contrasenya: $contrasenya,
+            telefon: $telefon,
+            dataNaixement: $dataNaixement,
+            avatar: $avatarDEFAULT,
+            dni: $dni,
+            nivell: UserLevel::PRINCIPANT->value,
+        );
 
-        $sessionVersion = $this->authRepo->getUserSessionVersion($user->id);
+        $userId = $this->createUserCommand->execute($dto);
+
+        $user = $this->authRepo->findUserById($userId);
+
+        $sessionVersion = $this->authRepo->getUserSessionVersion($userId);
 
         $familyId = Str::uuid()->toString();
 
-        $accessPayload = JWTFactory::sub($user->id)
-            ->make();
-        $accessToken = JWTAuth::encode($accessPayload)->get();
+        $accessPayload = JWTFactory::sub($userId)->make();
+        $accessToken   = JWTAuth::encode($accessPayload)->get();
 
-        $refreshPayload = JWTFactory::sub($user->id)
+        $refreshPayload = JWTFactory::sub($userId)
             ->claims([
                 'familyId' => $familyId,
-                'type' => 'refresh',
+                'type'     => 'refresh',
             ])
             ->setTTL(60 * 24 * 7)
             ->make();
         $refreshToken = JWTAuth::encode($refreshPayload)->get();
 
-        $tokenHash = hash(algo: 'sha256', data: $refreshToken);
-
-        $existingSession = $this->authRepo->findRefreshSessionByDeviceId($user->id, $deviceId);
-        if ($existingSession) {
-            $this->authRepo->revokeRefreshSession($existingSession->id);
-        }
+        $tokenHash = hash('sha256', $refreshToken);
 
         $session = new RefreshSession(
             id: Str::uuid()->toString(),
-            user_id: $user->id,
+            user_id: $userId,
             device_id: $deviceId,
             device_type: $deviceType,
             browser: $browser,
@@ -76,11 +85,11 @@ class LoginCommand
         $this->authRepo->createRefreshSession($session);
 
         return [
-            'access_token' => $accessToken,
+            'access_token'  => $accessToken,
             'refresh_token' => $refreshToken,
-            'token_type' => 'Bearer',
-            'expires_in' => config('jwt.ttl', 15) * 60,
-            'user' => $user,
+            'token_type'    => 'Bearer',
+            'expires_in'    => config('jwt.ttl', 15) * 60,
+            'user'          => $user,
         ];
     }
 }

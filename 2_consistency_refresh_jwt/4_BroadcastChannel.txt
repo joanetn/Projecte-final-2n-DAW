@@ -1,0 +1,29 @@
+- Objectiu: Login, logout y refresh funcionen correctamente en 
+    multi-device +
+    multi-tabs +
+    race conditions
+----------------------------------------------------------------------------------------
+- Manejar *race conditions* y *multi-tabs* dentro de la misma sesión/dispositivo.
+  - Ejemplo: 
+    * Pestaña A hace refresh → obtiene nuevo access + refresh
+    * Pestaña B todavía tiene el refresh viejo → intenta usarlo → **401 / token revocado**
+----------------------------------------------------------------------------------------
+BroadcastChannel es una API del navegador para comunicación entre pestañas.
+----------------------------------------------------------------------------------------
+1. Refresh concurrente entre pestañas:
+  1. Revocar refresh token en backend
+  2. Una sola pestaña refresca - Avisar a otras pestañas con BroadcastChannel
+
+2. Logout global/Una pestaña hace logout y otra refresh:
+  1. Revocar refresh token en backend
+  2. Borrar cookie HttpOnly
+  3. Una sola pestaña refresca - Avisar a otras pestañas con BroadcastChannel
+----------------------------------------------------------------------------------------
+## 🧠 BroadcastChannel = señal de liberación del mutex
+  1. Todas las pestañas escuchan un canal común (`auth`)
+  2. Cuando una pestaña refresca:
+    * guarda tokens
+    * avisa a las demás
+  3. Las demás:
+    * actualizan su estado
+    * **NO** hacen refresh
