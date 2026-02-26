@@ -13,12 +13,18 @@ import type {
     SearchMerchsParams,
     ApiResponse,
     ApiListResponse,
+    Brand,
 } from "@/types/merch"
 
 // ========== MERCHS ==========
 export const getMerchs = async (params?: SearchMerchsParams): Promise<SearchMerchsResponse> => {
     const res = await laravel.get<SearchMerchsResponse>('/api/merchs', { params })
     return res.data
+}
+
+export const getBrands = async (): Promise<Brand[]> => {
+    const res = await laravel.get<{ success: boolean; data: Brand[] }>('/api/merchs/brands')
+    return res.data.data
 }
 
 export const getOneMerch = async (id: string): Promise<Merch> => {

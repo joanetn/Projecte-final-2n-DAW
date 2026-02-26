@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useCreateMerch, useUpdateMerch } from "@/mutations/merch.mutations"
-import type { CreateMerchRequest, Merch, UpdateMerchRequest } from "@/types/merch"
+import { getBrands } from "@/services/merch.service"
+import type { CreateMerchRequest, Merch, UpdateMerchRequest, Brand } from "@/types/merch"
 import React, { useEffect, useState } from "react"
 
 interface MerchFormDialogProps {
@@ -25,6 +27,26 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
     })
 
     const [errors, setErrors] = useState<Record<string, string>>({})
+    const [brands, setBrands] = useState<Brand[]>([])
+    const [loadingBrands, setLoadingBrands] = useState(false)
+
+    useEffect(() => {
+        if (open) {
+            loadBrands()
+        }
+    }, [open])
+
+    const loadBrands = async () => {
+        try {
+            setLoadingBrands(true)
+            const data = await getBrands()
+            setBrands(data)
+        } catch (err) {
+            console.error('Error cargando marcas:', err)
+        } finally {
+            setLoadingBrands(false)
+        }
+    }
 
     useEffect(() => {
         if (merch) {
@@ -112,6 +134,9 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
                     <DialogTitle>
                         {isEditing ? 'Editar producte' : 'Crear producte'}
                     </DialogTitle>
+                    <DialogDescription>
+                        {isEditing ? 'Modifica los datos del producto' : 'Agrega un nuevo producto al catálogo'}
+                    </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
@@ -128,14 +153,24 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
 
                     <div className="space-y-2">
                         <Label htmlFor="marca">Marca</Label>
-                        <Input
-                            id="marca"
-                            value={form.marca}
-                            onChange={(e) => setForm({ ...form, marca: e.target.value })}
-                            placeholder="Marca del producte"
-                            aria-invalid={!!errors.marca}
-                        />
+                        <Select value={form.marca} onValueChange={(value) => setForm({ ...form, marca: value })} disabled={loadingBrands}>
+                            <SelectTrigger id="marca" aria-invalid={!!errors.marca}>
+                                <SelectValue placeholder={loadingBrands ? 'Cargando marcas...' : 'Selecciona una marca'} />
+                            </SelectTrigger>
+                            {!loadingBrands && brands.length > 0 && (
+                                <SelectContent>
+                                    {brands.map((brand) => (
+                                        <SelectItem key={brand.value} value={brand.value}>
+                                            {brand.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            )}
+                        </Select>
                         {errors.marca && <p className="text-sm text-red-500">{errors.marca}</p>}
+                        {!loadingBrands && brands.length === 0 && (
+                            <p className="text-sm text-yellow-600">No hay marcas disponibles. Crea una primera.</p>
+                        )}
                     </div>
 
                     <div className="space-y-2">

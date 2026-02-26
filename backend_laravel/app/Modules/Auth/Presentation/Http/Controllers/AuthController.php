@@ -173,13 +173,11 @@ class AuthController extends Controller
         ]);
 
         $userId = JWTAuth::parseToken()->getPayload()->get('sub');
-        $deviceId = $request->input('deviceId');
+        $deviceId = $request->input(key: 'deviceId');
         $refreshToken = $request->cookie('refresh_token');
 
-        // Revocar la sesión del dispositivo (agregar token a blacklist si existe)
         $this->logoutDeviceCommand->execute($userId, $deviceId, $refreshToken);
 
-        // Siempre borrar la cookie y el access token
         $response = response()
             ->json(['message' => 'Sesión del dispositivo cerrada correctamente'])
             ->withoutCookie('refresh_token', '/api/auth');

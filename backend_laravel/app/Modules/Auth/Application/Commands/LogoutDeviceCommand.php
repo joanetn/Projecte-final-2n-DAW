@@ -16,7 +16,6 @@ class LogoutDeviceCommand
     {
         $this->authRepo->revokeDeviceSessions($userId, $deviceId);
 
-        // Agregar token a blacklist si se proporciona
         if ($refreshToken) {
             try {
                 $payload = JWTAuth::setToken($refreshToken)->getPayload();
@@ -26,7 +25,6 @@ class LogoutDeviceCommand
 
                 $this->authRepo->addTokenToBlacklist($tokenHash, $userId, $familyId, $expiresAt);
             } catch (\Exception $e) {
-                // Si hay error al parsear el token, continuar
             }
         }
     }

@@ -1,3 +1,9 @@
+// ========== BRAND ==========
+export interface Brand {
+    value: string;
+    label: string;
+}
+
 // ========== MERCH BASE ==========
 export interface Merch {
     id: string;

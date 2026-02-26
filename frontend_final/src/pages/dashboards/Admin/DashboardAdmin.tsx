@@ -12,22 +12,6 @@ const DashboardAdmin = () => {
                     <p className="text-warm-600 dark:text-warm-300">Gestiona los usuarios y configuraciones del sistema</p>
                 </div>
 
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    <div className="card p-6 border-l-4 border-warm-600">
-                        <p className="text-warm-600 dark:text-warm-300 text-sm font-medium mb-1">Total Usuarios</p>
-                        <h3 className="text-3xl font-bold text-warm-900 dark:text-warm-100">—</h3>
-                    </div>
-                    <div className="card p-6 border-l-4 border-accent-warm-500">
-                        <p className="text-accent-warm-600 dark:text-accent-warm-300 text-sm font-medium mb-1">Usuarios Activos</p>
-                        <h3 className="text-3xl font-bold text-accent-warm-900 dark:text-accent-warm-100">—</h3>
-                    </div>
-                    <div className="card p-6 border-l-4 border-warm-700">
-                        <p className="text-warm-700 dark:text-warm-200 text-sm font-medium mb-1">Administradores</p>
-                        <h3 className="text-3xl font-bold text-warm-800 dark:text-warm-50">—</h3>
-                    </div>
-                </div>
-
                 {/* Tabs Section */}
                 <div className="card">
                     <Tabs defaultValue="users" className="w-full">
