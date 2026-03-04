@@ -15,7 +15,7 @@ class Settings:
 
     CORS_ORIGINS: list = os.getenv(
         "CORS_ORIGINS",
-        "http://localhost:5173,http://localhost:8000"
+        "http://localhost:3000,http://localhost:8000"
     ).split(",")
 
     APP_TITLE: str = "API Ligera fastapi"

@@ -23,7 +23,7 @@ const registerSchema = z.object({
     contrasenya: z.string().min(8, "La contrasenya ha de tindre 1 mayus min, minúscules, números i  múnim 8 caracters"),
     telefon: z.string().max(20, "El teléfon pot tindre un màxim de 20 dígits"),
     dataNaixement: z.string().date().refine(date => new Date(date) <= new Date(), "La data de naixement ha de ser anterior o igual a avui"),
-    avatar: z.string().max(500).optional().nullable(),
+    avatar: z.string().optional().nullable(),
     dni: z.string().max(20).optional().nullable(),
     deviceId: z.string().max(255),
     deviceType: z.string().max(50).optional().nullable(),

@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
 import { RegisterForm } from '@/components/auth/register/RegisterForm'
 
 export default function RegisterPage() {

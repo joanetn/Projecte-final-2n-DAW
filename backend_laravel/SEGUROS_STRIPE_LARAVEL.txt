@@ -1,0 +1,385 @@
+================================================================================
+MÓDULO SEGUROS + STRIPE EN LARAVEL — GUÍA BASADA EN TU ARQUITECTURA
+================================================================================
+
+Los seguros funcionan IGUAL que el módulo Merchandise (compras de producto sin
+slot ni stock limitado). Solo añades Stripe por encima.
+
+NO necesitas tabla de slots. Un seguro = un producto que alguien compra,
+tiene fecha de expiración y se marca como pagado cuando Stripe confirma.
+
+================================================================================
+PARTE 1: ESTRUCTURA DE ARCHIVOS A CREAR
+================================================================================
+
+Copia la estructura de Merchandise y renombra. Los ficheros a crear son:
+
+app/Modules/Seguro/
+├── Application/
+│   ├── Commands/
+│   │   ├── CreateSeguroCommand.php
+│   │   └── UpdateSeguroCommand.php
+│   ├── DTOs/
+│   │   ├── CreateSeguroDTO.php
+│   │   └── UpdateSeguroDTO.php
+│   └── Queries/
+│       ├── GetSeguroQuery.php
+│       ├── GetSegurosQuery.php
+│       └── GetSegurosByUsuariQuery.php
+├── Domain/
+│   ├── Entities/
+│   │   └── Seguro.php
+│   ├── Exceptions/
+│   │   └── SeguroNotFoundException.php
+│   └── Repositories/
+│       └── SeguroRepositoryInterface.php
+├── Infrastructure/
+│   └── Persistence/
+│       └── Eloquent/
+│           ├── Models/
+│           │   └── SeguroModel.php
+│           ├── Repositories/
+│           │   └── EloquentSeguroRepository.php
+│           └── Mappers/
+│               └── SeguroMapper.php
+├── Presentation/
+│   └── Http/
+│       ├── Controllers/
+│       │   └── SeguroController.php
+│       ├── Requests/
+│       │   └── CreateSeguroRequest.php
+│       └── Resources/
+│           └── SeguroResource.php
+├── Providers/
+│   ├── SeguroServiceProvider.php
+│   └── RouteServiceProvider.php
+└── Routes/
+    └── api.php
+
+================================================================================
+PARTE 2: MIGRACIÓN — NUEVA COLUMNA EN seguros
+================================================================================
+
+Tu tabla seguros ya existe. Solo añade el campo de Stripe con una nueva migración:
+
+  php artisan make:migration add_stripe_to_seguros_table
+
+  // En el archivo generado:
+  public function up(): void
+  {
+      Schema::table('seguros', function (Blueprint $table) {
+          $table->string('stripe_payment_intent_id')->nullable()->unique();
+          // unique → idempotencia: 2 webhooks del mismo pago no crean 2 seguros
+          $table->decimal('preu', 8, 2)->nullable();
+          $table->integer('mesos')->default(12); // duración del seguro
+      });
+  }
+
+  public function down(): void
+  {
+      Schema::table('seguros', function (Blueprint $table) {
+          $table->dropColumn(['stripe_payment_intent_id', 'preu', 'mesos']);
+      });
+  }
+
+================================================================================
+PARTE 3: INSTALAR STRIPE
+================================================================================
+
+  composer require stripe/stripe-php
+
+Añadir al .env:
+  STRIPE_SECRET_KEY=sk_test_xxx
+  STRIPE_WEBHOOK_SECRET=whsec_xxx
+
+Añadir a config/services.php:
+  'stripe' => [
+      'secret'         => env('STRIPE_SECRET_KEY'),
+      'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+  ],
+
+Añadir al docker-compose.yml en el bloque &laravel-env:
+  STRIPE_SECRET_KEY: "${STRIPE_SECRET_KEY:-sk_test_xxx}"
+  STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET:-whsec_xxx}"
+
+================================================================================
+PARTE 4: MODELO — SeguroModel.php
+================================================================================
+
+Igual que CompraModel, solo cambia la tabla y los campos:
+
+  <?php
+  namespace App\Modules\Seguro\Infrastructure\Persistence\Eloquent\Models;
+
+  use Illuminate\Database\Eloquent\Model;
+  use Illuminate\Database\Eloquent\Concerns\HasUuids;
+
+  class SeguroModel extends Model
+  {
+      use HasUuids;
+
+      protected $table = 'seguros';
+
+      protected $fillable = [
+          'id', 'usuariId', 'dataExpiracio', 'pagat',
+          'preu', 'mesos', 'stripe_payment_intent_id', 'isActive',
+      ];
+
+      protected $casts = [
+          'pagat'         => 'boolean',
+          'isActive'      => 'boolean',
+          'dataExpiracio' => 'datetime',
+          'preu'          => 'float',
+      ];
+  }
+
+================================================================================
+PARTE 5: CONTROLLER — SeguroController.php
+================================================================================
+
+Dos endpoints: uno para iniciar el pago (crear PI en Stripe), otro para el webhook.
+
+  <?php
+  namespace App\Modules\Seguro\Presentation\Http\Controllers;
+
+  use Illuminate\Http\JsonResponse;
+  use Illuminate\Http\Request;
+  use Illuminate\Http\Response;
+  use Illuminate\Routing\Controller;
+  use Illuminate\Support\Facades\DB;
+  use Illuminate\Support\Str;
+  use App\Modules\Seguro\Infrastructure\Persistence\Eloquent\Models\SeguroModel;
+
+  class SeguroController extends Controller
+  {
+      // ─── GET /seguros ────────────────────────────────────────────────────────
+      public function index(): JsonResponse
+      {
+          $seguros = SeguroModel::where('isActive', true)->get();
+          return response()->json(['success' => true, 'data' => $seguros]);
+      }
+
+      // ─── GET /seguros/usuari/{usuariId} ───────────────────────────────────
+      public function byUsuari(string $usuariId): JsonResponse
+      {
+          $seguros = SeguroModel::where('usuariId', $usuariId)
+              ->where('isActive', true)
+              ->get();
+          return response()->json(['success' => true, 'data' => $seguros]);
+      }
+
+      // ─── POST /seguros/create-payment-intent ─────────────────────────────
+      // Crea el seguro en estado PENDING y devuelve el clientSecret al frontend
+      public function createPaymentIntent(Request $request): JsonResponse
+      {
+          $validated = $request->validate([
+              'usuariId' => 'required|uuid|exists:usuaris,id',
+              'preu'     => 'required|numeric|min:1',
+              'mesos'    => 'required|integer|min:1|max:24',
+          ]);
+
+          $seguro = null;
+          $paymentIntent = null;
+
+          DB::transaction(function () use ($validated, &$seguro, &$paymentIntent) {
+              // 1. Crear seguro PENDING (pagat = false)
+              $seguro = SeguroModel::create([
+                  'id'            => Str::uuid()->toString(),
+                  'usuariId'      => $validated['usuariId'],
+                  'dataExpiracio' => now()->addMonths($validated['mesos']),
+                  'pagat'         => false,
+                  'preu'          => $validated['preu'],
+                  'mesos'         => $validated['mesos'],
+                  'isActive'      => true,
+              ]);
+
+              // 2. Crear PaymentIntent en Stripe
+              $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+              $paymentIntent = $stripe->paymentIntents->create([
+                  'amount'   => (int) round($validated['preu'] * 100), // céntimos
+                  'currency' => 'eur',
+                  'metadata' => ['seguroId' => $seguro->id],
+              ]);
+
+              // 3. Guardar el PI id en el seguro para idempotencia en el webhook
+              $seguro->update([
+                  'stripe_payment_intent_id' => $paymentIntent->id,
+              ]);
+          });
+
+          return response()->json([
+              'success'      => true,
+              'clientSecret' => $paymentIntent->client_secret,
+              'seguroId'     => $seguro->id,
+          ]);
+      }
+
+      // ─── POST /seguros/webhook ────────────────────────────────────────────
+      // Stripe llama aquí cuando el pago se confirma. Sin middleware de auth.
+      public function webhook(Request $request): Response
+      {
+          $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
+
+          // Verificar firma de Stripe
+          try {
+              $event = \Stripe\Webhook::constructEvent(
+                  $request->getContent(),
+                  $request->header('Stripe-Signature'),
+                  config('services.stripe.webhook_secret')
+              );
+          } catch (\Exception $e) {
+              return response('Webhook inválido', 400);
+          }
+
+          // Solo procesamos pagos exitosos
+          if ($event->type !== 'payment_intent.succeeded') {
+              return response()->json(['received' => true]);
+          }
+
+          $pi       = $event->data->object;
+          $seguroId = $pi->metadata->seguroId;
+
+          DB::transaction(function () use ($seguroId) {
+              $seguro = SeguroModel::find($seguroId);
+
+              if (!$seguro) return; // seguro no encontrado, ignorar
+
+              // IDEMPOTENCIA: si ya está pagado, Stripe reintentó → ignorar
+              if ($seguro->pagat) return;
+
+              // Marcar como pagado
+              $seguro->update(['pagat' => true]);
+
+              // Aquí puedes añadir: envío de email, notificación, etc.
+          });
+
+          return response()->json(['received' => true]);
+      }
+  }
+
+================================================================================
+PARTE 6: RUTAS — Routes/api.php
+================================================================================
+
+  <?php
+  use Illuminate\Support\Facades\Route;
+  use App\Modules\Seguro\Presentation\Http\Controllers\SeguroController;
+
+  // Webhook → SIN middleware de auth (Stripe no manda token JWT)
+  Route::post('/seguros/webhook', [SeguroController::class, 'webhook']);
+
+  Route::prefix('seguros')->group(function () {
+      // Rutas específicas ANTES de las dinámicas (evitar el bug de /nivells)
+      Route::post('/create-payment-intent', [SeguroController::class, 'createPaymentIntent']);
+      Route::get('/usuari/{usuariId}', [SeguroController::class, 'byUsuari']);
+      Route::get('/', [SeguroController::class, 'index']);
+  });
+
+================================================================================
+PARTE 7: SERVICE PROVIDER — Providers/SeguroServiceProvider.php
+================================================================================
+
+Igual que MerchandiseServiceProvider:
+
+  <?php
+  namespace App\Modules\Seguro\Providers;
+
+  use App\Modules\Seguro\Domain\Repositories\SeguroRepositoryInterface;
+  use App\Modules\Seguro\Infrastructure\Persistence\Eloquent\Repositories\EloquentSeguroRepository;
+  use Illuminate\Support\ServiceProvider;
+
+  class SeguroServiceProvider extends ServiceProvider
+  {
+      public function register(): void
+      {
+          $this->app->bind(
+              SeguroRepositoryInterface::class,
+              EloquentSeguroRepository::class
+          );
+      }
+
+      public function boot(): void
+      {
+          $this->loadMigrationsFrom(__DIR__ . '/../../../../database/migrations');
+      }
+  }
+
+================================================================================
+PARTE 8: REGISTRAR EL MÓDULO
+================================================================================
+
+Añadir en bootstrap/providers.php (igual que los demás módulos):
+
+  App\Modules\Seguro\Providers\SeguroServiceProvider::class,
+
+Añadir en config/microservices.php si usas gateway:
+
+  'seguro' => [
+      'name'     => 'Seguro Service',
+      'base_url' => env('SERVICE_SEGURO_URL', 'http://localhost:8009'),
+      'prefixes' => ['seguros'],
+      'timeout'  => 10,
+      'retries'  => 2,
+  ],
+
+Añadir en .env y docker-compose.yml:
+
+  SERVICE_SEGURO_URL=http://svc_seguro:8009   ← en docker-compose environment
+  SERVICE_SEGURO_URL=http://localhost:8009    ← en .env local
+
+Añadir en package.json script gateway (nuevo servicio en puerto 8009):
+
+  \"cross-env GATEWAY_ENABLED=false php artisan serve --port=8009\"
+
+Y añadir svc_seguro al docker-compose.yml igual que los otros microservicios.
+
+================================================================================
+PARTE 9: WEBHOOK — EXCLUIR DEL MIDDLEWARE JWT
+================================================================================
+
+Si tienes middleware de autenticación JWT aplicado globalmente en el grupo /api,
+el webhook de Stripe fallará porque no manda Authorization header.
+
+En bootstrap/app.php, excluye la ruta del webhook:
+
+  ->withMiddleware(function (Middleware $middleware): void {
+      $middleware->api(prepend: [
+          \App\Http\Middleware\ApiGateway::class,
+      ]);
+  })
+
+O directamente en la ruta, usa withoutMiddleware():
+
+  Route::post('/seguros/webhook', [SeguroController::class, 'webhook'])
+      ->withoutMiddleware([\App\Http\Middleware\TuMiddlewareJWT::class]);
+
+================================================================================
+PARTE 10: FRONTEND — FLUJO COMPLETO
+================================================================================
+
+1. Usuario pulsa "Comprar seguro"
+2. Frontend llama POST /api/seguros/create-payment-intent
+   → Recibe { clientSecret, seguroId }
+
+3. Frontend usa Stripe.js para mostrar el formulario de pago:
+   stripe.confirmCardPayment(clientSecret, {
+     payment_method: { card: cardElement }
+   })
+
+4. Stripe procesa el pago y llama al webhook POST /seguros/webhook
+5. El webhook marca pagat = true en la BD
+
+6. Frontend puede hacer polling o escuchar el resultado de confirmCardPayment
+   para redirigir al usuario a una pantalla de confirmación.
+
+================================================================================
+RESUMEN RÁPIDO
+================================================================================
+
+✅ Sin slots — los seguros son como compras de merchandise
+✅ DB::transaction() automático — sin BEGIN/COMMIT manual
+✅ stripe_payment_intent_id UNIQUE — idempotencia ante reintentos de Stripe
+✅ Webhook sin JWT — Stripe no manda token
+✅ Estructura idéntica a Merchandise — solo cambia nombre y campos de tabla
+
+================================================================================

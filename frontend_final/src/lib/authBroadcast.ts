@@ -10,11 +10,12 @@ export type AuthBroadcastMessage =
 class AuthBroadcaster {
     private channel: BroadcastChannel | null = null;
     private refreshInProgress = false;
-    private waitingForRefresh = false;
+    private _waitingForRefresh = false;
 
     constructor() {
         if (typeof BroadcastChannel !== 'undefined') {
             this.channel = new BroadcastChannel('auth-channel');
+            console.log(this._waitingForRefresh)
         }
     }
 
@@ -32,7 +33,7 @@ class AuthBroadcaster {
 
     requestRefresh(): boolean {
         if (this.refreshInProgress) {
-            this.waitingForRefresh = true;
+            this._waitingForRefresh = true;
             return false;
         }
 

@@ -6,12 +6,12 @@ use App\Modules\User\Presentation\Http\Controllers\AdminUserController;
 
 Route::prefix('usuaris')->group(function () {
     Route::get('/', [UserController::class, 'index']);
+    Route::get('/nivells', [UserController::class, 'getLevels']);
     Route::get('/{usuariId}', [UserController::class, 'show']);
     Route::get('/{usuariId}/detail', [UserController::class, 'showDetail']);
     Route::post('/', [UserController::class, 'store']);
     Route::put('/{usuariId}', [UserController::class, 'update']);
     Route::delete('/{usuariId}', [UserController::class, 'destroy']);
-    Route::get('/nivells', [UserController::class, 'getLevels']);
 
     Route::prefix('{usuariId}/rols')->group(function () {
         Route::get('/', [UserController::class, 'indexRols']);

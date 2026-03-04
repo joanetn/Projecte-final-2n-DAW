@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSearchAdminUsers } from '@/queries/user.queries'
+import { useGetLevels, useSearchAdminUsers } from '@/queries/user.queries'
 import { useUpdateUser } from '@/mutations/user.mutations'
 import { useUsersState } from '@/hooks/useUsersState'
 import { UserFormDialog } from './UserFormDialog'
@@ -46,6 +46,7 @@ export function UsersTab() {
     } = useUsersState()
 
     const { data: response, isLoading, error, refetch } = useSearchAdminUsers(apiParams)
+    const { data: levels } = useGetLevels()
     const updateUserMutation = useUpdateUser()
 
     const users = response?.data ?? []
@@ -189,9 +190,10 @@ export function UsersTab() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">Todos los niveles</SelectItem>
-                            <SelectItem value="principant">Principant</SelectItem>
-                            <SelectItem value="intermedi">Intermedi</SelectItem>
-                            <SelectItem value="avançat">Avançat</SelectItem>
+                            {levels && levels.map((level: any) => (
+                                <SelectItem value={level.value}>{level.value}</SelectItem>
+                            ))
+                            }
                         </SelectContent>
                     </Select>
 

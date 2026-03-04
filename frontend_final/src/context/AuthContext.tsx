@@ -338,7 +338,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 case 'LOGIN':
                     localStorage.setItem('accessToken', message.token);
                     setAccessToken(message.token);
-                    setUser(message.user);
+                    recoverSession()
 
                     if (refreshWaitingRef.current) {
                         refreshWaitingRef.current.resolve(message.token);

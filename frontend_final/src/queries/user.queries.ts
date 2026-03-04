@@ -7,6 +7,7 @@ import {
     getAdminUser,
     getAdminUserDetail,
     getUserRoles,
+    getLevels,
 } from '../services/user.service'
 import type { User, UserDetail, UserRole, SearchUsersParams, SearchUsersResponse } from '../types/users'
 
@@ -28,6 +29,12 @@ export const useGetUserDetail = (id: string | null) =>
         queryKey: ['users', id, 'detail'],
         queryFn: () => getUserDetail(id!),
         enabled: !!id,
+    })
+
+export const useGetLevels = () =>
+    useQuery({
+        queryKey: ['users', 'levels'],
+        queryFn: () => getLevels()
     })
 
 export const useSearchAdminUsers = (params: SearchUsersParams) =>

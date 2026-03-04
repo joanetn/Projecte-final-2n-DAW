@@ -1,0 +1,200 @@
+services:
+
+  # ── Base de datos PostgreSQL ──────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: pf_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: projecte
+      POSTGRES_PASSWORD: projecte_pass
+      POSTGRES_DB: projecte_final
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U projecte -d projecte_final"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Imagen base compartida para todos los servicios Laravel ───────
+  # Se usa x-laravel-common como anchor YAML para no repetir config
+  x-laravel-common: &laravel-common
+    build:
+      context: ./backend_laravel
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment: &laravel-env
+      APP_NAME: Laravel
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_KEY: "${APP_KEY:-base64:tRrhnZeA+s1eXjy7spSBLqRqDaJwRvBMRBv4RuuSitE=}"
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: projecte_final
+      DB_USERNAME: projecte
+      DB_PASSWORD: projecte_pass
+      DATABASE_URL: "postgresql://projecte:projecte_pass@postgres:5432/projecte_final"
+      JWT_SECRET: "${JWT_SECRET:-RSOPbaGozf7NtBWvxlweuhlv6Hrh09Rq5sbkAuITkrtfPgEtApKgEiAAtSTGcpiF}"
+      CACHE_STORE: array
+      CACHE_DRIVER: array
+      SESSION_DRIVER: cookie
+      QUEUE_CONNECTION: sync
+      LOG_CHANNEL: stack
+      LOG_LEVEL: debug
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── API Gateway (puerto 8000) ─────────────────────────────────────
+  gateway:
+    <<: *laravel-common
+    container_name: pf_gateway
+    ports:
+      - "8000:8000"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8000
+      GATEWAY_ENABLED: "true"
+      SERVICE_USER_URL: http://svc_user:8001
+      SERVICE_CLUB_URL: http://svc_club:8002
+      SERVICE_LEAGUE_URL: http://svc_league:8003
+      SERVICE_MATCH_URL: http://svc_match:8004
+      SERVICE_VENUE_URL: http://svc_venue:8005
+      SERVICE_LINEUP_URL: http://svc_lineup:8006
+      SERVICE_INVITATION_URL: http://svc_invitation:8007
+      SERVICE_MERCHANDISE_URL: http://svc_merchandise:8008
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+
+  # ── User Service (puerto 8001) ────────────────────────────────────
+  svc_user:
+    <<: *laravel-common
+    container_name: pf_svc_user
+    ports:
+      - "8001:8001"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8001
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8001"]
+
+  # ── Club Service (puerto 8002) ────────────────────────────────────
+  svc_club:
+    <<: *laravel-common
+    container_name: pf_svc_club
+    ports:
+      - "8002:8002"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8002
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8002"]
+
+  # ── League Service (puerto 8003) ──────────────────────────────────
+  svc_league:
+    <<: *laravel-common
+    container_name: pf_svc_league
+    ports:
+      - "8003:8003"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8003
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8003"]
+
+  # ── Match Service (puerto 8004) ───────────────────────────────────
+  svc_match:
+    <<: *laravel-common
+    container_name: pf_svc_match
+    ports:
+      - "8004:8004"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8004
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8004"]
+
+  # ── Venue Service (puerto 8005) ───────────────────────────────────
+  svc_venue:
+    <<: *laravel-common
+    container_name: pf_svc_venue
+    ports:
+      - "8005:8005"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8005
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8005"]
+
+  # ── Lineup Service (puerto 8006) ──────────────────────────────────
+  svc_lineup:
+    <<: *laravel-common
+    container_name: pf_svc_lineup
+    ports:
+      - "8006:8006"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8006
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8006"]
+
+  # ── Invitation Service (puerto 8007) ──────────────────────────────
+  svc_invitation:
+    <<: *laravel-common
+    container_name: pf_svc_invitation
+    ports:
+      - "8007:8007"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8007
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8007"]
+
+  # ── Merchandise Service (puerto 8008) ─────────────────────────────
+  svc_merchandise:
+    <<: *laravel-common
+    container_name: pf_svc_merchandise
+    ports:
+      - "8008:8008"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8008
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8008"]
+
+  # ── Backend FastAPI (Microservicio Leagues alternativo) ────────────
+  backend_fastapi:
+    build:
+      context: ./backend_fastapi
+      dockerfile: Dockerfile
+    container_name: pf_fastapi
+    restart: unless-stopped
+    ports:
+      - "5005:5005"
+    environment:
+      DATABASE_URL: postgresql://projecte:projecte_pass@postgres:5432/projecte_final
+      APP_ENV: development
+      DEBUG: "True"
+      CORS_ORIGINS: "http://localhost:5173,http://localhost:3000,http://localhost:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ── Frontend React (Vite + Nginx) ─────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend_final
+      dockerfile: Dockerfile
+    container_name: pf_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+      - backend_fastapi
+
+volumes:
+  postgres_data:

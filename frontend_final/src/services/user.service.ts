@@ -32,6 +32,11 @@ export const getUserDetail = async (id: string): Promise<UserDetail> => {
     return res.data.data!
 }
 
+export const getLevels = async () => {
+    const res = await laravel.get('/api/usuaris/nivells')
+    return res.data.data!
+}
+
 // ========== ENDPOINTS ADMIN (todos los usuarios, incluidos inactivos) ==========
 export const searchAdminUsers = async (params?: SearchUsersParams): Promise<SearchUsersResponse> => {
     const res = await laravel.get<SearchUsersResponse>('/api/admin/usuaris', { params })
