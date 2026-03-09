@@ -12,6 +12,8 @@ interface InsuranceRepositoryInterface
 
     public function findById(string $id): ?Insurance;
 
+    public function findAllByUserId(string $userId): array;
+
     public function findByIdWithRelations(string $id, array $relations = []): ?Insurance;
 
     public function create(array $data): Insurance;
@@ -37,4 +39,6 @@ interface InsuranceRepositoryInterface
         int $page,
         int $limit
     ): array;
+
+    public function findByStripePaymentIntentId(string $paymentIntentId): ?Insurance;
 }

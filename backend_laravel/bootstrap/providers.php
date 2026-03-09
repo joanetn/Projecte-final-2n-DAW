@@ -10,5 +10,6 @@ return [
     App\Modules\Lineup\Providers\LineupServiceProvider::class,
     App\Modules\Invitation\Providers\InvitationServiceProvider::class,
     App\Modules\Merchandise\Providers\MerchandiseServiceProvider::class,
+    App\Modules\Insurance\Providers\InsuranceServiceProvider::class,
     App\Modules\Auth\Providers\AuthServiceProvider::class,
 ];

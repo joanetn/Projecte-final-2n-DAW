@@ -4,7 +4,7 @@ namespace App\Modules\Insurance\Application\Queries;
 
 use App\Modules\Insurance\Domain\Repositories\InsuranceRepositoryInterface;
 
-class GetInsurancesQuery
+class GetInsurancesAdminQuery
 {
     public function __construct(
         private InsuranceRepositoryInterface $repo
@@ -12,7 +12,7 @@ class GetInsurancesQuery
 
     public function execute(): array
     {
-        return $this->repo->findAllWithRelations([
+        return $this->repo->findAllIncludingInactiveWithRelations([
             'usuari'
         ]);
     }

@@ -33,16 +33,16 @@ El sistema no representa un únic club: és una plataforma on poden participar d
 │  React+Vite │                └──────┬───────────────────────────────────────┘
 │  port 3000  │                       │ proxy intern Docker
 └─────────────┘                ┌──────▼───────────────────────────────────────────┐
-                                │  Microserveis Laravel (un procés per mòdul)      │
-                                │                                                   │
-                                │  :8001 User       :8005 Venue                    │
-                                │  :8002 Club       :8006 Lineup                   │
-                                │  :8003 League     :8007 Invitation               │
-                                │  :8004 Match      :8008 Merchandise              │
-                                └──────────────────────────────────────────────────┘
+                               │  Microserveis Laravel (un procés per mòdul)      │
+                               │                                                  │
+                               │  :8001 User       :8005 Venue                    │
+                               │  :8002 Club       :8006 Lineup                   │
+                               │  :8003 League     :8007 Invitation               │
+                               │  :8004 Match      :8008 Merchandise              │
+                               └──────────────────────────────────────────────────┘
                                        │
                        ┌───────────────┴─────────────────┐
-                       │                                  │
+                       │                                 │
                 ┌──────▼──────────────┐    ┌─────────────▼──────────┐
                 │  FastAPI (port 5005)│    │  PostgreSQL 16         │
                 │  Mòdul Lligues      │    │  (port 5433 en host)   │

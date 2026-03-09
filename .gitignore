@@ -1,2 +1,3 @@
 # Secrets Docker — copia .env.docker.example a .env.docker i omple els valors
 .env.docker
+.env

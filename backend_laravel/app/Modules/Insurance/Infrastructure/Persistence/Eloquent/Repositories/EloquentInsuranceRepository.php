@@ -24,6 +24,17 @@ class EloquentInsuranceRepository implements InsuranceRepositoryInterface
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
 
+    public function findAllByUserId(string $userId): array
+    {
+        $models = $this->model
+            ->where('isActive', true)
+            ->where('usuariId', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
     public function findById(string $id): ?Insurance
     {
         $model = $this->model->where('isActive', true)->find($id);
@@ -104,8 +115,15 @@ class EloquentInsuranceRepository implements InsuranceRepositoryInterface
         $this->model->where('id', $id)->update(['isActive' => false]);
     }
 
-    public function searchWithFilters(?string $q, string $sort, ?string $minPrice, ?string $maxPrice, ?bool $pagat, int $page, int $limit): array
-    {
+    public function searchWithFilters(
+        ?string $q,
+        string $sort,
+        ?string $minPrice,
+        ?string $maxPrice,
+        ?bool $pagat,
+        int $page,
+        int $limit
+    ): array {
         $priceRange = [];
 
         if ($minPrice) {
@@ -131,5 +149,14 @@ class EloquentInsuranceRepository implements InsuranceRepositoryInterface
             'last_page'    => $paginator->lastPage(),
             'total'        => $paginator->total(),
         ];
+    }
+
+    public function findByStripePaymentIntentId(string $paymentIntentId): ?Insurance
+    {
+        $model = $this->model
+            ->where('stripe_payment_intent_id', $paymentIntentId)
+            ->first();
+
+        return $model ? $this->mapper->toDomain($model) : null;
     }
 }
