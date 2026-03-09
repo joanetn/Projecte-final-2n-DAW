@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('seguros', function (Blueprint $table) {
-            //
+            $table->string('stripe_payment_intent_id')->nullable()->unique();
+            // unique → idempotencia: 2 webhooks del mismo pago no crean 2 seguros
+            $table->decimal('preu', 8, 2)->nullable();
+            $table->integer('mesos')->default(12); // duración del seguro
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('seguros', function (Blueprint $table) {
-            //
+            $table->dropColumn(['stripe_payment_intent_id', 'preu', 'mesos']);
         });
     }
 };
