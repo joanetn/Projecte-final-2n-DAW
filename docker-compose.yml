@@ -6,9 +6,9 @@ services:
     container_name: pf_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: projecte
-      POSTGRES_PASSWORD: projecte_pass
-      POSTGRES_DB: projecte_final
+      POSTGRES_USER: ${DB_USERNAME:-projecte}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-projecte_pass}
+      POSTGRES_DB: ${DB_DATABASE:-projecte_final}
     ports:
       - "5433:5432"
     volumes:
@@ -30,15 +30,15 @@ services:
       APP_NAME: Laravel
       APP_ENV: local
       APP_DEBUG: "true"
-      APP_KEY: "${APP_KEY:-base64:tRrhnZeA+s1eXjy7spSBLqRqDaJwRvBMRBv4RuuSitE=}"
+      APP_KEY: "${APP_KEY}"
       DB_CONNECTION: pgsql
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_DATABASE: projecte_final
-      DB_USERNAME: projecte
-      DB_PASSWORD: projecte_pass
-      DATABASE_URL: "postgresql://projecte:projecte_pass@postgres:5432/projecte_final"
-      JWT_SECRET: "${JWT_SECRET:-RSOPbaGozf7NtBWvxlweuhlv6Hrh09Rq5sbkAuITkrtfPgEtApKgEiAAtSTGcpiF}"
+      DB_DATABASE: ${DB_DATABASE:-projecte_final}
+      DB_USERNAME: ${DB_USERNAME:-projecte}
+      DB_PASSWORD: ${DB_PASSWORD:-projecte_pass}
+      DATABASE_URL: "postgresql://${DB_USERNAME:-projecte}:${DB_PASSWORD:-projecte_pass}@postgres:5432/${DB_DATABASE:-projecte_final}"
+      JWT_SECRET: "${JWT_SECRET}"
       CACHE_STORE: array
       CACHE_DRIVER: array
       SESSION_DRIVER: cookie
@@ -175,7 +175,7 @@ services:
     ports:
       - "5005:5005"
     environment:
-      DATABASE_URL: postgresql://projecte:projecte_pass@postgres:5432/projecte_final
+      DATABASE_URL: postgresql://${DB_USERNAME:-projecte}:${DB_PASSWORD:-projecte_pass}@postgres:5432/${DB_DATABASE:-projecte_final}
       APP_ENV: development
       DEBUG: "True"
       CORS_ORIGINS: "http://localhost:5173,http://localhost:3000,http://localhost:80"
