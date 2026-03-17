@@ -171,6 +171,18 @@ docker exec pf_gateway php artisan migrate --seed
 docker compose logs -f gateway
 ```
 
+### Stripe webhook forward (carrito + seguros) amb Docker
+
+```bash
+# Arrancar listener Stripe únic (carrito + seguros)
+docker compose --profile stripe up stripe_webhook
+```
+
+Notes:
+- El listener mostrarà una línia amb `whsec_...` (webhook signing secret).
+- Copia eixe valor a `backend_laravel/.env` com `STRIPE_WEBHOOK_SECRET`.
+- Recarrega contenidors Laravel perquè agafen el nou secret (`docker compose up --build`).
+
 ### Serveis del compose
 
 | Contenidor | Imatge | Port host |

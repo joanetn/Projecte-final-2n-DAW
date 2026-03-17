@@ -11,8 +11,8 @@ export function useMerchState() {
     const minPrice = url.get('minPrice', '')
     const maxPrice = url.get('maxPrice', '')
     const sort = url.get('sort', 'id')
-    const page = Number(url.get('page'))
-    const limit = Number(url.get('limit'))
+    const page = Math.max(1, Number(url.get('page', '1')) || 1)
+    const limit = Math.max(1, Number(url.get('limit', '20')) || 20)
 
     const [qInput, setQInput] = useState(q)
     const prevSearchRef = useRef(q)

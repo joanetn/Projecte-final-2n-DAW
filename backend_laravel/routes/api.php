@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GatewayController;
+use App\Http\Controllers\StripeWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,9 @@ Route::prefix('gateway')->group(function () {
     Route::get('/services/{serviceKey}/health', [GatewayController::class, 'serviceHealth']);
     Route::post('/services/{serviceKey}/circuit-reset', [GatewayController::class, 'resetCircuit']);
 });
+
+// ─── Stripe unified webhook (carrito + seguros) ───────────────────
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handle']);
 
 // ─── Module routes (proxied via gateway or direct) ──────────────────────────────
 // When GATEWAY_ENABLED=true  → filtered through ApiGateway middleware (proxying)

@@ -7,17 +7,11 @@ import {
     CarouselPrevious
 } from "@/components/ui/carousel"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useEffect } from "react"
 
 export function Leagues() {
     const { data: response, isLoading, error } = useGetLeagues()
 
     const leagues = response ?? []
-
-    useEffect(() => {
-        console.log(leagues)
-        console.log(leagues.length)
-    }, [leagues])
 
     if (error) {
         return (

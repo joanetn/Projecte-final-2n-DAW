@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useSearchMerchs } from '@/queries/merch.queries'
+import { useSearchMerchs, useGetBrands } from '@/queries/merch.queries'
 import { useUpdateMerch } from '@/mutations/merch.mutations'
 import { useMerchState } from '@/hooks/useMerchState'
 import { Button } from '@/components/ui/button'
@@ -44,6 +44,7 @@ export function MerchTab() {
     } = useMerchState()
 
     const { data: response, isLoading, error, refetch } = useSearchMerchs(apiParams)
+    const { data: brands = [] } = useGetBrands()
     const updateMerchMutation = useUpdateMerch()
 
     const merchs = response?.data ?? []
@@ -187,6 +188,9 @@ export function MerchTab() {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">Totes les marques</SelectItem>
+                            {brands.map(b => (
+                                <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
 

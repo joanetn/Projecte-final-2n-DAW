@@ -20,6 +20,13 @@ interface MerchRepositoryInterface
 
     public function delete(string $id): void;
 
+    /**
+     * Find a merch row and lock it exclusively (FOR UPDATE NOWAIT).
+     * Must be called inside an open DB transaction.
+     * Throws \PDOException with code 55P03 if the row is already locked.
+     */
+    public function findByIdWithLock(string $id): ?Merch;
+
     public function searchWithFilters(
         ?string $q,
         ?string $marca,

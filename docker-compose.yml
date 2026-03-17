@@ -39,6 +39,8 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-projecte_pass}
       DATABASE_URL: "postgresql://${DB_USERNAME:-projecte}:${DB_PASSWORD:-projecte_pass}@postgres:5432/${DB_DATABASE:-projecte_final}"
       JWT_SECRET: "${JWT_SECRET}"
+      STRIPE_SECRET_KEY: "${STRIPE_SECRET_KEY}"
+      STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET}"
       CACHE_STORE: array
       CACHE_DRIVER: array
       SESSION_DRIVER: cookie
@@ -199,6 +201,11 @@ services:
     build:
       context: ./frontend_final
       dockerfile: Dockerfile
+      args:
+        VITE_LARAVEL_URL: ${VITE_LARAVEL_URL:-http://localhost:8000}
+        VITE_FASTAPI_URL: ${VITE_FASTAPI_URL:-http://localhost:5005}
+        VITE_STRIPE_PUBLIC_KEY: ${VITE_STRIPE_PUBLIC_KEY:-}
+        VITE_STRIPE_PUBLISHABLE_KEY: ${VITE_STRIPE_PUBLISHABLE_KEY:-}
     container_name: pf_frontend
     restart: unless-stopped
     ports:
@@ -206,6 +213,28 @@ services:
     depends_on:
       - gateway
       - backend_fastapi
+
+  # ── Stripe CLI (forward webhooks carrito + seguros) ───────────────
+  stripe_webhook:
+    image: stripe/stripe-cli:latest
+    container_name: pf_stripe_webhook
+    profiles: ["stripe"]
+    restart: unless-stopped
+    env_file:
+      - ./backend_laravel/.env
+    depends_on:
+      - gateway
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ -z "$STRIPE_SECRET_KEY" ]; then
+          echo "Falta STRIPE_SECRET_KEY en backend_laravel/.env"
+          exit 1
+        fi
+        stripe listen \
+          --api-key "$STRIPE_SECRET_KEY" \
+          --forward-to http://gateway:8000/api/stripe/webhook \
+          --events checkout.session.completed,payment_intent.succeeded,payment_intent.payment_failed
 
 volumes:
   postgres_data:

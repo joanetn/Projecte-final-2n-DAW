@@ -28,6 +28,17 @@ class AuthController extends Controller
         private GetActiveSessionsQuery $getSessionsQuery,
     ) {}
 
+    private function resolveHttpStatusCode(\Throwable $e, int $default): int
+    {
+        $code = (int) $e->getCode();
+
+        if ($code >= 100 && $code <= 599) {
+            return $code;
+        }
+
+        return $default;
+    }
+
     public function login(LoginRequest $request): JsonResponse
     {
         try {
@@ -61,7 +72,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-            ], $e->getCode() ?: 401);
+            ], $this->resolveHttpStatusCode($e, 401));
         }
     }
 
@@ -80,6 +91,7 @@ class AuthController extends Controller
                 deviceType: $request->input('deviceType'),
                 browser: $request->input('browser'),
                 os: $request->input('os'),
+                rols: $request->input('rols'),
             );
 
             return response()
@@ -103,7 +115,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e->getMessage(),
-            ], $e->getCode() ?: 400);
+            ], $this->resolveHttpStatusCode($e, 400));
         }
     }
 
@@ -222,6 +234,31 @@ class AuthController extends Controller
             return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
 
-        return response()->json(['user' => $user]);
+        // Cargar roles y permisos directamente desde Eloquent
+        $usuariModel = \App\Models\Usuari::with([
+            'rols' => fn($q) => $q->where('isActive', true),
+        ])->find($userId);
+
+        $rols = $usuariModel
+            ? $usuariModel->rols
+            ->where('isActive', true)
+            ->values()
+            ->map(fn($rol) => [
+                'id' => $rol->id,
+                'usuariId' => $rol->usuariId,
+                'rol' => $rol->rol,
+                'isActive' => $rol->isActive,
+                'createdAt' => $rol->createdAt?->format('Y-m-d H:i:s'),
+            ])->toArray()
+            : [];
+
+        $permisos = $usuariModel ? $usuariModel->getPermissionsArray() : [];
+
+        return response()->json([
+            'user' => array_merge((array) $user, [
+                'rols'    => $rols,
+                'permisos' => $permisos,
+            ]),
+        ]);
     }
 }

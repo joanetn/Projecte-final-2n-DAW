@@ -23,6 +23,10 @@ class RegisterRequest extends FormRequest
             'avatar'         => 'nullable|string|max:500',
             'dni'            => 'nullable|string|max:20',
 
+            // Rols (opcionales pero si vienen, deben ser válidos)
+            'rols'           => 'nullable|array|min:1',
+            'rols.*'         => 'string|in:JUGADOR,ENTRENADOR,ARBITRE',
+
             // Dades del dispositiu (igual que login)
             'deviceId'       => 'required|string|max:255',
             'deviceType'     => 'nullable|string|max:50',

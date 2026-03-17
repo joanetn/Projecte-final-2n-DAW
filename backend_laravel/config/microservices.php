@@ -87,7 +87,7 @@ return [
         'merchandise' => [
             'name'      => 'Merchandise Service',
             'base_url'  => env('SERVICE_MERCHANDISE_URL', 'http://localhost:8008'),
-            'prefixes'  => ['merchs', 'compras'],
+            'prefixes'  => ['merchs', 'compras', 'cart'],
             'timeout'   => env('SERVICE_MERCHANDISE_TIMEOUT', 10),
             'retries'   => env('SERVICE_MERCHANDISE_RETRIES', 2),
         ],

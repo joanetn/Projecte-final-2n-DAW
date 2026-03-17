@@ -8,18 +8,7 @@ import {
     type ReactNode,
 } from 'react';
 import { authBroadcaster, type AuthBroadcastMessage } from '../lib/authBroadcast';
-
-interface User {
-    id: string;
-    nom: string;
-    email: string;
-    telefon?: string;
-    dataNaixement?: string;
-    nivell?: string;
-    avatar?: string;
-    dni?: string;
-    isActive: boolean;
-}
+import type { User } from '../types/users';
 
 interface Session {
     id: string;
@@ -257,9 +246,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             setUser(data.user);
 
-            authBroadcaster.broadcastLogin(data.access_token, user)
+            authBroadcaster.broadcastLogin(data.access_token, data.user)
+
+            // Asegura que el usuario tenga rols/permisos (vienen de /auth/me)
+            await recoverSession();
         },
-        [deviceId],
+        [deviceId, recoverSession],
     );
 
     const logout = useCallback(async (): Promise<void> => {

@@ -24,12 +24,17 @@ class Partit extends Model
         'arbitreId',
         'usuariId',
         'status',
+        'ubicacio',
+        'setsLocal',
+        'setsVisitant',
         'isActive',
     ];
 
     protected $casts = [
         'dataHora' => 'datetime',
         'isActive' => 'boolean',
+        'setsLocal' => 'integer',
+        'setsVisitant' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

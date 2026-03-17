@@ -17,7 +17,12 @@ class CreateInsuranceCommand
         private InsuranceRepositoryInterface $repo,
         private InsuranceDomainService $service
     ) {
-        $this->stripe = new StripeClient(config('services.stripe.secret'));
+        $stripeSecret = (string) (config('services.stripe.secret') ?: getenv('STRIPE_SECRET_KEY') ?: '');
+        if ($stripeSecret === '') {
+            throw new \RuntimeException('STRIPE_SECRET_KEY no está configurada en el backend.');
+        }
+
+        $this->stripe = new StripeClient($stripeSecret);
     }
 
     /**

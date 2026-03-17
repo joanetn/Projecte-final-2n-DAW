@@ -12,6 +12,9 @@ class UsuariRol extends Model
 
     protected $table = 'usuari_rols';
 
+    public const CREATED_AT = 'createdAt';
+    public const UPDATED_AT = null;
+
     protected $fillable = [
         'id',
         'usuariId',
@@ -22,7 +25,6 @@ class UsuariRol extends Model
     protected $casts = [
         'isActive' => 'boolean',
         'createdAt' => 'datetime',
-        'updatedAt' => 'datetime',
     ];
 
     public function usuari(): BelongsTo

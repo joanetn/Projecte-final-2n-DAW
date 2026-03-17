@@ -22,10 +22,11 @@ export interface RegisterRequest {
     contrasenya: string;
     deviceId: string;
     telefon?: string | null;
-    dataNaiximent?: string | null;
+    dataNaixement?: string | null;
     avatar?: string | null;
     dni?: string | null;
     deviceType?: string | null;
     browser?: string | null;
     os?: string | null;
+    rols?: string[];
 }

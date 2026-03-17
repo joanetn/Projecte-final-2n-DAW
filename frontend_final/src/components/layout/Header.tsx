@@ -63,6 +63,18 @@ export function Header() {
                         >
                             Home
                         </Link>
+                        <Link
+                            to="/shop"
+                            className="text-sm font-medium text-slate-700 hover:text-warm-600 dark:text-slate-300 dark:hover:text-warm-400 transition-colors"
+                        >
+                            Tienda
+                        </Link>
+                        <Link
+                            to="/carrito"
+                            className="text-sm font-medium text-slate-700 hover:text-warm-600 dark:text-slate-300 dark:hover:text-warm-400 transition-colors"
+                        >
+                            Carrito
+                        </Link>
                     </div>
 
                     {/* Right side buttons */}
@@ -146,6 +158,20 @@ export function Header() {
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
                             Home
+                        </Link>
+                        <Link
+                            to="/shop"
+                            className="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            Tienda
+                        </Link>
+                        <Link
+                            to="/carrito"
+                            className="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            Carrito
                         </Link>
 
                         <div className="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2">

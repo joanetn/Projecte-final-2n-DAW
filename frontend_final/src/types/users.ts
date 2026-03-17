@@ -1,3 +1,11 @@
+export interface UserRole {
+    id: string;
+    usuariId: string;
+    rol: string;
+    isActive: boolean;
+    createdAt?: string;
+}
+
 export interface User {
     id: string;
     nom: string;
@@ -10,10 +18,11 @@ export interface User {
     isActive: boolean;
     createdAt?: string;
     updatedAt?: string;
+    rols?: UserRole[];
+    permisos?: string[];
 }
 
 export interface UserDetail extends User {
-    rols?: UserRole[];
     equipUsuaris?: any[];
     compras?: any[];
     seguros?: any[];
@@ -51,14 +60,6 @@ export interface RegisterData {
     dni?: string;
     dataNaixement?: string;
     nivell?: string;
-}
-
-export interface UserRole {
-    id: string;
-    usuariId: string;
-    rol: string;
-    isActive: boolean;
-    createdAt?: string;
 }
 
 export interface CreateRoleRequest {

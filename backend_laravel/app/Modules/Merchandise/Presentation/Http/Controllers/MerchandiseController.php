@@ -230,6 +230,25 @@ class MerchandiseController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ], $e->getCode());
+        } catch (\PDOException $e) {
+            // 55P03 = lock_not_available (FOR UPDATE NOWAIT)
+            if ($e->getCode() === '55P03') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Producte no disponible en aquest moment, torna a intentar-ho',
+                ], 409);
+            }
+            // 40001 = serialization_failure (tots els reintents exhaurits)
+            if ($e->getCode() === '40001') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Alta concurrència, torna a intentar-ho en uns instants',
+                ], 503);
+            }
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

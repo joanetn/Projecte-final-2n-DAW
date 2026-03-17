@@ -45,6 +45,7 @@ use App\Modules\Club\Presentation\Http\Requests\UpdateEquipUsuariRequest;
 use App\Modules\Club\Presentation\Http\Resources\ClubResource;
 use App\Modules\Club\Presentation\Http\Resources\EquipResource;
 use App\Modules\Club\Presentation\Http\Resources\EquipUsuariResource;
+use App\Models\UsuariRol;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -121,10 +122,26 @@ class ClubController extends Controller
     public function store(CreateClubRequest $request): JsonResponse
     {
         try {
+            $authUserId = (string) $request->input('auth_user_id', '');
+            if ($authUserId === '') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat'
+                ], 401);
+            }
+
+            $validated = $request->validated();
+            $validated['creadorId'] = $authUserId;
+
             // Convertim les dades validades a un DTO
-            $dto = CreateClubDTO::fromArray($request->validated());
+            $dto = CreateClubDTO::fromArray($validated);
             // Executem el command que crea el club
             $clubId = $this->createClubCommand->execute($dto);
+
+            UsuariRol::updateOrCreate(
+                ['usuariId' => $authUserId, 'rol' => 'ADMIN_CLUB'],
+                ['isActive' => true]
+            );
 
             return response()->json([
                 'success' => true,
@@ -248,6 +265,28 @@ class ClubController extends Controller
     public function storeEquip(string $clubId, CreateEquipRequest $request): JsonResponse
     {
         try {
+            $authUserId = (string) $request->input('auth_user_id', '');
+            if ($authUserId === '') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat'
+                ], 401);
+            }
+
+            $club = $this->getClubQuery->execute($clubId);
+
+            $isAdminWeb = UsuariRol::where('usuariId', $authUserId)
+                ->where('rol', 'ADMIN_WEB')
+                ->where('isActive', true)
+                ->exists();
+
+            if (($club->creadorId ?? null) !== $authUserId && !$isAdminWeb) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Només l\'administrador del club pot crear equips en aquest club'
+                ], 403);
+            }
+
             // Afegim el clubId de la ruta a les dades validades
             $dto = CreateEquipDTO::fromArray(array_merge(
                 $request->validated(),

@@ -12,7 +12,7 @@ Route::prefix('clubs')->group(function () {
     // --- CRUD de clubs ---
     Route::get('/', [ClubController::class, 'index']);           // Llistar tots els clubs
     Route::get('/{id}', [ClubController::class, 'show']);        // Obtenir un club per ID
-    Route::post('/', [ClubController::class, 'store']);          // Crear un club
+    Route::post('/', [ClubController::class, 'store'])->middleware('jwt.auth');          // Crear un club
     Route::put('/{id}', [ClubController::class, 'update']);      // Actualitzar un club
     Route::delete('/{id}', [ClubController::class, 'destroy']); // Eliminar (soft delete) un club
 
@@ -20,7 +20,7 @@ Route::prefix('clubs')->group(function () {
     Route::prefix('{clubId}/equips')->group(function () {
         Route::get('/', [ClubController::class, 'indexEquips']);           // Llistar equips d'un club
         Route::get('/{equipId}', [ClubController::class, 'showEquip']);   // Obtenir un equip concret
-        Route::post('/', [ClubController::class, 'storeEquip']);          // Crear un equip dins del club
+        Route::post('/', [ClubController::class, 'storeEquip'])->middleware('jwt.auth');          // Crear un equip dins del club
         Route::put('/{equipId}', [ClubController::class, 'updateEquip']);      // Actualitzar un equip
         Route::delete('/{equipId}', [ClubController::class, 'destroyEquip']); // Eliminar un equip
 

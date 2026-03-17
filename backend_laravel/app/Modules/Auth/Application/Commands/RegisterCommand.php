@@ -3,6 +3,7 @@
 namespace App\Modules\Auth\Application\Commands;
 
 use App\Enums\UserLevel;
+use App\Models\UsuariRol;
 use App\Modules\Auth\Domain\Entities\RefreshSession;
 use App\Modules\Auth\Infrastructure\Persistence\Eloquent\Repositories\EloquentAuthRepository;
 use App\Modules\User\Application\Commands\CreateUserCommand;
@@ -30,6 +31,7 @@ class RegisterCommand
         ?string $deviceType = null,
         ?string $browser = null,
         ?string $os = null,
+        ?array $rols = null,
     ): array {
 
         $avatarDEFAULT = $avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($nom) . '&background=random&size=128';
@@ -45,6 +47,20 @@ class RegisterCommand
         );
 
         $userId = $this->createUserCommand->execute($dto);
+
+        // Assignar rols seleccionats (o per defecte JUGADOR)
+        $selectedRoles = $rols ?? ['JUGADOR'];
+        $selectedRoles = array_values(array_unique(array_filter($selectedRoles, fn($r) => is_string($r) && $r !== '')));
+        if (empty($selectedRoles)) {
+            $selectedRoles = ['JUGADOR'];
+        }
+
+        foreach ($selectedRoles as $rol) {
+            UsuariRol::updateOrCreate(
+                ['usuariId' => $userId, 'rol' => $rol],
+                ['isActive' => true]
+            );
+        }
 
         $user = $this->authRepo->findUserById($userId);
 

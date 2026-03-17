@@ -8,16 +8,16 @@ export default function RegisterPage() {
         <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-warm-50 to-white dark:from-slate-900 dark:to-slate-950">
             <div className="w-full max-w-md space-y-8">
                 <div className="text-center">
-                    <div className="flex justify-center mb-4">
-                        <div className="flex items-center justify-center w-16 h-16 rounded-lg bg-gradient-to-br from-warm-500 to-warm-600">
-                            <span className="text-3xl font-bold text-white">PP</span>
+                    <div className="flex items-center justify-center gap-3 mb-2">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-warm-500 to-warm-600">
+                            <span className="text-2xl font-bold text-white">PP</span>
                         </div>
+                        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+                            Registrarse
+                        </h1>
                     </div>
-                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-                        Crea tu cuenta
-                    </h1>
                     <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                        Únete a PadelPlay hoy
+                        Crea tu cuenta en PadelPlay
                     </p>
                 </div>
 

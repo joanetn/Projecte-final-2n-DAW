@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\Merchandise\Presentation\Http\Controllers\MerchandiseController;
 use App\Modules\Merchandise\Presentation\Http\Controllers\AdminMerchandiseController;
+use App\Modules\Merchandise\Presentation\Http\Controllers\CartController;
 
 Route::prefix('merchs')->group(function () {
     Route::get('/', [MerchandiseController::class, 'indexMerchs']);
@@ -29,4 +30,15 @@ Route::prefix('admin/merchs')->group(function () {
     Route::post('/', [AdminMerchandiseController::class, 'store']);
     Route::put('/{id}', [AdminMerchandiseController::class, 'update']);
     Route::delete('/{id}', [AdminMerchandiseController::class, 'destroy']);
+});
+
+Route::post('/cart/webhook', [CartController::class, 'webhook']);
+
+Route::middleware(['jwt.auth'])->prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'myCart']);
+    Route::post('/items', [CartController::class, 'addItem']);
+    Route::patch('/items/{itemId}', [CartController::class, 'updateItem']);
+    Route::delete('/items/{itemId}', [CartController::class, 'removeItem']);
+    Route::post('/checkout/session', [CartController::class, 'createCheckoutSession']);
+    Route::delete('/', [CartController::class, 'clear']);
 });

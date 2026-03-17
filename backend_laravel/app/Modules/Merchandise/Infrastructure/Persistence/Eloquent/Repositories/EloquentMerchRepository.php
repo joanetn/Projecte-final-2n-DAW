@@ -64,6 +64,16 @@ class EloquentMerchRepository implements MerchRepositoryInterface
         MerchModel::where('id', $id)->update(['isActive' => false]);
     }
 
+    public function findByIdWithLock(string $id): ?Merch
+    {
+        $model = MerchModel::where('isActive', true)
+            ->where('id', $id)
+            ->lock('for update nowait')
+            ->first();
+
+        return $model ? MerchMapper::toDomain($model) : null;
+    }
+
     public function searchWithFilters(
         ?string $q,
         ?string $marca,
@@ -84,6 +94,7 @@ class EloquentMerchRepository implements MerchRepositoryInterface
         }
 
         $paginator = $this->model->query()
+            ->where('isActive', true)
             ->search($q)
             ->byBrand($marca)
             ->byPriceRange($priceRange)
