@@ -18,6 +18,7 @@ class CreateMerchRequest extends FormRequest
         return [
             'nom' => 'required|string|max:255',
             'marca' => ['nullable', new Enum(MerchBrand::class)],
+            'imageUrl' => 'nullable|string|max:2048',
             'preu' => 'nullable|numeric|min:0',
             'stock' => 'nullable|integer|min:0',
         ];
@@ -29,6 +30,7 @@ class CreateMerchRequest extends FormRequest
             'nom.required' => 'El nom del producte és obligatori.',
             'nom.max' => 'El nom no pot superar els 255 caràcters.',
             'marca.enum' => 'La marca seleccionada no és vàlida. Marques disponibles: ' . implode(', ', MerchBrand::values()),
+            'imageUrl.max' => "La URL de la imatge no pot superar els 2048 caràcters.",
             'preu.numeric' => 'El preu ha de ser un valor numèric.',
             'preu.min' => 'El preu no pot ser negatiu.',
             'stock.integer' => "L'estoc ha de ser un nombre enter.",

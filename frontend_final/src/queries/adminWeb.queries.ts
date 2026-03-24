@@ -9,10 +9,15 @@ import {
     getPartitsArbitre,
     getMembresEquip,
     getClassificacionsAdmin,
-    type GetUsuarisParams,
-    type GetEquipsParams,
-    type GetPartitsParams,
+    getEquipsLligaAdmin,
+    getMevesPropostesReprogramacio,
 } from '@/services/adminWeb.service';
+import type {
+    GetUsuarisParams,
+    GetEquipsParams,
+    GetPartitsParams,
+    GetPropostesReprogramacioParams,
+} from '@/types/admin';
 
 export const ADMIN_WEB_KEYS = {
     estadistiques: ['adminWeb', 'estadistiques'] as const,
@@ -24,6 +29,9 @@ export const ADMIN_WEB_KEYS = {
     partitsArbitre: (arbitreId: string) => ['adminWeb', 'arbitres', arbitreId, 'partits'] as const,
     membresEquip: (equipId: string) => ['adminWeb', 'equips', equipId, 'membres'] as const,
     classificacions: ['adminWeb', 'classificacions'] as const,
+    equipsLliga: (lligaId: string) => ['adminWeb', 'lligues', lligaId, 'equips'] as const,
+    propostesReprogramacio: (params?: GetPropostesReprogramacioParams) =>
+        ['adminWeb', 'propostes-reprogramacio', params] as const,
 };
 
 export const useGetEstadistiques = () =>
@@ -80,4 +88,17 @@ export const useGetClassificacionsAdmin = () =>
     useQuery({
         queryKey: ADMIN_WEB_KEYS.classificacions,
         queryFn: getClassificacionsAdmin,
+    });
+
+export const useGetEquipsLligaAdmin = (lligaId: string | null) =>
+    useQuery({
+        queryKey: ADMIN_WEB_KEYS.equipsLliga(lligaId ?? ''),
+        queryFn: () => getEquipsLligaAdmin(lligaId!),
+        enabled: !!lligaId,
+    });
+
+export const useGetMevesPropostesReprogramacio = (params?: GetPropostesReprogramacioParams) =>
+    useQuery({
+        queryKey: ADMIN_WEB_KEYS.propostesReprogramacio(params),
+        queryFn: () => getMevesPropostesReprogramacio(params),
     });

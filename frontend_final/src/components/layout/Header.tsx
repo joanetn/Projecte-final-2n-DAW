@@ -4,12 +4,32 @@ import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/ui/button'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Menu, X, LogOut, Shield } from 'lucide-react'
+import { Menu, X, LogOut } from 'lucide-react'
+
+type DashboardLink = {
+    label: string
+    to: string
+    roles: string[]
+}
 
 export function Header() {
     const { user, isAuthenticated, isLoading, logout } = useAuth()
     const navigate = useNavigate()
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+    const userRoles = (user?.rols ?? []).map((role) => String(role.rol).toUpperCase())
+
+    const dashboardLinks: DashboardLink[] = [
+        { label: 'Dashboard Jugador', to: '/dashboardJugador', roles: ['JUGADOR'] },
+        { label: 'Dashboard Entrenador', to: '/dashboardEntrenador', roles: ['ENTRENADOR'] },
+        { label: 'Dashboard Árbitro', to: '/dashboardArbitre', roles: ['ARBITRE'] },
+        { label: 'Dashboard Club', to: '/dashboardAdminClub', roles: ['ADMIN_CLUB', 'ADMIN_WEB'] },
+        { label: 'Dashboard Admin', to: '/dashboardAdmin', roles: ['ADMIN_WEB'] },
+    ]
+
+    const visibleDashboardLinks = isAuthenticated
+        ? dashboardLinks.filter((link) => link.roles.some((role) => userRoles.includes(role)))
+        : []
 
     const handleLogout = async () => {
         try {
@@ -19,11 +39,6 @@ export function Header() {
         } catch (error) {
             console.error('Error logging out:', error)
         }
-    }
-
-    const handleAdminClick = () => {
-        navigate('/dashboardAdmin')
-        setIsMobileMenuOpen(false)
     }
 
     const handleLoginClick = () => {
@@ -75,6 +90,15 @@ export function Header() {
                         >
                             Carrito
                         </Link>
+                        {visibleDashboardLinks.map((dashboardLink) => (
+                            <Link
+                                key={dashboardLink.to}
+                                to={dashboardLink.to}
+                                className="text-sm font-medium text-slate-700 hover:text-warm-600 dark:text-slate-300 dark:hover:text-warm-400 transition-colors"
+                            >
+                                {dashboardLink.label}
+                            </Link>
+                        ))}
                     </div>
 
                     {/* Right side buttons */}
@@ -173,6 +197,16 @@ export function Header() {
                         >
                             Carrito
                         </Link>
+                        {visibleDashboardLinks.map((dashboardLink) => (
+                            <Link
+                                key={dashboardLink.to}
+                                to={dashboardLink.to}
+                                className="block px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                {dashboardLink.label}
+                            </Link>
+                        ))}
 
                         <div className="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2">
                             {isLoading ? (
@@ -185,15 +219,6 @@ export function Header() {
                                     <div className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                                         {user.nom}
                                     </div>
-                                    {user.nivell === 'admin' && (
-                                        <button
-                                            onClick={handleAdminClick}
-                                            className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors flex items-center gap-2"
-                                        >
-                                            <Shield className="h-4 w-4" />
-                                            Panel Admin
-                                        </button>
-                                    )}
                                     <button
                                         onClick={handleLogout}
                                         className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/20 rounded-lg transition-colors flex items-center gap-2"

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, type DragEvent } from 'react'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { useGetPartit } from '@/queries/partit.queries'
 import { useGetEquipMembres } from '@/queries/club.queries'
@@ -19,6 +19,7 @@ import type { MembreEquip } from '@/services/club.service'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Slot = MembreEquip | null
+type DragPayload = { membre: MembreEquip; fromSlotIndex: number | null }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function jugadorStatus(m: MembreEquip): 'ok' | 'sin-segur' | 'lesionat' {
@@ -52,14 +53,19 @@ function PlayerSlot({
     index,
     isOver,
     onRemove,
+    onDragStart,
+    onClick,
 }: {
     slot: Slot
     index: number
     isOver: boolean
     onRemove: (index: number) => void
+    onDragStart: (event: DragEvent, slotIndex: number) => void
+    onClick: (index: number) => void
 }) {
     return (
         <div
+            onClick={() => onClick(index)}
             className={`
                 relative w-44 h-36 rounded-xl border-2 transition-all duration-150 flex flex-col items-center justify-center gap-2
                 ${isOver
@@ -78,8 +84,19 @@ function PlayerSlot({
                         {slot.nom ?? `Jugador ${slot.usuariId.slice(0, 4)}`}
                     </p>
                     <StatusBadge membre={slot} />
+                    <div
+                        className="text-slate-400 cursor-grab"
+                        draggable
+                        onDragStart={(event) => onDragStart(event, index)}
+                        title="Arrossega per canviar de posició"
+                    >
+                        <GripVertical className="w-4 h-4" />
+                    </div>
                     <button
-                        onClick={() => onRemove(index)}
+                        onClick={(event) => {
+                            event.stopPropagation()
+                            onRemove(index)
+                        }}
                         className="absolute top-1.5 right-1.5 text-slate-400 hover:text-red-500 transition-colors"
                         title="Remover"
                     >
@@ -115,27 +132,40 @@ export default function AlineacioPage() {
     const [overSlot, setOverSlot] = useState<number | null>(null)
     const [saved, setSaved] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
-    const dragRef = useRef<MembreEquip | null>(null)
+    const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null)
+    const dragRef = useRef<DragPayload | null>(null)
 
     const allMembres: MembreEquip[] = membresData?.membres ?? []
     // Available = not already in a slot
     const slottedIds = new Set(slots.filter(Boolean).map((s) => s!.usuariId))
     const available = allMembres.filter((m) => !slottedIds.has(m.usuariId))
+    const selectedPlayer = available.find((m) => m.usuariId === selectedPlayerId) ?? null
 
     const filledCount = slots.filter(Boolean).length
     const canSave = filledCount === 2 && !!equipId && !!partitId
 
     // Drag handlers
-    const handleDragStart = (e: React.DragEvent, membre: MembreEquip) => {
+    const handleDragStartFromList = (e: DragEvent, membre: MembreEquip) => {
         if (jugadorStatus(membre) === 'sin-segur') {
             e.preventDefault()
             return
         }
-        dragRef.current = membre
+        dragRef.current = { membre, fromSlotIndex: null }
         e.dataTransfer.effectAllowed = 'move'
     }
 
-    const handleDragOver = (e: React.DragEvent, slotIndex: number) => {
+    const handleDragStartFromSlot = (e: DragEvent, slotIndex: number) => {
+        const membre = slots[slotIndex]
+        if (!membre) {
+            e.preventDefault()
+            return
+        }
+
+        dragRef.current = { membre, fromSlotIndex: slotIndex }
+        e.dataTransfer.effectAllowed = 'move'
+    }
+
+    const handleDragOver = (e: DragEvent, slotIndex: number) => {
         e.preventDefault()
         e.dataTransfer.dropEffect = 'move'
         setOverSlot(slotIndex)
@@ -143,28 +173,44 @@ export default function AlineacioPage() {
 
     const handleDragLeave = () => setOverSlot(null)
 
-    const handleDrop = (e: React.DragEvent, slotIndex: number) => {
+    const handleDrop = (e: DragEvent, slotIndex: number) => {
         e.preventDefault()
         setOverSlot(null)
-        const membre = dragRef.current
-        if (!membre) return
+        const payload = dragRef.current
+        if (!payload) return
         dragRef.current = null
+        const { membre, fromSlotIndex } = payload
 
         setSlots((prev) => {
             const next: [Slot, Slot] = [...prev] as [Slot, Slot]
-            // If jugador is already in the other slot → swap
+
+            if (fromSlotIndex !== null) {
+                if (fromSlotIndex === slotIndex) {
+                    return prev
+                }
+
+                const displaced = next[slotIndex]
+                next[slotIndex] = membre
+                next[fromSlotIndex] = displaced
+
+                return next
+            }
+
             const otherIndex = slotIndex === 0 ? 1 : 0
             if (next[otherIndex]?.usuariId === membre.usuariId) {
-                // Swap: put the current slot occupant in the other slot
                 const displaced = next[slotIndex]
                 next[slotIndex] = membre
                 next[otherIndex] = displaced
             } else {
-                // Just place in this slot (previous occupant goes back to available)
                 next[slotIndex] = membre
             }
+
             return next
         })
+
+        if (selectedPlayerId === membre.usuariId) {
+            setSelectedPlayerId(null)
+        }
     }
 
     const handleRemove = (slotIndex: number) => {
@@ -173,6 +219,35 @@ export default function AlineacioPage() {
             next[slotIndex] = null
             return next
         })
+    }
+
+    const handleSelectPlayer = (membre: MembreEquip) => {
+        if (jugadorStatus(membre) === 'sin-segur') {
+            return
+        }
+
+        setSelectedPlayerId((prev) => (prev === membre.usuariId ? null : membre.usuariId))
+    }
+
+    const placeSelectedPlayerInSlot = (slotIndex: number) => {
+        if (!selectedPlayer) return
+
+        setSlots((prev) => {
+            const next: [Slot, Slot] = [...prev] as [Slot, Slot]
+            const otherIndex = slotIndex === 0 ? 1 : 0
+
+            if (next[otherIndex]?.usuariId === selectedPlayer.usuariId) {
+                const displaced = next[slotIndex]
+                next[slotIndex] = selectedPlayer
+                next[otherIndex] = displaced
+            } else {
+                next[slotIndex] = selectedPlayer
+            }
+
+            return next
+        })
+
+        setSelectedPlayerId(null)
     }
 
     const handleSave = async () => {
@@ -263,14 +338,19 @@ export default function AlineacioPage() {
                         </p>
                     ) : (
                         <div className="space-y-2 overflow-y-auto max-h-96">
+                            <p className="text-xs text-slate-500 mb-2">
+                                Arrossega o fes clic en un jugador i després en una posició.
+                            </p>
                             {available.map((membre) => {
                                 const status = jugadorStatus(membre)
                                 const disabled = status === 'sin-segur'
+                                const selected = selectedPlayerId === membre.usuariId
                                 return (
                                     <div
                                         key={membre.usuariId}
+                                        onClick={() => handleSelectPlayer(membre)}
                                         draggable={!disabled}
-                                        onDragStart={(e) => handleDragStart(e, membre)}
+                                        onDragStart={(e) => handleDragStartFromList(e, membre)}
                                         title={
                                             disabled ? 'Aquest jugador no té el segur pagat' :
                                                 status === 'lesionat' ? `Lesionat${membre.dataLesio ? ` fins ${membre.dataLesio}` : ''}` :
@@ -281,6 +361,7 @@ export default function AlineacioPage() {
                                             ${disabled
                                                 ? 'opacity-60 cursor-not-allowed bg-slate-50 border-slate-200 dark:bg-slate-700 dark:border-slate-600'
                                                 : 'cursor-grab active:cursor-grabbing bg-white border-slate-200 hover:border-blue-300 hover:shadow-sm dark:bg-slate-700 dark:border-slate-600'}
+                                            ${selected ? 'ring-2 ring-blue-400 border-blue-400' : ''}
                                             ${status === 'lesionat' ? 'border-orange-200 dark:border-orange-700' : ''}
                                         `}
                                     >
@@ -351,7 +432,14 @@ export default function AlineacioPage() {
                             onDragLeave={handleDragLeave}
                             onDrop={(e) => handleDrop(e, 0)}
                         >
-                            <PlayerSlot slot={slots[0]} index={0} isOver={overSlot === 0} onRemove={handleRemove} />
+                            <PlayerSlot
+                                slot={slots[0]}
+                                index={0}
+                                isOver={overSlot === 0}
+                                onRemove={handleRemove}
+                                onDragStart={handleDragStartFromSlot}
+                                onClick={placeSelectedPlayerInSlot}
+                            />
                         </div>
 
                         {/* Slot 2 (right side) */}
@@ -362,7 +450,14 @@ export default function AlineacioPage() {
                             onDragLeave={handleDragLeave}
                             onDrop={(e) => handleDrop(e, 1)}
                         >
-                            <PlayerSlot slot={slots[1]} index={1} isOver={overSlot === 1} onRemove={handleRemove} />
+                            <PlayerSlot
+                                slot={slots[1]}
+                                index={1}
+                                isOver={overSlot === 1}
+                                onRemove={handleRemove}
+                                onDragStart={handleDragStartFromSlot}
+                                onClick={placeSelectedPlayerInSlot}
+                            />
                         </div>
                     </div>
 
@@ -370,8 +465,8 @@ export default function AlineacioPage() {
                     <div className="mt-6 space-y-3">
                         <div className="flex items-center justify-center gap-2">
                             <span className={`inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full ${filledCount === 2
-                                    ? 'bg-green-100 text-green-700'
-                                    : 'bg-orange-100 text-orange-700'
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-orange-100 text-orange-700'
                                 }`}>
                                 {filledCount === 2 ? '✅' : '⏳'} Posicions ocupades: {filledCount}/2
                             </span>

@@ -68,13 +68,15 @@ Codi únic Laravel 12 (PHP 8.2) que s'executa com a múltiples processos indepen
 | **Lineup** | 8006 | Alineacions i convocatòries per partit. |
 | **Invitation** | 8007 | Invitacions d'equip entre usuaris. |
 | **Merchandise** | 8008 | Productes i compres amb Stripe. |
-| **Insurance** | — | Segurs obligatoris de jugadors amb Stripe. *(en curs)* |
+| **Insurance** | — | Segurs obligatoris de jugadors amb Stripe. |
+| **AdminWeb** | — | Gestió administrativa de lligues, equips, rondes i propostes de canvi de data. |
 
 ### Tecnologies Laravel
-- **Autenticació:** JWT (`tymon/jwt-auth`)
+- **Autenticació:** JWT (`tymon/jwt-auth`) amb suport per a rol exclusiu ARBITRE.
 - **Documentació API:** Swagger (`darkaonline/l5-swagger`)
-- **Pagaments:** `stripe/stripe-php`
+- **Pagaments:** `stripe/stripe-php` 
 - **Arquitectura interna:** Clean Architecture (Domain / Application / Infrastructure / Presentation)
+- **Patrons:** Repository Pattern, Mapper Pattern, DTO Pattern
 
 ---
 
@@ -118,19 +120,56 @@ Aplicació SPA desenvolupada amb **React 19 + Vite 7 + TypeScript**.
 
 ## 7. Rols d'usuari
 
-Un mateix usuari pot tenir més d'un rol simultàniament.
+Un mateix usuari pot tenir més d'un rol simultàniament, **excepte ARBITRE que és exclusiu**.
 
-| Rol | Capacitats principals |
-|---|---|
-| **Jugador** | Consultar partits, rànquing, pagar segur, comprar marxandatge |
-| **Entrenador** | Crear alineacions, convocar jugadors |
-| **Admin equip** | Gestionar membres, invitar jugadors, inscriure equip a lligues |
-| **Àrbitre** | Obrir i tancar actes de partit, registrar resultats |
-| **Admin web** | Gestió completa del sistema des del panell d'administració |
+| Rol | Capacitats principals | Notes |
+|---|---|---|
+| **Jugador** | Consultar partits, rànquing, pagar segur, comprar marxandatge | Únic rol amb accés a pagament de segur |
+| **Entrenador** | Crear alineacions, convocar jugadors | |
+| **Admin equip** | Gestionar membres, invitar jugadors, inscriure equip a lligues | |
+| **Àrbitre** | Obrir i tancar actes de partit, registrar resultats | ⚠️ Rol exclusiu — no pot combinar-se amb altres |
+| **Admin web** | Gestió completa del sistema des del panell d'administració | |
+
+### Rol ARBITRE exclusiu
+- A nivell de registre: si selecciona ARBITRE, automàticament es desactiven les altres opcions de rol.
+- Validació de doble capa (frontend + backend) per garantir que no es crei usuari ARBITRE amb altres rols.
+- Aplicat a través del sistema de `UsuariRol` amb flags `isActive`.
 
 ---
 
-## 8. Pagaments amb Stripe
+## 8. Noves funcionalitats implementades (Q1 2026)
+
+### 8.1 Restricció de pagament de segur (player-only)
+- Només els usuaris amb rol **JUGADOR** actiu poden crear o confirmar pagaments de segur.
+- Validació implementada a nivell de controller (`InsuranceController`):
+  - Endpoint `POST /seguros` retorna **403 Forbidden** si l'usuari no és JUGADOR.
+  - Endpoint `POST /seguros/confirm` retorna **403 Forbidden** si l'usuari no és JUGADOR.
+- Query d'accés: `UsuariRol::where('rol', 'JUGADOR')->where('isActive', true)`
+
+### 8.2 Rol ARBITRE exclusiu
+- **Frontend:** Selector de rols amb lògica d'exclusivitat — seleccionar ARBITRE desactiva altres rols automàticament.
+- **Backend:** Doble validació:
+  - `RegisterRequest::withValidator()` rebutja combinacions d'ARBITRE amb altres rols.
+  - `RegisterCommand::normalizeRoles()` força ARBITRE a ser l'únic rol si està present.
+
+### 8.3 Millora d'alineacions amb drag-and-drop avançat
+- **Interaccions suportades:**
+  1. **Drag desde llista disponible:** Arrossega un jugador → Deixa caure en slot lliure o ocupat → Assignació/reemplaçament.
+  2. **Drag entre slots:** Arrossega jugador des de slot ocupat → Deixa caure en altre slot → Intercanvi (swap).
+  3. **Click-to-assign:** Clica jugador (visual ring) → Clica slot → Assignació automàtica.
+- **Guards:** Els jugadors sense segur mostren estat "sin-segur" i no es poden seleccionar ni assignar.
+- **Millors visuals:** Nom de jugador seleccionat destaca amb anell blue, icona de "grip" en slots ocupats.
+
+### 8.4 Infraestructura AdminWeb (Layer pattern)
+- Nou mòdul `AdminWeb` amb abstracció de models i mappers:
+  - **Models:** `LeagueModel`, `TeamModel`, `RoundModel`, `MatchModel`, `RescheduleProposalModel`, `TeamUserModel`
+  - **Mappers:** `TeamMapper`, `RescheduleProposalMapper`
+  - **Repository:** `EloquentAdminLeaguePlannerRepository` actualitzat per utilitzar models encapsulats.
+- Permet gestió de propostes de canvi de data (`proposta_canvi_data_partits`) amb validació de disponibilitat d'equips.
+
+---
+
+## 9. Pagaments amb Stripe
 
 ### Segur obligatori
 - Necessari per participar en partits de lliga.
@@ -150,7 +189,7 @@ Usuari → Frontend → Gateway (8000) → svc_merchandise / svc_insurance
 
 ---
 
-## 9. Notificacions
+## 10. Notificacions
 
 - Notificacions internes associades a cada usuari (sense correu electrònic).
 - Mostrades en una campaneta al frontend.
@@ -158,7 +197,7 @@ Usuari → Frontend → Gateway (8000) → svc_merchandise / svc_insurance
 
 ---
 
-## 10. Desplegament amb Docker
+## 11. Desplegament amb Docker
 
 ```bash
 # Iniciar tots els serveis

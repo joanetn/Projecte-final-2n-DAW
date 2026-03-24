@@ -6,6 +6,27 @@ export interface EstadistiquesAdminWeb {
     arbitres: { total: number };
 }
 
+export interface GetUsuarisParams {
+    rol?: string;
+    actiu?: boolean;
+    cerca?: string;
+}
+
+export interface GetEquipsParams {
+    lligaId?: string;
+    actiu?: boolean;
+    cerca?: string;
+}
+
+export interface GetPartitsParams {
+    status?: string;
+    cerca?: string;
+}
+
+export interface GetPropostesReprogramacioParams {
+    status?: PropostaReprogramacioStatus;
+}
+
 export interface UsuariAdmin {
     id: string;
     nom: string;
@@ -32,8 +53,39 @@ export interface LligaAdmin {
     id: string;
     nom: string;
     categoria?: string;
+    dataInici?: string | null;
     isActive: boolean;
     totalEquips: number;
+    fixturesGenerats?: boolean;
+}
+
+export interface LligaEquipAdmin {
+    id: string;
+    nom: string;
+    categoria?: string;
+    isActive: boolean;
+}
+
+export interface LligaEquipsResponse {
+    lliga: {
+        id: string;
+        nom: string;
+        categoria?: string;
+        dataInici?: string | null;
+        fixturesGenerats: boolean;
+    };
+    equips: LligaEquipAdmin[];
+    total: number;
+}
+
+export interface GenerateLligaFixturesResponse {
+    lligaId: string;
+    lligaNom: string;
+    equipCount: number;
+    jornadesGenerades: number;
+    partitsGenerats: number;
+    rerandomized: boolean;
+    message: string;
 }
 
 export type PartitStatus = 'PENDENT' | 'PROGRAMAT' | 'EN_CURS' | 'COMPLETAT' | 'CANCEL·LAT';
@@ -128,4 +180,50 @@ export interface UpdatePartitData {
     hora?: string;
     ubicacio?: string;
     isActive?: boolean;
+}
+
+export type PropostaReprogramacioStatus = 'PENDENT' | 'ACCEPTADA' | 'REBUTJADA';
+export type RespostaPropostaAccio = 'ACCEPTAR' | 'RECHAZAR';
+
+export interface PropostaReprogramacio {
+    id: string;
+    partitId: string;
+    equipProposaId: string;
+    equipProposaNom?: string;
+    equipReceptorId: string;
+    equipReceptorNom?: string;
+    proposatPerUsuariId: string;
+    proposatPerUsuariNom?: string;
+    dataHoraProposada: string;
+    motiu?: string | null;
+    estat: PropostaReprogramacioStatus;
+    respostaText?: string | null;
+    respostaPerUsuariId?: string | null;
+    respostaPerUsuariNom?: string | null;
+    respostaAt?: string | null;
+    createdAt?: string | null;
+    partit?: {
+        id?: string;
+        localId?: string;
+        localNom?: string;
+        visitantId?: string;
+        visitantNom?: string;
+        dataHoraActual?: string | null;
+        status?: string;
+    };
+}
+
+export interface GetMevesPropostesResponse {
+    propostes: PropostaReprogramacio[];
+    total: number;
+}
+
+export interface CreatePropostaReprogramacioData {
+    dataHoraProposada: string;
+    motiu?: string;
+}
+
+export interface RespondrePropostaReprogramacioData {
+    accio: RespostaPropostaAccio;
+    respostaText?: string;
 }

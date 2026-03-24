@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { useGetInsurances } from '@/queries/insurance.queries'
@@ -123,15 +124,17 @@ function MisEquipsTab({ userId }: { userId: string }) {
                 <div key={equip.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
                     <div className="flex items-start justify-between gap-3">
                         <div className="flex-1">
-                            <p className="font-semibold text-slate-900 dark:text-white">{equip.nom}</p>
+                            <p className="font-semibold text-slate-900 dark:text-white">
+                                {equip.nom || `Equip #${equip.id.slice(0, 8)}`}
+                            </p>
                             {equip.categoria && <p className="text-xs text-slate-500 mt-0.5">{equip.categoria}</p>}
                             <div className="flex gap-2 mt-2 flex-wrap">
                                 {equip.lligaNom && <Badge variant="secondary" className="text-xs">{equip.lligaNom}</Badge>}
                                 {equip.rolMeu && <Badge className="text-xs bg-blue-100 text-blue-700">{equip.rolMeu}</Badge>}
                             </div>
                         </div>
-                        <Badge className={equip.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}>
-                            {equip.isActive ? 'Actiu' : 'Inactiu'}
+                        <Badge className={equip.isActive === false ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'}>
+                            {equip.isActive === false ? 'Inactiu' : 'Actiu'}
                         </Badge>
                     </div>
                 </div>
@@ -141,20 +144,46 @@ function MisEquipsTab({ userId }: { userId: string }) {
 }
 
 // ── Tab: Estadístiques ────────────────────────────────────────────────────────
-function EstadistiquesTab() {
+function EstadistiquesTab({
+    equipsCount,
+    partitsTotals,
+    partitsPendents,
+    invitacionsPendents,
+}: {
+    equipsCount: number
+    partitsTotals: number
+    partitsPendents: number
+    invitacionsPendents: number
+}) {
     return (
-        <div className="text-center py-12 text-slate-500">
-            <BarChart2 className="w-10 h-10 mx-auto mb-3 opacity-30" />
-            <p>Estadístiques disponibles pròximament.</p>
-            <p className="text-sm mt-1">Un cop participis en partits, veuràs les teves dades aquí.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Equips actius</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">{equipsCount}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Partits totals</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">{partitsTotals}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Partits pendents</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">{partitsPendents}</p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                <p className="text-xs text-slate-500 uppercase tracking-wide">Invitacions pendents</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mt-1">{invitacionsPendents}</p>
+            </div>
         </div>
     )
 }
 
 // ── Tab: Pròxims Partits ──────────────────────────────────────────────────────
-function PartitsTab({ userId }: { userId: string }) {
-    const { data, isLoading } = useGetPartits({ equipId: userId })
-    const partits = (data?.partits ?? []).filter((p: Partit) => p.status !== 'COMPLETAT')
+function PartitsTab({ equipIds }: { equipIds: string[] }) {
+    const { data, isLoading } = useGetPartits()
+    const partits = (data?.partits ?? [])
+        .filter((p: Partit) => equipIds.includes(p.localId) || equipIds.includes(p.visitantId))
+        .filter((p: Partit) => p.status !== 'COMPLETAT')
+        .sort((a, b) => new Date(a.dataHora).getTime() - new Date(b.dataHora).getTime())
 
     if (isLoading) return (
         <div className="flex items-center justify-center py-12">
@@ -287,12 +316,12 @@ function InvitacionsTab({ userId }: { userId: string }) {
                         <div className="flex gap-2">
                             <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white text-xs h-8"
                                 disabled={respondre.isPending}
-                                onClick={() => respondre.mutate({ id: inv.id, status: 'ACCEPTADA' })}>
+                                onClick={() => respondre.mutate({ id: inv.id, estat: 'acceptada' })}>
                                 <CheckCircle2 className="w-3.5 h-3.5 mr-1" />Acceptar
                             </Button>
                             <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 text-xs h-8"
                                 disabled={respondre.isPending}
-                                onClick={() => respondre.mutate({ id: inv.id, status: 'REBUTJADA' })}>
+                                onClick={() => respondre.mutate({ id: inv.id, estat: 'rebutjada' })}>
                                 <XCircle className="w-3.5 h-3.5 mr-1" />Rebutjar
                             </Button>
                         </div>
@@ -309,11 +338,24 @@ export default function DashboardJugador() {
     const { data: insurances } = useGetInsurances()
     const { data: equipsData } = useGetMeusEquips(user?.id ?? null)
     const { data: invitacionsData } = useGetInvitacionsPendents(user?.id ?? null)
+    const { data: partitsData } = useGetPartits()
 
     const activeInsurance = (insurances ?? []).find((ins: Insurance) =>
         !!ins.isActive && ins.pagat
     )
     const equips = equipsData?.equips ?? []
+    const equipIds = useMemo(() => equips.map((equip) => equip.id), [equips])
+    const partitsMeus = useMemo(
+        () => (partitsData?.partits ?? []).filter((p: Partit) => equipIds.includes(p.localId) || equipIds.includes(p.visitantId)),
+        [partitsData, equipIds]
+    )
+    const propersPartits = useMemo(
+        () => partitsMeus
+            .filter((p: Partit) => p.status !== 'COMPLETAT')
+            .sort((a, b) => new Date(a.dataHora).getTime() - new Date(b.dataHora).getTime()),
+        [partitsMeus]
+    )
+    const properPartit = propersPartits[0]
     const pendentCount = invitacionsData?.length ?? 0
 
     if (!user) return null
@@ -347,7 +389,13 @@ export default function DashboardJugador() {
                         <Calendar className="w-4 h-4 text-purple-600" />
                         <span className="text-xs font-medium text-slate-500 uppercase tracking-wide">Proper Partit</span>
                     </div>
-                    <p className="text-sm font-medium text-slate-700 dark:text-slate-300">—</p>
+                    {properPartit ? (
+                        <p className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                            {new Date(properPartit.dataHora).toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit' })}
+                        </p>
+                    ) : (
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">—</p>
+                    )}
                 </div>
                 <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
                     <div className="flex items-center gap-2 mb-2">
@@ -401,8 +449,8 @@ export default function DashboardJugador() {
 
                 <TabsContent value="dades"><MisDatosTab /></TabsContent>
                 <TabsContent value="equips"><MisEquipsTab userId={user.id} /></TabsContent>
-                <TabsContent value="stats"><EstadistiquesTab /></TabsContent>
-                <TabsContent value="partits"><PartitsTab userId={user.id} /></TabsContent>
+                <TabsContent value="stats"><EstadistiquesTab equipsCount={equips.length} partitsTotals={partitsMeus.length} partitsPendents={propersPartits.length} invitacionsPendents={pendentCount} /></TabsContent>
+                <TabsContent value="partits"><PartitsTab equipIds={equipIds} /></TabsContent>
                 <TabsContent value="segur"><SeguroTab /></TabsContent>
                 <TabsContent value="invitacions"><InvitacionsTab userId={user.id} /></TabsContent>
             </Tabs>

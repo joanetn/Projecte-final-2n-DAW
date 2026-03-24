@@ -2,6 +2,8 @@
 
 namespace App\Modules\AdminWeb\Presentation\Http\Controllers;
 
+use App\Enums\LeagueCategory;
+use App\Modules\AdminWeb\Application\Commands\AutoGenerateStartedLeagueFixturesCommand;
 use App\Models\Equip;
 use App\Models\EquipUsuari;
 use App\Models\Lliga;
@@ -9,6 +11,7 @@ use App\Models\Partit;
 use App\Models\Usuari;
 use App\Models\UsuariRol;
 use App\Models\Classificacio;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -17,6 +20,10 @@ use Illuminate\Validation\ValidationException;
 
 class AdminWebController extends Controller
 {
+    public function __construct(
+        private AutoGenerateStartedLeagueFixturesCommand $autoGenerateStartedLeagueFixturesCommand,
+    ) {}
+
     // ──────────────────────────────────────────────────────────────────────────
     // ESTADÍSTIQUES
     // ──────────────────────────────────────────────────────────────────────────
@@ -257,9 +264,11 @@ class AdminWebController extends Controller
     public function crearEquip(Request $request): JsonResponse
     {
         try {
+            $categoriaValues = implode(',', LeagueCategory::values());
+
             $request->validate([
                 'nom'      => 'required|string|max:100|unique:equips,nom',
-                'categoria' => 'nullable|string|max:50',
+                'categoria' => "nullable|string|in:{$categoriaValues}",
                 'lligaId'  => 'nullable|uuid|exists:lligues,id',
             ]);
 
@@ -298,9 +307,11 @@ class AdminWebController extends Controller
                 return $this->notFound('Equipo no encontrado');
             }
 
+            $categoriaValues = implode(',', LeagueCategory::values());
+
             $request->validate([
                 'nom'      => "nullable|string|max:100|unique:equips,nom,{$equipId}",
-                'categoria' => 'nullable|string|max:50',
+                'categoria' => "nullable|string|in:{$categoriaValues}",
                 'lligaId'  => 'nullable|uuid|exists:lligues,id',
                 'isActive' => 'nullable|boolean',
             ]);
@@ -379,7 +390,10 @@ class AdminWebController extends Controller
     public function llistarLligues(Request $request): JsonResponse
     {
         try {
-            $query = Lliga::withCount('equips as totalEquips');
+            $this->autoGenerateStartedLeagueFixturesCommand->execute();
+
+            $query = Lliga::withCount('equips as totalEquips')
+                ->withCount('jornadas as totalJornades');
 
             if ($cerca = $request->query('cerca')) {
                 $query->where('nom', 'like', "%{$cerca}%");
@@ -391,8 +405,10 @@ class AdminWebController extends Controller
                 'id'          => $l->id,
                 'nom'         => $l->nom,
                 'categoria'   => $l->categoria,
+                'dataInici'   => $l->dataInici ? Carbon::parse($l->dataInici)->toISOString() : null,
                 'isActive'    => $l->isActive,
                 'totalEquips' => $l->totalEquips ?? 0,
+                'fixturesGenerats' => ($l->totalJornades ?? 0) > 0,
             ]);
 
             return response()->json([

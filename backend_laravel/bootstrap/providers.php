@@ -12,4 +12,5 @@ return [
     App\Modules\Merchandise\Providers\MerchandiseServiceProvider::class,
     App\Modules\Insurance\Providers\InsuranceServiceProvider::class,
     App\Modules\Auth\Providers\AuthServiceProvider::class,
+    App\Modules\AdminWeb\Providers\AdminWebServiceProvider::class,
 ];

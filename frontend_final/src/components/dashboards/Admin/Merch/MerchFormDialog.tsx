@@ -22,6 +22,7 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
     const [form, setForm] = useState({
         nom: '',
         marca: '',
+        imageUrl: '',
         preu: '',
         stock: ''
     })
@@ -53,6 +54,7 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
             setForm({
                 nom: merch.nom || '',
                 marca: merch.marca || '',
+                imageUrl: merch.imageUrl || '',
                 preu: merch.preu ? String(merch.preu) : '',
                 stock: merch.stock ? String(merch.stock) : ''
             })
@@ -60,6 +62,7 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
             setForm({
                 nom: '',
                 marca: '',
+                imageUrl: '',
                 preu: '',
                 stock: ''
             })
@@ -105,6 +108,7 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
                 const data: UpdateMerchRequest = {}
                 if (form.nom !== merch.nom) data.nom = form.nom
                 if (form.marca !== merch.marca) data.marca = form.marca
+                if (form.imageUrl !== (merch.imageUrl || '')) data.imageUrl = form.imageUrl || undefined
                 if (form.preu !== String(merch.preu)) data.preu = Number(form.preu)
                 if (form.stock !== String(merch.stock)) data.stock = Number(form.stock)
 
@@ -113,6 +117,7 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
                 const data: CreateMerchRequest = {
                     nom: form.nom,
                     marca: form.marca,
+                    imageUrl: form.imageUrl || undefined,
                     preu: Number(form.preu),
                     stock: Number(form.stock)
                 }
@@ -185,6 +190,18 @@ export function MerchFormDialog({ open, onOpenChange, merch }: MerchFormDialogPr
                             aria-invalid={!!errors.preu}
                         />
                         {errors.preu && <p className="text-sm text-red-500">{errors.preu}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="imageUrl">Imatge (URL, opcional)</Label>
+                        <Input
+                            id="imageUrl"
+                            value={form.imageUrl}
+                            onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+                            placeholder="https://..."
+                            aria-invalid={!!errors.imageUrl}
+                        />
+                        {errors.imageUrl && <p className="text-sm text-red-500">{errors.imageUrl}</p>}
                     </div>
 
                     <div className="space-y-2">

@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { useGetLliguesAdmin } from '@/queries/adminWeb.queries'
+import { useGetLliguesAdmin, useGetEquipsLligaAdmin } from '@/queries/adminWeb.queries'
 import {
     useCrearLliga,
     useActualitzarLliga,
     useEliminarLliga,
+    useGenerarPartitsLliga,
 } from '@/mutations/adminWeb.mutations'
 import { usePermissions } from '@/hooks/usePermissions'
 import { AdminPermissions } from '@/types/permissions'
@@ -28,7 +29,108 @@ import {
     Pencil,
     Trash2,
     Trophy,
+    ListChecks,
+    Shuffle,
 } from 'lucide-react'
+
+function LligaEquipsDialog({
+    lliga,
+    open,
+    onClose,
+}: {
+    lliga: LligaAdmin | null
+    open: boolean
+    onClose: () => void
+}) {
+    const { data, isLoading } = useGetEquipsLligaAdmin(open && lliga ? lliga.id : null)
+
+    return (
+        <Dialog open={open} onOpenChange={onClose}>
+            <DialogContent className="bg-white dark:bg-slate-800">
+                <DialogHeader>
+                    <DialogTitle className="text-warm-900 dark:text-warm-100">
+                        Equips inscrits · {lliga?.nom}
+                    </DialogTitle>
+                </DialogHeader>
+
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-8">
+                        <Loader2 className="w-6 h-6 animate-spin text-warm-600 dark:text-warm-400" />
+                    </div>
+                ) : !data || data.equips.length === 0 ? (
+                    <p className="text-sm text-warm-600 dark:text-warm-300 py-2">No hi ha equips inscrits.</p>
+                ) : (
+                    <div className="space-y-2 max-h-64 overflow-y-auto py-2">
+                        {data.equips.map((equip) => (
+                            <div
+                                key={equip.id}
+                                className="flex items-center justify-between rounded-lg border border-warm-200 dark:border-slate-700 px-3 py-2"
+                            >
+                                <div>
+                                    <p className="text-sm font-medium text-warm-900 dark:text-warm-100">{equip.nom}</p>
+                                    <p className="text-xs text-warm-600 dark:text-warm-300">{equip.categoria ?? '—'}</p>
+                                </div>
+                                <Badge variant={equip.isActive ? 'default' : 'secondary'}>
+                                    {equip.isActive ? 'Actiu' : 'Inactiu'}
+                                </Badge>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                <DialogFooter>
+                    <Button variant="outline" onClick={onClose}>Tancar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+function GenerateFixturesDialog({
+    lliga,
+    open,
+    onClose,
+    onConfirm,
+    loading,
+}: {
+    lliga: LligaAdmin | null
+    open: boolean
+    onClose: () => void
+    onConfirm: (force: boolean) => void
+    loading: boolean
+}) {
+    if (!lliga) return null
+
+    const alreadyGenerated = !!lliga.fixturesGenerats
+
+    return (
+        <Dialog open={open} onOpenChange={onClose}>
+            <DialogContent className="bg-white dark:bg-slate-800">
+                <DialogHeader>
+                    <DialogTitle className="text-warm-900 dark:text-warm-100">
+                        {alreadyGenerated ? 'Re-randomitzar enfrontaments' : 'Generar enfrontaments'}
+                    </DialogTitle>
+                </DialogHeader>
+                <p className="text-warm-700 dark:text-warm-300 py-2 text-sm">
+                    {alreadyGenerated
+                        ? `La lliga ${lliga.nom} ja té partits generats. Vols regenerar tot el calendari (ida i tornada)?`
+                        : `Vols generar el calendari complet d'anada i tornada per la lliga ${lliga.nom}?`}
+                </p>
+                <DialogFooter>
+                    <Button variant="outline" onClick={onClose} disabled={loading}>Cancel·lar</Button>
+                    <Button
+                        onClick={() => onConfirm(alreadyGenerated)}
+                        disabled={loading}
+                        className="bg-warm-600 hover:bg-warm-700 text-white"
+                    >
+                        {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                        {alreadyGenerated ? 'Re-randomitzar' : 'Generar'}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 function LligaFormDialog({
     lliga,
@@ -143,9 +245,12 @@ export function LliguesTab() {
     const crearMutation = useCrearLliga()
     const actualitzarMutation = useActualitzarLliga()
     const eliminarMutation = useEliminarLliga()
+    const generarPartitsMutation = useGenerarPartitsLliga()
 
     const [formDialog, setFormDialog] = useState<LligaAdmin | 'new' | null>(null)
     const [deleteDialog, setDeleteDialog] = useState<LligaAdmin | null>(null)
+    const [teamsDialog, setTeamsDialog] = useState<LligaAdmin | null>(null)
+    const [generateDialog, setGenerateDialog] = useState<LligaAdmin | null>(null)
     const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
     const showNotification = (type: 'success' | 'error', message: string) => {
@@ -176,6 +281,18 @@ export function LliguesTab() {
             setDeleteDialog(null)
         } catch {
             showNotification('error', 'Error al eliminar la lliga')
+        }
+    }
+
+    const handleGenerateFixtures = async (force: boolean) => {
+        if (!generateDialog) return
+
+        try {
+            const result = await generarPartitsMutation.mutateAsync({ lligaId: generateDialog.id, force })
+            showNotification('success', result.message || 'Calendari generat correctament')
+            setGenerateDialog(null)
+        } catch {
+            showNotification('error', 'Error al generar els partits de la lliga')
         }
     }
 
@@ -240,6 +357,7 @@ export function LliguesTab() {
                                 <th className="text-left px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Nom</th>
                                 <th className="text-left px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Categoria</th>
                                 <th className="text-center px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Estat</th>
+                                <th className="text-center px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Fixtures</th>
                                 <th className="text-right px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Accions</th>
                             </tr>
                         </thead>
@@ -253,8 +371,33 @@ export function LliguesTab() {
                                             {lliga.isActive ? 'Activa' : 'Inactiva'}
                                         </Badge>
                                     </td>
+                                    <td className="px-4 py-3 text-center">
+                                        <Badge variant={lliga.fixturesGenerats ? 'default' : 'secondary'}>
+                                            {lliga.fixturesGenerats ? 'Generats' : 'Pendents'}
+                                        </Badge>
+                                    </td>
                                     <td className="px-4 py-3 text-right">
                                         <div className="flex justify-end gap-2">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => setTeamsDialog(lliga)}
+                                                className="border-warm-300 dark:border-slate-600"
+                                                title="Veure equips inscrits"
+                                            >
+                                                <ListChecks className="w-4 h-4" />
+                                            </Button>
+                                            {can(AdminPermissions.LLIGUES_EDIT) && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => setGenerateDialog(lliga)}
+                                                    className="border-warm-300 dark:border-slate-600"
+                                                    title={lliga.fixturesGenerats ? 'Re-randomitzar partits' : 'Generar partits'}
+                                                >
+                                                    <Shuffle className="w-4 h-4" />
+                                                </Button>
+                                            )}
                                             {can(AdminPermissions.LLIGUES_EDIT) && (
                                                 <Button
                                                     variant="outline"
@@ -297,6 +440,18 @@ export function LliguesTab() {
                 onClose={() => setDeleteDialog(null)}
                 onConfirm={handleDelete}
                 loading={eliminarMutation.isPending}
+            />
+            <LligaEquipsDialog
+                lliga={teamsDialog}
+                open={!!teamsDialog}
+                onClose={() => setTeamsDialog(null)}
+            />
+            <GenerateFixturesDialog
+                lliga={generateDialog}
+                open={!!generateDialog}
+                onClose={() => setGenerateDialog(null)}
+                onConfirm={handleGenerateFixtures}
+                loading={generarPartitsMutation.isPending}
             />
         </div>
     )

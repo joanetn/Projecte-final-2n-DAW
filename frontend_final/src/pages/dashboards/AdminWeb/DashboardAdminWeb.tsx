@@ -4,6 +4,7 @@ import { UsuarisTab } from '@/components/dashboards/adminWeb/UsuarisTab'
 import { EquipsTab } from '@/components/dashboards/adminWeb/EquipsTab'
 import { LliguesTab } from '@/components/dashboards/adminWeb/LliguesTab'
 import { PartitsTab } from '@/components/dashboards/adminWeb/PartitsTab'
+import { ReprogramacionsTab } from '@/components/dashboards/adminWeb/ReprogramacionsTab'
 import { ArbitresTab } from '@/components/dashboards/adminWeb/ArbitresTab'
 import { ClassificacioTab } from '@/components/dashboards/adminWeb/ClassificacioTab'
 import { usePermissions } from '@/hooks/usePermissions'
@@ -62,6 +63,12 @@ const DashboardAdminWeb = () => {
                                 📅 Partits
                             </TabsTrigger>
                             <TabsTrigger
+                                value="reprogramacions"
+                                className="text-warm-700 dark:text-warm-300 data-[state=active]:text-warm-900 dark:data-[state=active]:text-warm-100 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700"
+                            >
+                                🔁 Reprogramacions
+                            </TabsTrigger>
+                            <TabsTrigger
                                 value="arbitres"
                                 className="text-warm-700 dark:text-warm-300 data-[state=active]:text-warm-900 dark:data-[state=active]:text-warm-100 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700"
                             >
@@ -91,6 +98,9 @@ const DashboardAdminWeb = () => {
                         </TabsContent>
                         <TabsContent value="partits" className="p-6">
                             <PartitsTab />
+                        </TabsContent>
+                        <TabsContent value="reprogramacions" className="p-6">
+                            <ReprogramacionsTab />
                         </TabsContent>
                         <TabsContent value="arbitres" className="p-6">
                             <ArbitresTab />

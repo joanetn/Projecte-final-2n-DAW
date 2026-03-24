@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Trash2, Loader2 } from 'lucide-react'
+import { Trash2, Loader2, Shirt } from 'lucide-react'
 
 import { useAuth } from '@/context/AuthContext'
 import { useGetMyCart } from '@/queries/cart.queries'
 import {
     useClearCart,
+    useConfirmCartCheckoutSession,
     useCreateCartCheckoutSession,
     useRemoveCartItem,
     useUpdateCartItemQuantity,
@@ -24,6 +25,7 @@ export default function CartPage() {
     const updateQuantityMutation = useUpdateCartItemQuantity()
     const clearCartMutation = useClearCart()
     const createCheckoutSessionMutation = useCreateCartCheckoutSession()
+    const confirmCheckoutSessionMutation = useConfirmCartCheckoutSession()
 
     const [isCheckingOut, setIsCheckingOut] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -31,6 +33,23 @@ export default function CartPage() {
     const items = cart?.items ?? []
     const total = cart?.totalAmount ?? 0
     const checkoutStatus = searchParams.get('checkout')
+    const checkoutSessionId = searchParams.get('session_id')
+    const confirmedSessionRef = useRef<string | null>(null)
+
+    useEffect(() => {
+        if (checkoutStatus !== 'success' || !checkoutSessionId || !user) return
+        if (confirmedSessionRef.current === checkoutSessionId) return
+
+        confirmedSessionRef.current = checkoutSessionId
+        setError(null)
+
+        void confirmCheckoutSessionMutation
+            .mutateAsync({ sessionId: checkoutSessionId })
+            .catch((e) => {
+                const msg = e instanceof Error ? e.message : 'No s\'ha pogut confirmar la compra amb Stripe'
+                setError(msg)
+            })
+    }, [checkoutStatus, checkoutSessionId, user, confirmCheckoutSessionMutation])
 
     const handleQuantityChange = async (itemId: string, nextValue: number) => {
         if (!Number.isFinite(nextValue) || nextValue < 1) return
@@ -64,7 +83,7 @@ export default function CartPage() {
             const baseUrl = window.location.origin
 
             const checkoutSession = await createCheckoutSessionMutation.mutateAsync({
-                successUrl: `${baseUrl}/carrito?checkout=success`,
+                successUrl: `${baseUrl}/carrito?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
                 cancelUrl: `${baseUrl}/carrito?checkout=cancel`,
             })
 
@@ -112,7 +131,9 @@ export default function CartPage() {
 
                 {checkoutStatus === 'success' && (
                     <div className="mb-6 rounded-lg bg-green-50 p-4 text-green-800 dark:bg-green-950/20 dark:text-green-300">
-                        Pago completado. Estamos actualizando tu carrito y tus compras.
+                        {confirmCheckoutSessionMutation.isPending
+                            ? 'Pago completado. Confirmando compra...'
+                            : 'Pago completado. Estamos actualizando tu carrito y tus compras.'}
                     </div>
                 )}
 
@@ -147,16 +168,29 @@ export default function CartPage() {
                                     key={item.id}
                                     className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 border-b last:border-b-0 border-slate-100 dark:border-slate-700"
                                 >
-                                    <div className="flex-1">
-                                        <p className="font-semibold text-slate-900 dark:text-white">
-                                            {item.merch?.nom ?? item.merchId}
-                                        </p>
-                                        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                                            {item.merch?.marca ?? 'Sin marca'}
-                                        </p>
-                                        <p className="text-sm font-semibold text-warm-700 dark:text-warm-300 mt-2">
-                                            {(item.merch?.preu ?? 0).toFixed(2)} €
-                                        </p>
+                                    <div className="flex items-center gap-3 flex-1">
+                                        {item.merch?.imageUrl ? (
+                                            <img
+                                                src={item.merch.imageUrl}
+                                                alt={item.merch?.nom ?? 'Merch'}
+                                                className="w-14 h-14 rounded-md object-cover border border-warm-100 dark:border-slate-700"
+                                            />
+                                        ) : (
+                                            <div className="w-14 h-14 rounded-md border border-warm-100 dark:border-slate-700 bg-warm-50 dark:bg-slate-700/50 flex items-center justify-center text-warm-500 dark:text-warm-300">
+                                                <Shirt className="w-5 h-5" />
+                                            </div>
+                                        )}
+                                        <div className="flex-1">
+                                            <p className="font-semibold text-slate-900 dark:text-white">
+                                                {item.merch?.nom ?? item.merchId}
+                                            </p>
+                                            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                                                {item.merch?.marca ?? 'Sin marca'}
+                                            </p>
+                                            <p className="text-sm font-semibold text-warm-700 dark:text-warm-300 mt-2">
+                                                {(item.merch?.preu ?? 0).toFixed(2)} €
+                                            </p>
+                                        </div>
                                     </div>
 
                                     <div className="flex items-center gap-3">
@@ -198,14 +232,14 @@ export default function CartPage() {
                             <Button
                                 variant="outline"
                                 onClick={handleClearCart}
-                                disabled={isCheckingOut || clearCartMutation.isPending || createCheckoutSessionMutation.isPending}
+                                disabled={isCheckingOut || clearCartMutation.isPending || createCheckoutSessionMutation.isPending || confirmCheckoutSessionMutation.isPending}
                                 className="flex-1"
                             >
                                 Vaciar carrito
                             </Button>
                             <Button
                                 onClick={handleCheckout}
-                                disabled={isCheckingOut || items.length === 0 || createCheckoutSessionMutation.isPending}
+                                disabled={isCheckingOut || items.length === 0 || createCheckoutSessionMutation.isPending || confirmCheckoutSessionMutation.isPending}
                                 className="flex-1 bg-warm-600 hover:bg-warm-700 text-white"
                             >
                                 {isCheckingOut || createCheckoutSessionMutation.isPending ? (

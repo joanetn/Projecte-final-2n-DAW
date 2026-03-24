@@ -34,7 +34,11 @@ class UserDetailResource extends JsonResource
                     'isActive' => $equipUsuari['isActive'] ?? $equipUsuari->isActive,
                 ];
             })->toArray(),
-            'compras' => collect($this->compras ?? [])->map(function ($compra) {
+            'compras' => collect($this->compras ?? [])->sortByDesc(function ($compra) {
+                return data_get($compra, 'createdAt')
+                    ?? data_get($compra, 'created_at')
+                    ?? data_get($compra, 'createdat');
+            })->values()->map(function ($compra) {
                 return [
                     'id' => $compra['id'] ?? $compra->id,
                     'merchId' => $compra['merchId'] ?? $compra->merchId,
@@ -42,6 +46,7 @@ class UserDetailResource extends JsonResource
                     'total' => $compra['total'] ?? $compra->total,
                     'pagat' => $compra['pagat'] ?? $compra->pagat,
                     'status' => $compra['status'] ?? $compra->status,
+                    'createdAt' => $compra['createdAt'] ?? $compra->createdAt ?? $compra->created_at ?? null,
                 ];
             })->toArray(),
             'seguros' => collect($this->seguros ?? [])->map(function ($seguro) {

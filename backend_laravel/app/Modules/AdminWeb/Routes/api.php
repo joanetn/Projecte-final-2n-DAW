@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Modules\AdminWeb\Presentation\Http\Controllers\AdminWebController;
+use App\Modules\AdminWeb\Presentation\Http\Controllers\AdminLeaguePlannerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,11 @@ Route::middleware(['jwt.auth', 'checkRole:ADMIN_WEB'])
         Route::patch('/lligues/{lligaId}', [AdminWebController::class, 'actualitzarLliga'])
             ->middleware('checkPermission:admin.lligues.edit');
 
+        Route::get('/lligues/{lligaId}/equips', [AdminLeaguePlannerController::class, 'equipsLliga']);
+
+        Route::post('/lligues/{lligaId}/generar-partits', [AdminLeaguePlannerController::class, 'generarPartitsLliga'])
+            ->middleware('checkPermission:admin.lligues.edit');
+
         Route::delete('/lligues/{lligaId}', [AdminWebController::class, 'eliminarLliga'])
             ->middleware('checkPermission:admin.lligues.delete');
 
@@ -82,3 +88,9 @@ Route::middleware(['jwt.auth', 'checkRole:ADMIN_WEB'])
         // Classificacions
         Route::get('/classificacions', [AdminWebController::class, 'classificacions']);
     });
+
+Route::middleware(['jwt.auth'])->group(function () {
+    Route::get('/admin-web/propostes-reprogramacio/me', [AdminLeaguePlannerController::class, 'mevesPropostes']);
+    Route::post('/admin-web/partits/{partitId}/propostes-reprogramacio', [AdminLeaguePlannerController::class, 'enviarPropostaCanviData']);
+    Route::patch('/admin-web/propostes-reprogramacio/{propostaId}/respondre', [AdminLeaguePlannerController::class, 'respondreProposta']);
+});

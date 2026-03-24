@@ -74,6 +74,7 @@ class EloquentInvitacioEquipRepository implements InvitacioEquipRepositoryInterf
         $models = $this->model
             ->where('equipId', $equipId)
             ->where('isActive', true)
+            ->with(['equip', 'usuari'])
             ->orderBy('created_at', 'desc')
             ->get();
 

@@ -44,14 +44,18 @@ const AppRouter = () => {
                     <Route
                         path="/dashboardJugador"
                         element={
-                            <RolGuard allowedRoles={["JUGADOR", "ENTRENADOR", "ARBITRE", "ADMIN_WEB"]}>
+                            <RolGuard allowedRoles={["JUGADOR", "ADMIN_WEB"]}>
                                 <DashboardJugador />
                             </RolGuard>
                         }
                     />
                     <Route
                         path="/dashboardAdminClub"
-                        element={<DashboardAdminClub />}
+                        element={
+                            <RolGuard allowedRoles={["ADMIN_CLUB", "ADMIN_WEB", "ENTRENADOR"]}>
+                                <DashboardAdminClub />
+                            </RolGuard>
+                        }
                     />
                     <Route
                         path="/dashboardArbitre"

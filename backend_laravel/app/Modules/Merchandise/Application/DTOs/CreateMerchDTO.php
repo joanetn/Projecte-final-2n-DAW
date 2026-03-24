@@ -7,6 +7,7 @@ class CreateMerchDTO
     public function __construct(
         public readonly string $nom,
         public readonly ?string $marca,
+        public readonly ?string $imageUrl,
         public readonly ?float $preu,
         public readonly ?int $stock,
     ) {}
@@ -16,6 +17,7 @@ class CreateMerchDTO
         return new self(
             nom: $data['nom'],
             marca: $data['marca'] ?? null,
+            imageUrl: $data['imageUrl'] ?? null,
             preu: $data['preu'] ?? null,
             stock: $data['stock'] ?? null,
         );

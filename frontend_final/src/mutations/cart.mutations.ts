@@ -2,12 +2,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     addCartItem,
     clearCart,
+    confirmCartCheckoutSession,
     createCartCheckoutSession,
     removeCartItem,
     updateCartItemQuantity,
 } from '@/services/cart.service';
 import type {
     AddCartItemRequest,
+    ConfirmCartCheckoutSessionRequest,
     CreateCartCheckoutSessionRequest,
     UpdateCartItemQuantityRequest,
 } from '@/types/cart';
@@ -68,6 +70,17 @@ export const useCreateCartCheckoutSession = () => {
 
     return useMutation({
         mutationFn: (payload: CreateCartCheckoutSessionRequest) => createCartCheckoutSession(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: CART_KEYS.me });
+        },
+    });
+};
+
+export const useConfirmCartCheckoutSession = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (payload: ConfirmCartCheckoutSessionRequest) => confirmCartCheckoutSession(payload),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: CART_KEYS.me });
         },

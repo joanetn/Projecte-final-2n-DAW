@@ -1,8 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
-import { useGetMeusEquips } from '@/queries/club.queries'
+import {
+    useGetEquipMembres,
+    useGetLligaDetail,
+    useGetLliguesDisponibles,
+    useGetMeusEquips,
+} from '@/queries/club.queries'
 import { useGetPartits } from '@/queries/partit.queries'
+import { useGetUsers } from '@/queries/user.queries'
+import { useCrearInvitacioEquip, useGetInvitacionsEquip } from '@/queries/alineacio.queries'
+import { useInscriureEquipALliga } from '@/mutations/club.mutations'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import {
@@ -16,10 +24,13 @@ import {
     AlertTriangle,
     Loader2,
     ChevronDown,
-    Plus,
+    Bell,
+    UserPlus,
 } from 'lucide-react'
+import type { Invitacio } from '@/services/invitacio.service'
 import type { Partit } from '@/services/partit.service'
-import type { Equip } from '@/types/club'
+import type { Equip, Lliga } from '@/types/club'
+import type { User } from '@/types/users'
 
 // ─── Helper ────────────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
@@ -46,12 +57,63 @@ function formatTime(iso: string) {
     return new Date(iso).toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' })
 }
 
+function hasRole(user: User | undefined, role: string) {
+    if (!user) return false
+
+    return (user.rols ?? []).some(
+        (rol) => rol.isActive && (rol.rol ?? '').toUpperCase() === role.toUpperCase(),
+    )
+}
+
+function InvitationStatusBadge({ estat }: { estat: Invitacio['estat'] }) {
+    const map: Record<string, { label: string; cls: string }> = {
+        pendent: { label: 'Pendent', cls: 'bg-orange-100 text-orange-800' },
+        acceptada: { label: 'Acceptada', cls: 'bg-green-100 text-green-800' },
+        rebutjada: { label: 'Rebutjada', cls: 'bg-red-100 text-red-800' },
+        cancelada: { label: 'Cancelada', cls: 'bg-slate-200 text-slate-700' },
+    }
+
+    const status = map[estat] ?? map.pendent
+
+    return (
+        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${status.cls}`}>
+            {status.label}
+        </span>
+    )
+}
+
 // ─── Tab: Plantilla ───────────────────────────────────────────────────────────
 function PlantillaTab({ equip }: { equip: Equip | null }) {
+    const { data: membresData, isLoading } = useGetEquipMembres(equip?.id ?? null)
+    const { data: users = [] } = useGetUsers()
+
+    const usersById = useMemo(
+        () => new Map(users.map((user) => [user.id, user])),
+        [users],
+    )
+
+    const membres = useMemo(() => {
+        return (membresData?.membres ?? []).map((membre) => {
+            const usuari = usersById.get(membre.usuariId)
+
+            return {
+                ...membre,
+                nom: membre.nom ?? usuari?.nom ?? `Usuari #${membre.usuariId.slice(0, 8)}`,
+                email: membre.email ?? usuari?.email ?? '—',
+            }
+        })
+    }, [membresData, usersById])
+
     if (!equip) return (
         <div className="text-center py-12 text-slate-500">
             <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
             <p>Selecciona un equip per veure la plantilla.</p>
+        </div>
+    )
+
+    if (isLoading) return (
+        <div className="flex items-center justify-center h-40">
+            <Loader2 className="w-7 h-7 animate-spin text-green-700" />
         </div>
     )
 
@@ -65,32 +127,50 @@ function PlantillaTab({ equip }: { equip: Equip | null }) {
                 </div>
             </div>
 
-            {/* Accions */}
-            <div className="flex flex-wrap gap-2">
-                <Button size="sm" className="bg-green-700 hover:bg-green-800 text-white text-xs gap-1">
-                    <Plus className="w-3.5 h-3.5" /> Afegir Jugador
-                </Button>
-            </div>
+            <p className="text-xs text-slate-500">
+                Les altes de jugadors i entrenadors es gestionen des del tab d&apos;invitacions.
+            </p>
 
-            {/* Taula placeholder */}
             <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
                 <table className="w-full text-sm">
                     <thead className="bg-slate-50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300">
                         <tr>
                             <th className="text-left p-4 font-medium">#</th>
                             <th className="text-left p-4 font-medium">Nom</th>
+                            <th className="text-left p-4 font-medium">Email</th>
                             <th className="text-left p-4 font-medium">Posició</th>
                             <th className="text-left p-4 font-medium">Segur</th>
                             <th className="text-left p-4 font-medium">Estat</th>
-                            <th className="text-left p-4 font-medium">Accions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colSpan={6} className="p-8 text-center text-slate-400">
-                                Plantilla de {equip.nom} (implementació amb /api/clubs/&#123;id&#125;/equips/&#123;equipId&#125;/membres)
-                            </td>
-                        </tr>
+                        {!membres.length ? (
+                            <tr>
+                                <td colSpan={6} className="p-8 text-center text-slate-400">
+                                    Encara no hi ha membres en la plantilla de {equip.nom}.
+                                </td>
+                            </tr>
+                        ) : (
+                            membres.map((membre, index) => (
+                                <tr key={membre.id} className="border-t border-slate-100 dark:border-slate-700/60">
+                                    <td className="p-4 text-slate-500">{index + 1}</td>
+                                    <td className="p-4 font-medium text-slate-800 dark:text-slate-100">{membre.nom}</td>
+                                    <td className="p-4 text-slate-600 dark:text-slate-300">{membre.email ?? '—'}</td>
+                                    <td className="p-4 capitalize text-slate-600 dark:text-slate-300">{membre.rolEquip ?? '—'}</td>
+                                    <td className="p-4 text-slate-600 dark:text-slate-300">
+                                        {membre.teSeguir === true ? 'Sí' : membre.teSeguir === false ? 'No' : '—'}
+                                    </td>
+                                    <td className="p-4">
+                                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${membre.isActive === false
+                                            ? 'bg-slate-200 text-slate-700'
+                                            : 'bg-green-100 text-green-800'
+                                            }`}>
+                                            {membre.isActive === false ? 'Inactiu' : 'Actiu'}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -120,10 +200,10 @@ function FutursPartitsTab({ equip }: { equip: Equip | null }) {
 
     return (
         <div className="space-y-4">
-            <div className="flex justify-end">
-                <Button size="sm" className="bg-green-700 hover:bg-green-800 text-white text-xs gap-1">
-                    <Plus className="w-3.5 h-3.5" /> Crear Partit
-                </Button>
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+                <p className="text-xs text-blue-700 dark:text-blue-300">
+                    Els partits els crea l&apos;administració web. Aquí pots consultar els partits del teu equip.
+                </p>
             </div>
             {!partits.length ? (
                 <div className="text-center py-12 text-slate-500">
@@ -163,6 +243,407 @@ function FutursPartitsTab({ equip }: { equip: Equip | null }) {
                                 Detalls
                             </Button>
                         </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+// ─── Tab: Invitacions ────────────────────────────────────────────────────────
+function InvitacionsTab({ equip, authUserId }: { equip: Equip | null; authUserId: string }) {
+    const { data: users = [], isLoading: usersLoading } = useGetUsers()
+    const { data: membresData } = useGetEquipMembres(equip?.id ?? null)
+    const { data: invitacions = [], isLoading: invitacionsLoading } = useGetInvitacionsEquip(equip?.id ?? null)
+    const crearInvitacio = useCrearInvitacioEquip(equip?.id ?? '')
+
+    const [query, setQuery] = useState('')
+    const [selectedUserId, setSelectedUserId] = useState('')
+    const [missatge, setMissatge] = useState('')
+    const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+    const membreIds = useMemo(
+        () => new Set((membresData?.membres ?? []).map((membre) => membre.usuariId)),
+        [membresData],
+    )
+
+    const candidates = useMemo(() => {
+        const normalizedQuery = query.trim().toLowerCase()
+
+        return users.filter((candidate) => {
+            const isJugadorOrEntrenador = hasRole(candidate, 'JUGADOR') || hasRole(candidate, 'ENTRENADOR')
+            if (!isJugadorOrEntrenador) return false
+            if (candidate.id === authUserId) return false
+            if (membreIds.has(candidate.id)) return false
+
+            if (!normalizedQuery) return true
+
+            const nom = (candidate.nom ?? '').toLowerCase()
+            const email = (candidate.email ?? '').toLowerCase()
+
+            return nom.includes(normalizedQuery) || email.includes(normalizedQuery)
+        })
+    }, [authUserId, membreIds, query, users])
+
+    const sortedInvitacions = useMemo(() => {
+        return [...invitacions].sort((a, b) => {
+            if (a.estat === 'pendent' && b.estat !== 'pendent') return -1
+            if (a.estat !== 'pendent' && b.estat === 'pendent') return 1
+            return new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()
+        })
+    }, [invitacions])
+
+    const handleSendInvitation = async () => {
+        if (!equip || !selectedUserId) {
+            setFeedback({ type: 'error', text: 'Selecciona un destinatari per enviar la invitació.' })
+            return
+        }
+
+        try {
+            await crearInvitacio.mutateAsync({
+                usuariId: selectedUserId,
+                missatge: missatge.trim() || undefined,
+            })
+
+            setFeedback({ type: 'success', text: 'Invitació enviada correctament.' })
+            setSelectedUserId('')
+            setMissatge('')
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'No s\'ha pogut enviar la invitació.'
+            setFeedback({ type: 'error', text: message })
+        }
+    }
+
+    if (!equip) return (
+        <div className="text-center py-12 text-slate-500">
+            <Bell className="w-12 h-12 mx-auto mb-3 opacity-30" />
+            <p>Selecciona un equip per gestionar invitacions.</p>
+        </div>
+    )
+
+    return (
+        <div className="space-y-4">
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-sm">Enviar invitació</h3>
+
+                {feedback && (
+                    <div
+                        className={`rounded-lg px-3 py-2 text-xs ${feedback.type === 'success'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-700'
+                            }`}
+                    >
+                        {feedback.text}
+                    </div>
+                )}
+
+                <div className="grid sm:grid-cols-2 gap-3">
+                    <input
+                        type="text"
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        placeholder="Cerca per nom o email"
+                        className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
+                    />
+
+                    <select
+                        value={selectedUserId}
+                        onChange={(event) => setSelectedUserId(event.target.value)}
+                        className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
+                    >
+                        <option value="">Selecciona destinatari</option>
+                        {candidates.map((candidate) => (
+                            <option key={candidate.id} value={candidate.id}>
+                                {candidate.nom} · {hasRole(candidate, 'ENTRENADOR') ? 'Entrenador' : 'Jugador'}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <textarea
+                    value={missatge}
+                    onChange={(event) => setMissatge(event.target.value)}
+                    placeholder="Missatge opcional per a la invitació"
+                    rows={2}
+                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
+                />
+
+                <div className="flex justify-end">
+                    <Button
+                        size="sm"
+                        className="bg-green-700 hover:bg-green-800 text-white text-xs"
+                        disabled={usersLoading || crearInvitacio.isPending || !selectedUserId}
+                        onClick={handleSendInvitation}
+                    >
+                        {crearInvitacio.isPending ? (
+                            <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+                        ) : (
+                            <UserPlus className="w-3.5 h-3.5 mr-1" />
+                        )}
+                        Enviar invitació
+                    </Button>
+                </div>
+
+                {!usersLoading && candidates.length === 0 && (
+                    <p className="text-xs text-slate-500">No hi ha jugadors o entrenadors disponibles amb aquest filtre.</p>
+                )}
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-sm">Historial d&apos;invitacions de l&apos;equip</h3>
+
+                {invitacionsLoading ? (
+                    <div className="flex items-center justify-center h-24">
+                        <Loader2 className="w-6 h-6 animate-spin text-green-700" />
+                    </div>
+                ) : sortedInvitacions.length === 0 ? (
+                    <p className="text-sm text-slate-500">Aquest equip encara no té invitacions registrades.</p>
+                ) : (
+                    <div className="space-y-2">
+                        {sortedInvitacions.map((invitation) => (
+                            <div
+                                key={invitation.id}
+                                className="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 flex items-center justify-between gap-2"
+                            >
+                                <div>
+                                    <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                                        {invitation.usuariNom ?? `Usuari #${invitation.usuariId}`}
+                                    </p>
+                                    {invitation.missatge && (
+                                        <p className="text-xs text-slate-500 mt-0.5">{invitation.missatge}</p>
+                                    )}
+                                    {invitation.createdAt && (
+                                        <p className="text-xs text-slate-400 mt-0.5">
+                                            {new Date(invitation.createdAt).toLocaleDateString('ca-ES')}
+                                        </p>
+                                    )}
+                                </div>
+                                <InvitationStatusBadge estat={invitation.estat} />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}
+
+// ─── Tab: Lligues ────────────────────────────────────────────────────────────
+function LliguesTab({ equip }: { equip: Equip | null }) {
+    const { data: lligues = [], isLoading } = useGetLliguesDisponibles(equip?.categoria ?? null)
+    const inscriureMutation = useInscriureEquipALliga()
+
+    const [selectedLligaId, setSelectedLligaId] = useState<string | null>(null)
+    const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+    useEffect(() => {
+        setSelectedLligaId(null)
+        setFeedback(null)
+    }, [equip?.id])
+
+    useEffect(() => {
+        if (!lligues.length) {
+            setSelectedLligaId(null)
+            return
+        }
+
+        if (!selectedLligaId || !lligues.some((lliga) => lliga.id === selectedLligaId)) {
+            setSelectedLligaId(lligues[0].id)
+        }
+    }, [lligues, selectedLligaId])
+
+    const { data: lligaDetail, isLoading: lligaDetailLoading } = useGetLligaDetail(selectedLligaId)
+
+    const handleInscripcio = async (lliga: Lliga) => {
+        if (!equip) return
+
+        if (!equip.clubId) {
+            setFeedback({
+                type: 'error',
+                text: 'No s\'ha pogut determinar el club de l\'equip. Recarrega i torna-ho a provar.',
+            })
+            return
+        }
+
+        try {
+            await inscriureMutation.mutateAsync({
+                clubId: equip.clubId,
+                equipId: equip.id,
+                lligaId: lliga.id,
+            })
+
+            setFeedback({ type: 'success', text: `Equip inscrit a ${lliga.nom} correctament.` })
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'No s\'ha pogut completar la inscripció.'
+            setFeedback({ type: 'error', text: message })
+        }
+    }
+
+    if (!equip) return (
+        <div className="text-center py-12 text-slate-500">
+            <Trophy className="w-12 h-12 mx-auto mb-3 opacity-30" />
+            <p>Selecciona un equip per veure les lligues disponibles.</p>
+        </div>
+    )
+
+    return (
+        <div className="space-y-4">
+            {feedback && (
+                <div
+                    className={`rounded-lg px-3 py-2 text-xs ${feedback.type === 'success'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-700'
+                        }`}
+                >
+                    {feedback.text}
+                </div>
+            )}
+
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3">
+                    Lligues disponibles per categoria ({equip.categoria ?? 'sense categoria'})
+                </h3>
+
+                {isLoading ? (
+                    <div className="flex items-center justify-center h-24">
+                        <Loader2 className="w-6 h-6 animate-spin text-green-700" />
+                    </div>
+                ) : lligues.length === 0 ? (
+                    <p className="text-sm text-slate-500">No hi ha lligues disponibles per aquesta categoria.</p>
+                ) : (
+                    <div className="space-y-2">
+                        {lligues.map((lliga) => {
+                            const isSelected = selectedLligaId === lliga.id
+                            const isSameLeague = equip.lligaId === lliga.id
+
+                            return (
+                                <div
+                                    key={lliga.id}
+                                    className={`rounded-lg border px-3 py-3 flex items-center justify-between gap-3 ${isSelected
+                                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                                        : 'border-slate-200 dark:border-slate-700'
+                                        }`}
+                                >
+                                    <button
+                                        type="button"
+                                        onClick={() => setSelectedLligaId(lliga.id)}
+                                        className="text-left flex-1"
+                                    >
+                                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{lliga.nom}</p>
+                                        <p className="text-xs text-slate-500 mt-0.5">Categoria: {lliga.categoria ?? '—'}</p>
+                                    </button>
+
+                                    <Button
+                                        size="sm"
+                                        variant={isSameLeague ? 'outline' : 'default'}
+                                        className={isSameLeague ? 'text-xs' : 'bg-green-700 hover:bg-green-800 text-white text-xs'}
+                                        disabled={isSameLeague || inscriureMutation.isPending || !equip.clubId}
+                                        onClick={() => handleInscripcio(lliga)}
+                                    >
+                                        {isSameLeague ? 'Ja inscrits' : 'Inscriure equip'}
+                                    </Button>
+                                </div>
+                            )
+                        })}
+                    </div>
+                )}
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-3">Equips de la lliga seleccionada</h3>
+
+                {!selectedLligaId ? (
+                    <p className="text-sm text-slate-500">Selecciona una lliga per veure els equips.</p>
+                ) : lligaDetailLoading ? (
+                    <div className="flex items-center justify-center h-24">
+                        <Loader2 className="w-6 h-6 animate-spin text-green-700" />
+                    </div>
+                ) : (
+                    <>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">
+                            {lligaDetail?.nom ?? 'Lliga'} · {lligaDetail?.categoria ?? '—'}
+                        </p>
+
+                        {lligaDetail?.equips?.length ? (
+                            <div className="grid sm:grid-cols-2 gap-2">
+                                {lligaDetail.equips.map((leagueTeam) => (
+                                    <div
+                                        key={leagueTeam.id}
+                                        className={`rounded-lg border px-3 py-2 text-sm ${leagueTeam.id === equip.id
+                                            ? 'border-green-500 bg-green-50 dark:bg-green-900/20 font-semibold'
+                                            : 'border-slate-200 dark:border-slate-700'
+                                            }`}
+                                    >
+                                        {leagueTeam.nom}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-sm text-slate-500">Aquesta lliga encara no té equips inscrits.</p>
+                        )}
+                    </>
+                )}
+            </div>
+        </div>
+    )
+}
+
+// ─── Tab: Alineacions ────────────────────────────────────────────────────────
+function AlineacionsTab({ equip }: { equip: Equip | null }) {
+    const navigate = useNavigate()
+    const { data, isLoading } = useGetPartits(equip ? { equipId: equip.id } : undefined)
+    const partits = (data?.partits ?? []).filter((p: Partit) =>
+        p.status !== 'COMPLETAT' && p.status !== 'CANCELAT'
+    )
+
+    if (!equip) return (
+        <div className="text-center py-12 text-slate-500">
+            <Target className="w-12 h-12 mx-auto mb-3 opacity-30" />
+            <p>Selecciona un equip per veure les alineacions.</p>
+        </div>
+    )
+
+    if (isLoading) return (
+        <div className="flex items-center justify-center h-40">
+            <Loader2 className="w-7 h-7 animate-spin text-green-700" />
+        </div>
+    )
+
+    return (
+        <div className="space-y-4">
+            {!partits.length ? (
+                <div className="text-center py-12 text-slate-500">
+                    <Target className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                    <p>No hi ha partits pendents per preparar alineacions.</p>
+                </div>
+            ) : partits.map((partit: Partit) => (
+                <div
+                    key={partit.id}
+                    className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5"
+                >
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200 capitalize">
+                                <Calendar className="w-4 h-4 text-green-700" />
+                                {formatDate(partit.dataHora)} — {formatTime(partit.dataHora)}
+                            </div>
+                            {partit.ubicacio && <p className="text-xs text-slate-500 mb-2">📍 {partit.ubicacio}</p>}
+                            <div className="text-base font-bold text-slate-800 dark:text-white flex items-center gap-3">
+                                <span>{partit.localNom ?? 'Local'}</span>
+                                <span className="text-slate-400 font-normal">vs</span>
+                                <span>{partit.visitantNom ?? 'Visitant'}</span>
+                            </div>
+                            <div className="mt-2">
+                                <StatusBadge status={partit.status} />
+                            </div>
+                        </div>
+                        <Button
+                            size="sm"
+                            className="bg-green-700 hover:bg-green-800 text-white text-xs"
+                            onClick={() => navigate(`/alineacio/${partit.id}?equipId=${equip.id}`)}
+                        >
+                            Obrir alineació
+                        </Button>
                     </div>
                 </div>
             ))}
@@ -301,6 +782,12 @@ export default function DashboardEntrenador() {
                             <TabsTrigger value="plantilla" className="rounded-lg data-[state=active]:bg-green-800 data-[state=active]:text-white text-xs">
                                 <Users className="w-3.5 h-3.5 mr-1" />Plantilla
                             </TabsTrigger>
+                            <TabsTrigger value="lligues" className="rounded-lg data-[state=active]:bg-green-800 data-[state=active]:text-white text-xs">
+                                <Trophy className="w-3.5 h-3.5 mr-1" />Lligues
+                            </TabsTrigger>
+                            <TabsTrigger value="invitacions" className="rounded-lg data-[state=active]:bg-green-800 data-[state=active]:text-white text-xs">
+                                <Bell className="w-3.5 h-3.5 mr-1" />Invitacions
+                            </TabsTrigger>
                             <TabsTrigger value="partits" className="rounded-lg data-[state=active]:bg-green-800 data-[state=active]:text-white text-xs">
                                 <Calendar className="w-3.5 h-3.5 mr-1" />Futurs Partits
                             </TabsTrigger>
@@ -315,19 +802,17 @@ export default function DashboardEntrenador() {
                         <TabsContent value="plantilla">
                             <PlantillaTab equip={selectedEquip} />
                         </TabsContent>
+                        <TabsContent value="lligues">
+                            <LliguesTab equip={selectedEquip} />
+                        </TabsContent>
+                        <TabsContent value="invitacions">
+                            <InvitacionsTab equip={selectedEquip} authUserId={user.id} />
+                        </TabsContent>
                         <TabsContent value="partits">
                             <FutursPartitsTab equip={selectedEquip} />
                         </TabsContent>
                         <TabsContent value="alineacions">
-                            <div className="text-center py-16 text-slate-500">
-                                <Target className="w-14 h-14 mx-auto mb-4 opacity-30" />
-                                <p className="font-medium">Alineacions</p>
-                                <p className="text-sm mt-1">Selecciona un partit per crear o editar l'alineació</p>
-                                <Button className="mt-4 bg-green-700 hover:bg-green-800 text-white text-sm"
-                                    onClick={() => { }}>
-                                    Veure partits i alineacions
-                                </Button>
-                            </div>
+                            <AlineacionsTab equip={selectedEquip} />
                         </TabsContent>
                         <TabsContent value="stats">
                             <EstadistiquesTab equip={selectedEquip} />

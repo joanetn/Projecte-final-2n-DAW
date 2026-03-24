@@ -49,11 +49,7 @@ class RegisterCommand
         $userId = $this->createUserCommand->execute($dto);
 
         // Assignar rols seleccionats (o per defecte JUGADOR)
-        $selectedRoles = $rols ?? ['JUGADOR'];
-        $selectedRoles = array_values(array_unique(array_filter($selectedRoles, fn($r) => is_string($r) && $r !== '')));
-        if (empty($selectedRoles)) {
-            $selectedRoles = ['JUGADOR'];
-        }
+        $selectedRoles = $this->normalizeRoles($rols);
 
         foreach ($selectedRoles as $rol) {
             UsuariRol::updateOrCreate(
@@ -111,5 +107,27 @@ class RegisterCommand
             'expires_in'    => config('jwt.ttl', 15) * 60,
             'user'          => $user,
         ];
+    }
+
+    private function normalizeRoles(?array $rols): array
+    {
+        $selectedRoles = $rols ?? ['JUGADOR'];
+        $selectedRoles = array_values(array_unique(array_filter(
+            array_map(
+                static fn($role) => is_string($role) ? strtoupper(trim($role)) : '',
+                $selectedRoles
+            ),
+            static fn($role) => $role !== ''
+        )));
+
+        if (empty($selectedRoles)) {
+            return ['JUGADOR'];
+        }
+
+        if (in_array('ARBITRE', $selectedRoles, true)) {
+            return ['ARBITRE'];
+        }
+
+        return $selectedRoles;
     }
 }

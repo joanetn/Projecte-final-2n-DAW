@@ -339,6 +339,9 @@ function Step2Form({
             <p className="text-sm text-slate-600 dark:text-slate-400">
                 ¿Qué harás en la plataforma? Puedes cambiar esto después.
             </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+                Si eliges <span className="font-semibold">Árbitro</span>, se desactivan el resto de roles automáticamente.
+            </p>
 
             <div className="space-y-3">
                 {ROLES.map((role) => {
@@ -443,9 +446,21 @@ export function RegisterForm() {
     const [selectedRoles, setSelectedRoles] = useState<string[]>(['JUGADOR'])
 
     const toggleRole = (roleId: string) => {
-        setSelectedRoles((prev) =>
-            prev.includes(roleId) ? prev.filter((r) => r !== roleId) : [...prev, roleId]
-        )
+        setSelectedRoles((prev) => {
+            const isAlreadySelected = prev.includes(roleId)
+
+            if (roleId === 'ARBITRE') {
+                return isAlreadySelected ? [] : ['ARBITRE']
+            }
+
+            const rolesWithoutReferee = prev.filter((r) => r !== 'ARBITRE')
+
+            if (isAlreadySelected) {
+                return rolesWithoutReferee.filter((r) => r !== roleId)
+            }
+
+            return [...rolesWithoutReferee, roleId]
+        })
     }
 
     const handleSubmit = async () => {

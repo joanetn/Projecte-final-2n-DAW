@@ -13,6 +13,7 @@ class MerchResource extends JsonResource
             'id' => $this->id,
             'nom' => $this->nom,
             'marca' => $this->marca,
+            'imageUrl' => $this->imageUrl,
             'preu' => $this->preu,
             'stock' => $this->stock,
             'isActive' => $this->isActive,

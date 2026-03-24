@@ -22,3 +22,12 @@ export interface CreatePaymentIntentResponse {
     insuranceId: string;
     clientSecret: string;
 }
+
+export interface ConfirmInsurancePaymentData {
+    paymentIntentId: string;
+}
+
+export interface ConfirmInsurancePaymentResponse {
+    success: boolean;
+    message?: string;
+}

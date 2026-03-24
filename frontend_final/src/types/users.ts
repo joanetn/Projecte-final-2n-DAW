@@ -22,9 +22,19 @@ export interface User {
     permisos?: string[];
 }
 
+export interface UserPurchase {
+    id: string;
+    merchId: string;
+    quantitat: number;
+    total: number;
+    pagat: boolean;
+    status?: string;
+    createdAt?: string;
+}
+
 export interface UserDetail extends User {
     equipUsuaris?: any[];
-    compras?: any[];
+    compras?: UserPurchase[];
     seguros?: any[];
 }
 

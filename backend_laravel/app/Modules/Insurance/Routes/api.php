@@ -19,7 +19,11 @@ Route::prefix('seguros')->group(function () {
     Route::get('/', [InsuranceController::class, 'index']);
 
     // ─── Rutes amb autenticació JWT ──────────────────────────────
-    Route::post('/create-payment-intent', [InsuranceController::class, 'createPaymentIntent']);
+    Route::middleware(['jwt.auth'])->group(function () {
+        Route::post('/create-payment-intent', [InsuranceController::class, 'createPaymentIntent']);
+        Route::post('/confirm-payment', [InsuranceController::class, 'confirmPayment']);
+    });
+
     Route::get('/usuari/{usuariId}', [InsuranceController::class, 'byUser']);
 
     // ─── Webhook de Stripe (sense auth) ──────────────────────────

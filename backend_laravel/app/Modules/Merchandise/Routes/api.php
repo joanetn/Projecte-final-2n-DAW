@@ -40,5 +40,6 @@ Route::middleware(['jwt.auth'])->prefix('cart')->group(function () {
     Route::patch('/items/{itemId}', [CartController::class, 'updateItem']);
     Route::delete('/items/{itemId}', [CartController::class, 'removeItem']);
     Route::post('/checkout/session', [CartController::class, 'createCheckoutSession']);
+    Route::post('/checkout/confirm', [CartController::class, 'confirmCheckoutSession']);
     Route::delete('/', [CartController::class, 'clear']);
 });

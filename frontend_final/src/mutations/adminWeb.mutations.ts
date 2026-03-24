@@ -13,9 +13,9 @@ import {
     actualitzarPartit,
     eliminarPartit,
     assignarArbitre,
-    type GetUsuarisParams,
-    type GetEquipsParams,
-    type GetPartitsParams,
+    generarPartitsLligaAdmin,
+    crearPropostaReprogramacio,
+    respondrePropostaReprogramacio,
 } from '@/services/adminWeb.service';
 import type {
     CreateEquipData,
@@ -24,6 +24,11 @@ import type {
     UpdateLligaData,
     CreatePartitData,
     UpdatePartitData,
+    GetUsuarisParams,
+    GetEquipsParams,
+    GetPartitsParams,
+    CreatePropostaReprogramacioData,
+    RespondrePropostaReprogramacioData,
 } from '@/types/admin';
 import { ADMIN_WEB_KEYS } from '@/queries/adminWeb.queries';
 
@@ -108,6 +113,19 @@ export const useEliminarLliga = () => {
     });
 };
 
+export const useGenerarPartitsLliga = () => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({ lligaId, force }: { lligaId: string; force?: boolean }) =>
+            generarPartitsLligaAdmin(lligaId, force ?? false),
+        onSuccess: (_data, variables) => {
+            qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.lligues });
+            qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.partits() });
+            qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.equipsLliga(variables.lligaId) });
+        },
+    });
+};
+
 // ─── Partits ─────────────────────────────────────────────────────────────────
 
 export const useCrearPartit = (partitsParams?: GetPartitsParams) => {
@@ -150,6 +168,42 @@ export const useAssignarArbitre = (partitsParams?: GetPartitsParams) => {
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.partits(partitsParams) });
             qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.arbitres });
+        },
+    });
+};
+
+// ─── Reprogramacions ─────────────────────────────────────────────────────────
+
+export const useCrearPropostaReprogramacio = () => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            partitId,
+            data,
+        }: {
+            partitId: string;
+            data: CreatePropostaReprogramacioData;
+        }) => crearPropostaReprogramacio(partitId, data),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.propostesReprogramacio() });
+            qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.partits() });
+        },
+    });
+};
+
+export const useRespondrePropostaReprogramacio = () => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            propostaId,
+            data,
+        }: {
+            propostaId: string;
+            data: RespondrePropostaReprogramacioData;
+        }) => respondrePropostaReprogramacio(propostaId, data),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.propostesReprogramacio() });
+            qc.invalidateQueries({ queryKey: ADMIN_WEB_KEYS.partits() });
         },
     });
 };

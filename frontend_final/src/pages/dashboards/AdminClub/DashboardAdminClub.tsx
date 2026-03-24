@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useGetClubs, useGetEquipsClub } from '@/queries/club.queries'
+import { useGetClubs, useGetEquipsClub, useGetLeagueCategories } from '@/queries/club.queries'
 import { useCrearEquip, useActualitzarClub } from '@/mutations/club.mutations'
+import { useAuth } from '@/context/AuthContext'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -154,14 +155,16 @@ function InfoClubTab({ clubId }: { clubId: string }) {
 // ── Tab: Equips del Club ──────────────────────────────────────────────────────
 function EquipsTab({ clubId }: { clubId: string }) {
     const { data, isLoading } = useGetEquipsClub(clubId)
+    const { data: categoriesData } = useGetLeagueCategories()
     const equips = data?.equips ?? []
-    const crearEquipMutation = useCrearEquip(clubId)
+    const categories = categoriesData ?? []
+    const crearEquipMutation = useCrearEquip()
 
     const [showForm, setShowForm] = useState(false)
     const [form, setForm] = useState({ nom: '', categoria: '', clubId })
 
     const handleCrear = async () => {
-        if (!form.nom.trim()) return
+        if (!form.nom.trim() || !form.categoria.trim()) return
         await crearEquipMutation.mutateAsync({ ...form, clubId })
         setShowForm(false)
         setForm({ nom: '', categoria: '', clubId })
@@ -194,17 +197,22 @@ function EquipsTab({ clubId }: { clubId: string }) {
                             value={form.nom}
                             onChange={(e) => setForm({ ...form, nom: e.target.value })}
                         />
-                        <Input
-                            placeholder="Categoría"
+                        <select
                             value={form.categoria}
                             onChange={(e) => setForm({ ...form, categoria: e.target.value })}
-                        />
+                            className="text-sm rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-3 py-2"
+                        >
+                            <option value="">Selecciona categoría *</option>
+                            {categories.map((category) => (
+                                <option key={category.value} value={category.value}>{category.label}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="flex gap-2">
                         <Button
                             size="sm"
                             onClick={handleCrear}
-                            disabled={crearEquipMutation.isPending || !form.nom.trim()}
+                            disabled={crearEquipMutation.isPending || !form.nom.trim() || !form.categoria.trim()}
                             className="bg-warm-600 hover:bg-warm-700 text-white"
                         >
                             {crearEquipMutation.isPending && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
@@ -276,8 +284,18 @@ function MembresTab() {
 
 // ── Dashboard Admin Club (main) ───────────────────────────────────────────────
 export default function DashboardAdminClub() {
+    const { user } = useAuth()
     const { data: clubsData, isLoading } = useGetClubs()
-    const clubs = clubsData?.clubs ?? []
+    const userRoles = (user?.rols ?? []).map((r) => String(r.rol).toUpperCase())
+    const isAdminWeb = userRoles.includes('ADMIN_WEB')
+
+    const clubs = (clubsData?.clubs ?? []).filter((club) => {
+        if (isAdminWeb) {
+            return true
+        }
+
+        return club.creadorId === user?.id
+    })
 
     if (isLoading) {
         return (

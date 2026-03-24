@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { crearClub, actualitzarClub, eliminarClub, crearEquip } from '@/services/club.service';
+import { crearClub, actualitzarClub, eliminarClub, crearEquip, inscriureEquipALliga } from '@/services/club.service';
 import { CLUB_KEYS } from '@/queries/club.queries';
 import type { CreateClubData, UpdateClubData, CreateEquipData } from '@/types/club';
 
@@ -33,12 +33,34 @@ export const useEliminarClub = () => {
     });
 };
 
-export const useCrearEquip = (clubId: string) => {
+export const useCrearEquip = () => {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (data: CreateEquipData) => crearEquip(clubId, data),
-        onSuccess: () => {
-            qc.invalidateQueries({ queryKey: CLUB_KEYS.equips(clubId) });
+        mutationFn: (data: CreateEquipData) => crearEquip(data.clubId, data),
+        onSuccess: (_result, variables) => {
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.equips(variables.clubId) });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.meusEquips() });
+        },
+    });
+};
+
+export const useInscriureEquipALliga = () => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            clubId,
+            equipId,
+            lligaId,
+        }: {
+            clubId: string;
+            equipId: string;
+            lligaId: string;
+        }) => inscriureEquipALliga(clubId, equipId, lligaId),
+        onSuccess: (_result, variables) => {
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.equips(variables.clubId) });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.meusEquips() });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.lligaDetail(variables.lligaId) });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.lligues() });
         },
     });
 };

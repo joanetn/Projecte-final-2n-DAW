@@ -2,6 +2,8 @@
 
 namespace App\Modules\Insurance\Presentation\Http\Controllers;
 
+use App\Models\UsuariRol;
+use App\Modules\Insurance\Application\Commands\ConfirmInsurancePaymentCommand;
 use App\Modules\Insurance\Application\Commands\CreateInsuranceCommand;
 use App\Modules\Insurance\Application\Commands\HandleStripeWebhookCommand;
 use App\Modules\Insurance\Application\DTOs\CreateInsuranceDTO;
@@ -22,6 +24,7 @@ class InsuranceController extends Controller
 {
     public function __construct(
         private CreateInsuranceCommand $createInsuranceCommand,
+        private ConfirmInsurancePaymentCommand $confirmInsurancePaymentCommand,
         private HandleStripeWebhookCommand $handleStripeWebhookCommand,
         private GetInsuranceQuery $getInsuranceQuery,
         private GetInsurancesQuery $getInsurancesQuery,
@@ -141,7 +144,24 @@ class InsuranceController extends Controller
                 'preu'  => 'sometimes|numeric|min:0.01',
             ]);
 
-            $usuariId = JWTAuth::parseToken()->getPayload()->get('sub');
+            $usuariId = (string) $request->input('auth_user_id');
+            if (!$usuariId) {
+                $usuariId = (string) JWTAuth::parseToken()->getPayload()->get('sub');
+            }
+
+            if (!$usuariId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat',
+                ], 401);
+            }
+
+            if (!$this->isPlayer($usuariId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Només els usuaris amb rol JUGADOR poden pagar el segur',
+                ], 403);
+            }
 
             $dto = CreateInsuranceDTO::fromArray([
                 'usuariId' => $usuariId,
@@ -157,6 +177,60 @@ class InsuranceController extends Controller
                 'insuranceId'  => $result['insuranceId'],
                 'clientSecret' => $result['clientSecret'],
             ], 201);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error de Stripe: ' . $e->getMessage(),
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
+     * Confirmació manual del pagament del segur després del retorn de Stripe.
+     * Serveix de fallback quan el webhook no s'ha processat encara.
+     */
+    public function confirmPayment(Request $request): JsonResponse
+    {
+        try {
+            $validated = $request->validate([
+                'paymentIntentId' => 'required|string',
+            ]);
+
+            $usuariId = (string) $request->input('auth_user_id');
+            if (!$usuariId) {
+                $usuariId = (string) JWTAuth::parseToken()->getPayload()->get('sub');
+            }
+
+            if (!$usuariId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat',
+                ], 401);
+            }
+
+            if (!$this->isPlayer($usuariId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Només els usuaris amb rol JUGADOR poden confirmar el pagament del segur',
+                ], 403);
+            }
+
+            $result = $this->confirmInsurancePaymentCommand->execute(
+                paymentIntentId: (string) $validated['paymentIntentId'],
+                usuariId: $usuariId,
+            );
+
+            $statusCode = $result['status'] === 'error' ? 400 : 200;
+
+            return response()->json([
+                'success' => $result['status'] === 'ok',
+                'message' => $result['message'],
+            ], $statusCode);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             return response()->json([
                 'success' => false,
@@ -196,5 +270,14 @@ class InsuranceController extends Controller
             'success' => $result['status'] === 'ok',
             'message' => $result['message'],
         ], $statusCode);
+    }
+
+    private function isPlayer(string $usuariId): bool
+    {
+        return UsuariRol::query()
+            ->where('usuariId', $usuariId)
+            ->where('rol', 'JUGADOR')
+            ->where('isActive', true)
+            ->exists();
     }
 }

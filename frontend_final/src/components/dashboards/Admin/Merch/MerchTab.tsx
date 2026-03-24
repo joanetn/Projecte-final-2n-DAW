@@ -27,6 +27,7 @@ import {
     X,
     ChevronLeft,
     ChevronRight,
+    Shirt,
 } from 'lucide-react'
 import type { Merch } from '@/types/merch'
 import { MerchFormDialog } from './MerchFormDialog'
@@ -313,9 +314,17 @@ export function MerchTab() {
                                     >
                                         <td className="px-4 py-3">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-full bg-warm-200 dark:bg-slate-600 flex items-center justify-center font-bold text-sm text-warm-700 dark:text-warm-300 shrink-0">
-                                                    {merch.nom?.charAt(0).toUpperCase() || '?'}
-                                                </div>
+                                                {merch.imageUrl ? (
+                                                    <img
+                                                        src={merch.imageUrl}
+                                                        alt={merch.nom}
+                                                        className="w-9 h-9 rounded-full object-cover border border-warm-200 dark:border-slate-600 shrink-0"
+                                                    />
+                                                ) : (
+                                                    <div className="w-9 h-9 rounded-full bg-warm-200 dark:bg-slate-600 flex items-center justify-center text-warm-700 dark:text-warm-300 shrink-0">
+                                                        <Shirt className="w-4 h-4" />
+                                                    </div>
+                                                )}
                                                 <div className="min-w-0">
                                                     <p className="font-medium text-sm text-warm-900 dark:text-slate-100 truncate">
                                                         {merch.nom}

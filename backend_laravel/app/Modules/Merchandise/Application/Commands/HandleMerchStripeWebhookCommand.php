@@ -11,17 +11,27 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Stripe\Exception\SignatureVerificationException;
+use Stripe\StripeClient;
 use Stripe\Webhook;
 
 class HandleMerchStripeWebhookCommand
 {
+    private StripeClient $stripe;
+
     public function __construct(
         private CartRepositoryInterface $cartRepository,
         private CartItemRepositoryInterface $cartItemRepository,
         private CompraRepositoryInterface $compraRepository,
         private MerchRepositoryInterface $merchRepository,
         private MerchandiseDomainService $domainService,
-    ) {}
+    ) {
+        $stripeSecret = (string) (config('services.stripe.secret') ?: getenv('STRIPE_SECRET_KEY') ?: '');
+        if ($stripeSecret === '') {
+            throw new \RuntimeException('STRIPE_SECRET_KEY no está configurada en el backend.');
+        }
+
+        $this->stripe = new StripeClient($stripeSecret);
+    }
 
     /**
      * Processa webhooks Stripe de pagaments de merchandising.
@@ -30,7 +40,11 @@ class HandleMerchStripeWebhookCommand
      */
     public function execute(string $payload, string $sigHeader): array
     {
-        $webhookSecret = config('services.stripe.webhook_secret');
+        $webhookSecret = (string) (config('services.stripe.webhook_secret') ?: getenv('STRIPE_WEBHOOK_SECRET') ?: '');
+        if ($webhookSecret === '') {
+            Log::error('Merch Stripe webhook: STRIPE_WEBHOOK_SECRET no configurada');
+            return ['status' => 'error', 'message' => 'STRIPE_WEBHOOK_SECRET no configurada'];
+        }
 
         try {
             $event = Webhook::constructEvent(
@@ -66,6 +80,42 @@ class HandleMerchStripeWebhookCommand
 
         Log::info('Merch Stripe webhook: event ignorat', ['type' => $event->type]);
         return ['status' => 'ok', 'message' => "Event {$event->type} ignorat"];
+    }
+
+    /**
+     * Confirmació manual post-retorn de Stripe Checkout (fallback sense webhook).
+     *
+     * @return array{status: string, message: string}
+     */
+    public function confirmCheckoutSessionById(string $sessionId, ?string $expectedUsuariId = null): array
+    {
+        $sessionId = trim($sessionId);
+        if ($sessionId === '') {
+            return ['status' => 'error', 'message' => 'sessionId és obligatori'];
+        }
+
+        try {
+            $session = $this->stripe->checkout->sessions->retrieve($sessionId, []);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            Log::error('Merch Stripe confirm: error recuperant sessió', [
+                'session_id' => $sessionId,
+                'error' => $e->getMessage(),
+            ]);
+
+            return ['status' => 'error', 'message' => 'No s\'ha pogut recuperar la sessió de Stripe'];
+        }
+
+        $metadata = $session->metadata;
+        if (($metadata->type ?? null) !== 'merch_cart') {
+            return ['status' => 'error', 'message' => 'La sessió no correspon a un checkout de merchandising'];
+        }
+
+        $metadataUserId = (string) ($metadata->usuari_id ?? '');
+        if ($expectedUsuariId !== null && $expectedUsuariId !== '' && $metadataUserId !== '' && $metadataUserId !== $expectedUsuariId) {
+            return ['status' => 'error', 'message' => 'Aquesta sessió no correspon a l\'usuari autenticat'];
+        }
+
+        return $this->handleCheckoutSessionCompleted($session);
     }
 
     /**

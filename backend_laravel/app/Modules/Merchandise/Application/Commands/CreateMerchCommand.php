@@ -20,6 +20,7 @@ class CreateMerchCommand
             'id' => $id,
             'nom' => $dto->nom,
             'marca' => $dto->marca,
+            'imageUrl' => $dto->imageUrl,
             'preu' => $dto->preu,
             'stock' => $dto->stock,
             'isActive' => true,

@@ -22,7 +22,11 @@ class HandleStripeWebhookCommand
      */
     public function execute(string $payload, string $sigHeader): array
     {
-        $webhookSecret = config('services.stripe.webhook_secret');
+        $webhookSecret = (string) (config('services.stripe.webhook_secret') ?: getenv('STRIPE_WEBHOOK_SECRET') ?: '');
+        if ($webhookSecret === '') {
+            Log::error('Stripe webhook insurance: STRIPE_WEBHOOK_SECRET no configurada');
+            return ['status' => 'error', 'message' => 'STRIPE_WEBHOOK_SECRET no configurada'];
+        }
 
         // 1. Verificar la signatura de Stripe
         try {

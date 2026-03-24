@@ -2,6 +2,7 @@
 
 namespace App\Modules\League\Presentation\Http\Controllers;
 
+use App\Enums\LeagueCategory;
 use App\Modules\League\Application\Commands\CreateLeagueCommand;
 use App\Modules\League\Application\Commands\UpdateLeagueCommand;
 use App\Modules\League\Application\Commands\DestroyLeagueCommand;
@@ -29,6 +30,14 @@ class LeagueController extends Controller
         private GetLeaguesQuery $getLeaguesQuery,
         private GetLeaguesDetailQuery $getLeaguesDetailQuery
     ) {}
+
+    public function categories(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'data' => LeagueCategory::options(),
+        ]);
+    }
 
     public function index(): JsonResponse
     {

@@ -18,6 +18,7 @@ class MerchModel extends Model
         'id',
         'nom',
         'marca',
+        'imageUrl',
         'preu',
         'stock',
         'isActive',

@@ -234,6 +234,40 @@ class CartController extends Controller
         }
     }
 
+    public function confirmCheckoutSession(Request $request): JsonResponse
+    {
+        $usuariId = (string) $request->input('auth_user_id');
+        if (!$usuariId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat',
+            ], 401);
+        }
+
+        try {
+            $validated = $request->validate([
+                'sessionId' => 'required|string',
+            ]);
+
+            $result = $this->handleMerchStripeWebhookCommand->confirmCheckoutSessionById(
+                sessionId: (string) $validated['sessionId'],
+                expectedUsuariId: $usuariId,
+            );
+
+            $statusCode = $result['status'] === 'error' ? 400 : 200;
+
+            return response()->json([
+                'success' => $result['status'] === 'ok',
+                'message' => $result['message'],
+            ], $statusCode);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
     public function webhook(Request $request): JsonResponse
     {
         $payload = $request->getContent();

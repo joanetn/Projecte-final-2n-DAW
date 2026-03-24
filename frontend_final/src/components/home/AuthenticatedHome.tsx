@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
-import { useGetClubs, useGetMeusEquips } from '@/queries/club.queries'
+import { useGetClubs, useGetLeagueCategories, useGetMeusEquips } from '@/queries/club.queries'
 import { useCrearClub, useCrearEquip } from '@/mutations/club.mutations'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -39,11 +39,23 @@ const EMPTY_CLUB_FORM = {
     anyFundacio: '',
 }
 
+const REQUIRED_CLUB_FIELDS: Array<{ key: keyof typeof EMPTY_CLUB_FORM; label: string }> = [
+    { key: 'nom', label: 'nombre' },
+    { key: 'descripcio', label: 'descripción' },
+    { key: 'adreca', label: 'dirección' },
+    { key: 'ciutat', label: 'ciudad' },
+    { key: 'codiPostal', label: 'código postal' },
+    { key: 'provincia', label: 'provincia' },
+    { key: 'telefon', label: 'teléfono' },
+    { key: 'email', label: 'email' },
+    { key: 'web', label: 'web' },
+    { key: 'anyFundacio', label: 'año de fundación' },
+]
+
 const EMPTY_EQUIP_FORM = {
     nom: '',
     categoria: '',
     clubId: '',
-    lligaId: '',
 }
 
 export function AuthenticatedHome() {
@@ -51,15 +63,42 @@ export function AuthenticatedHome() {
     const navigate = useNavigate()
     const { data: clubsData } = useGetClubs()
     const { data: equipsData } = useGetMeusEquips(user?.id ?? null)
+    const { data: leagueCategoriesData } = useGetLeagueCategories()
 
     const clubs = clubsData?.clubs ?? []
     const equips = equipsData?.equips ?? []
+    const leagueCategories = leagueCategoriesData ?? []
 
     const userRoles = (user?.rols ?? []).map((r) => String(r.rol).toUpperCase())
     const isAdminWeb = userRoles.includes('ADMIN_WEB')
     const adminClubs = isAdminWeb
         ? clubs
         : clubs.filter((club) => club.creadorId === user?.id)
+
+    const goToMainDashboard = () => {
+        if (userRoles.includes('ENTRENADOR')) {
+            navigate('/dashboardEntrenador')
+            return
+        }
+
+        if (userRoles.includes('JUGADOR')) {
+            navigate('/dashboardJugador')
+            return
+        }
+
+        if (userRoles.includes('ARBITRE')) {
+            navigate('/dashboardArbitre')
+            return
+        }
+
+        navigate('/dashboardJugador')
+    }
+
+    const dashboardShortcutLabel = userRoles.includes('ENTRENADOR')
+        ? 'Dashboard Entrenador'
+        : userRoles.includes('ARBITRE') && !userRoles.includes('JUGADOR')
+            ? 'Dashboard Árbitro'
+            : 'Mi Dashboard'
 
     // ── Crear Club ───────────────────────────────────────────────
     const [showClubForm, setShowClubForm] = useState(false)
@@ -78,8 +117,12 @@ export function AuthenticatedHome() {
     }
 
     const handleCrearClub = async () => {
-        if (!clubForm.nom.trim()) {
-            setClubError('El nombre del club es obligatorio')
+        const missingFields = REQUIRED_CLUB_FIELDS
+            .filter(({ key }) => !clubForm[key].trim())
+            .map(({ label }) => label)
+
+        if (missingFields.length > 0) {
+            setClubError(`Debes completar todos los campos: ${missingFields.join(', ')}`)
             return
         }
 
@@ -119,7 +162,7 @@ export function AuthenticatedHome() {
     const [showEquipForm, setShowEquipForm] = useState(false)
     const [equipForm, setEquipForm] = useState(EMPTY_EQUIP_FORM)
     const [equipError, setEquipError] = useState<string | null>(null)
-    const crearEquipMutation = useCrearEquip(equipForm.clubId || adminClubs[0]?.id || '')
+    const crearEquipMutation = useCrearEquip()
 
     const resetEquipForm = () => {
         setEquipForm(EMPTY_EQUIP_FORM)
@@ -155,7 +198,6 @@ export function AuthenticatedHome() {
                 nom: equipForm.nom.trim(),
                 categoria: equipForm.categoria.trim(),
                 clubId,
-                lligaId: cleanOptional(equipForm.lligaId),
             })
             setShowEquipForm(false)
             resetEquipForm()
@@ -175,7 +217,7 @@ export function AuthenticatedHome() {
     }
 
     const shortcuts = [
-        { label: 'Mi Dashboard', icon: Users, action: () => navigate('/dashboardJugador'), roles: ['JUGADOR'] },
+        { label: dashboardShortcutLabel, icon: Users, action: goToMainDashboard, roles: ['JUGADOR', 'ENTRENADOR', 'ARBITRE'] },
         { label: 'Admin Web', icon: Shield, action: () => navigate('/dashboardAdminWeb'), roles: ['ADMIN_WEB'] },
         { label: 'Ranking', icon: Medal, action: () => navigate('/'), roles: [] },
         { label: 'Seguro', icon: ClipboardList, action: () => navigate('/seguro'), roles: [] },
@@ -428,11 +470,16 @@ export function AuthenticatedHome() {
                                 value={equipForm.nom}
                                 onChange={(e) => setEquipForm({ ...equipForm, nom: e.target.value })}
                             />
-                            <Input
-                                placeholder="Categoría *"
+                            <select
                                 value={equipForm.categoria}
                                 onChange={(e) => setEquipForm({ ...equipForm, categoria: e.target.value })}
-                            />
+                                className="text-sm rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-3 py-2"
+                            >
+                                <option value="">Selecciona categoría *</option>
+                                {leagueCategories.map((category) => (
+                                    <option key={category.value} value={category.value}>{category.label}</option>
+                                ))}
+                            </select>
                             <select
                                 value={equipForm.clubId || adminClubs[0]?.id || ''}
                                 onChange={(e) => setEquipForm({ ...equipForm, clubId: e.target.value })}
@@ -442,12 +489,6 @@ export function AuthenticatedHome() {
                                     <option key={c.id} value={c.id}>{c.nom}</option>
                                 ))}
                             </select>
-                            <Input
-                                className="sm:col-span-2"
-                                placeholder="ID de liga (opcional)"
-                                value={equipForm.lligaId}
-                                onChange={(e) => setEquipForm({ ...equipForm, lligaId: e.target.value })}
-                            />
                         </div>
 
                         {equipError && (
@@ -496,7 +537,7 @@ export function AuthenticatedHome() {
                                             <Badge variant="secondary" className="mt-1 text-xs">{equip.rolMeu}</Badge>
                                         )}
                                     </div>
-                                    <Button size="sm" variant="outline" onClick={() => navigate('/dashboardJugador')}>
+                                    <Button size="sm" variant="outline" onClick={goToMainDashboard}>
                                         Entrar
                                         <ArrowRight className="w-3 h-3 ml-1" />
                                     </Button>

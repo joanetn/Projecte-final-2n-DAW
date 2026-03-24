@@ -9,6 +9,7 @@ export interface Merch {
     id: string;
     nom: string;
     marca?: string;
+    imageUrl?: string;
     preu?: number;
     stock?: number;
     isActive: boolean;
@@ -25,6 +26,7 @@ export interface MerchDetail extends Merch {
 export interface CreateMerchRequest {
     nom: string;
     marca?: string;
+    imageUrl?: string;
     preu?: number;
     stock?: number;
 }
@@ -33,6 +35,7 @@ export interface CreateMerchRequest {
 export interface UpdateMerchRequest {
     nom?: string;
     marca?: string;
+    imageUrl?: string;
     preu?: number;
     stock?: number;
     isActive?: boolean;

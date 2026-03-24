@@ -1,10 +1,12 @@
 import { laravel } from '@/api/axios';
 import type {
     AddCartItemRequest,
+    ApiCartCheckoutConfirmResponse,
     ApiCartCheckoutSessionResponse,
     ApiCartResponse,
     Cart,
     CartCheckoutSession,
+    ConfirmCartCheckoutSessionRequest,
     CartItem,
     CreateCartCheckoutSessionRequest,
     UpdateCartItemQuantityRequest,
@@ -122,4 +124,16 @@ export const createCartCheckoutSession = async (
     );
 
     return unwrapCheckoutSession(res.data);
+};
+
+export const confirmCartCheckoutSession = async (
+    payload: ConfirmCartCheckoutSessionRequest,
+): Promise<ApiCartCheckoutConfirmResponse> => {
+    const res = await laravel.post<ApiCartCheckoutConfirmResponse>(
+        '/api/cart/checkout/confirm',
+        payload,
+        { headers: authHeader() },
+    );
+
+    return res.data;
 };

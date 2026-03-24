@@ -1,0 +1,7 @@
+{
+    "name": "AdminWeb",
+    "description": "AdminWeb Module - Panel web d'administració, planificador de lligues i reprogramacions",
+    "version": "1.0.0",
+    "provider": "App\\Modules\\AdminWeb\\Providers\\AdminWebServiceProvider",
+    "routes": "Routes/api.php"
+}

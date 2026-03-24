@@ -48,7 +48,11 @@ use App\Modules\Club\Presentation\Http\Resources\EquipUsuariResource;
 use App\Models\UsuariRol;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * Controlador del mòdul Club.
@@ -78,6 +82,23 @@ class ClubController extends Controller
         private GetEquipQuery $getEquipQuery,
         private GetEquipMembresQuery $getEquipMembresQuery,
     ) {}
+
+    private function resolveAuthUserId(Request $request): ?string
+    {
+        $userIdFromRequest = trim((string) $request->input('auth_user_id', ''));
+        if ($userIdFromRequest !== '') {
+            return $userIdFromRequest;
+        }
+
+        try {
+            $userIdFromToken = JWTAuth::parseToken()->getPayload()->get('sub');
+            $userIdFromToken = trim((string) $userIdFromToken);
+
+            return $userIdFromToken !== '' ? $userIdFromToken : null;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
 
     // =====================================================================
     // CLUB ENDPOINTS
@@ -122,8 +143,9 @@ class ClubController extends Controller
     public function store(CreateClubRequest $request): JsonResponse
     {
         try {
-            $authUserId = (string) $request->input('auth_user_id', '');
-            if ($authUserId === '') {
+            $authUserId = $this->resolveAuthUserId($request);
+
+            if ($authUserId === null) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No autenticat'
@@ -265,8 +287,9 @@ class ClubController extends Controller
     public function storeEquip(string $clubId, CreateEquipRequest $request): JsonResponse
     {
         try {
-            $authUserId = (string) $request->input('auth_user_id', '');
-            if ($authUserId === '') {
+            $authUserId = $this->resolveAuthUserId($request);
+
+            if ($authUserId === null) {
                 return response()->json([
                     'success' => false,
                     'message' => 'No autenticat'
@@ -287,12 +310,31 @@ class ClubController extends Controller
                 ], 403);
             }
 
-            // Afegim el clubId de la ruta a les dades validades
-            $dto = CreateEquipDTO::fromArray(array_merge(
-                $request->validated(),
-                ['clubId' => $clubId]
-            ));
-            $equipId = $this->createEquipCommand->execute($dto);
+            $isEntrenador = UsuariRol::where('usuariId', $authUserId)
+                ->where('rol', 'ENTRENADOR')
+                ->where('isActive', true)
+                ->exists();
+
+            $rolEquip = $isEntrenador ? 'entrenador' : 'delegat';
+
+            $equipId = DB::transaction(function () use ($request, $clubId, $authUserId, $rolEquip) {
+                $dto = CreateEquipDTO::fromArray(array_merge(
+                    $request->validated(),
+                    ['clubId' => $clubId]
+                ));
+
+                $createdEquipId = $this->createEquipCommand->execute($dto);
+
+                $membreDto = CreateEquipUsuariDTO::fromArray([
+                    'equipId' => $createdEquipId,
+                    'usuariId' => $authUserId,
+                    'rolEquip' => $rolEquip,
+                ]);
+
+                $this->createEquipUsuariCommand->execute($membreDto, $clubId);
+
+                return $createdEquipId;
+            });
 
             return response()->json([
                 'success' => true,
@@ -332,6 +374,123 @@ class ClubController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ], $e->getCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'exception' => get_class($e),
+                'debug' => env('APP_DEBUG')
+            ], 400);
+        }
+    }
+
+    /**
+     * POST /clubs/{clubId}/equips/{equipId}/inscripcio-lliga - Inscriure equip a una lliga
+     */
+    public function inscriureEquipALliga(string $clubId, string $equipId, Request $request): JsonResponse
+    {
+        try {
+            $authUserId = $this->resolveAuthUserId($request);
+
+            if ($authUserId === null) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat'
+                ], 401);
+            }
+
+            $lligaId = trim((string) $request->input('lligaId', ''));
+
+            if ($lligaId === '') {
+                return response()->json([
+                    'success' => false,
+                    'message' => "La lliga és obligatòria"
+                ], 422);
+            }
+
+            $equip = \App\Models\Equip::query()
+                ->where('id', $equipId)
+                ->where('clubId', $clubId)
+                ->where('isActive', true)
+                ->first();
+
+            if (!$equip) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "L'equip no existeix o no pertany al club"
+                ], 404);
+            }
+
+            $activeRoles = UsuariRol::query()
+                ->where('usuariId', $authUserId)
+                ->where('isActive', true)
+                ->pluck('rol')
+                ->map(fn(string $rol) => strtoupper($rol))
+                ->toArray();
+
+            $isAdminWeb = in_array('ADMIN_WEB', $activeRoles, true);
+            $isAdminClubOwner = in_array('ADMIN_CLUB', $activeRoles, true)
+                && DB::table('clubs')
+                ->where('id', $clubId)
+                ->where('creadorId', $authUserId)
+                ->exists();
+            $isTrainerOfTeam = in_array('ENTRENADOR', $activeRoles, true)
+                && DB::table('equip_usuaris')
+                ->where('equipId', $equipId)
+                ->where('usuariId', $authUserId)
+                ->whereRaw('LOWER(rolEquip) = ?', ['entrenador'])
+                ->exists();
+
+            if (!$isAdminWeb && !$isAdminClubOwner && !$isTrainerOfTeam) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "No tens permisos per inscriure aquest equip"
+                ], 403);
+            }
+
+            $lliga = null;
+            if (Schema::hasTable('lligues')) {
+                $lliga = DB::table('lligues')
+                    ->where('id', $lligaId)
+                    ->where('isActive', true)
+                    ->first();
+            }
+
+            if (!$lliga && Schema::hasTable('lligas')) {
+                $lliga = DB::table('lligas')
+                    ->where('id', $lligaId)
+                    ->where('isActive', true)
+                    ->first();
+            }
+
+            if (!$lliga) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La lliga indicada no existeix'
+                ], 404);
+            }
+
+            $equipCategoria = mb_strtoupper(trim((string) $equip->categoria));
+            $lligaCategoria = mb_strtoupper(trim((string) ($lliga->categoria ?? '')));
+
+            if ($equipCategoria !== '' && $lligaCategoria !== '' && $equipCategoria !== $lligaCategoria) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La categoria de la lliga no coincideix amb la de l\'equip'
+                ], 422);
+            }
+
+            $equip->lligaId = $lligaId;
+            $equip->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Equip inscrit correctament a la lliga',
+                'data' => [
+                    'equipId' => $equipId,
+                    'lligaId' => $lligaId,
+                ]
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

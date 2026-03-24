@@ -15,6 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             \App\Http\Middleware\ApiGateway::class,
         ]);
+
+        $middleware->alias([
+            'jwt.auth' => \App\Modules\Auth\Infrastructure\Middleware\JwtMiddleware::class,
+            'validate.session' => \App\Modules\Auth\Infrastructure\Middleware\ValidateSessionMiddleware::class,
+            'checkRole' => \App\Http\Middleware\CheckRole::class,
+            'checkPermission' => \App\Http\Middleware\CheckPermission::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

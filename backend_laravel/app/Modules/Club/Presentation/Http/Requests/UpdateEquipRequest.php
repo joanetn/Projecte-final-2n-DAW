@@ -2,6 +2,7 @@
 
 namespace App\Modules\Club\Presentation\Http\Requests;
 
+use App\Enums\LeagueCategory;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -17,9 +18,11 @@ class UpdateEquipRequest extends FormRequest
 
     public function rules(): array
     {
+        $categoriaValues = implode(',', LeagueCategory::values());
+
         return [
             'nom' => 'nullable|string|min:2|max:255',
-            'categoria' => 'nullable|string|max:100',
+            'categoria' => "nullable|string|in:{$categoriaValues}",
             'lligaId' => 'nullable|string|exists:lligas,id',
             'isActive' => 'nullable|boolean',
         ];
@@ -32,6 +35,7 @@ class UpdateEquipRequest extends FormRequest
             'nom.min' => "El nom ha de tenir almenys 2 caràcters",
             'nom.max' => "El nom no pot excedir 255 caràcters",
             'categoria.string' => "La categoria ha de ser una cadena de text",
+            'categoria.in' => 'La categoria ha de ser un dels valors: ' . implode(', ', LeagueCategory::values()),
             'lligaId.exists' => "La lliga indicada no existeix",
             'isActive.boolean' => "El camp isActive ha de ser un valor booleà",
         ];

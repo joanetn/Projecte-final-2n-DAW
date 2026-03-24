@@ -10,6 +10,7 @@ class Merch
         public readonly string $id,
         public readonly string $nom,
         public readonly MerchBrand|string $marca,
+        public readonly ?string $imageUrl,
         public readonly ?float $preu,
         public readonly ?int $stock,
         public readonly bool $isActive,

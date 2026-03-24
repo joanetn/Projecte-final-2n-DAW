@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useGetEquipsAdmin, useGetLliguesAdmin, useGetMembresEquip } from '@/queries/adminWeb.queries'
+import { useGetLeagueCategories } from '@/queries/club.queries'
 import {
     useCrearEquip,
     useActualitzarEquip,
@@ -46,6 +47,7 @@ function EquipFormDialog({
     onSave,
     loading,
     lligues,
+    categories,
 }: {
     equip: EquipAdmin | null
     open: boolean
@@ -53,6 +55,7 @@ function EquipFormDialog({
     onSave: (data: CreateEquipData | UpdateEquipData) => void
     loading: boolean
     lligues: LligaAdmin[]
+    categories: Array<{ value: string; label: string }>
 }) {
     const [nom, setNom] = useState(equip?.nom ?? '')
     const [categoria, setCategoria] = useState(equip?.categoria ?? '')
@@ -60,7 +63,7 @@ function EquipFormDialog({
     const [isActive, setIsActive] = useState(equip?.isActive ?? true)
 
     const handleSave = () => {
-        if (!nom.trim()) return
+        if (!nom.trim() || !categoria.trim()) return
         if (equip) {
             onSave({ nom, categoria, lligaId: lligaId || undefined, isActive } as UpdateEquipData)
         } else {
@@ -87,13 +90,23 @@ function EquipFormDialog({
                         />
                     </div>
                     <div>
-                        <label className="text-sm font-medium text-warm-700 dark:text-warm-300 mb-1 block">Categoria</label>
-                        <Input
-                            value={categoria}
-                            onChange={e => setCategoria(e.target.value)}
-                            placeholder="Categoria"
-                            className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600"
-                        />
+                        <label className="text-sm font-medium text-warm-700 dark:text-warm-300 mb-1 block">Categoria *</label>
+                        <Select
+                            value={categoria || 'none'}
+                            onValueChange={v => setCategoria(v === 'none' ? '' : v)}
+                        >
+                            <SelectTrigger className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600">
+                                <SelectValue placeholder="Selecciona categoria" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">Selecciona categoria</SelectItem>
+                                {categories.map(category => (
+                                    <SelectItem key={category.value} value={category.value}>
+                                        {category.label}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                     <div>
                         <label className="text-sm font-medium text-warm-700 dark:text-warm-300 mb-1 block">Lliga</label>
@@ -116,7 +129,7 @@ function EquipFormDialog({
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={onClose} disabled={loading}>Cancel·lar</Button>
-                    <Button onClick={handleSave} disabled={loading || !nom.trim()} className="bg-warm-600 hover:bg-warm-700 text-white">
+                    <Button onClick={handleSave} disabled={loading || !nom.trim() || !categoria.trim()} className="bg-warm-600 hover:bg-warm-700 text-white">
                         {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                         {equip ? 'Guardar canvis' : 'Crear equip'}
                     </Button>
@@ -223,6 +236,7 @@ export function EquipsTab() {
 
     const { data, isLoading, error, refetch } = useGetEquipsAdmin(params)
     const { data: lliguesData } = useGetLliguesAdmin()
+    const { data: categoriesData } = useGetLeagueCategories()
     const crearMutation = useCrearEquip()
     const actualitzarMutation = useActualitzarEquip()
     const eliminarMutation = useEliminarEquip()
@@ -265,6 +279,7 @@ export function EquipsTab() {
 
     const equips = data?.equips ?? []
     const lligues = lliguesData?.lligues ?? []
+    const categories = categoriesData ?? []
 
     if (error) {
         return (
@@ -402,6 +417,7 @@ export function EquipsTab() {
                 onSave={handleSave}
                 loading={crearMutation.isPending || actualitzarMutation.isPending}
                 lligues={lligues}
+                categories={categories}
             />
             <DeleteDialog
                 equip={deleteDialog}

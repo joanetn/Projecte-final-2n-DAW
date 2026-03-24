@@ -8,6 +8,7 @@ use App\Modules\League\Presentation\Http\Controllers\StandingController;
 
 Route::prefix('lligues')->group(function () {
     Route::get('/', [LeagueController::class, 'index']);
+    Route::get('/categories', [LeagueController::class, 'categories']);
     Route::get('/{id}', [LeagueController::class, 'show']);
     Route::get('/{id}/detail', [LeagueController::class, 'showDetail']);
     Route::post('/', [LeagueController::class, 'store']);

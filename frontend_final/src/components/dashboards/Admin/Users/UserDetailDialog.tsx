@@ -18,6 +18,11 @@ interface UserDetailDialogProps {
 
 export function UserDetailDialog({ open, onOpenChange, user }: UserDetailDialogProps) {
     const { data: detail, isLoading } = useGetAdminUserDetail(open ? user?.id ?? null : null)
+    const comprasOrdenades = [...(detail?.compras ?? [])].sort((a, b) => {
+        const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return bDate - aDate
+    })
 
     if (!user) return null
 
@@ -120,26 +125,38 @@ export function UserDetailDialog({ open, onOpenChange, user }: UserDetailDialogP
                         )}
 
                         {/* Compras */}
-                        {detail.compras && detail.compras.length > 0 && (
+                        {comprasOrdenades.length > 0 && (
                             <Section title="Compras">
                                 <div className="space-y-2">
-                                    {detail.compras.map((compra: any, i: number) => (
+                                    {comprasOrdenades.map((compra) => (
                                         <div
-                                            key={compra.id || i}
+                                            key={compra.id}
                                             className="flex items-center justify-between text-sm p-2 rounded bg-warm-50 dark:bg-slate-700/50"
                                         >
-                                            <span className="text-warm-800 dark:text-warm-200">
-                                                {compra.quantitat}x — {compra.total}€
-                                            </span>
-                                            <Badge
-                                                className={
-                                                    compra.pagat
-                                                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                                                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                                                }
-                                            >
-                                                {compra.status}
-                                            </Badge>
+                                            <div className="text-warm-800 dark:text-warm-200">
+                                                <p className="font-medium">{compra.quantitat}x · {compra.total}€</p>
+                                                <p className="text-xs text-warm-600 dark:text-warm-400">
+                                                    {compra.createdAt
+                                                        ? new Date(compra.createdAt).toLocaleDateString('ca-ES')
+                                                        : 'Data no disponible'}
+                                                </p>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Badge
+                                                    className={
+                                                        compra.pagat
+                                                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                                            : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                                    }
+                                                >
+                                                    {compra.pagat ? 'Pagada' : 'Pendent'}
+                                                </Badge>
+                                                {compra.status && (
+                                                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                                        {compra.status}
+                                                    </Badge>
+                                                )}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

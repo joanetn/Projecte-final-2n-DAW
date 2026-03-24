@@ -51,4 +51,27 @@ class RegisterRequest extends FormRequest
             'deviceId.required'      => 'El deviceId és obligatori',
         ];
     }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $roles = $this->input('rols');
+
+            if (!is_array($roles) || empty($roles)) {
+                return;
+            }
+
+            $normalizedRoles = array_values(array_unique(array_filter(
+                array_map(
+                    static fn($role) => is_string($role) ? strtoupper(trim($role)) : '',
+                    $roles
+                ),
+                static fn($role) => $role !== ''
+            )));
+
+            if (in_array('ARBITRE', $normalizedRoles, true) && count($normalizedRoles) > 1) {
+                $validator->errors()->add('rols', 'Si selecciones ARBITRE, no pots seleccionar altres rols.');
+            }
+        });
+    }
 }

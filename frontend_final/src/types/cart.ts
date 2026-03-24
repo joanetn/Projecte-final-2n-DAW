@@ -2,6 +2,7 @@ export interface CartMerch {
     id: string;
     nom?: string;
     marca?: string;
+    imageUrl?: string;
     preu?: number;
     stock?: number;
     isActive?: boolean;
@@ -44,6 +45,10 @@ export interface CreateCartCheckoutSessionRequest {
     cancelUrl: string;
 }
 
+export interface ConfirmCartCheckoutSessionRequest {
+    sessionId: string;
+}
+
 export interface CartCheckoutSession {
     sessionId: string;
     checkoutUrl: string;
@@ -59,4 +64,9 @@ export interface ApiCartCheckoutSessionResponse {
     success: boolean;
     message?: string;
     data?: CartCheckoutSession;
+}
+
+export interface ApiCartCheckoutConfirmResponse {
+    success: boolean;
+    message?: string;
 }

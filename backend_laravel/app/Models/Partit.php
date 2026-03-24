@@ -93,4 +93,9 @@ class Partit extends Model
     {
         return $this->hasMany(SetPartit::class, 'partitId');
     }
+
+    public function propostesCanviData(): HasMany
+    {
+        return $this->hasMany(PropostaCanviDataPartit::class, 'partitId');
+    }
 }

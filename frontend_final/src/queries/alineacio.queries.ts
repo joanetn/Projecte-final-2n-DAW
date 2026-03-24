@@ -7,6 +7,8 @@ import {
     type Alineacio,
 } from '@/services/alineacio.service';
 import {
+    crearInvitacioEquip,
+    getInvitacionsEquip,
     getInvitacionsPerUsuari,
     getInvitacionsPendents,
     respondreInvitacio,
@@ -54,6 +56,7 @@ export const useDeleteAlineacio = (partitId: string) => {
 export const INVITACIO_KEYS = {
     perUsuari: (usuariId: string) => ['invitacions', 'usuari', usuariId] as const,
     pendents: (usuariId: string) => ['invitacions', 'usuari', usuariId, 'pendents'] as const,
+    perEquip: (equipId: string) => ['invitacions', 'equip', equipId] as const,
 };
 
 export const useGetInvitacionsUsuari = (usuariId: string | null) =>
@@ -70,11 +73,29 @@ export const useGetInvitacionsPendents = (usuariId: string | null) =>
         enabled: !!usuariId,
     });
 
+export const useGetInvitacionsEquip = (equipId: string | null) =>
+    useQuery({
+        queryKey: INVITACIO_KEYS.perEquip(equipId ?? ''),
+        queryFn: () => getInvitacionsEquip(equipId!),
+        enabled: !!equipId,
+    });
+
+export const useCrearInvitacioEquip = (equipId: string) => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({ usuariId, missatge }: { usuariId: string; missatge?: string }) =>
+            crearInvitacioEquip({ equipId, usuariId, missatge }),
+        onSuccess: () => {
+            qc.invalidateQueries({ queryKey: INVITACIO_KEYS.perEquip(equipId) });
+        },
+    });
+};
+
 export const useRespondreInvitacio = (usuariId: string) => {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, status }: { id: string; status: 'ACCEPTADA' | 'REBUTJADA' }) =>
-            respondreInvitacio(id, status),
+        mutationFn: ({ id, estat }: { id: string; estat: 'acceptada' | 'rebutjada' }) =>
+            respondreInvitacio(id, estat),
         onSuccess: () => {
             qc.invalidateQueries({ queryKey: INVITACIO_KEYS.perUsuari(usuariId) });
             qc.invalidateQueries({ queryKey: INVITACIO_KEYS.pendents(usuariId) });

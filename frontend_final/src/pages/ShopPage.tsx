@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Search, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Search, Shirt, X } from 'lucide-react'
 
 import { useSearchMerchs, useGetBrands } from '@/queries/merch.queries'
 import { useAuth } from '@/context/AuthContext'
@@ -214,6 +214,19 @@ export default function ShopPage() {
                                         key={m.id}
                                         className="rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex flex-col"
                                     >
+                                        <div className="mb-4">
+                                            {m.imageUrl ? (
+                                                <img
+                                                    src={m.imageUrl}
+                                                    alt={m.nom}
+                                                    className="w-full h-40 rounded-lg object-cover border border-warm-100 dark:border-slate-700"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-40 rounded-lg border border-warm-100 dark:border-slate-700 bg-warm-50 dark:bg-slate-700/50 flex items-center justify-center text-warm-500 dark:text-warm-300">
+                                                    <Shirt className="w-8 h-8" />
+                                                </div>
+                                            )}
+                                        </div>
                                         <div className="flex-1">
                                             <h3 className="font-semibold text-slate-900 dark:text-white">
                                                 {m.nom}

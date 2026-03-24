@@ -1,5 +1,10 @@
 import { laravel } from "@/api/axios"
-import type { CreatePaymentIntentData, CreatePaymentIntentResponse, Insurance } from "@/types/insurance"
+import type {
+    ConfirmInsurancePaymentResponse,
+    CreatePaymentIntentData,
+    CreatePaymentIntentResponse,
+    Insurance,
+} from "@/types/insurance"
 
 const authHeader = () => {
     const token = localStorage.getItem('accessToken')
@@ -17,5 +22,15 @@ export const createPaymentIntent = async (data: CreatePaymentIntentData): Promis
     const res = await laravel.post<CreatePaymentIntentResponse>(`/api/seguros/create-payment-intent`, data, {
         headers: authHeader(),
     })
+    return res.data
+}
+
+export const confirmInsurancePayment = async (paymentIntentId: string): Promise<ConfirmInsurancePaymentResponse> => {
+    const res = await laravel.post<ConfirmInsurancePaymentResponse>(`/api/seguros/confirm-payment`, {
+        paymentIntentId,
+    }, {
+        headers: authHeader(),
+    })
+
     return res.data
 }

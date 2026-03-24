@@ -14,6 +14,15 @@ import type {
     UpdateLligaData,
     CreatePartitData,
     UpdatePartitData,
+    LligaEquipsResponse,
+    GenerateLligaFixturesResponse,
+    GetUsuarisParams,
+    GetEquipsParams,
+    GetPartitsParams,
+    GetPropostesReprogramacioParams,
+    GetMevesPropostesResponse,
+    CreatePropostaReprogramacioData,
+    RespondrePropostaReprogramacioData,
 } from '@/types/admin';
 
 const BASE = '/api/admin-web';
@@ -32,12 +41,6 @@ export const getEstadistiquesAdminWeb = async (): Promise<EstadistiquesAdminWeb>
 };
 
 // ─── Usuaris ─────────────────────────────────────────────────────────────────
-
-export interface GetUsuarisParams {
-    rol?: string;
-    actiu?: boolean;
-    cerca?: string;
-}
 
 export const getUsuarisAdmin = async (
     params?: GetUsuarisParams
@@ -66,12 +69,6 @@ export const eliminarUsuari = async (usuariId: string): Promise<void> => {
 };
 
 // ─── Equips ───────────────────────────────────────────────────────────────────
-
-export interface GetEquipsParams {
-    lligaId?: string;
-    actiu?: boolean;
-    cerca?: string;
-}
 
 export const getEquipsAdmin = async (
     params?: GetEquipsParams
@@ -128,12 +125,24 @@ export const eliminarLliga = async (lligaId: string): Promise<void> => {
     await laravel.delete(`${BASE}/lligues/${lligaId}`, { headers: authHeader() });
 };
 
-// ─── Partits ─────────────────────────────────────────────────────────────────
+export const getEquipsLligaAdmin = async (lligaId: string): Promise<LligaEquipsResponse> => {
+    const res = await laravel.get(`${BASE}/lligues/${lligaId}/equips`, { headers: authHeader() });
+    return res.data.data;
+};
 
-export interface GetPartitsParams {
-    status?: string;
-    cerca?: string;
-}
+export const generarPartitsLligaAdmin = async (
+    lligaId: string,
+    force: boolean = false
+): Promise<GenerateLligaFixturesResponse> => {
+    const res = await laravel.post(
+        `${BASE}/lligues/${lligaId}/generar-partits`,
+        { force },
+        { headers: authHeader() }
+    );
+    return res.data.data;
+};
+
+// ─── Partits ─────────────────────────────────────────────────────────────────
 
 export const getPartitsAdmin = async (
     params?: GetPartitsParams
@@ -182,6 +191,45 @@ export const getPartitsArbitre = async (
     const res = await laravel.get(`${BASE}/arbitres/${arbitreId}/partits`, {
         headers: authHeader(),
     });
+    return res.data.data;
+};
+
+// ─── Reprogramacions ─────────────────────────────────────────────────────────
+
+export const getMevesPropostesReprogramacio = async (
+    params?: GetPropostesReprogramacioParams
+): Promise<GetMevesPropostesResponse> => {
+    const res = await laravel.get(`${BASE}/propostes-reprogramacio/me`, {
+        headers: authHeader(),
+        params,
+    });
+
+    return res.data.data;
+};
+
+export const crearPropostaReprogramacio = async (
+    partitId: string,
+    data: CreatePropostaReprogramacioData
+): Promise<{ id: string }> => {
+    const res = await laravel.post(
+        `${BASE}/partits/${partitId}/propostes-reprogramacio`,
+        data,
+        { headers: authHeader() }
+    );
+
+    return res.data.data;
+};
+
+export const respondrePropostaReprogramacio = async (
+    propostaId: string,
+    data: RespondrePropostaReprogramacioData
+): Promise<{ accepted: boolean }> => {
+    const res = await laravel.patch(
+        `${BASE}/propostes-reprogramacio/${propostaId}/respondre`,
+        data,
+        { headers: authHeader() }
+    );
+
     return res.data.data;
 };
 

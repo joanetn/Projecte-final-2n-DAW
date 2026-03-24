@@ -22,6 +22,7 @@ class UpdateMerchAdminCommand
         $data = [];
         if ($dto->nom !== null) $data['nom'] = $dto->nom;
         if ($dto->marca !== null) $data['marca'] = $dto->marca;
+        if ($dto->imageUrl !== null) $data['imageUrl'] = $dto->imageUrl;
         if ($dto->preu !== null) $data['preu'] = $dto->preu;
         if ($dto->stock !== null) $data['stock'] = $dto->stock;
         if ($dto->isActive !== null) $data['isActive'] = $dto->isActive;

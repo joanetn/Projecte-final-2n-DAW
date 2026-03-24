@@ -16,6 +16,7 @@ class CartItemMapper
                 'id' => $model->merch->id,
                 'nom' => $model->merch->nom,
                 'marca' => $model->merch->marca,
+                'imageUrl' => $model->merch->imageUrl,
                 'preu' => $model->merch->preu,
                 'stock' => $model->merch->stock,
                 'isActive' => $model->merch->isActive,

@@ -5,7 +5,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import { Loader2, Shield, CheckCircle2, Clock, XCircle } from 'lucide-react'
 
 import { useAuth } from '@/context/AuthContext'
-import { useCreatePaymentIntent } from '@/mutations/insurance.mutations'
+import { useConfirmInsurancePayment, useCreatePaymentIntent } from '@/mutations/insurance.mutations'
 import { useGetInsurances } from '@/queries/insurance.queries'
 import type { Insurance } from '@/types/insurance'
 import { Button } from '@/components/ui/button'
@@ -34,7 +34,7 @@ const formatDate = (value?: string | null) => {
 }
 
 interface InsuranceCheckoutFormProps {
-    onSuccess: (status: string) => Promise<void> | void
+    onSuccess: (paymentIntentId: string, status: string) => Promise<void> | void
     onCancel: () => void
 }
 
@@ -66,7 +66,7 @@ function InsuranceCheckoutForm({ onSuccess, onCancel }: InsuranceCheckoutFormPro
             }
 
             if (result.paymentIntent) {
-                await onSuccess(result.paymentIntent.status)
+                await onSuccess(result.paymentIntent.id, result.paymentIntent.status)
                 return
             }
 
@@ -117,6 +117,7 @@ export function InsurancesTab() {
 
     const { data: insurances = [], isLoading, refetch } = useGetInsurances()
     const createPaymentIntent = useCreatePaymentIntent()
+    const confirmInsurancePayment = useConfirmInsurancePayment()
 
     const [mesos, setMesos] = useState('12')
     const [clientSecret, setClientSecret] = useState<string | null>(null)
@@ -164,13 +165,18 @@ export function InsurancesTab() {
         }
     }
 
-    const handlePaymentSuccess = async (status: string) => {
+    const handlePaymentSuccess = async (paymentIntentId: string, status: string) => {
         setClientSecret(null)
         setPendingInsuranceId(null)
         setErrorMessage(null)
 
         if (status === 'succeeded') {
-            setSuccessMessage('Pagament realitzat. Estem confirmant el segur via webhook de Stripe.')
+            try {
+                await confirmInsurancePayment.mutateAsync({ paymentIntentId })
+                setSuccessMessage('Pagament del segur confirmat correctament.')
+            } catch {
+                setSuccessMessage('Pagament realitzat. Estem confirmant el segur via webhook de Stripe.')
+            }
         } else {
             setSuccessMessage('Pagament processat. Comprovarem l\'estat en uns segons.')
         }
