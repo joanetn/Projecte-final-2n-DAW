@@ -24,6 +24,7 @@ class EquipUsuari extends Model
     protected $casts = [
         'isActive' => 'boolean',
         'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function equip(): BelongsTo

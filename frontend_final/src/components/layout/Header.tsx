@@ -23,7 +23,7 @@ export function Header() {
         { label: 'Dashboard Jugador', to: '/dashboardJugador', roles: ['JUGADOR'] },
         { label: 'Dashboard Entrenador', to: '/dashboardEntrenador', roles: ['ENTRENADOR'] },
         { label: 'Dashboard Árbitro', to: '/dashboardArbitre', roles: ['ARBITRE'] },
-        { label: 'Dashboard Club', to: '/dashboardAdminClub', roles: ['ADMIN_CLUB', 'ADMIN_WEB'] },
+        { label: 'Dashboard Club', to: '/dashboardAdminClub', roles: ['ADMIN_CLUB'] },
         { label: 'Dashboard Admin', to: '/dashboardAdmin', roles: ['ADMIN_WEB'] },
     ]
 

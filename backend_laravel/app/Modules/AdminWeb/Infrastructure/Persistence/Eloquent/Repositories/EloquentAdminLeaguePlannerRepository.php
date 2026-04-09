@@ -91,7 +91,7 @@ class EloquentAdminLeaguePlannerRepository implements AdminLeaguePlannerReposito
             ->where('usuariId', $userId)
             ->where('equipId', $teamId)
             ->where('isActive', true)
-            ->whereRaw('LOWER(rolEquip) in (?, ?)', ['entrenador', 'delegat'])
+            ->whereRaw('LOWER("rolEquip") in (?, ?)', ['entrenador', 'delegat'])
             ->exists();
     }
 
@@ -100,7 +100,7 @@ class EloquentAdminLeaguePlannerRepository implements AdminLeaguePlannerReposito
         return TeamUserModel::query()
             ->where('usuariId', $userId)
             ->where('isActive', true)
-            ->whereRaw('LOWER(rolEquip) in (?, ?)', ['entrenador', 'delegat'])
+            ->whereRaw('LOWER("rolEquip") in (?, ?)', ['entrenador', 'delegat'])
             ->pluck('equipId')
             ->unique()
             ->values()

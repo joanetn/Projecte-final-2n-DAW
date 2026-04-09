@@ -23,7 +23,11 @@ class InstalacioResource extends JsonResource
                     'id' => $pista['id'] ?? $pista->id,
                     'nom' => $pista['nom'] ?? $pista->nom,
                     'tipus' => $pista['tipus'] ?? $pista->tipus,
+                    'instalacioId' => $pista['instalacioId'] ?? $pista->instalacioId,
+                    'numero' => $pista['numero'] ?? $pista->numero,
                     'isActive' => $pista['isActive'] ?? $pista->isActive,
+                    'createdAt' => $pista['createdAt'] ?? $pista->createdAt ?? $pista['created_at'] ?? null,
+                    'updatedAt' => $pista['updatedAt'] ?? $pista->updatedAt ?? $pista['updated_at'] ?? null,
                 ];
             })->toArray(),
             'createdAt' => $this->createdAt,

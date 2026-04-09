@@ -24,7 +24,7 @@ class CreateEquipRequest extends FormRequest
         return [
             'nom' => 'required|string|min:2|max:255',
             'categoria' => "required|string|in:{$categoriaValues}",
-            'lligaId' => 'nullable|string|exists:lligas,id',
+            'lligaId' => 'nullable|string|exists:lligues,id',
         ];
     }
 

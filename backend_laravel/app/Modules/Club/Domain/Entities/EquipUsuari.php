@@ -11,5 +11,6 @@ class EquipUsuari
         public readonly string $rolEquip,
         public readonly bool $isActive = true,
         public readonly ?string $createdAt = null,
+        public readonly ?string $updatedAt = null,
     ) {}
 }

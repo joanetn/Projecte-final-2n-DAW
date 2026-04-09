@@ -81,6 +81,8 @@ class ApiGateway
         // nunca se proxyan a un microservicio.
         return str_starts_with($path, 'gateway/')
             || str_starts_with($path, 'admin/')
+            || str_starts_with($path, 'admin-web/')
+            || $path === 'admin-web'
             || str_starts_with($path, 'auth/')
             || $path === 'auth'
             || str_starts_with($path, 'stripe/')

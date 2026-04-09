@@ -83,6 +83,42 @@ class EloquentMatchRepository implements MatchRepositoryInterface
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
 
+    public function findFiltered(?string $arbitreId = null, ?string $equipId = null, array $equipIds = [], ?string $status = null): array
+    {
+        $query = $this->model
+            ->where('isActive', true)
+            ->with(['local', 'visitant', 'jornada', 'pista', 'arbitre'])
+            ->orderBy('dataHora', 'desc');
+
+        if (!empty($arbitreId)) {
+            $query->where('arbitreId', $arbitreId);
+        }
+
+        if (!empty($equipId)) {
+            $query->where(function ($builder) use ($equipId) {
+                $builder
+                    ->where('localId', $equipId)
+                    ->orWhere('visitantId', $equipId);
+            });
+        }
+
+        if (!empty($equipIds)) {
+            $query->where(function ($builder) use ($equipIds) {
+                $builder
+                    ->whereIn('localId', $equipIds)
+                    ->orWhereIn('visitantId', $equipIds);
+            });
+        }
+
+        if (!empty($status)) {
+            $query->where('status', strtoupper($status));
+        }
+
+        $models = $query->get();
+
+        return $models->map([$this->mapper, 'toDomain'])->toArray();
+    }
+
     public function findByJornada(string $jornadaId): array
     {
         $models = $this->model

@@ -1,16 +1,20 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import DashboardAdmin from "@/pages/dashboards/Admin/DashboardAdmin"
+import DashboardAdminWeb from "@/pages/dashboards/AdminWeb/DashboardAdminWeb"
 import DashboardJugador from "@/pages/dashboards/Jugador/DashboardJugador"
 import DashboardAdminClub from "@/pages/dashboards/AdminClub/DashboardAdminClub"
 import DashboardArbitre from "@/pages/dashboards/Arbitre/DashboardArbitre"
 import DashboardEntrenador from "@/pages/dashboards/Entrenador/DashboardEntrenador"
 import AlineacioPage from "@/pages/AlineacioPage"
 import ActaPage from "@/pages/ActaPage"
+import PartitDetailPage from '@/pages/PartitDetailPage'
 import Home from "@/pages/Home"
+import RoleBasedHome from "@/pages/RoleBasedHome"
 import ShopPage from "@/pages/ShopPage"
 import CartPage from "@/pages/CartPage"
 import LoginPage from "@/pages/LoginPage"
 import RegisterPage from "@/pages/RegisterPage"
+import GuestGuard from '@/guard/guestGuard'
 import { Layout } from "@/components/layout/Layout"
 import Profile from "@/pages/Profile"
 import Insurances from "@/pages/InsurancePage"
@@ -24,6 +28,10 @@ const AppRouter = () => {
                     <Route
                         path="/"
                         element={<Home />}
+                    />
+                    <Route
+                        path="/home"
+                        element={<RoleBasedHome />}
                     />
                     <Route
                         path="/shop"
@@ -42,6 +50,14 @@ const AppRouter = () => {
                         }
                     />
                     <Route
+                        path="/dashboardAdminWeb"
+                        element={
+                            <RolGuard allowedRoles={["ADMIN_WEB"]}>
+                                <DashboardAdminWeb />
+                            </RolGuard>
+                        }
+                    />
+                    <Route
                         path="/dashboardJugador"
                         element={
                             <RolGuard allowedRoles={["JUGADOR", "ADMIN_WEB"]}>
@@ -52,7 +68,7 @@ const AppRouter = () => {
                     <Route
                         path="/dashboardAdminClub"
                         element={
-                            <RolGuard allowedRoles={["ADMIN_CLUB", "ADMIN_WEB", "ENTRENADOR"]}>
+                            <RolGuard allowedRoles={["ADMIN_CLUB", "ENTRENADOR"]}>
                                 <DashboardAdminClub />
                             </RolGuard>
                         }
@@ -90,12 +106,28 @@ const AppRouter = () => {
                         }
                     />
                     <Route
+                        path="/partits/:partitId"
+                        element={
+                            <RolGuard allowedRoles={["JUGADOR", "ENTRENADOR", "ARBITRE", "ADMIN_WEB", "ADMIN_CLUB"]}>
+                                <PartitDetailPage />
+                            </RolGuard>
+                        }
+                    />
+                    <Route
                         path="/login"
-                        element={<LoginPage />}
+                        element={
+                            <GuestGuard>
+                                <LoginPage />
+                            </GuestGuard>
+                        }
                     />
                     <Route
                         path="/register"
-                        element={<RegisterPage />}
+                        element={
+                            <GuestGuard>
+                                <RegisterPage />
+                            </GuestGuard>
+                        }
                     />
                     <Route
                         path="/profile"

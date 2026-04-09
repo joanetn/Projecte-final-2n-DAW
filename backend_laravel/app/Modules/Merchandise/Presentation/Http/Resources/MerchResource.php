@@ -19,7 +19,20 @@ class MerchResource extends JsonResource
             'isActive' => $this->isActive,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
-            'compras' => $this->compras,
+            'compras' => collect($this->compras ?? [])->map(function ($compra) {
+                return [
+                    'id' => $compra['id'] ?? $compra->id,
+                    'usuariId' => $compra['usuariId'] ?? $compra->usuariId,
+                    'merchId' => $compra['merchId'] ?? $compra->merchId,
+                    'quantitat' => $compra['quantitat'] ?? $compra->quantitat,
+                    'total' => $compra['total'] ?? $compra->total,
+                    'pagat' => $compra['pagat'] ?? $compra->pagat,
+                    'status' => $compra['status'] ?? $compra->status,
+                    'isActive' => $compra['isActive'] ?? $compra->isActive,
+                    'createdAt' => $compra['createdAt'] ?? $compra->createdAt ?? $compra['created_at'] ?? null,
+                    'updatedAt' => $compra['updatedAt'] ?? $compra->updatedAt ?? $compra['updated_at'] ?? null,
+                ];
+            })->toArray(),
         ];
     }
 }

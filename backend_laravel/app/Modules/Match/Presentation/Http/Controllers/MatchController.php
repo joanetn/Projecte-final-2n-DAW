@@ -33,9 +33,26 @@ class MatchController extends Controller
         private GetMatchesDetailQuery $getMatchesDetailQuery
     ) {}
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $matches = $this->getMatchesQuery->execute();
+        $arbitreId = trim((string) $request->query('arbitreId', ''));
+        $equipId = trim((string) $request->query('equipId', ''));
+        $status = trim((string) $request->query('status', ''));
+        $equipIdsParam = trim((string) $request->query('equipIds', ''));
+
+        $equipIds = collect(explode(',', $equipIdsParam))
+            ->map(fn($value) => trim((string) $value))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        $matches = $this->getMatchesQuery->execute(
+            $arbitreId !== '' ? $arbitreId : null,
+            $equipId !== '' ? $equipId : null,
+            $equipIds,
+            $status !== '' ? $status : null,
+        );
 
         return response()->json([
             'success' => true,

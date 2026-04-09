@@ -24,8 +24,8 @@ import {
     MapPin,
 } from 'lucide-react'
 import type { Equip } from '@/types/club'
-import type { Partit } from '@/services/partit.service'
-import type { Invitacio } from '@/services/invitacio.service'
+import type { Partit } from '@/types/partit'
+import type { Invitacio } from '@/services/dto/invitacio.dto'
 import type { Insurance } from '@/types/insurance'
 
 // ── Tab: Mis Datos ────────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@ function MisEquipsTab({ userId }: { userId: string }) {
                     <div className="flex items-start justify-between gap-3">
                         <div className="flex-1">
                             <p className="font-semibold text-slate-900 dark:text-white">
-                                {equip.nom || `Equip #${equip.id.slice(0, 8)}`}
+                                {equip.nom || 'Equip sense nom'}
                             </p>
                             {equip.categoria && <p className="text-xs text-slate-500 mt-0.5">{equip.categoria}</p>}
                             <div className="flex gap-2 mt-2 flex-wrap">
@@ -179,9 +179,9 @@ function EstadistiquesTab({
 
 // ── Tab: Pròxims Partits ──────────────────────────────────────────────────────
 function PartitsTab({ equipIds }: { equipIds: string[] }) {
-    const { data, isLoading } = useGetPartits()
+    const equipIdsParam = equipIds.join(',')
+    const { data, isLoading } = useGetPartits({ equipIds: equipIdsParam || '__NONE__' })
     const partits = (data?.partits ?? [])
-        .filter((p: Partit) => equipIds.includes(p.localId) || equipIds.includes(p.visitantId))
         .filter((p: Partit) => p.status !== 'COMPLETAT')
         .sort((a, b) => new Date(a.dataHora).getTime() - new Date(b.dataHora).getTime())
 
@@ -304,7 +304,7 @@ function InvitacionsTab({ userId }: { userId: string }) {
                     <div className="flex items-start justify-between gap-3">
                         <div>
                             <p className="font-semibold text-slate-900 dark:text-white">
-                                Invitació de {inv.equipNom ?? `Equip #${inv.equipId}`}
+                                Invitació de {inv.equipNom ?? 'Equip sense nom'}
                             </p>
                             {inv.tipus && <p className="text-xs text-slate-500 mt-0.5">Rol: {inv.tipus}</p>}
                             {inv.dataCreacio && (
@@ -338,16 +338,17 @@ export default function DashboardJugador() {
     const { data: insurances } = useGetInsurances()
     const { data: equipsData } = useGetMeusEquips(user?.id ?? null)
     const { data: invitacionsData } = useGetInvitacionsPendents(user?.id ?? null)
-    const { data: partitsData } = useGetPartits()
 
     const activeInsurance = (insurances ?? []).find((ins: Insurance) =>
         !!ins.isActive && ins.pagat
     )
     const equips = equipsData?.equips ?? []
     const equipIds = useMemo(() => equips.map((equip) => equip.id), [equips])
+    const equipIdsParam = useMemo(() => equipIds.join(','), [equipIds])
+    const { data: partitsMeusData } = useGetPartits({ equipIds: equipIdsParam || '__NONE__' })
     const partitsMeus = useMemo(
-        () => (partitsData?.partits ?? []).filter((p: Partit) => equipIds.includes(p.localId) || equipIds.includes(p.visitantId)),
-        [partitsData, equipIds]
+        () => partitsMeusData?.partits ?? [],
+        [partitsMeusData]
     )
     const propersPartits = useMemo(
         () => partitsMeus

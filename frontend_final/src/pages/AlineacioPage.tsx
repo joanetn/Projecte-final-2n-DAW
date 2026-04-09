@@ -15,7 +15,7 @@ import {
     Loader2,
     Users,
 } from 'lucide-react'
-import type { MembreEquip } from '@/services/club.service'
+import type { MembreEquip } from '@/types/club'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type Slot = MembreEquip | null
@@ -81,7 +81,7 @@ function PlayerSlot({
                         {slot.nom?.[0]?.toUpperCase() ?? '?'}
                     </div>
                     <p className="text-sm font-semibold text-slate-800 text-center px-2 truncate w-full text-center">
-                        {slot.nom ?? `Jugador ${slot.usuariId.slice(0, 4)}`}
+                        {slot.nom ?? 'Jugador sense nom'}
                     </p>
                     <StatusBadge membre={slot} />
                     <div

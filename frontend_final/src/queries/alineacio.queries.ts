@@ -4,10 +4,11 @@ import {
     crearAlineacio,
     updateAlineacio,
     deleteAlineacio,
-    type Alineacio,
 } from '@/services/alineacio.service';
+import type { Alineacio } from '@/types/alineacio';
 import {
     crearInvitacioEquip,
+    getInvitacioCandidates,
     getInvitacionsEquip,
     getInvitacionsPerUsuari,
     getInvitacionsPendents,
@@ -57,6 +58,7 @@ export const INVITACIO_KEYS = {
     perUsuari: (usuariId: string) => ['invitacions', 'usuari', usuariId] as const,
     pendents: (usuariId: string) => ['invitacions', 'usuari', usuariId, 'pendents'] as const,
     perEquip: (equipId: string) => ['invitacions', 'equip', equipId] as const,
+    candidatsEquip: (equipId: string, q: string) => ['invitacions', 'equip', equipId, 'candidats', q] as const,
 };
 
 export const useGetInvitacionsUsuari = (usuariId: string | null) =>
@@ -79,6 +81,17 @@ export const useGetInvitacionsEquip = (equipId: string | null) =>
         queryFn: () => getInvitacionsEquip(equipId!),
         enabled: !!equipId,
     });
+
+export const useGetInvitacioCandidates = (equipId: string | null, query: string) => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return useQuery({
+        queryKey: INVITACIO_KEYS.candidatsEquip(equipId ?? '', normalizedQuery),
+        queryFn: () => getInvitacioCandidates(equipId!, { q: normalizedQuery }),
+        enabled: !!equipId,
+        staleTime: 1000 * 30,
+    });
+};
 
 export const useCrearInvitacioEquip = (equipId: string) => {
     const qc = useQueryClient();

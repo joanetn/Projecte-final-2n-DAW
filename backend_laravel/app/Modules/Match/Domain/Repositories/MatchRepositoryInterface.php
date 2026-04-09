@@ -23,6 +23,7 @@ interface MatchRepositoryInterface
     public function findByEquip(string $equipId): array;
 
     public function findByArbitre(string $arbitreId): array;
+    public function findFiltered(?string $arbitreId = null, ?string $equipId = null, array $equipIds = [], ?string $status = null): array;
     public function findByIdIncludingInactive(string $id): ?Matches;
     public function findAllIncludingInactive(): array;
     public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?Matches;

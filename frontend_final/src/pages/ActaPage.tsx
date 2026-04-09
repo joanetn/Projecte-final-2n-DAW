@@ -14,7 +14,7 @@ import {
     FileText,
 } from 'lucide-react'
 import { crearPuntuacio } from '@/services/puntuacio.service'
-import type { SetResultat } from '@/services/puntuacio.service'
+import type { SetResultat } from '@/types/puntuacio'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type ActaStatus = 'BORRADOR' | 'CONFIRMADA'

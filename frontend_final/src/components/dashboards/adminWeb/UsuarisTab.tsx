@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGetUsuarisAdmin } from '@/queries/adminWeb.queries'
 import {
     useToggleUsuariActiu,
@@ -37,7 +37,15 @@ import {
     Users,
 } from 'lucide-react'
 
-const ALL_ROLES = ['ADMIN_WEB', 'ADMIN_EQUIP', 'ENTRENADOR', 'ARBITRE', 'JUGADOR']
+const ROLE_ALIASES: Record<string, string> = {
+    ADMIN_EQUIP: 'ADMIN_CLUB',
+}
+
+const ALL_ROLES = ['ADMIN_WEB', 'ADMIN_CLUB', 'ENTRENADOR', 'ARBITRE', 'JUGADOR']
+
+const normalizeRol = (rol: string) => ROLE_ALIASES[String(rol).toUpperCase()] ?? String(rol).toUpperCase()
+
+const normalizeRols = (rols: string[]) => Array.from(new Set(rols.map(normalizeRol)))
 
 function RolsDialog({
     user,
@@ -52,7 +60,11 @@ function RolsDialog({
     onSave: (rols: string[]) => void
     loading: boolean
 }) {
-    const [selectedRols, setSelectedRols] = useState<string[]>(user?.rols ?? [])
+    const [selectedRols, setSelectedRols] = useState<string[]>([])
+
+    useEffect(() => {
+        setSelectedRols(normalizeRols(user?.rols ?? []))
+    }, [user, open])
 
     const toggleRol = (rol: string) => {
         setSelectedRols(prev =>
@@ -180,7 +192,10 @@ export function UsuarisTab() {
     const handleSaveRols = async (rols: string[]) => {
         if (!rolsDialog) return
         try {
-            await rolsMutation.mutateAsync({ usuariId: rolsDialog.id, rols })
+            await rolsMutation.mutateAsync({
+                usuariId: rolsDialog.id,
+                rols: normalizeRols(rols),
+            })
             showNotification('success', 'Rols actualitzats correctament')
             setRolsDialog(null)
         } catch {

@@ -85,6 +85,19 @@ export interface UpdateEquipData {
     isActive?: boolean;
 }
 
+export interface MembreEquip {
+    id: string;
+    usuariId: string;
+    equipId: string;
+    rolEquip?: string;
+    isActive?: boolean;
+    nom?: string;
+    email?: string;
+    teSeguir?: boolean;
+    lesionat?: boolean;
+    dataLesio?: string;
+}
+
 export interface LeagueCategoryOption {
     value: string;
     label: string;

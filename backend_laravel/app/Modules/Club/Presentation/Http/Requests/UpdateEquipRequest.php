@@ -23,7 +23,7 @@ class UpdateEquipRequest extends FormRequest
         return [
             'nom' => 'nullable|string|min:2|max:255',
             'categoria' => "nullable|string|in:{$categoriaValues}",
-            'lligaId' => 'nullable|string|exists:lligas,id',
+            'lligaId' => 'nullable|string|exists:lligues,id',
             'isActive' => 'nullable|boolean',
         ];
     }

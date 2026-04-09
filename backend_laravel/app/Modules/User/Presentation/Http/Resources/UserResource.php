@@ -21,17 +21,21 @@ class UserResource extends JsonResource
             'isActive' => $this->isActive,
             'rols' => collect($this->rols ?? [])->map(function ($rol) {
                 return [
-                    'id' => $rol['id'] ?? $rol->id,
-                    'rol' => $rol['rol'] ?? $rol->rol,
-                    'isActive' => $rol['isActive'] ?? $rol->isActive,
+                    'id' => data_get($rol, 'id'),
+                    'usuariId' => data_get($rol, 'usuariId'),
+                    'rol' => data_get($rol, 'rol'),
+                    'isActive' => data_get($rol, 'isActive'),
+                    'createdAt' => data_get($rol, 'createdAt') ?? data_get($rol, 'created_at'),
                 ];
             })->toArray(),
             'equipUsuaris' => collect($this->equipUsuaris ?? [])->map(function ($equipUsuari) {
                 return [
-                    'id' => $equipUsuari['id'] ?? $equipUsuari->id,
-                    'equipId' => $equipUsuari['equipId'] ?? $equipUsuari->equipId,
-                    'rolEquip' => $equipUsuari['rolEquip'] ?? $equipUsuari->rolEquip,
-                    'isActive' => $equipUsuari['isActive'] ?? $equipUsuari->isActive,
+                    'id' => data_get($equipUsuari, 'id'),
+                    'equipId' => data_get($equipUsuari, 'equipId'),
+                    'usuariId' => data_get($equipUsuari, 'usuariId'),
+                    'rolEquip' => data_get($equipUsuari, 'rolEquip'),
+                    'isActive' => data_get($equipUsuari, 'isActive'),
+                    'createdAt' => data_get($equipUsuari, 'createdAt') ?? data_get($equipUsuari, 'created_at'),
                 ];
             })->toArray(),
             'compras' => collect($this->compras ?? [])->sortByDesc(function ($compra) {
@@ -40,20 +44,26 @@ class UserResource extends JsonResource
                     ?? data_get($compra, 'createdat');
             })->values()->map(function ($compra) {
                 return [
-                    'id' => $compra['id'] ?? $compra->id,
-                    'merchId' => $compra['merchId'] ?? $compra->merchId,
-                    'quantitat' => $compra['quantitat'] ?? $compra->quantitat,
-                    'total' => $compra['total'] ?? $compra->total,
-                    'pagat' => $compra['pagat'] ?? $compra->pagat,
-                    'status' => $compra['status'] ?? $compra->status,
-                    'createdAt' => $compra['createdAt'] ?? $compra->createdAt ?? $compra->created_at ?? null,
+                    'id' => data_get($compra, 'id'),
+                    'usuariId' => data_get($compra, 'usuariId'),
+                    'merchId' => data_get($compra, 'merchId'),
+                    'quantitat' => data_get($compra, 'quantitat'),
+                    'total' => data_get($compra, 'total'),
+                    'pagat' => data_get($compra, 'pagat'),
+                    'status' => data_get($compra, 'status'),
+                    'createdAt' => data_get($compra, 'createdAt') ?? data_get($compra, 'created_at'),
+                    'updatedAt' => data_get($compra, 'updatedAt') ?? data_get($compra, 'updated_at'),
                 ];
             })->toArray(),
             'seguros' => collect($this->seguros ?? [])->map(function ($seguro) {
                 return [
-                    'id' => $seguro['id'] ?? $seguro->id,
-                    'dataExpiracio' => $seguro['dataExpiracio'] ?? $seguro->dataExpiracio,
-                    'pagat' => $seguro['pagat'] ?? $seguro->pagat,
+                    'id' => data_get($seguro, 'id'),
+                    'usuariId' => data_get($seguro, 'usuariId'),
+                    'dataExpiracio' => data_get($seguro, 'dataExpiracio') ?? data_get($seguro, 'data_expiracio'),
+                    'pagat' => data_get($seguro, 'pagat'),
+                    'status' => data_get($seguro, 'status'),
+                    'createdAt' => data_get($seguro, 'createdAt') ?? data_get($seguro, 'created_at'),
+                    'updatedAt' => data_get($seguro, 'updatedAt') ?? data_get($seguro, 'updated_at'),
                 ];
             })->toArray(),
             'createdAt' => $this->createdAt,

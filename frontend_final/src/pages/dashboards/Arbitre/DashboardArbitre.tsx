@@ -15,7 +15,7 @@ import {
     Loader2,
     AlertCircle,
 } from 'lucide-react'
-import type { Partit } from '@/services/partit.service'
+import type { Partit } from '@/types/partit'
 
 // ─── Helper badges ────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
@@ -100,7 +100,7 @@ function PartitsPendentsTab({ userId }: { userId: string }) {
                             <Button
                                 size="sm"
                                 className="bg-blue-900 hover:bg-red-700 text-white text-xs"
-                                onClick={() => navigate(`/acta/crear/${p.id}`)}
+                                onClick={() => navigate(`/acta/${p.id}`)}
                             >
                                 <FileText className="w-3.5 h-3.5 mr-1" />
                                 Crear Acta

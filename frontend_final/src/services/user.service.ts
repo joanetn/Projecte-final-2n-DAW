@@ -1,4 +1,6 @@
 import { laravel } from '@/api/axios'
+import { authHeader } from '@/services/shared/auth-header'
+import { extractArray, unwrapApiData } from '@/services/shared/response-utils'
 import type {
     User,
     UserDetail,
@@ -18,59 +20,59 @@ import type {
 
 // ========== ENDPOINTS PÚBLICOS (solo usuarios activos, para login etc.) ==========
 export const getUsers = async (): Promise<User[]> => {
-    const res = await laravel.get<ApiResponse<User[]>>('/api/usuaris')
-    return res.data.data || []
+    const res = await laravel.get<ApiResponse<User[]>>('/api/usuaris', { headers: authHeader() })
+    return extractArray<User>(res.data)
 }
 
 export const getUser = async (id: string): Promise<User> => {
-    const res = await laravel.get<ApiResponse<User>>(`/api/usuaris/${id}`)
-    return res.data.data!
+    const res = await laravel.get<ApiResponse<User>>(`/api/usuaris/${id}`, { headers: authHeader() })
+    return unwrapApiData<User>(res.data)
 }
 
 export const getUserDetail = async (id: string): Promise<UserDetail> => {
-    const res = await laravel.get<ApiResponse<UserDetail>>(`/api/usuaris/${id}/detail`)
-    return res.data.data!
+    const res = await laravel.get<ApiResponse<UserDetail>>(`/api/usuaris/${id}/detail`, { headers: authHeader() })
+    return unwrapApiData<UserDetail>(res.data)
 }
 
-export const getLevels = async () => {
+export const getLevels = async (): Promise<string[]> => {
     const res = await laravel.get('/api/usuaris/nivells')
-    return res.data.data!
+    return extractArray<string>(res.data)
 }
 
 // ========== ENDPOINTS ADMIN (todos los usuarios, incluidos inactivos) ==========
 export const searchAdminUsers = async (params?: SearchUsersParams): Promise<SearchUsersResponse> => {
-    const res = await laravel.get<SearchUsersResponse>('/api/admin/usuaris', { params })
+    const res = await laravel.get<SearchUsersResponse>('/api/admin/usuaris', { params, headers: authHeader() })
     return res.data
 }
 
 export const getAdminUser = async (id: string): Promise<User> => {
-    const res = await laravel.get<ApiResponse<User>>(`/api/admin/usuaris/${id}`)
-    return res.data.data!
+    const res = await laravel.get<ApiResponse<User>>(`/api/admin/usuaris/${id}`, { headers: authHeader() })
+    return unwrapApiData<User>(res.data)
 }
 
 export const getAdminUserDetail = async (id: string): Promise<UserDetail> => {
-    const res = await laravel.get<ApiResponse<UserDetail>>(`/api/admin/usuaris/${id}/detail`)
-    console.log(res.data.data!)
-    return res.data.data!
+    const res = await laravel.get<ApiResponse<UserDetail>>(`/api/admin/usuaris/${id}/detail`, { headers: authHeader() })
+    return unwrapApiData<UserDetail>(res.data)
 }
 
 export const createUser = async (data: CreateUserRequest): Promise<string> => {
-    const res = await laravel.post<CreateUserResponse>('/api/admin/usuaris', data)
-    return res.data.data.id
+    const res = await laravel.post<CreateUserResponse>('/api/admin/usuaris', data, { headers: authHeader() })
+    const payload = unwrapApiData<{ id: string }>(res.data)
+    return payload.id
 }
 
 export const updateUser = async (id: string, data: UpdateUserRequest): Promise<void> => {
-    await laravel.put<ApiResponse<void>>(`/api/admin/usuaris/${id}`, data)
+    await laravel.put<ApiResponse<void>>(`/api/admin/usuaris/${id}`, data, { headers: authHeader() })
 }
 
 export const deleteUser = async (id: string): Promise<void> => {
-    await laravel.delete<ApiResponse<void>>(`/api/admin/usuaris/${id}`)
+    await laravel.delete<ApiResponse<void>>(`/api/admin/usuaris/${id}`, { headers: authHeader() })
 }
 
 // ========== ENDPOINTS DE ROLES (admin) ==========
 export const getUserRoles = async (usuariId: string): Promise<UserRole[]> => {
-    const res = await laravel.get<ApiResponse<UserRole[]>>(`/api/admin/usuaris/${usuariId}/rols`)
-    return res.data.data || []
+    const res = await laravel.get<ApiResponse<UserRole[]>>(`/api/admin/usuaris/${usuariId}/rols`, { headers: authHeader() })
+    return extractArray<UserRole>(res.data)
 }
 
 export const createUserRole = async (
@@ -79,7 +81,8 @@ export const createUserRole = async (
 ): Promise<RoleActionResponse> => {
     const res = await laravel.post<RoleActionResponse>(
         `/api/admin/usuaris/${usuariId}/rols`,
-        data
+        data,
+        { headers: authHeader() }
     )
     return res.data
 }
@@ -91,12 +94,13 @@ export const updateUserRole = async (
 ): Promise<void> => {
     await laravel.put<ApiResponse<void>>(
         `/api/admin/usuaris/${usuariId}/rols/${rolId}`,
-        data
+        data,
+        { headers: authHeader() }
     )
 }
 
 export const deleteUserRole = async (usuariId: string, rolId: string): Promise<void> => {
-    await laravel.delete<ApiResponse<void>>(`/api/admin/usuaris/${usuariId}/rols/${rolId}`)
+    await laravel.delete<ApiResponse<void>>(`/api/admin/usuaris/${usuariId}/rols/${rolId}`, { headers: authHeader() })
 }
 
 export const bulkUpdateUserRoles = async (
@@ -105,7 +109,8 @@ export const bulkUpdateUserRoles = async (
 ): Promise<BulkRolesResponse> => {
     const res = await laravel.post<ApiResponse<BulkRolesResponse>>(
         `/api/admin/usuaris/${usuariId}/rols/bulk`,
-        data
+        data,
+        { headers: authHeader() }
     )
-    return res.data.data!
+    return unwrapApiData<BulkRolesResponse>(res.data)
 }

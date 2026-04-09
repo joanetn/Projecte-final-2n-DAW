@@ -1,4 +1,6 @@
 import { laravel } from '@/api/axios';
+import { authHeader } from '@/services/shared/auth-header';
+import { unwrapApiData } from '@/services/shared/response-utils';
 import type {
     EstadistiquesAdminWeb,
     UsuariAdmin,
@@ -27,17 +29,11 @@ import type {
 
 const BASE = '/api/admin-web';
 
-// Helper para obtener el token del localStorage
-const authHeader = () => {
-    const token = localStorage.getItem('accessToken');
-    return token ? { Authorization: `Bearer ${token}` } : {};
-};
-
 // ─── Estadístiques ────────────────────────────────────────────────────────────
 
 export const getEstadistiquesAdminWeb = async (): Promise<EstadistiquesAdminWeb> => {
     const res = await laravel.get(`${BASE}/estadistiques`, { headers: authHeader() });
-    return res.data.data;
+    return unwrapApiData<EstadistiquesAdminWeb>(res.data);
 };
 
 // ─── Usuaris ─────────────────────────────────────────────────────────────────
@@ -49,7 +45,7 @@ export const getUsuarisAdmin = async (
         headers: authHeader(),
         params,
     });
-    return res.data.data;
+    return unwrapApiData<{ usuaris: UsuariAdmin[]; total: number }>(res.data);
 };
 
 export const toggleUsuariActiu = async (usuariId: string): Promise<void> => {
@@ -74,12 +70,12 @@ export const getEquipsAdmin = async (
     params?: GetEquipsParams
 ): Promise<{ equips: EquipAdmin[]; total: number }> => {
     const res = await laravel.get(`${BASE}/equips`, { headers: authHeader(), params });
-    return res.data.data;
+    return unwrapApiData<{ equips: EquipAdmin[]; total: number }>(res.data);
 };
 
 export const crearEquip = async (data: CreateEquipData): Promise<EquipAdmin> => {
     const res = await laravel.post(`${BASE}/equips`, data, { headers: authHeader() });
-    return res.data.data;
+    return unwrapApiData<EquipAdmin>(res.data);
 };
 
 export const actualitzarEquip = async (
@@ -99,19 +95,19 @@ export const getMembresEquip = async (
     const res = await laravel.get(`${BASE}/equips/${equipId}/membres`, {
         headers: authHeader(),
     });
-    return res.data.data;
+    return unwrapApiData<{ membres: MembreEquip[] }>(res.data);
 };
 
 // ─── Lligues ─────────────────────────────────────────────────────────────────
 
 export const getLliguesAdmin = async (): Promise<{ lligues: LligaAdmin[]; total: number }> => {
     const res = await laravel.get(`${BASE}/lligues`, { headers: authHeader() });
-    return res.data.data;
+    return unwrapApiData<{ lligues: LligaAdmin[]; total: number }>(res.data);
 };
 
 export const crearLliga = async (data: CreateLligaData): Promise<LligaAdmin> => {
     const res = await laravel.post(`${BASE}/lligues`, data, { headers: authHeader() });
-    return res.data.data;
+    return unwrapApiData<LligaAdmin>(res.data);
 };
 
 export const actualitzarLliga = async (
@@ -127,7 +123,7 @@ export const eliminarLliga = async (lligaId: string): Promise<void> => {
 
 export const getEquipsLligaAdmin = async (lligaId: string): Promise<LligaEquipsResponse> => {
     const res = await laravel.get(`${BASE}/lligues/${lligaId}/equips`, { headers: authHeader() });
-    return res.data.data;
+    return unwrapApiData<LligaEquipsResponse>(res.data);
 };
 
 export const generarPartitsLligaAdmin = async (
@@ -139,7 +135,7 @@ export const generarPartitsLligaAdmin = async (
         { force },
         { headers: authHeader() }
     );
-    return res.data.data;
+    return unwrapApiData<GenerateLligaFixturesResponse>(res.data);
 };
 
 // ─── Partits ─────────────────────────────────────────────────────────────────
@@ -148,12 +144,12 @@ export const getPartitsAdmin = async (
     params?: GetPartitsParams
 ): Promise<{ partits: PartitAdmin[]; total: number }> => {
     const res = await laravel.get(`${BASE}/partits`, { headers: authHeader(), params });
-    return res.data.data;
+    return unwrapApiData<{ partits: PartitAdmin[]; total: number }>(res.data);
 };
 
 export const crearPartit = async (data: CreatePartitData): Promise<PartitAdmin> => {
     const res = await laravel.post(`${BASE}/partits`, data, { headers: authHeader() });
-    return res.data.data;
+    return unwrapApiData<PartitAdmin>(res.data);
 };
 
 export const actualitzarPartit = async (
@@ -171,7 +167,7 @@ export const eliminarPartit = async (partitId: string): Promise<void> => {
 
 export const getArbitresAdmin = async (): Promise<{ arbitres: ArbitreAdmin[] }> => {
     const res = await laravel.get(`${BASE}/arbitres`, { headers: authHeader() });
-    return res.data.data;
+    return unwrapApiData<{ arbitres: ArbitreAdmin[] }>(res.data);
 };
 
 export const assignarArbitre = async (
@@ -191,7 +187,7 @@ export const getPartitsArbitre = async (
     const res = await laravel.get(`${BASE}/arbitres/${arbitreId}/partits`, {
         headers: authHeader(),
     });
-    return res.data.data;
+    return unwrapApiData<{ partits: PartitAdmin[] }>(res.data);
 };
 
 // ─── Reprogramacions ─────────────────────────────────────────────────────────
@@ -204,7 +200,7 @@ export const getMevesPropostesReprogramacio = async (
         params,
     });
 
-    return res.data.data;
+    return unwrapApiData<GetMevesPropostesResponse>(res.data);
 };
 
 export const crearPropostaReprogramacio = async (
@@ -217,7 +213,7 @@ export const crearPropostaReprogramacio = async (
         { headers: authHeader() }
     );
 
-    return res.data.data;
+    return unwrapApiData<{ id: string }>(res.data);
 };
 
 export const respondrePropostaReprogramacio = async (
@@ -230,7 +226,7 @@ export const respondrePropostaReprogramacio = async (
         { headers: authHeader() }
     );
 
-    return res.data.data;
+    return unwrapApiData<{ accepted: boolean }>(res.data);
 };
 
 // ─── Classificacions ─────────────────────────────────────────────────────────
@@ -239,5 +235,5 @@ export const getClassificacionsAdmin = async (): Promise<{
     classificacions: Record<string, ClassificacioEntry[]>;
 }> => {
     const res = await laravel.get(`${BASE}/classificacions`, { headers: authHeader() });
-    return res.data.data;
+    return unwrapApiData<{ classificacions: Record<string, ClassificacioEntry[]> }>(res.data);
 };

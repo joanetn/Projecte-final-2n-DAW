@@ -16,6 +16,7 @@ class EquipUsuariMapper
             rolEquip: $model->rolEquip,
             isActive: $model->isActive,
             createdAt: $model->created_at?->format('Y-m-d H:i:s'),
+            updatedAt: $model->updated_at?->format('Y-m-d H:i:s'),
         );
     }
 
@@ -28,6 +29,7 @@ class EquipUsuariMapper
             'rolEquip' => $entity->rolEquip,
             'isActive' => $entity->isActive,
             'created_at' => $entity->createdAt,
+            'updated_at' => $entity->updatedAt,
         ];
     }
 }

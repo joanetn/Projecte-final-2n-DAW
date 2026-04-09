@@ -87,6 +87,11 @@ class AdminWebController extends Controller
             }
 
             if ($rol = $request->query('rol')) {
+                $rol = strtoupper((string) $rol);
+                if ($rol === 'ADMIN_EQUIP') {
+                    $rol = 'ADMIN_CLUB';
+                }
+
                 $query->whereHas('rols', fn($q) => $q->where('rol', $rol)->where('isActive', true));
             }
 
@@ -146,7 +151,7 @@ class AdminWebController extends Controller
         try {
             $request->validate([
                 'rols'   => 'required|array|min:1',
-                'rols.*' => 'string',
+                'rols.*' => 'required|string',
             ]);
 
             $usuari = Usuari::find($usuariId);
@@ -154,7 +159,40 @@ class AdminWebController extends Controller
                 return $this->notFound('Usuario no encontrado');
             }
 
-            $nouRols = $request->input('rols');
+            $allowedRoles = ['ADMIN_WEB', 'ADMIN_CLUB', 'ENTRENADOR', 'ARBITRE', 'JUGADOR'];
+
+            $nouRols = collect($request->input('rols', []))
+                ->map(fn($rol) => strtoupper(trim((string) $rol)))
+                ->map(fn($rol) => $rol === 'ADMIN_EQUIP' ? 'ADMIN_CLUB' : $rol)
+                ->filter()
+                ->unique()
+                ->values();
+
+            if ($nouRols->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Debes asignar al menos un rol válido',
+                ], 422);
+            }
+
+            $invalidRols = $nouRols->diff($allowedRoles)->values();
+            if ($invalidRols->isNotEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Uno o más roles no son válidos',
+                    'data' => [
+                        'invalidRols' => $invalidRols,
+                        'allowedRols' => $allowedRoles,
+                    ],
+                ], 422);
+            }
+
+            if ($nouRols->contains('ARBITRE') && $nouRols->count() > 1) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El rol ARBITRE no se puede combinar con otros roles activos',
+                ], 422);
+            }
 
             DB::transaction(function () use ($usuari, $nouRols) {
                 // Desactivar todos los roles actuales
@@ -406,6 +444,8 @@ class AdminWebController extends Controller
                 'nom'         => $l->nom,
                 'categoria'   => $l->categoria,
                 'dataInici'   => $l->dataInici ? Carbon::parse($l->dataInici)->toISOString() : null,
+                'dataFi'      => $l->dataFi ? Carbon::parse($l->dataFi)->toISOString() : null,
+                'status'      => $l->status ?? 'NOT_STARTED',
                 'isActive'    => $l->isActive,
                 'totalEquips' => $l->totalEquips ?? 0,
                 'fixturesGenerats' => ($l->totalJornades ?? 0) > 0,
@@ -426,13 +466,24 @@ class AdminWebController extends Controller
             $request->validate([
                 'nom'      => 'required|string|max:100|unique:lligues,nom',
                 'categoria' => 'nullable|string|max:50',
+                'dataInici' => 'nullable|date',
+                'dataFi' => 'nullable|date|after_or_equal:dataInici',
+                'status' => 'nullable|string|in:NOT_STARTED,ON_PROGRESS,FINISHED',
+                'logo_url' => 'nullable|string|max:500',
             ]);
 
             $lliga = Lliga::create([
                 'nom'       => $request->input('nom'),
                 'categoria' => $request->input('categoria', 'General'),
-                'dataInici' => now(),
+                'dataInici' => $request->filled('dataInici')
+                    ? Carbon::parse($request->input('dataInici'))
+                    : now(),
+                'dataFi' => $request->filled('dataFi')
+                    ? Carbon::parse($request->input('dataFi'))
+                    : null,
+                'status'   => $request->input('status', 'NOT_STARTED'),
                 'isActive'  => true,
+                'logo_url'  => $request->input('logo_url'),
             ]);
 
             return response()->json([
@@ -442,7 +493,11 @@ class AdminWebController extends Controller
                     'id'        => $lliga->id,
                     'nom'       => $lliga->nom,
                     'categoria' => $lliga->categoria,
+                    'dataInici' => $lliga->dataInici ? Carbon::parse($lliga->dataInici)->toISOString() : null,
+                    'dataFi'    => $lliga->dataFi ? Carbon::parse($lliga->dataFi)->toISOString() : null,
+                    'status'    => $lliga->status,
                     'isActive'  => $lliga->isActive,
+                    'logo_url'  => $lliga->logo_url,
                 ],
             ], 201);
         } catch (ValidationException $e) {
@@ -463,13 +518,25 @@ class AdminWebController extends Controller
             $request->validate([
                 'nom'      => "nullable|string|max:100|unique:lligues,nom,{$lligaId}",
                 'categoria' => 'nullable|string|max:50',
+                'dataInici' => 'nullable|date',
+                'dataFi' => 'nullable|date|after_or_equal:dataInici',
+                'status' => 'nullable|string|in:NOT_STARTED,ON_PROGRESS,FINISHED',
                 'isActive' => 'nullable|boolean',
+                'logo_url' => 'nullable|string|max:500',
             ]);
 
             $updates = array_filter([
                 'nom'      => $request->input('nom'),
                 'categoria' => $request->input('categoria'),
+                'dataInici' => $request->filled('dataInici')
+                    ? Carbon::parse($request->input('dataInici'))
+                    : null,
+                'dataFi' => $request->filled('dataFi')
+                    ? Carbon::parse($request->input('dataFi'))
+                    : null,
+                'status' => $request->input('status'),
                 'isActive' => $request->has('isActive') ? $request->boolean('isActive') : null,
+                'logo_url' => $request->input('logo_url'),
             ], fn($v) => !is_null($v));
 
             $lliga->fill($updates)->save();

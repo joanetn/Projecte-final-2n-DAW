@@ -1,14 +1,9 @@
-import { useState } from 'react'
-import { useGetLliguesAdmin, useGetEquipsLligaAdmin } from '@/queries/adminWeb.queries'
-import {
-    useCrearLliga,
-    useActualitzarLliga,
-    useEliminarLliga,
-    useGenerarPartitsLliga,
-} from '@/mutations/adminWeb.mutations'
+import { useState, useEffect } from 'react'
+import { useGetLeaguesAdmin } from '@/queries/leagues.queries'
+import { useCreateLeague, useUpdateLeague, useDeleteLeague, useGenerateLeagueFixtures } from '@/mutations/leagues.mutations'
 import { usePermissions } from '@/hooks/usePermissions'
 import { AdminPermissions } from '@/types/permissions'
-import type { LligaAdmin, CreateLligaData, UpdateLligaData } from '@/types/admin'
+import type { LeaguesAdminResponse, CreateLeagueData, UpdateLeagueData } from '@/types/leagues'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -21,6 +16,14 @@ import {
 } from '@/components/ui/dialog'
 import { Switch } from '@/components/ui/switch'
 import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import { useGetLeagueCategories } from '@/queries/club.queries'
+import {
     Loader2,
     RefreshCw,
     AlertCircle,
@@ -29,8 +32,7 @@ import {
     Pencil,
     Trash2,
     Trophy,
-    ListChecks,
-    Shuffle,
+    CalendarDays,
 } from 'lucide-react'
 
 function LligaEquipsDialog({
@@ -38,45 +40,42 @@ function LligaEquipsDialog({
     open,
     onClose,
 }: {
-    lliga: LligaAdmin | null
+    lliga: LeaguesAdminResponse | null
     open: boolean
     onClose: () => void
 }) {
-    const { data, isLoading } = useGetEquipsLligaAdmin(open && lliga ? lliga.id : null)
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="bg-white dark:bg-slate-800">
                 <DialogHeader>
                     <DialogTitle className="text-warm-900 dark:text-warm-100">
-                        Equips inscrits · {lliga?.nom}
+                        Informació de la lliga · {lliga?.nom}
                     </DialogTitle>
                 </DialogHeader>
 
-                {isLoading ? (
-                    <div className="flex items-center justify-center py-8">
-                        <Loader2 className="w-6 h-6 animate-spin text-warm-600 dark:text-warm-400" />
+                <div className="space-y-4 py-2">
+                    <div>
+                        <p className="text-xs font-semibold text-warm-600 dark:text-warm-400 uppercase mb-1">ID</p>
+                        <p className="text-sm text-warm-900 dark:text-warm-100 font-mono">{lliga?.id}</p>
                     </div>
-                ) : !data || data.equips.length === 0 ? (
-                    <p className="text-sm text-warm-600 dark:text-warm-300 py-2">No hi ha equips inscrits.</p>
-                ) : (
-                    <div className="space-y-2 max-h-64 overflow-y-auto py-2">
-                        {data.equips.map((equip) => (
-                            <div
-                                key={equip.id}
-                                className="flex items-center justify-between rounded-lg border border-warm-200 dark:border-slate-700 px-3 py-2"
-                            >
-                                <div>
-                                    <p className="text-sm font-medium text-warm-900 dark:text-warm-100">{equip.nom}</p>
-                                    <p className="text-xs text-warm-600 dark:text-warm-300">{equip.categoria ?? '—'}</p>
-                                </div>
-                                <Badge variant={equip.isActive ? 'default' : 'secondary'}>
-                                    {equip.isActive ? 'Actiu' : 'Inactiu'}
-                                </Badge>
-                            </div>
-                        ))}
+                    <div>
+                        <p className="text-xs font-semibold text-warm-600 dark:text-warm-400 uppercase mb-1">Categoria</p>
+                        <p className="text-sm text-warm-900 dark:text-warm-100">{lliga?.categoria ?? '—'}</p>
                     </div>
-                )}
+                    <div>
+                        <p className="text-xs font-semibold text-warm-600 dark:text-warm-400 uppercase mb-1">Data Inici</p>
+                        <p className="text-sm text-warm-900 dark:text-warm-100">{lliga?.dataInici ? new Date(lliga.dataInici).toLocaleDateString('ca-ES') : '—'}</p>
+                    </div>
+                    <div>
+                        <p className="text-xs font-semibold text-warm-600 dark:text-warm-400 uppercase mb-1">Data Fi</p>
+                        <p className="text-sm text-warm-900 dark:text-warm-100">{lliga?.dataFi ? new Date(lliga.dataFi).toLocaleDateString('ca-ES') : '—'}</p>
+                    </div>
+                    <div>
+                        <p className="text-xs font-semibold text-warm-600 dark:text-warm-400 uppercase mb-1">Estat</p>
+                        <p className="text-sm text-warm-900 dark:text-warm-100">{lliga?.status ?? '—'}</p>
+                    </div>
+                </div>
 
                 <DialogFooter>
                     <Button variant="outline" onClick={onClose}>Tancar</Button>
@@ -86,6 +85,8 @@ function LligaEquipsDialog({
     )
 }
 
+// NOTA: Funcionalitat de generar partits eliminada temporalment fins que es proporcioni el mutation
+/* 
 function GenerateFixturesDialog({
     lliga,
     open,
@@ -93,7 +94,7 @@ function GenerateFixturesDialog({
     onConfirm,
     loading,
 }: {
-    lliga: LligaAdmin | null
+    lliga: LeaguesAdminResponse | null
     open: boolean
     onClose: () => void
     onConfirm: (force: boolean) => void
@@ -101,7 +102,7 @@ function GenerateFixturesDialog({
 }) {
     if (!lliga) return null
 
-    const alreadyGenerated = !!lliga.fixturesGenerats
+    const alreadyGenerated = false // À ACTUALITZAR quan es tingui la info
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
@@ -131,6 +132,7 @@ function GenerateFixturesDialog({
         </Dialog>
     )
 }
+*/
 
 function LligaFormDialog({
     lliga,
@@ -139,22 +141,50 @@ function LligaFormDialog({
     onSave,
     loading,
 }: {
-    lliga: LligaAdmin | null
+    lliga: LeaguesAdminResponse | null
     open: boolean
     onClose: () => void
-    onSave: (data: CreateLligaData | UpdateLligaData) => void
+    onSave: (data: CreateLeagueData | UpdateLeagueData) => void
     loading: boolean
 }) {
     const [nom, setNom] = useState(lliga?.nom ?? '')
     const [categoria, setCategoria] = useState(lliga?.categoria ?? '')
+    const [status, setStatus] = useState(lliga?.status ?? 'NOT_STARTED')
+    const [dataInici, setDataInici] = useState(lliga?.dataInici ? new Date(lliga.dataInici).toISOString().split('T')[0] : '')
+    const [dataFi, setDataFi] = useState(lliga?.dataFi ? new Date(lliga.dataFi).toISOString().split('T')[0] : '')
     const [isActive, setIsActive] = useState(lliga?.isActive ?? true)
 
+    const { data: categoriesData } = useGetLeagueCategories()
+    const categories = categoriesData ?? []
+
+    useEffect(() => {
+        setNom(lliga?.nom ?? '')
+        setCategoria(lliga?.categoria ?? '')
+        setStatus(lliga?.status ?? 'NOT_STARTED')
+        setDataInici(lliga?.dataInici ? new Date(lliga.dataInici).toISOString().split('T')[0] : '')
+        setDataFi(lliga?.dataFi ? new Date(lliga.dataFi).toISOString().split('T')[0] : '')
+        setIsActive(lliga?.isActive ?? true)
+    }, [lliga, open])
+
     const handleSave = () => {
-        if (!nom.trim()) return
+        if (!nom.trim() || !status.trim()) return
+
         if (lliga) {
-            onSave({ nom, categoria, isActive } as UpdateLligaData)
+            onSave({
+                nom,
+                categoria: categoria || undefined,
+                status: status || undefined,
+                isActive,
+                dataInici: dataInici || undefined,
+                dataFi: dataFi || undefined,
+            } as UpdateLeagueData)
         } else {
-            onSave({ nom, categoria } as CreateLligaData)
+            onSave({
+                nom,
+                categoria: categoria || undefined,
+                status,
+                dataInici: dataInici || new Date().toISOString().split('T')[0],
+            } as CreateLeagueData)
         }
     }
 
@@ -178,11 +208,47 @@ function LligaFormDialog({
                     </div>
                     <div>
                         <label className="text-sm font-medium text-warm-700 dark:text-warm-300 mb-1 block">Categoria</label>
-                        <Input
-                            value={categoria}
-                            onChange={e => setCategoria(e.target.value)}
-                            placeholder="Categoria"
-                            className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600"
+                        <Select value={categoria || 'none'} onValueChange={v => setCategoria(v === 'none' ? '' : v)}>
+                            <SelectTrigger className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600">
+                                <SelectValue placeholder="Selecciona categoria" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">Selecciona categoria</SelectItem>
+                                {categories.map(c => (
+                                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <label className="text-sm font-medium text-warm-700 dark:text-warm-300 mb-1 block">Estat *</label>
+                        <Select value={status || 'NOT_STARTED'} onValueChange={v => setStatus(v)}>
+                            <SelectTrigger className="bg-white dark:bg-slate-700 border-warm-300 dark:border-slate-600">
+                                <SelectValue placeholder="Selecciona estat" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="NOT_STARTED">No iniciada</SelectItem>
+                                <SelectItem value="ON_PROGRESS">En progrés</SelectItem>
+                                <SelectItem value="FINISHED">Finalitzada</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <label className="text-sm font-medium text-warm-700 dark:text-warm-300 mb-1 block">Data Inici</label>
+                        <input
+                            type="date"
+                            value={dataInici}
+                            onChange={e => setDataInici(e.target.value)}
+                            className="w-full px-3 py-2 rounded-md border border-warm-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-warm-900 dark:text-warm-100"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-sm font-medium text-warm-700 dark:text-warm-300 mb-1 block">Data Fi</label>
+                        <input
+                            type="date"
+                            value={dataFi}
+                            onChange={e => setDataFi(e.target.value)}
+                            className="w-full px-3 py-2 rounded-md border border-warm-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-warm-900 dark:text-warm-100"
                         />
                     </div>
                     {lliga && (
@@ -194,7 +260,7 @@ function LligaFormDialog({
                 </div>
                 <DialogFooter>
                     <Button variant="outline" onClick={onClose} disabled={loading}>Cancel·lar</Button>
-                    <Button onClick={handleSave} disabled={loading || !nom.trim()} className="bg-warm-600 hover:bg-warm-700 text-white">
+                    <Button onClick={handleSave} disabled={loading || !nom.trim() || !status.trim()} className="bg-warm-600 hover:bg-warm-700 text-white">
                         {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                         {lliga ? 'Guardar canvis' : 'Crear lliga'}
                     </Button>
@@ -211,7 +277,7 @@ function DeleteDialog({
     onConfirm,
     loading,
 }: {
-    lliga: LligaAdmin | null
+    lliga: LeaguesAdminResponse | null
     open: boolean
     onClose: () => void
     onConfirm: () => void
@@ -240,17 +306,23 @@ function DeleteDialog({
 }
 
 export function LliguesTab() {
-    const { can } = usePermissions()
-    const { data, isLoading, error, refetch } = useGetLliguesAdmin()
-    const crearMutation = useCrearLliga()
-    const actualitzarMutation = useActualitzarLliga()
-    const eliminarMutation = useEliminarLliga()
-    const generarPartitsMutation = useGenerarPartitsLliga()
+    const { can, userPermissions, userRoles } = usePermissions()
+    const { data: liguesData, isLoading, error, refetch } = useGetLeaguesAdmin()
+    const createMutation = useCreateLeague()
+    const updateMutation = useUpdateLeague()
+    const deleteMutation = useDeleteLeague()
+    const generateMutation = useGenerateLeagueFixtures()
+    const lligues = Array.isArray(liguesData?.lligues) ? liguesData.lligues : []
+    const totalLligues = typeof liguesData?.total === 'number' ? liguesData.total : lligues.length
 
-    const [formDialog, setFormDialog] = useState<LligaAdmin | 'new' | null>(null)
-    const [deleteDialog, setDeleteDialog] = useState<LligaAdmin | null>(null)
-    const [teamsDialog, setTeamsDialog] = useState<LligaAdmin | null>(null)
-    const [generateDialog, setGenerateDialog] = useState<LligaAdmin | null>(null)
+    // Debug: Log user permissions
+    console.debug('🏆 LliguesTab - User Roles:', userRoles)
+    console.debug('🏆 LliguesTab - User Permissions:', userPermissions)
+    console.debug('🏆 LliguesTab - Can LLIGUES_CREATE:', can(AdminPermissions.LLIGUES_CREATE))
+
+    const [formDialog, setFormDialog] = useState<LeaguesAdminResponse | 'new' | null>(null)
+    const [deleteDialog, setDeleteDialog] = useState<LeaguesAdminResponse | null>(null)
+    const [infoDialog, setInfoDialog] = useState<LeaguesAdminResponse | null>(null)
     const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
     const showNotification = (type: 'success' | 'error', message: string) => {
@@ -258,13 +330,13 @@ export function LliguesTab() {
         setTimeout(() => setNotification(null), type === 'success' ? 3000 : 5000)
     }
 
-    const handleSave = async (formData: CreateLligaData | UpdateLligaData) => {
+    const handleSave = async (formData: CreateLeagueData | UpdateLeagueData) => {
         try {
             if (formDialog === 'new') {
-                await crearMutation.mutateAsync(formData as CreateLligaData)
+                await createMutation.mutateAsync(formData as CreateLeagueData)
                 showNotification('success', 'Lliga creada correctament')
             } else if (formDialog && typeof formDialog === 'object') {
-                await actualitzarMutation.mutateAsync({ lligaId: (formDialog as LligaAdmin).id, data: formData as UpdateLligaData })
+                await updateMutation.mutateAsync({ id: formDialog.id, data: formData as UpdateLeagueData })
                 showNotification('success', 'Lliga actualitzada correctament')
             }
             setFormDialog(null)
@@ -276,27 +348,13 @@ export function LliguesTab() {
     const handleDelete = async () => {
         if (!deleteDialog) return
         try {
-            await eliminarMutation.mutateAsync(deleteDialog.id)
+            await deleteMutation.mutateAsync(deleteDialog.id)
             showNotification('success', 'Lliga eliminada correctament')
             setDeleteDialog(null)
         } catch {
             showNotification('error', 'Error al eliminar la lliga')
         }
     }
-
-    const handleGenerateFixtures = async (force: boolean) => {
-        if (!generateDialog) return
-
-        try {
-            const result = await generarPartitsMutation.mutateAsync({ lligaId: generateDialog.id, force })
-            showNotification('success', result.message || 'Calendari generat correctament')
-            setGenerateDialog(null)
-        } catch {
-            showNotification('error', 'Error al generar els partits de la lliga')
-        }
-    }
-
-    const lligues = data?.lligues ?? []
 
     if (error) {
         return (
@@ -326,13 +384,17 @@ export function LliguesTab() {
 
             <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-warm-900 dark:text-warm-100">
-                    Lligues ({lligues.length})
+                    Lligues ({totalLligues})
                 </h3>
                 <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={() => refetch()} className="border-warm-300 dark:border-slate-600">
                         <RefreshCw className="w-4 h-4" />
                     </Button>
-                    {can(AdminPermissions.LLIGUES_CREATE) && (
+                    {!can(AdminPermissions.LLIGUES_CREATE) ? (
+                        <div className="text-xs text-orange-600 dark:text-orange-400 px-3 py-1.5 bg-orange-50 dark:bg-orange-900/20 rounded-md border border-orange-200 dark:border-orange-800">
+                            ⚠️ Permisos insuficientes
+                        </div>
+                    ) : (
                         <Button size="sm" onClick={() => setFormDialog('new')} className="bg-warm-600 hover:bg-warm-700 text-white">
                             <Plus className="w-4 h-4 mr-1" /> Nova lliga
                         </Button>
@@ -356,8 +418,8 @@ export function LliguesTab() {
                             <tr>
                                 <th className="text-left px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Nom</th>
                                 <th className="text-left px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Categoria</th>
-                                <th className="text-center px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Estat</th>
-                                <th className="text-center px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Fixtures</th>
+                                <th className="text-left px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Estat</th>
+                                <th className="text-center px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Estat Actiu</th>
                                 <th className="text-right px-4 py-3 font-semibold text-warm-700 dark:text-warm-300">Accions</th>
                             </tr>
                         </thead>
@@ -366,14 +428,14 @@ export function LliguesTab() {
                                 <tr key={lliga.id} className="border-b border-warm-100 dark:border-slate-700 hover:bg-warm-50 dark:hover:bg-slate-800/50">
                                     <td className="px-4 py-3 font-medium text-warm-900 dark:text-warm-100">{lliga.nom}</td>
                                     <td className="px-4 py-3 text-warm-600 dark:text-warm-300">{lliga.categoria ?? '—'}</td>
-                                    <td className="px-4 py-3 text-center">
-                                        <Badge variant={lliga.isActive ? 'default' : 'secondary'}>
-                                            {lliga.isActive ? 'Activa' : 'Inactiva'}
+                                    <td className="px-4 py-3 text-warm-600 dark:text-warm-300">
+                                        <Badge variant="outline" className="text-xs">
+                                            {lliga.status}
                                         </Badge>
                                     </td>
                                     <td className="px-4 py-3 text-center">
-                                        <Badge variant={lliga.fixturesGenerats ? 'default' : 'secondary'}>
-                                            {lliga.fixturesGenerats ? 'Generats' : 'Pendents'}
+                                        <Badge variant={lliga.isActive ? 'default' : 'secondary'}>
+                                            {lliga.isActive ? 'Activa' : 'Inactiva'}
                                         </Badge>
                                     </td>
                                     <td className="px-4 py-3 text-right">
@@ -381,39 +443,75 @@ export function LliguesTab() {
                                             <Button
                                                 variant="outline"
                                                 size="sm"
-                                                onClick={() => setTeamsDialog(lliga)}
+                                                onClick={() => setInfoDialog(lliga)}
                                                 className="border-warm-300 dark:border-slate-600"
-                                                title="Veure equips inscrits"
+                                                title="Veure informació"
                                             >
-                                                <ListChecks className="w-4 h-4" />
+                                                <Trophy className="w-4 h-4" />
                                             </Button>
-                                            {can(AdminPermissions.LLIGUES_EDIT) && (
+                                            {can(AdminPermissions.LLIGUES_EDIT) ? (
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
-                                                    onClick={() => setGenerateDialog(lliga)}
+                                                    onClick={() => {
+                                                        if (confirm('Generar els partits per aquesta lliga? Aquesta acció pot sobreescriure el calendari existent.')) {
+                                                            generateMutation.mutate({ id: lliga.id })
+                                                        }
+                                                    }}
                                                     className="border-warm-300 dark:border-slate-600"
-                                                    title={lliga.fixturesGenerats ? 'Re-randomitzar partits' : 'Generar partits'}
+                                                    title="Generar partits"
                                                 >
-                                                    <Shuffle className="w-4 h-4" />
+                                                    {generateMutation.isPending ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <CalendarDays className="w-4 h-4" />}
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    disabled
+                                                    className="border-warm-300 dark:border-slate-600 opacity-50 cursor-not-allowed"
+                                                    title="Sense permís per generar"
+                                                >
+                                                    <CalendarDays className="w-4 h-4" />
                                                 </Button>
                                             )}
-                                            {can(AdminPermissions.LLIGUES_EDIT) && (
+                                            {can(AdminPermissions.LLIGUES_EDIT) ? (
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
                                                     onClick={() => setFormDialog(lliga)}
                                                     className="border-warm-300 dark:border-slate-600"
+                                                    title="Editar"
+                                                >
+                                                    <Pencil className="w-4 h-4" />
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    disabled
+                                                    className="border-warm-300 dark:border-slate-600 opacity-50 cursor-not-allowed"
+                                                    title="Sense permís per editar"
                                                 >
                                                     <Pencil className="w-4 h-4" />
                                                 </Button>
                                             )}
-                                            {can(AdminPermissions.LLIGUES_DELETE) && (
+                                            {can(AdminPermissions.LLIGUES_DELETE) ? (
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
                                                     onClick={() => setDeleteDialog(lliga)}
                                                     className="border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                                    title="Eliminar"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    disabled
+                                                    className="border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 opacity-50 cursor-not-allowed"
+                                                    title="Sense permís per eliminar"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
                                                 </Button>
@@ -432,26 +530,19 @@ export function LliguesTab() {
                 open={!!formDialog}
                 onClose={() => setFormDialog(null)}
                 onSave={handleSave}
-                loading={crearMutation.isPending || actualitzarMutation.isPending}
+                loading={createMutation.isPending || updateMutation.isPending}
             />
             <DeleteDialog
                 lliga={deleteDialog}
                 open={!!deleteDialog}
                 onClose={() => setDeleteDialog(null)}
                 onConfirm={handleDelete}
-                loading={eliminarMutation.isPending}
+                loading={deleteMutation.isPending}
             />
             <LligaEquipsDialog
-                lliga={teamsDialog}
-                open={!!teamsDialog}
-                onClose={() => setTeamsDialog(null)}
-            />
-            <GenerateFixturesDialog
-                lliga={generateDialog}
-                open={!!generateDialog}
-                onClose={() => setGenerateDialog(null)}
-                onConfirm={handleGenerateFixtures}
-                loading={generarPartitsMutation.isPending}
+                lliga={infoDialog}
+                open={!!infoDialog}
+                onClose={() => setInfoDialog(null)}
             />
         </div>
     )

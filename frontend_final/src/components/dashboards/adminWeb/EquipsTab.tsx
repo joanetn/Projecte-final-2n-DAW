@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGetEquipsAdmin, useGetLliguesAdmin, useGetMembresEquip } from '@/queries/adminWeb.queries'
 import { useGetLeagueCategories } from '@/queries/club.queries'
 import {
@@ -61,6 +61,13 @@ function EquipFormDialog({
     const [categoria, setCategoria] = useState(equip?.categoria ?? '')
     const [lligaId, setLligaId] = useState(equip?.lliga?.id ?? '')
     const [isActive, setIsActive] = useState(equip?.isActive ?? true)
+
+    useEffect(() => {
+        setNom(equip?.nom ?? '')
+        setCategoria(equip?.categoria ?? '')
+        setLligaId(equip?.lliga?.id ?? '')
+        setIsActive(equip?.isActive ?? true)
+    }, [equip, open])
 
     const handleSave = () => {
         if (!nom.trim() || !categoria.trim()) return

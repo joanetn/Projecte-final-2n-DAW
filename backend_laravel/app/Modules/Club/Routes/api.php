@@ -49,5 +49,8 @@ Route::prefix('admin/equips')->group(function () {
     Route::get('/{equipId}', [AdminClubController::class, 'showEquip']);
     Route::put('/{equipId}', [AdminClubController::class, 'updateEquip']);
     Route::delete('/{equipId}', [AdminClubController::class, 'destroyEquip']);
-    Route::get('/{equipId}/membres', [AdminClubController::class, 'indexMembres']);
+    Route::get('/{equipId}/membres', [AdminClubController::class, 'indexMembres'])
+        ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
+    Route::get('/{equipId}/candidats-invitacio', [AdminClubController::class, 'candidatsInvitacio'])
+        ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
 });

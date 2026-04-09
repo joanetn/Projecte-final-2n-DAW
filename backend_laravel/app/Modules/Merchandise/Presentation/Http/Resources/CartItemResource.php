@@ -22,7 +22,15 @@ class CartItemResource extends JsonResource
             'isActive' => (bool) ($item['isActive'] ?? true),
             'createdAt' => $item['createdAt'] ?? null,
             'updatedAt' => $item['updatedAt'] ?? null,
-            'merch' => $item['merch'] ?? null,
+            'merch' => $item['merch'] ? [
+                'id' => $item['merch']['id'] ?? ($item['merch']->id ?? null),
+                'nom' => $item['merch']['nom'] ?? ($item['merch']->nom ?? null),
+                'marca' => $item['merch']['marca'] ?? ($item['merch']->marca ?? null),
+                'imageUrl' => $item['merch']['imageUrl'] ?? ($item['merch']->imageUrl ?? null),
+                'preu' => $item['merch']['preu'] ?? ($item['merch']->preu ?? null),
+                'stock' => $item['merch']['stock'] ?? ($item['merch']->stock ?? null),
+                'isActive' => $item['merch']['isActive'] ?? ($item['merch']->isActive ?? null),
+            ] : null,
             'subtotal' => round($preu * $quantitat, 2),
         ];
     }

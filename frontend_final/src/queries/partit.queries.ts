@@ -6,23 +6,18 @@ import {
     updatePartit,
     deletePartit,
     assignArbitre,
-    type CreatePartitData,
 } from '@/services/partit.service';
+import type { CreatePartitData } from '@/types/partit';
 
 export const PARTIT_KEYS = {
     all: ['partits'] as const,
-    byArbitre: (arbitreId: string) => ['partits', 'arbitre', arbitreId] as const,
-    byEquip: (equipId: string) => ['partits', 'equip', equipId] as const,
+    filtered: (params?: { arbitreId?: string; equipId?: string; equipIds?: string; status?: string }) => ['partits', 'filtered', params ?? {}] as const,
     detail: (id: string) => ['partits', id] as const,
 };
 
-export const useGetPartits = (params?: { arbitreId?: string; equipId?: string; status?: string }) =>
+export const useGetPartits = (params?: { arbitreId?: string; equipId?: string; equipIds?: string; status?: string }) =>
     useQuery({
-        queryKey: params?.arbitreId
-            ? PARTIT_KEYS.byArbitre(params.arbitreId)
-            : params?.equipId
-                ? PARTIT_KEYS.byEquip(params.equipId)
-                : PARTIT_KEYS.all,
+        queryKey: PARTIT_KEYS.filtered(params),
         queryFn: () => getPartits(params),
     });
 

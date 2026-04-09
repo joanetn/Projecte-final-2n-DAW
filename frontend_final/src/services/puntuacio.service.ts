@@ -1,40 +1,17 @@
 import { laravel } from '@/api/axios';
-
-export interface Puntuacio {
-    id?: string;
-    partitId: string;
-    equipId: string;
-    punts: number;
-    stats?: Record<string, unknown>;
-    observacions?: string;
-}
-
-export interface SetResultat {
-    local: number;
-    visitant: number;
-}
-
-export interface ActaData {
-    partitId: string;
-    sets: SetResultat[];
-    observacions?: string;
-    duracio?: number; // minutes
-}
-
-const authHeader = () => {
-    const token = localStorage.getItem('accessToken');
-    return token ? { Authorization: `Bearer ${token}` } : {};
-};
+import { authHeader } from '@/services/shared/auth-header';
+import { extractArray, unwrapApiData } from '@/services/shared/response-utils';
+import type { Puntuacio } from '@/types/puntuacio';
 
 export const getPuntuacionsPartit = async (partitId: string): Promise<Puntuacio[]> => {
     const res = await laravel.get(`/api/puntuacions/partit/${partitId}`, { headers: authHeader() });
-    const data = res.data.data ?? res.data;
-    return Array.isArray(data) ? data : (data.puntuacions ?? []);
+    const payload = unwrapApiData<unknown>(res.data);
+    return extractArray<Puntuacio>(payload, ['puntuacions']);
 };
 
 export const crearPuntuacio = async (data: Puntuacio): Promise<Puntuacio> => {
     const res = await laravel.post('/api/puntuacions', data, { headers: authHeader() });
-    return res.data.data ?? res.data;
+    return unwrapApiData<Puntuacio>(res.data);
 };
 
 export const updatePuntuacio = async (id: string, data: Partial<Puntuacio>): Promise<void> => {

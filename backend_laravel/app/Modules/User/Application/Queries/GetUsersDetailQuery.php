@@ -16,7 +16,7 @@ class GetUsersDetailQuery
     {
         $user = $this->userRepositoryInterface->findByIdWithRelations($userId, [
             'rols',
-            'equipUsuaris',
+            'equipUsuaris.equip',
             'compras',
             'seguros'
         ]);

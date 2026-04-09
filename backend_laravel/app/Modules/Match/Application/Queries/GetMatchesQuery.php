@@ -10,8 +10,8 @@ class GetMatchesQuery
         private MatchRepositoryInterface $matchRepoInterf
     ) {}
 
-    public function execute(): array
+    public function execute(?string $arbitreId = null, ?string $equipId = null, array $equipIds = [], ?string $status = null): array
     {
-        return $this->matchRepoInterf->findAll();
+        return $this->matchRepoInterf->findFiltered($arbitreId, $equipId, $equipIds, $status);
     }
 }

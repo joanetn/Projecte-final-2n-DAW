@@ -34,7 +34,11 @@ class ClubResource extends JsonResource
                     'id' => $equip['id'] ?? $equip->id,
                     'nom' => $equip['nom'] ?? $equip->nom,
                     'categoria' => $equip['categoria'] ?? $equip->categoria,
+                    'clubId' => $equip['clubId'] ?? $equip->clubId,
+                    'lligaId' => $equip['lligaId'] ?? $equip->lligaId,
                     'isActive' => $equip['isActive'] ?? $equip->isActive,
+                    'createdAt' => $equip['created_at'] ?? $equip->created_at ?? $equip->createdAt,
+                    'updatedAt' => $equip['updated_at'] ?? $equip->updated_at ?? $equip->updatedAt,
                 ];
             })->toArray(),
             'createdAt' => $this->createdAt,

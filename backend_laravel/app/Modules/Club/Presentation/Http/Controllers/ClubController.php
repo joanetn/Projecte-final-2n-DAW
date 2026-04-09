@@ -438,7 +438,7 @@ class ClubController extends Controller
                 && DB::table('equip_usuaris')
                 ->where('equipId', $equipId)
                 ->where('usuariId', $authUserId)
-                ->whereRaw('LOWER(rolEquip) = ?', ['entrenador'])
+                ->whereRaw('LOWER("rolEquip") = ?', ['entrenador'])
                 ->exists();
 
             if (!$isAdminWeb && !$isAdminClubOwner && !$isTrainerOfTeam) {
@@ -451,13 +451,6 @@ class ClubController extends Controller
             $lliga = null;
             if (Schema::hasTable('lligues')) {
                 $lliga = DB::table('lligues')
-                    ->where('id', $lligaId)
-                    ->where('isActive', true)
-                    ->first();
-            }
-
-            if (!$lliga && Schema::hasTable('lligas')) {
-                $lliga = DB::table('lligas')
                     ->where('id', $lligaId)
                     ->where('isActive', true)
                     ->first();

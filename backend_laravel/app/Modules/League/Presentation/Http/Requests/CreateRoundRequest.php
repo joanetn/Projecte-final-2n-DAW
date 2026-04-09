@@ -17,7 +17,7 @@ class CreateRoundRequest extends FormRequest
             'nom' => 'required|string|max:255',
             'dataInici' => 'required|date',
             'dataFi' => 'nullable|date|after_or_equal:dataInici',
-            'lligaId' => 'required|string|exists:lligas,id',
+            'lligaId' => 'required|string|exists:lligues,id',
             'status' => 'required|string|in:NOT_STARTED,ON_PROGRESS,FINISHED',
             'isActive' => 'nullable|boolean',
         ];

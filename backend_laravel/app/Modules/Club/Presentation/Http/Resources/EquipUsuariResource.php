@@ -20,6 +20,7 @@ class EquipUsuariResource extends JsonResource
             'rolEquip' => $this->rolEquip,
             'isActive' => $this->isActive,
             'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }

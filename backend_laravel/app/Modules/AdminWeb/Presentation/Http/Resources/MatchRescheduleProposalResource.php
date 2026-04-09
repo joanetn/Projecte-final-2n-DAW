@@ -30,7 +30,22 @@ class MatchRescheduleProposalResource extends JsonResource
                 'respostaPerUsuariNom' => $proposal->respostaPerUsuariNom,
                 'respostaAt' => $proposal->respostaAt,
                 'createdAt' => $proposal->createdAt,
-                'partit' => $proposal->partit,
+                'updatedAt' => $proposal->updatedAt ?? null,
+                'partit' => $proposal->partit ? [
+                    'id' => $proposal->partit->id ?? $proposal->partit['id'],
+                    'dataHora' => $proposal->partit->dataHora ?? $proposal->partit['dataHora'],
+                    'status' => $proposal->partit->status ?? $proposal->partit['status'],
+                    'jornadaId' => $proposal->partit->jornadaId ?? $proposal->partit['jornadaId'],
+                    'arbitreId' => $proposal->partit->arbitreId ?? $proposal->partit['arbitreId'] ?? null,
+                    'pistaId' => $proposal->partit->pistaId ?? $proposal->partit['pistaId'] ?? null,
+                    'localEquipId' => $proposal->partit->localEquipId ?? $proposal->partit['localEquipId'],
+                    'visitantEquipId' => $proposal->partit->visitantEquipId ?? $proposal->partit['visitantEquipId'],
+                    'golesLocal' => $proposal->partit->golesLocal ?? $proposal->partit['golesLocal'],
+                    'golesVisitant' => $proposal->partit->golesVisitant ?? $proposal->partit['golesVisitant'],
+                    'isActive' => $proposal->partit->isActive ?? $proposal->partit['isActive'],
+                    'createdAt' => $proposal->partit->createdAt ?? $proposal->partit['createdAt'] ?? $proposal->partit['created_at'] ?? null,
+                    'updatedAt' => $proposal->partit->updatedAt ?? $proposal->partit['updatedAt'] ?? $proposal->partit['updated_at'] ?? null,
+                ] : null,
             ];
         }
 

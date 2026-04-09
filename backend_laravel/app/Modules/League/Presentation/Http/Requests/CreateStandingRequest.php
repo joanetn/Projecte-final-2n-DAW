@@ -14,7 +14,7 @@ class CreateStandingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'lligaId' => 'required|string|exists:lligas,id',
+            'lligaId' => 'required|string|exists:lligues,id',
             'equipId' => 'required|string|exists:equips,id',
             'partitsJugats' => 'required|integer|min:0',
             'partitsGuanyats' => 'required|integer|min:0',

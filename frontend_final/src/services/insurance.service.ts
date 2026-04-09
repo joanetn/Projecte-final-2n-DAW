@@ -1,4 +1,6 @@
 import { laravel } from "@/api/axios"
+import { authHeader } from '@/services/shared/auth-header'
+import { extractArray } from '@/services/shared/response-utils'
 import type {
     ConfirmInsurancePaymentResponse,
     CreatePaymentIntentData,
@@ -6,16 +8,11 @@ import type {
     Insurance,
 } from "@/types/insurance"
 
-const authHeader = () => {
-    const token = localStorage.getItem('accessToken')
-    return token ? { Authorization: `Bearer ${token}` } : {}
-}
-
 export const getInsurances = async (): Promise<Insurance[]> => {
     const res = await laravel.get<{ success: boolean; data: Insurance[] }>("/api/seguros", {
         headers: authHeader(),
     })
-    return res.data.data
+    return extractArray<Insurance>(res.data)
 }
 
 export const createPaymentIntent = async (data: CreatePaymentIntentData): Promise<CreatePaymentIntentResponse> => {

@@ -8,8 +8,11 @@ import {
     useGetMeusEquips,
 } from '@/queries/club.queries'
 import { useGetPartits } from '@/queries/partit.queries'
-import { useGetUsers } from '@/queries/user.queries'
-import { useCrearInvitacioEquip, useGetInvitacionsEquip } from '@/queries/alineacio.queries'
+import {
+    useCrearInvitacioEquip,
+    useGetInvitacioCandidates,
+    useGetInvitacionsEquip,
+} from '@/queries/alineacio.queries'
 import { useInscriureEquipALliga } from '@/mutations/club.mutations'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
@@ -27,10 +30,9 @@ import {
     Bell,
     UserPlus,
 } from 'lucide-react'
-import type { Invitacio } from '@/services/invitacio.service'
-import type { Partit } from '@/services/partit.service'
+import type { Invitacio } from '@/services/dto/invitacio.dto'
+import type { Partit } from '@/types/partit'
 import type { Equip, Lliga } from '@/types/club'
-import type { User } from '@/types/users'
 
 // ─── Helper ────────────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
@@ -57,14 +59,6 @@ function formatTime(iso: string) {
     return new Date(iso).toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' })
 }
 
-function hasRole(user: User | undefined, role: string) {
-    if (!user) return false
-
-    return (user.rols ?? []).some(
-        (rol) => rol.isActive && (rol.rol ?? '').toUpperCase() === role.toUpperCase(),
-    )
-}
-
 function InvitationStatusBadge({ estat }: { estat: Invitacio['estat'] }) {
     const map: Record<string, { label: string; cls: string }> = {
         pendent: { label: 'Pendent', cls: 'bg-orange-100 text-orange-800' },
@@ -85,24 +79,7 @@ function InvitationStatusBadge({ estat }: { estat: Invitacio['estat'] }) {
 // ─── Tab: Plantilla ───────────────────────────────────────────────────────────
 function PlantillaTab({ equip }: { equip: Equip | null }) {
     const { data: membresData, isLoading } = useGetEquipMembres(equip?.id ?? null)
-    const { data: users = [] } = useGetUsers()
-
-    const usersById = useMemo(
-        () => new Map(users.map((user) => [user.id, user])),
-        [users],
-    )
-
-    const membres = useMemo(() => {
-        return (membresData?.membres ?? []).map((membre) => {
-            const usuari = usersById.get(membre.usuariId)
-
-            return {
-                ...membre,
-                nom: membre.nom ?? usuari?.nom ?? `Usuari #${membre.usuariId.slice(0, 8)}`,
-                email: membre.email ?? usuari?.email ?? '—',
-            }
-        })
-    }, [membresData, usersById])
+    const membres = membresData?.membres ?? []
 
     if (!equip) return (
         <div className="text-center py-12 text-slate-500">
@@ -239,7 +216,7 @@ function FutursPartitsTab({ equip }: { equip: Equip | null }) {
                                 Alineació
                             </Button>
                             <Button size="sm" variant="outline" className="text-xs"
-                                onClick={() => navigate(`/partits/${p.id}`)}>
+                                onClick={() => navigate(`/partits/${p.id}?equipId=${equip?.id ?? ''}`)}>
                                 Detalls
                             </Button>
                         </div>
@@ -251,39 +228,21 @@ function FutursPartitsTab({ equip }: { equip: Equip | null }) {
 }
 
 // ─── Tab: Invitacions ────────────────────────────────────────────────────────
-function InvitacionsTab({ equip, authUserId }: { equip: Equip | null; authUserId: string }) {
-    const { data: users = [], isLoading: usersLoading } = useGetUsers()
-    const { data: membresData } = useGetEquipMembres(equip?.id ?? null)
+function InvitacionsTab({ equip }: { equip: Equip | null }) {
+    const [query, setQuery] = useState('')
+    const { data: candidates = [], isLoading: candidatesLoading } = useGetInvitacioCandidates(equip?.id ?? null, query)
     const { data: invitacions = [], isLoading: invitacionsLoading } = useGetInvitacionsEquip(equip?.id ?? null)
     const crearInvitacio = useCrearInvitacioEquip(equip?.id ?? '')
 
-    const [query, setQuery] = useState('')
     const [selectedUserId, setSelectedUserId] = useState('')
     const [missatge, setMissatge] = useState('')
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
-    const membreIds = useMemo(
-        () => new Set((membresData?.membres ?? []).map((membre) => membre.usuariId)),
-        [membresData],
-    )
-
-    const candidates = useMemo(() => {
-        const normalizedQuery = query.trim().toLowerCase()
-
-        return users.filter((candidate) => {
-            const isJugadorOrEntrenador = hasRole(candidate, 'JUGADOR') || hasRole(candidate, 'ENTRENADOR')
-            if (!isJugadorOrEntrenador) return false
-            if (candidate.id === authUserId) return false
-            if (membreIds.has(candidate.id)) return false
-
-            if (!normalizedQuery) return true
-
-            const nom = (candidate.nom ?? '').toLowerCase()
-            const email = (candidate.email ?? '').toLowerCase()
-
-            return nom.includes(normalizedQuery) || email.includes(normalizedQuery)
-        })
-    }, [authUserId, membreIds, query, users])
+    useEffect(() => {
+        if (selectedUserId && !candidates.some((candidate) => candidate.id === selectedUserId)) {
+            setSelectedUserId('')
+        }
+    }, [candidates, selectedUserId])
 
     const sortedInvitacions = useMemo(() => {
         return [...invitacions].sort((a, b) => {
@@ -354,11 +313,15 @@ function InvitacionsTab({ equip, authUserId }: { equip: Equip | null; authUserId
                         <option value="">Selecciona destinatari</option>
                         {candidates.map((candidate) => (
                             <option key={candidate.id} value={candidate.id}>
-                                {candidate.nom} · {hasRole(candidate, 'ENTRENADOR') ? 'Entrenador' : 'Jugador'}
+                                {candidate.nom} · {candidate.tipus === 'ENTRENADOR' ? 'Entrenador' : 'Jugador'}
                             </option>
                         ))}
                     </select>
                 </div>
+
+                {candidatesLoading && (
+                    <p className="text-xs text-slate-500">Cercant candidats disponibles...</p>
+                )}
 
                 <textarea
                     value={missatge}
@@ -372,7 +335,7 @@ function InvitacionsTab({ equip, authUserId }: { equip: Equip | null; authUserId
                     <Button
                         size="sm"
                         className="bg-green-700 hover:bg-green-800 text-white text-xs"
-                        disabled={usersLoading || crearInvitacio.isPending || !selectedUserId}
+                        disabled={candidatesLoading || crearInvitacio.isPending || !selectedUserId}
                         onClick={handleSendInvitation}
                     >
                         {crearInvitacio.isPending ? (
@@ -384,7 +347,7 @@ function InvitacionsTab({ equip, authUserId }: { equip: Equip | null; authUserId
                     </Button>
                 </div>
 
-                {!usersLoading && candidates.length === 0 && (
+                {!candidatesLoading && candidates.length === 0 && (
                     <p className="text-xs text-slate-500">No hi ha jugadors o entrenadors disponibles amb aquest filtre.</p>
                 )}
             </div>
@@ -407,7 +370,7 @@ function InvitacionsTab({ equip, authUserId }: { equip: Equip | null; authUserId
                             >
                                 <div>
                                     <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
-                                        {invitation.usuariNom ?? `Usuari #${invitation.usuariId}`}
+                                        {invitation.usuariNom ?? 'Usuari sense nom'}
                                     </p>
                                     {invitation.missatge && (
                                         <p className="text-xs text-slate-500 mt-0.5">{invitation.missatge}</p>
@@ -806,7 +769,7 @@ export default function DashboardEntrenador() {
                             <LliguesTab equip={selectedEquip} />
                         </TabsContent>
                         <TabsContent value="invitacions">
-                            <InvitacionsTab equip={selectedEquip} authUserId={user.id} />
+                            <InvitacionsTab equip={selectedEquip} />
                         </TabsContent>
                         <TabsContent value="partits">
                             <FutursPartitsTab equip={selectedEquip} />

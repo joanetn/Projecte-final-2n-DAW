@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\AdminWeb\Presentation\Http\Controllers\AdminWebController;
 use App\Modules\AdminWeb\Presentation\Http\Controllers\AdminLeaguePlannerController;
+use App\Modules\AdminWeb\Presentation\Http\Controllers\AdminPermissionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,25 @@ Route::middleware(['jwt.auth', 'checkRole:ADMIN_WEB'])
 
         // Classificacions
         Route::get('/classificacions', [AdminWebController::class, 'classificacions']);
+
+        // Permisos
+        Route::get('/permisos', [AdminPermissionsController::class, 'llistarPermisos'])
+            ->middleware('checkPermission:admin.usuaris.edit');
+
+        Route::get('/usuaris-permisos', [AdminPermissionsController::class, 'llistarUsuarisPermisos'])
+            ->middleware('checkPermission:admin.usuaris.edit');
+
+        Route::get('/usuaris/{usuariId}/permisos', [AdminPermissionsController::class, 'obtenirPermisosUsuari'])
+            ->middleware('checkPermission:admin.usuaris.edit');
+
+        Route::patch('/usuaris/{usuariId}/permisos', [AdminPermissionsController::class, 'actualizarPermisosUsuari'])
+            ->middleware('checkPermission:admin.usuaris.edit');
+
+        Route::post('/usuaris/{usuariId}/permisos/todos', [AdminPermissionsController::class, 'asignarTodosLosPermisos'])
+            ->middleware('checkPermission:admin.usuaris.edit');
+
+        Route::delete('/usuaris/{usuariId}/permisos', [AdminPermissionsController::class, 'limpiarPermisosDirectos'])
+            ->middleware('checkPermission:admin.usuaris.edit');
     });
 
 Route::middleware(['jwt.auth'])->group(function () {

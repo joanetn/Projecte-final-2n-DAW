@@ -4,6 +4,25 @@ export interface Permission {
     description: string;
 }
 
+export interface UsuariPermiso {
+    id: string
+    nom: string
+    email: string
+    isActive: boolean
+    rols: string[]
+    permisosDirectos: string[]
+    todosLosPermisos: string[]
+}
+
+export interface UsuariPermisosDetalle {
+    usuariId: string
+    nom: string
+    email: string
+    rols: string[]
+    permisosDirectos: Permission[]
+    todosLosPermisos: string[]
+}
+
 export interface PermissionCheck {
     permission: string;
     has: boolean;

@@ -10,7 +10,7 @@ class Lliga extends Model
 {
     use HasUuids;
 
-    protected $table = 'lligas';
+    protected $table = 'lligues';
 
     protected $fillable = [
         'id',

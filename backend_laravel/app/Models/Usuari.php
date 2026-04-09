@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 
 class Usuari extends Model
@@ -42,6 +43,18 @@ class Usuari extends Model
         return $this->hasMany(UsuariRol::class, 'usuariId');
     }
 
+    public function permisos(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            'App\Models\Permission',
+            'usuario_permissions',
+            'usuariId',
+            'permission_id',
+            'id',
+            'id'
+        );
+    }
+
     public function equipUsuaris(): HasMany
     {
         return $this->hasMany(EquipUsuari::class, 'usuariId');
@@ -73,20 +86,30 @@ class Usuari extends Model
         return $this->rols->where('isActive', true)->pluck('rol')->toArray();
     }
 
-    /** Retorna array de nombres de permisos basados en los roles */
+    /** Retorna array de nombres de permisos basados en los roles y permisos directos */
     public function getPermissionsArray(): array
     {
         $roles = $this->getRolesArray();
-        if (empty($roles)) {
-            return [];
+
+        // Permisos de roles
+        $rolePermissions = [];
+        if (!empty($roles)) {
+            $rolePermissions = DB::table('permissions')
+                ->join('role_permissions', 'permissions.id', '=', 'role_permissions.permission_id')
+                ->whereIn('role_permissions.rol', $roles)
+                ->pluck('permissions.name')
+                ->toArray();
         }
 
-        return DB::table('permissions')
-            ->join('role_permissions', 'permissions.id', '=', 'role_permissions.permission_id')
-            ->whereIn('role_permissions.rol', $roles)
+        // Permisos directos del usuario
+        $userPermissions = DB::table('permissions')
+            ->join('usuario_permissions', 'permissions.id', '=', 'usuario_permissions.permission_id')
+            ->where('usuario_permissions.usuariId', $this->id)
             ->pluck('permissions.name')
-            ->unique()
             ->toArray();
+
+        // Combinar y eliminar duplicados
+        return array_values(array_unique(array_merge($rolePermissions, $userPermissions)));
     }
 
     public function hasRole(string $role): bool

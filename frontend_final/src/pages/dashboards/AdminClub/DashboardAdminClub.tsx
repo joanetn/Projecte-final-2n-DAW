@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { useGetClubs, useGetEquipsClub, useGetLeagueCategories } from '@/queries/club.queries'
+import { useEffect, useState } from 'react'
+import { useGetClubs, useGetEquipsClub, useGetEquipMembres, useGetLeagueCategories } from '@/queries/club.queries'
+import { useGetPartits } from '@/queries/partit.queries'
 import { useCrearEquip, useActualitzarClub } from '@/mutations/club.mutations'
 import { useAuth } from '@/context/AuthContext'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -263,21 +264,233 @@ function EquipsTab({ clubId }: { clubId: string }) {
 }
 
 // ── Tab: Estadístiques ────────────────────────────────────────────────────────
-function EstadistiquesTab() {
+function EstadistiquesTab({ clubId }: { clubId: string }) {
+    const { data: equipsData, isLoading: loadingEquips } = useGetEquipsClub(clubId)
+    const equips = equipsData?.equips ?? []
+
+    const equipIdsParam = equips
+        .map((equip) => equip.id)
+        .filter((id): id is string => Boolean(id))
+        .join(',')
+
+    const { data: partitsData, isLoading: loadingPartits } = useGetPartits({
+        equipIds: equipIdsParam || '__NONE__',
+    })
+
+    const partits = partitsData?.partits ?? []
+
+    if (loadingEquips || loadingPartits) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-6 h-6 animate-spin text-warm-600" />
+            </div>
+        )
+    }
+
+    if (equips.length === 0) {
+        return (
+            <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+                <BarChart2 className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p>Crea equips per començar a veure estadístiques del club.</p>
+            </div>
+        )
+    }
+
+    const totalEquips = equips.length
+    const equipsActius = equips.filter((equip) => equip.isActive !== false).length
+    const equipsAmbLliga = equips.filter((equip) => Boolean(equip.lligaId)).length
+    const totalJugadors = equips.reduce((acc, equip) => acc + (equip.numJugadors ?? 0), 0)
+
+    const partitsCompletats = partits.filter((partit) => partit.status === 'COMPLETAT').length
+    const partitsPendents = partits.filter(
+        (partit) => partit.status !== 'COMPLETAT' && partit.status !== 'CANCELAT',
+    ).length
+
+    const categoriesMap = equips.reduce<Record<string, number>>((acc, equip) => {
+        const key = (equip.categoria || 'Sense categoria').trim() || 'Sense categoria'
+        acc[key] = (acc[key] ?? 0) + 1
+        return acc
+    }, {})
+
+    const categories = Object.entries(categoriesMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 6)
+
     return (
-        <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-            <BarChart2 className="w-10 h-10 mx-auto mb-3 opacity-30" />
-            <p>Estadísticas del club disponibles próximamente.</p>
+        <div className="space-y-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Equips totals</p>
+                    <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{totalEquips}</p>
+                </div>
+
+                <div className="rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Equips actius</p>
+                    <p className="text-2xl font-bold text-green-700 dark:text-green-400 mt-1">{equipsActius}</p>
+                </div>
+
+                <div className="rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Equips inscrits</p>
+                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-400 mt-1">{equipsAmbLliga}</p>
+                </div>
+
+                <div className="rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Jugadors (estimació)</p>
+                    <p className="text-2xl font-bold text-purple-700 dark:text-purple-400 mt-1">{totalJugadors}</p>
+                </div>
+
+                <div className="rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Partits completats</p>
+                    <p className="text-2xl font-bold text-emerald-700 dark:text-emerald-400 mt-1">{partitsCompletats}</p>
+                </div>
+
+                <div className="rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Partits pendents</p>
+                    <p className="text-2xl font-bold text-orange-700 dark:text-orange-400 mt-1">{partitsPendents}</p>
+                </div>
+            </div>
+
+            <div className="rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Distribució per categoria</h3>
+
+                {categories.length === 0 ? (
+                    <p className="text-sm text-slate-500 dark:text-slate-400">No hi ha categories disponibles.</p>
+                ) : (
+                    <div className="space-y-2">
+                        {categories.map(([categoria, count]) => (
+                            <div key={categoria} className="flex items-center justify-between text-sm">
+                                <span className="text-slate-700 dark:text-slate-200">{categoria}</span>
+                                <Badge variant="secondary" className="text-xs">{count} equips</Badge>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
 
 // ── Tab: Membres ──────────────────────────────────────────────────────────────
-function MembresTab() {
+function MembresTab({ clubId }: { clubId: string }) {
+    const { data: equipsData, isLoading: loadingEquips } = useGetEquipsClub(clubId)
+    const equips = equipsData?.equips ?? []
+
+    const [selectedEquipId, setSelectedEquipId] = useState<string>('')
+
+    useEffect(() => {
+        if (equips.length === 0) {
+            if (selectedEquipId) {
+                setSelectedEquipId('')
+            }
+            return
+        }
+
+        const selectedIsValid = equips.some((equip) => equip.id === selectedEquipId)
+        if (!selectedEquipId || !selectedIsValid) {
+            setSelectedEquipId(equips[0].id)
+        }
+    }, [equips, selectedEquipId])
+
+    const {
+        data: membresData,
+        isLoading: loadingMembres,
+        isError,
+    } = useGetEquipMembres(selectedEquipId || null)
+
+    const membres = membresData?.membres ?? []
+
+    if (loadingEquips) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-6 h-6 animate-spin text-warm-600" />
+            </div>
+        )
+    }
+
+    if (equips.length === 0) {
+        return (
+            <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+                <Users className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p>No hay equipos creados todavía. Crea un equipo para ver sus miembros.</p>
+            </div>
+        )
+    }
+
     return (
-        <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-            <Users className="w-10 h-10 mx-auto mb-3 opacity-30" />
-            <p>Gestión de miembros disponible próximamente.</p>
+        <div className="space-y-4">
+            <div className="bg-warm-50 dark:bg-slate-700 rounded-xl border border-warm-100 dark:border-slate-600 p-4">
+                <label className="text-xs text-slate-500 dark:text-slate-300 mb-1 block">Selecciona equipo</label>
+                <select
+                    value={selectedEquipId}
+                    onChange={(e) => setSelectedEquipId(e.target.value)}
+                    className="w-full text-sm rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-3 py-2"
+                >
+                    {equips.map((equip) => (
+                        <option key={equip.id} value={equip.id}>{equip.nom}</option>
+                    ))}
+                </select>
+            </div>
+
+            {loadingMembres ? (
+                <div className="flex items-center justify-center py-10">
+                    <Loader2 className="w-6 h-6 animate-spin text-warm-600" />
+                </div>
+            ) : isError ? (
+                <div className="text-sm rounded-lg border border-red-200 bg-red-50 text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300 p-4">
+                    No se han podido cargar los miembros del equipo seleccionado.
+                </div>
+            ) : membres.length === 0 ? (
+                <div className="text-center py-10 text-slate-500 dark:text-slate-400">
+                    <Users className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                    <p>Este equipo todavía no tiene miembros.</p>
+                </div>
+            ) : (
+                <div className="overflow-x-auto rounded-xl border border-warm-100 dark:border-slate-700 bg-white dark:bg-slate-800">
+                    <table className="w-full text-sm">
+                        <thead className="bg-warm-50 dark:bg-slate-900/60 text-slate-600 dark:text-slate-300">
+                            <tr>
+                                <th className="text-left p-3 font-medium">Miembro</th>
+                                <th className="text-left p-3 font-medium">Rol en el equipo</th>
+                                <th className="text-left p-3 font-medium">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {membres.map((membre) => {
+                                const fallbackName = membre.usuariId
+                                    ? 'Usuari sense nom'
+                                    : 'Usuari'
+
+                                return (
+                                    <tr key={membre.id} className="border-t border-warm-100 dark:border-slate-700">
+                                        <td className="p-3">
+                                            <p className="font-medium text-slate-900 dark:text-white">{membre.nom ?? fallbackName}</p>
+                                            {membre.email && (
+                                                <p className="text-xs text-slate-500 dark:text-slate-400">{membre.email}</p>
+                                            )}
+                                        </td>
+                                        <td className="p-3">
+                                            <Badge variant="secondary" className="text-xs">
+                                                {membre.rolEquip ?? 'Sense rol'}
+                                            </Badge>
+                                        </td>
+                                        <td className="p-3">
+                                            <Badge
+                                                className={
+                                                    membre.isActive !== false
+                                                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                                        : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300'
+                                                }
+                                            >
+                                                {membre.isActive !== false ? 'Activo' : 'Inactivo'}
+                                            </Badge>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     )
 }
@@ -353,8 +566,8 @@ export default function DashboardAdminClub() {
 
                 <TabsContent value="info"><InfoClubTab clubId={club.id} /></TabsContent>
                 <TabsContent value="equips"><EquipsTab clubId={club.id} /></TabsContent>
-                <TabsContent value="estadistiques"><EstadistiquesTab /></TabsContent>
-                <TabsContent value="membres"><MembresTab /></TabsContent>
+                <TabsContent value="estadistiques"><EstadistiquesTab clubId={club.id} /></TabsContent>
+                <TabsContent value="membres"><MembresTab clubId={club.id} /></TabsContent>
             </Tabs>
         </div>
     )

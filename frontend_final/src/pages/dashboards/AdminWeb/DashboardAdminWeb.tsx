@@ -7,6 +7,7 @@ import { PartitsTab } from '@/components/dashboards/adminWeb/PartitsTab'
 import { ReprogramacionsTab } from '@/components/dashboards/adminWeb/ReprogramacionsTab'
 import { ArbitresTab } from '@/components/dashboards/adminWeb/ArbitresTab'
 import { ClassificacioTab } from '@/components/dashboards/adminWeb/ClassificacioTab'
+import { PermissionsTab } from '@/components/dashboards/adminWeb/PermissionsTab'
 import { usePermissions } from '@/hooks/usePermissions'
 import { AdminPermissions } from '@/types/permissions'
 
@@ -82,6 +83,14 @@ const DashboardAdminWeb = () => {
                                     📈 Classificació
                                 </TabsTrigger>
                             )}
+                            {can(AdminPermissions.USUARIS_EDIT) && (
+                                <TabsTrigger
+                                    value="permisos"
+                                    className="text-warm-700 dark:text-warm-300 data-[state=active]:text-warm-900 dark:data-[state=active]:text-warm-100 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700"
+                                >
+                                    🔐 Permisos
+                                </TabsTrigger>
+                            )}
                         </TabsList>
 
                         <TabsContent value="resum" className="p-6">
@@ -107,6 +116,9 @@ const DashboardAdminWeb = () => {
                         </TabsContent>
                         <TabsContent value="classificacio" className="p-6">
                             <ClassificacioTab />
+                        </TabsContent>
+                        <TabsContent value="permisos" className="p-6">
+                            <PermissionsTab />
                         </TabsContent>
                     </Tabs>
                 </div>
