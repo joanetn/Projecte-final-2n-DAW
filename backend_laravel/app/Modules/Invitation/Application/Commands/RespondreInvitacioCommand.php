@@ -3,6 +3,7 @@
 namespace App\Modules\Invitation\Application\Commands;
 
 use App\Models\EquipUsuari;
+use App\Models\Seguro;
 use App\Models\UsuariRol;
 use App\Modules\Invitation\Domain\Exceptions\InvitacioEquipNotFoundException;
 use App\Modules\Invitation\Domain\Exceptions\InvalidInvitacioEstatException;
@@ -33,6 +34,10 @@ class RespondreInvitacioCommand
             }
 
             if ($resposta === 'acceptada') {
+                if (!$this->hasPaidActiveInsurance($invitacio->usuariId)) {
+                    throw new \RuntimeException("No pots acceptar la invitació sense tenir el segur pagat i actiu", 422);
+                }
+
                 $alreadyMember = EquipUsuari::query()
                     ->where('equipId', $invitacio->equipId)
                     ->where('usuariId', $invitacio->usuariId)
@@ -57,5 +62,19 @@ class RespondreInvitacioCommand
 
             $this->invitacioRepo->update($invitacioId, ['estat' => $resposta]);
         });
+    }
+
+    private function hasPaidActiveInsurance(string $usuariId): bool
+    {
+        return Seguro::query()
+            ->where('usuariId', $usuariId)
+            ->where('isActive', true)
+            ->where('pagat', true)
+            ->where(function ($query) {
+                $query
+                    ->whereNull('dataExpiracio')
+                    ->orWhere('dataExpiracio', '>=', now());
+            })
+            ->exists();
     }
 }

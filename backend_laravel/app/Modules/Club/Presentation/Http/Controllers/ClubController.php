@@ -107,9 +107,37 @@ class ClubController extends Controller
     /**
      * GET /clubs - Llistar tots els clubs actius
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $authUserId = $this->resolveAuthUserId($request);
+
+        if ($authUserId === null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat',
+            ], 401);
+        }
+
         $clubs = $this->getClubsQuery->execute();
+
+        $clubIdsFromMembership = DB::table('equip_usuaris')
+            ->join('equips', 'equips.id', '=', 'equip_usuaris.equipId')
+            ->where('equip_usuaris.usuariId', $authUserId)
+            ->where('equip_usuaris.isActive', true)
+            ->where('equips.isActive', true)
+            ->pluck('equips.clubId')
+            ->filter()
+            ->map(fn($clubId) => (string) $clubId)
+            ->unique()
+            ->values()
+            ->all();
+
+        $clubs = array_values(array_filter($clubs, function ($club) use ($authUserId, $clubIdsFromMembership) {
+            $clubId = (string) ($club->id ?? '');
+            $creadorId = (string) ($club->creadorId ?? '');
+
+            return $creadorId === $authUserId || in_array($clubId, $clubIdsFromMembership, true);
+        }));
 
         return response()->json([
             'success' => true,
@@ -171,12 +199,13 @@ class ClubController extends Controller
                 'data' => ['id' => $clubId]
             ], 201);
         } catch (\Exception $e) {
+            $status = ($e->getCode() >= 400 && $e->getCode() < 600) ? $e->getCode() : 400;
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
                 'exception' => get_class($e),
                 'debug' => env('APP_DEBUG')
-            ], 400);
+            ], $status);
         }
     }
 
@@ -331,7 +360,7 @@ class ClubController extends Controller
                     'rolEquip' => $rolEquip,
                 ]);
 
-                $this->createEquipUsuariCommand->execute($membreDto, $clubId);
+                $this->createEquipUsuariCommand->execute($membreDto, $clubId, true);
 
                 return $createdEquipId;
             });

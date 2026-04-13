@@ -2,6 +2,7 @@
 
 namespace App\Modules\Invitation\Application\Commands;
 
+use App\Models\Seguro;
 use App\Modules\Invitation\Application\DTOs\CreateInvitacioEquipDTO;
 use App\Modules\Invitation\Domain\Repositories\InvitacioEquipRepositoryInterface;
 use App\Modules\Invitation\Domain\Services\InvitationDomainService;
@@ -16,6 +17,10 @@ class CreateInvitacioEquipCommand
 
     public function execute(CreateInvitacioEquipDTO $dto): string
     {
+        if (!$this->hasPaidActiveInsurance($dto->usuariId)) {
+            throw new \RuntimeException("L'usuari convidat ha de tenir el segur pagat i actiu", 422);
+        }
+
         $existing = $this->invitacioRepo->findByEquip($dto->equipId);
         $this->domainService->validateNoDuplicate($existing, $dto->usuariId);
 
@@ -29,5 +34,19 @@ class CreateInvitacioEquipCommand
         ]);
 
         return $invitacio->id;
+    }
+
+    private function hasPaidActiveInsurance(string $usuariId): bool
+    {
+        return Seguro::query()
+            ->where('usuariId', $usuariId)
+            ->where('isActive', true)
+            ->where('pagat', true)
+            ->where(function ($query) {
+                $query
+                    ->whereNull('dataExpiracio')
+                    ->orWhere('dataExpiracio', '>=', now());
+            })
+            ->exists();
     }
 }

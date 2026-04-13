@@ -1,5 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { crearClub, actualitzarClub, eliminarClub, crearEquip, inscriureEquipALliga } from '@/services/club.service';
+import {
+    crearClub,
+    actualitzarClub,
+    eliminarClub,
+    crearEquip,
+    inscriureEquipALliga,
+    removeEquipMembre,
+    leaveMeEquip,
+} from '@/services/club.service';
 import { CLUB_KEYS } from '@/queries/club.queries';
 import type { CreateClubData, UpdateClubData, CreateEquipData } from '@/types/club';
 
@@ -61,6 +69,36 @@ export const useInscriureEquipALliga = () => {
             qc.invalidateQueries({ queryKey: CLUB_KEYS.meusEquips() });
             qc.invalidateQueries({ queryKey: CLUB_KEYS.lligaDetail(variables.lligaId) });
             qc.invalidateQueries({ queryKey: CLUB_KEYS.lligues() });
+        },
+    });
+};
+
+export const useRemoveEquipMembre = () => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({ equipId, membreId }: { equipId: string; membreId: string }) => removeEquipMembre(equipId, membreId),
+        onSuccess: (_result, variables) => {
+            qc.invalidateQueries({ queryKey: ['equips', variables.equipId, 'membres'] });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.meusEquips() });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.meEquipMembres(variables.equipId) });
+        },
+    });
+};
+
+export const useLeaveMeEquip = () => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            equipId,
+            successorMembreId,
+        }: {
+            equipId: string;
+            successorMembreId?: string | null;
+        }) => leaveMeEquip(equipId, successorMembreId),
+        onSuccess: (_result, variables) => {
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.meusEquips() });
+            qc.invalidateQueries({ queryKey: ['equips', variables.equipId, 'membres'] });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.meEquipMembres(variables.equipId) });
         },
     });
 };

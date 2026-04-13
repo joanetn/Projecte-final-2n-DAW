@@ -100,6 +100,23 @@ export const getEquipMembres = async (equipId: string): Promise<{ membres: Membr
     return { membres };
 };
 
+export const removeEquipMembre = async (equipId: string, membreId: string): Promise<void> => {
+    await laravel.delete(`/api/admin/equips/${equipId}/membres/${membreId}`, { headers: authHeader() });
+};
+
+export const getMeEquipMembres = async (equipId: string): Promise<{ membres: MembreEquip[] }> => {
+    const res = await laravel.get(`/api/usuaris/me/equips/${equipId}/membres`, { headers: authHeader() });
+    const raw = unwrapApiData<unknown>(res.data);
+    const membres = normalizeMembres(extractArray<unknown>(raw, ['membres']));
+
+    return { membres };
+};
+
+export const leaveMeEquip = async (equipId: string, successorMembreId?: string | null): Promise<void> => {
+    const payload = successorMembreId ? { successorMembreId } : {};
+    await laravel.post(`/api/usuaris/me/equips/${equipId}/sortir`, payload, { headers: authHeader() });
+};
+
 export const getMeusEquips = async (_usuariId: string): Promise<{ equips: Equip[] }> => {
     const res = await laravel.get('/api/usuaris/me/equips', { headers: authHeader() });
     const raw = unwrapApiData<unknown>(res.data);

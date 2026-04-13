@@ -40,4 +40,28 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    'cerebras' => [
+        'api_key' => env('CEREBRAS_API_KEY'),
+    ],
+
+    'groq' => [
+        'api_key' => env('GROQ_API_KEY'),
+    ],
+
+    'open_router' => [
+        'api_key' => env('OPENROUTER_API_KEY'),
+    ],
+
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
+
+    'mistral' => [
+        'api_key' => env('MISTRAL_API_KEY'),
+    ],
+
+    'cohere' => [
+        'api_key' => env('COHERE_API_KEY'),
+    ]
+
 ];

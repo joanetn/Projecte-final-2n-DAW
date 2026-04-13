@@ -1,13 +1,22 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { useGetInsurances } from '@/queries/insurance.queries'
-import { useGetMeusEquips } from '@/queries/club.queries'
+import { useGetMeEquipMembres, useGetMeusEquips } from '@/queries/club.queries'
 import { useGetPartits } from '@/queries/partit.queries'
 import { useGetInvitacionsPendents, useRespondreInvitacio } from '@/queries/alineacio.queries'
+import { useLeaveMeEquip } from '@/mutations/club.mutations'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog'
 import {
     User as UserIcon,
     Users,
@@ -22,11 +31,36 @@ import {
     Clock,
     Bell,
     MapPin,
+    LogOut,
 } from 'lucide-react'
 import type { Equip } from '@/types/club'
 import type { Partit } from '@/types/partit'
 import type { Invitacio } from '@/services/dto/invitacio.dto'
 import type { Insurance } from '@/types/insurance'
+
+const parseBoolean = (value: unknown): boolean => {
+    if (typeof value === 'boolean') return value
+    if (typeof value === 'number') return value === 1
+    if (typeof value === 'string') {
+        const normalized = value.trim().toLowerCase()
+        return normalized === '1' || normalized === 'true' || normalized === 'yes'
+    }
+
+    return false
+}
+
+const isInsuranceNotExpired = (value?: string | null): boolean => {
+    if (!value) return true
+    const date = new Date(value)
+    if (Number.isNaN(date.getTime())) return true
+    return date.getTime() >= Date.now()
+}
+
+const isInsuranceActiveAndPaid = (insurance: Insurance): boolean => {
+    const isActive = parseBoolean(insurance.isActive ?? true)
+    const isPaid = parseBoolean(insurance.pagat)
+    return isActive && isPaid && isInsuranceNotExpired(insurance.dataExpiracio)
+}
 
 // ── Tab: Mis Datos ────────────────────────────────────────────────────────────
 function MisDatosTab() {
@@ -103,6 +137,50 @@ function MisDatosTab() {
 function MisEquipsTab({ userId }: { userId: string }) {
     const { data, isLoading } = useGetMeusEquips(userId)
     const equips = data?.equips ?? []
+    const leaveEquipMutation = useLeaveMeEquip()
+    const [leaveDialog, setLeaveDialog] = useState<{ equipId: string; equipNom: string; rolMeu?: string } | null>(null)
+    const [successorMembreId, setSuccessorMembreId] = useState('')
+    const [actionError, setActionError] = useState<string | null>(null)
+    const { data: leaveMembresData, isLoading: loadingLeaveMembres } = useGetMeEquipMembres(leaveDialog?.equipId ?? null)
+    const leaveMembres = leaveMembresData?.membres ?? []
+    const myRole = String(leaveDialog?.rolMeu ?? '').trim().toLowerCase()
+    const hasDelegatInEquip = leaveMembres.some((membre) => String(membre.rolEquip ?? '').trim().toLowerCase() === 'delegat')
+    const hasOtherDelegat = leaveMembres.some(
+        (membre) => membre.usuariId !== userId && String(membre.rolEquip ?? '').trim().toLowerCase() === 'delegat',
+    )
+    const otherTrainerCount = leaveMembres.filter(
+        (membre) => membre.usuariId !== userId && String(membre.rolEquip ?? '').trim().toLowerCase() === 'entrenador',
+    ).length
+    const requiresSuccessor = (myRole === 'delegat' && !hasOtherDelegat)
+        || (myRole === 'entrenador' && !hasDelegatInEquip && otherTrainerCount === 0)
+    const successorCandidates = leaveMembres.filter((membre) => membre.usuariId !== userId && membre.isActive !== false)
+
+    useEffect(() => {
+        if (!leaveDialog) return
+        setSuccessorMembreId(successorCandidates[0]?.id ?? '')
+    }, [leaveDialog, successorCandidates])
+
+    const confirmLeaveEquip = () => {
+        if (!leaveDialog) return
+
+        setActionError(null)
+        leaveEquipMutation.mutate(
+            {
+                equipId: leaveDialog.equipId,
+                successorMembreId: requiresSuccessor ? successorMembreId || null : null,
+            },
+            {
+                onSuccess: () => {
+                    setLeaveDialog(null)
+                    setSuccessorMembreId('')
+                },
+                onError: (error) => {
+                    const message = error instanceof Error ? error.message : 'No s\'ha pogut sortir de l\'equip.'
+                    setActionError(message)
+                },
+            },
+        )
+    }
 
     if (isLoading) return (
         <div className="flex items-center justify-center py-12">
@@ -120,6 +198,12 @@ function MisEquipsTab({ userId }: { userId: string }) {
 
     return (
         <div className="space-y-3">
+            {actionError && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+                    {actionError}
+                </div>
+            )}
+
             {equips.map((equip: Equip) => (
                 <div key={equip.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
                     <div className="flex items-start justify-between gap-3">
@@ -133,12 +217,81 @@ function MisEquipsTab({ userId }: { userId: string }) {
                                 {equip.rolMeu && <Badge className="text-xs bg-blue-100 text-blue-700">{equip.rolMeu}</Badge>}
                             </div>
                         </div>
-                        <Badge className={equip.isActive === false ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'}>
-                            {equip.isActive === false ? 'Inactiu' : 'Actiu'}
-                        </Badge>
+                        <div className="flex flex-col items-end gap-2">
+                            <Badge className={equip.isActive === false ? 'bg-gray-100 text-gray-700' : 'bg-green-100 text-green-700'}>
+                                {equip.isActive === false ? 'Inactiu' : 'Actiu'}
+                            </Badge>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-red-600 border-red-200 hover:bg-red-50"
+                                onClick={() => {
+                                    setActionError(null)
+                                    setLeaveDialog({
+                                        equipId: equip.id,
+                                        equipNom: equip.nom || 'Equip sense nom',
+                                        rolMeu: equip.rolMeu,
+                                    })
+                                }}
+                            >
+                                <LogOut className="w-3.5 h-3.5 mr-1" />
+                                Sortir
+                            </Button>
+                        </div>
                     </div>
                 </div>
             ))}
+
+            <Dialog open={!!leaveDialog} onOpenChange={(open) => !open && setLeaveDialog(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Ixir de l&apos;equip</DialogTitle>
+                        <DialogDescription>
+                            Confirma que vols ixir de {leaveDialog?.equipNom ?? 'l\'equip seleccionat'}.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {requiresSuccessor && (
+                        <div className="space-y-2">
+                            <p className="text-sm text-slate-700 dark:text-slate-300">
+                                Com a administrador del equip, has d&apos;escollir un successor abans de ixir.
+                            </p>
+                            <select
+                                value={successorMembreId}
+                                onChange={(event) => setSuccessorMembreId(event.target.value)}
+                                className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
+                                disabled={loadingLeaveMembres}
+                            >
+                                <option value="">Selecciona successor</option>
+                                {successorCandidates.map((membre) => (
+                                    <option key={membre.id} value={membre.id}>
+                                        {membre.nom ?? 'Membre sense nom'} · {membre.rolEquip ?? 'sense rol'}
+                                    </option>
+                                ))}
+                            </select>
+                            {successorCandidates.length === 0 && !loadingLeaveMembres && (
+                                <p className="text-xs text-red-600">
+                                    No hi ha cap altre membre actiu per assignar com a successor.
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setLeaveDialog(null)} disabled={leaveEquipMutation.isPending}>
+                            Cancel·lar
+                        </Button>
+                        <Button
+                            onClick={confirmLeaveEquip}
+                            disabled={leaveEquipMutation.isPending || (requiresSuccessor && !successorMembreId)}
+                            className="bg-red-600 hover:bg-red-700 text-white"
+                        >
+                            {leaveEquipMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                            Confirmar ixida
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
@@ -227,9 +380,14 @@ function PartitsTab({ equipIds }: { equipIds: string[] }) {
 }
 
 // ── Tab: Seguro ───────────────────────────────────────────────────────────────
-function SeguroTab() {
+function SeguroTab({ userId }: { userId: string }) {
     const navigate = useNavigate()
     const { data: insurances, isLoading } = useGetInsurances()
+
+    const myInsurances = useMemo(
+        () => (insurances ?? []).filter((insurance: Insurance) => insurance.usuariId === userId),
+        [insurances, userId],
+    )
 
     if (isLoading) return (
         <div className="flex items-center justify-center py-12">
@@ -237,9 +395,7 @@ function SeguroTab() {
         </div>
     )
 
-    const activeInsurance = (insurances ?? []).find((ins: Insurance) =>
-        !!ins.isActive && ins.pagat
-    )
+    const activeInsurance = myInsurances.find((insurance) => isInsuranceActiveAndPaid(insurance))
 
     return (
         <div className="space-y-4">
@@ -283,6 +439,42 @@ function InvitacionsTab({ userId }: { userId: string }) {
     const { data: invitacions, isLoading } = useGetInvitacionsPendents(userId)
     const respondre = useRespondreInvitacio(userId)
     const pendents = invitacions ?? []
+    const [respondDialog, setRespondDialog] = useState<{
+        invitacio: Invitacio
+        estat: 'acceptada' | 'rebutjada'
+    } | null>(null)
+    const [actionError, setActionError] = useState<string | null>(null)
+
+    const openRespondDialog = (invitacio: Invitacio, estat: 'acceptada' | 'rebutjada') => {
+        setActionError(null)
+        setRespondDialog({ invitacio, estat })
+    }
+
+    const closeRespondDialog = () => {
+        if (respondre.isPending) return
+        setActionError(null)
+        setRespondDialog(null)
+    }
+
+    const handleConfirmResponse = () => {
+        if (!respondDialog) return
+
+        setActionError(null)
+        respondre.mutate(
+            { id: respondDialog.invitacio.id, estat: respondDialog.estat },
+            {
+                onSuccess: () => {
+                    setRespondDialog(null)
+                },
+                onError: (error) => {
+                    const message = error instanceof Error
+                        ? error.message
+                        : 'No s\'ha pogut processar la resposta de la invitació.'
+                    setActionError(message)
+                },
+            },
+        )
+    }
 
     if (isLoading) return (
         <div className="flex items-center justify-center py-12">
@@ -316,18 +508,67 @@ function InvitacionsTab({ userId }: { userId: string }) {
                         <div className="flex gap-2">
                             <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white text-xs h-8"
                                 disabled={respondre.isPending}
-                                onClick={() => respondre.mutate({ id: inv.id, estat: 'acceptada' })}>
+                                onClick={() => openRespondDialog(inv, 'acceptada')}>
                                 <CheckCircle2 className="w-3.5 h-3.5 mr-1" />Acceptar
                             </Button>
                             <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 text-xs h-8"
                                 disabled={respondre.isPending}
-                                onClick={() => respondre.mutate({ id: inv.id, estat: 'rebutjada' })}>
+                                onClick={() => openRespondDialog(inv, 'rebutjada')}>
                                 <XCircle className="w-3.5 h-3.5 mr-1" />Rebutjar
                             </Button>
                         </div>
                     </div>
                 </div>
             ))}
+
+            <Dialog open={!!respondDialog} onOpenChange={(open) => !open && closeRespondDialog()}>
+                <DialogContent className="bg-white dark:bg-slate-800">
+                    <DialogHeader>
+                        <DialogTitle className="text-slate-900 dark:text-slate-100">
+                            {respondDialog?.estat === 'acceptada' ? 'Acceptar invitació' : 'Rebutjar invitació'}
+                        </DialogTitle>
+                        <DialogDescription className="text-slate-600 dark:text-slate-300">
+                            {respondDialog?.estat === 'acceptada'
+                                ? 'Confirma si vols acceptar aquesta invitació i unir-te a l\'equip.'
+                                : 'Confirma si vols rebutjar aquesta invitació.'}
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-3 space-y-2">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide">Equip</p>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                            {respondDialog?.invitacio.equipNom ?? 'Equip sense nom'}
+                        </p>
+
+                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide pt-1">Missatge</p>
+                        <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
+                            {respondDialog?.invitacio.missatge?.trim() || 'Aquesta invitació no inclou missatge.'}
+                        </p>
+                    </div>
+
+                    {actionError && (
+                        <div className="rounded-md bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/40 p-2 text-sm text-red-700 dark:text-red-300">
+                            {actionError}
+                        </div>
+                    )}
+
+                    <DialogFooter>
+                        <Button variant="outline" onClick={closeRespondDialog} disabled={respondre.isPending}>
+                            Cancel·lar
+                        </Button>
+                        <Button
+                            onClick={handleConfirmResponse}
+                            disabled={respondre.isPending}
+                            className={respondDialog?.estat === 'rebutjada'
+                                ? 'bg-red-600 hover:bg-red-700 text-white'
+                                : 'bg-green-600 hover:bg-green-700 text-white'}
+                        >
+                            {respondre.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                            Confirmar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
@@ -339,9 +580,11 @@ export default function DashboardJugador() {
     const { data: equipsData } = useGetMeusEquips(user?.id ?? null)
     const { data: invitacionsData } = useGetInvitacionsPendents(user?.id ?? null)
 
-    const activeInsurance = (insurances ?? []).find((ins: Insurance) =>
-        !!ins.isActive && ins.pagat
+    const myInsurances = useMemo(
+        () => (insurances ?? []).filter((insurance: Insurance) => insurance.usuariId === user?.id),
+        [insurances, user?.id],
     )
+    const activeInsurance = myInsurances.find((insurance) => isInsuranceActiveAndPaid(insurance))
     const equips = equipsData?.equips ?? []
     const equipIds = useMemo(() => equips.map((equip) => equip.id), [equips])
     const equipIdsParam = useMemo(() => equipIds.join(','), [equipIds])
@@ -452,7 +695,7 @@ export default function DashboardJugador() {
                 <TabsContent value="equips"><MisEquipsTab userId={user.id} /></TabsContent>
                 <TabsContent value="stats"><EstadistiquesTab equipsCount={equips.length} partitsTotals={partitsMeus.length} partitsPendents={propersPartits.length} invitacionsPendents={pendentCount} /></TabsContent>
                 <TabsContent value="partits"><PartitsTab equipIds={equipIds} /></TabsContent>
-                <TabsContent value="segur"><SeguroTab /></TabsContent>
+                <TabsContent value="segur"><SeguroTab userId={user.id} /></TabsContent>
                 <TabsContent value="invitacions"><InvitacionsTab userId={user.id} /></TabsContent>
             </Tabs>
         </div>

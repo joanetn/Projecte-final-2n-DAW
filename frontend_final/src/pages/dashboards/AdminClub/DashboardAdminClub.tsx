@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useGetClubs, useGetEquipsClub, useGetEquipMembres, useGetLeagueCategories } from '@/queries/club.queries'
 import { useGetPartits } from '@/queries/partit.queries'
-import { useCrearEquip, useActualitzarClub } from '@/mutations/club.mutations'
+import { useCrearEquip, useActualitzarClub, useLeaveMeEquip, useRemoveEquipMembre } from '@/mutations/club.mutations'
 import { useAuth } from '@/context/AuthContext'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog'
 import {
     Building2,
     Users,
@@ -21,7 +29,15 @@ import {
     Edit2,
     X,
     Check,
+    Trash2,
+    LogOut,
 } from 'lucide-react'
+
+const normalizeEquipRole = (rol?: string | null) => String(rol ?? '').trim().toLowerCase()
+const canBeRemovedByManager = (rol?: string | null) => {
+    const normalized = normalizeEquipRole(rol)
+    return normalized === 'jugador' || normalized === 'entrenador'
+}
 
 // ── Tab: Informació del Club ──────────────────────────────────────────────────
 function InfoClubTab({ clubId }: { clubId: string }) {
@@ -371,11 +387,17 @@ function EstadistiquesTab({ clubId }: { clubId: string }) {
 }
 
 // ── Tab: Membres ──────────────────────────────────────────────────────────────
-function MembresTab({ clubId }: { clubId: string }) {
+function MembresTab({ clubId, currentUserId }: { clubId: string; currentUserId: string }) {
     const { data: equipsData, isLoading: loadingEquips } = useGetEquipsClub(clubId)
     const equips = equipsData?.equips ?? []
+    const removeMembreMutation = useRemoveEquipMembre()
+    const leaveEquipMutation = useLeaveMeEquip()
 
     const [selectedEquipId, setSelectedEquipId] = useState<string>('')
+    const [removeTarget, setRemoveTarget] = useState<{ id: string; nom: string } | null>(null)
+    const [leaveOpen, setLeaveOpen] = useState(false)
+    const [successorMembreId, setSuccessorMembreId] = useState('')
+    const [actionError, setActionError] = useState<string | null>(null)
 
     useEffect(() => {
         if (equips.length === 0) {
@@ -398,6 +420,66 @@ function MembresTab({ clubId }: { clubId: string }) {
     } = useGetEquipMembres(selectedEquipId || null)
 
     const membres = membresData?.membres ?? []
+    const currentEquip = equips.find((equip) => equip.id === selectedEquipId) ?? null
+    const myMembre = membres.find((membre) => membre.usuariId === currentUserId)
+    const myRole = normalizeEquipRole(myMembre?.rolEquip)
+    const hasDelegatInEquip = membres.some((membre) => normalizeEquipRole(membre.rolEquip) === 'delegat')
+    const hasOtherDelegat = membres.some(
+        (membre) => membre.usuariId !== currentUserId && normalizeEquipRole(membre.rolEquip) === 'delegat',
+    )
+    const otherTrainerCount = membres.filter(
+        (membre) => membre.usuariId !== currentUserId && normalizeEquipRole(membre.rolEquip) === 'entrenador',
+    ).length
+    const requiresSuccessor = (myRole === 'delegat' && !hasOtherDelegat)
+        || (myRole === 'entrenador' && !hasDelegatInEquip && otherTrainerCount === 0)
+    const successorCandidates = membres.filter((membre) => membre.usuariId !== currentUserId && membre.isActive !== false)
+
+    useEffect(() => {
+        if (!leaveOpen) return
+
+        const firstCandidate = successorCandidates[0]
+        setSuccessorMembreId(firstCandidate?.id ?? '')
+    }, [leaveOpen, successorCandidates])
+
+    const confirmRemoveMembre = () => {
+        if (!currentEquip || !removeTarget) return
+
+        setActionError(null)
+        removeMembreMutation.mutate(
+            { equipId: currentEquip.id, membreId: removeTarget.id },
+            {
+                onSuccess: () => {
+                    setRemoveTarget(null)
+                },
+                onError: (error) => {
+                    const message = error instanceof Error ? error.message : 'No s\'ha pogut donar de baixa el membre.'
+                    setActionError(message)
+                },
+            },
+        )
+    }
+
+    const confirmLeaveEquip = () => {
+        if (!currentEquip) return
+
+        setActionError(null)
+        leaveEquipMutation.mutate(
+            {
+                equipId: currentEquip.id,
+                successorMembreId: requiresSuccessor ? successorMembreId || null : null,
+            },
+            {
+                onSuccess: () => {
+                    setLeaveOpen(false)
+                    setSuccessorMembreId('')
+                },
+                onError: (error) => {
+                    const message = error instanceof Error ? error.message : 'No s\'ha pogut sortir de l\'equip.'
+                    setActionError(message)
+                },
+            },
+        )
+    }
 
     if (loadingEquips) {
         return (
@@ -431,6 +513,28 @@ function MembresTab({ clubId }: { clubId: string }) {
                 </select>
             </div>
 
+            {actionError && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+                    {actionError}
+                </div>
+            )}
+
+            {myMembre && (
+                <div className="flex justify-end">
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                            setActionError(null)
+                            setLeaveOpen(true)
+                        }}
+                    >
+                        <LogOut className="w-4 h-4 mr-1" />
+                        Sortir de l&apos;equip seleccionat
+                    </Button>
+                </div>
+            )}
+
             {loadingMembres ? (
                 <div className="flex items-center justify-center py-10">
                     <Loader2 className="w-6 h-6 animate-spin text-warm-600" />
@@ -452,6 +556,7 @@ function MembresTab({ clubId }: { clubId: string }) {
                                 <th className="text-left p-3 font-medium">Miembro</th>
                                 <th className="text-left p-3 font-medium">Rol en el equipo</th>
                                 <th className="text-left p-3 font-medium">Estado</th>
+                                <th className="text-left p-3 font-medium">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -484,6 +589,27 @@ function MembresTab({ clubId }: { clubId: string }) {
                                                 {membre.isActive !== false ? 'Activo' : 'Inactivo'}
                                             </Badge>
                                         </td>
+                                        <td className="p-3">
+                                            {membre.usuariId === currentUserId ? (
+                                                <Badge variant="secondary" className="text-xs">Tu</Badge>
+                                            ) : canBeRemovedByManager(membre.rolEquip) ? (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="text-red-600 border-red-200 hover:bg-red-50"
+                                                    disabled={removeMembreMutation.isPending}
+                                                    onClick={() => {
+                                                        setActionError(null)
+                                                        setRemoveTarget({ id: membre.id, nom: membre.nom ?? 'Membre' })
+                                                    }}
+                                                >
+                                                    <Trash2 className="w-3.5 h-3.5 mr-1" />
+                                                    Donar de baixa
+                                                </Button>
+                                            ) : (
+                                                <span className="text-xs text-slate-400">Sense accions</span>
+                                            )}
+                                        </td>
                                     </tr>
                                 )
                             })}
@@ -491,6 +617,80 @@ function MembresTab({ clubId }: { clubId: string }) {
                     </table>
                 </div>
             )}
+
+            <Dialog open={!!removeTarget} onOpenChange={(open) => !open && setRemoveTarget(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Donar de baixa membre</DialogTitle>
+                        <DialogDescription>
+                            Estàs segur que vols donar de baixa a {removeTarget?.nom ?? 'aquest membre'} de l&apos;equip?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setRemoveTarget(null)} disabled={removeMembreMutation.isPending}>
+                            Cancel·lar
+                        </Button>
+                        <Button
+                            className="bg-red-600 hover:bg-red-700 text-white"
+                            onClick={confirmRemoveMembre}
+                            disabled={removeMembreMutation.isPending}
+                        >
+                            {removeMembreMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                            Confirmar baixa
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={leaveOpen} onOpenChange={(open) => !open && setLeaveOpen(false)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Sortir de l&apos;equip</DialogTitle>
+                        <DialogDescription>
+                            Confirma que vols sortir de {currentEquip?.nom ?? 'l\'equip seleccionat'}.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {requiresSuccessor && (
+                        <div className="space-y-2">
+                            <p className="text-sm text-slate-700 dark:text-slate-300">
+                                Com a administrador del equip, has d&apos;escollir un successor abans de sortir.
+                            </p>
+                            <select
+                                value={successorMembreId}
+                                onChange={(event) => setSuccessorMembreId(event.target.value)}
+                                className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
+                            >
+                                <option value="">Selecciona successor</option>
+                                {successorCandidates.map((membre) => (
+                                    <option key={membre.id} value={membre.id}>
+                                        {membre.nom ?? 'Membre sense nom'} · {membre.rolEquip ?? 'sense rol'}
+                                    </option>
+                                ))}
+                            </select>
+                            {successorCandidates.length === 0 && (
+                                <p className="text-xs text-red-600">
+                                    No hi ha cap altre membre actiu per assignar com a successor.
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setLeaveOpen(false)} disabled={leaveEquipMutation.isPending}>
+                            Cancel·lar
+                        </Button>
+                        <Button
+                            onClick={confirmLeaveEquip}
+                            disabled={leaveEquipMutation.isPending || (requiresSuccessor && !successorMembreId)}
+                            className="bg-red-600 hover:bg-red-700 text-white"
+                        >
+                            {leaveEquipMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                            Sortir de l&apos;equip
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
@@ -499,6 +699,11 @@ function MembresTab({ clubId }: { clubId: string }) {
 export default function DashboardAdminClub() {
     const { user } = useAuth()
     const { data: clubsData, isLoading } = useGetClubs()
+
+    if (!user) {
+        return null
+    }
+
     const userRoles = (user?.rols ?? []).map((r) => String(r.rol).toUpperCase())
     const isAdminWeb = userRoles.includes('ADMIN_WEB')
 
@@ -567,7 +772,7 @@ export default function DashboardAdminClub() {
                 <TabsContent value="info"><InfoClubTab clubId={club.id} /></TabsContent>
                 <TabsContent value="equips"><EquipsTab clubId={club.id} /></TabsContent>
                 <TabsContent value="estadistiques"><EstadistiquesTab clubId={club.id} /></TabsContent>
-                <TabsContent value="membres"><MembresTab clubId={club.id} /></TabsContent>
+                <TabsContent value="membres"><MembresTab clubId={club.id} currentUserId={user.id} /></TabsContent>
             </Tabs>
         </div>
     )

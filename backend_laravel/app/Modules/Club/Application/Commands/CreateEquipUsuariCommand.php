@@ -2,6 +2,7 @@
 
 namespace App\Modules\Club\Application\Commands;
 
+use App\Models\Seguro;
 use App\Modules\Club\Application\DTOs\CreateEquipUsuariDTO;
 use App\Modules\Club\Domain\Exceptions\EquipNotFoundException;
 use App\Modules\Club\Domain\Repositories\EquipRepositoryInterface;
@@ -20,7 +21,7 @@ class CreateEquipUsuariCommand
         private ClubDomainService $clubDomainService
     ) {}
 
-    public function execute(CreateEquipUsuariDTO $dto, string $clubId): string
+    public function execute(CreateEquipUsuariDTO $dto, string $clubId, bool $skipInsuranceValidation = false): string
     {
         // Comprovar que l'equip existeix
         $equip = $this->equipRepository->findById($dto->equipId);
@@ -36,6 +37,10 @@ class CreateEquipUsuariCommand
             throw new \Exception("L'usuari ja és membre d'aquest equip");
         }
 
+        if (!$skipInsuranceValidation && !$this->hasPaidActiveInsurance($dto->usuariId)) {
+            throw new \RuntimeException("L'usuari ha de tenir el segur pagat i actiu per formar part d'un equip", 422);
+        }
+
         // Crear el registre a equip_usuaris
         $membre = $this->equipUsuariRepository->create([
             'equipId' => $dto->equipId,
@@ -46,5 +51,19 @@ class CreateEquipUsuariCommand
 
         // Retornem l'ID del membre creat
         return $membre->id;
+    }
+
+    private function hasPaidActiveInsurance(string $usuariId): bool
+    {
+        return Seguro::query()
+            ->where('usuariId', $usuariId)
+            ->where('isActive', true)
+            ->where('pagat', true)
+            ->where(function ($query) {
+                $query
+                    ->whereNull('dataExpiracio')
+                    ->orWhere('dataExpiracio', '>=', now());
+            })
+            ->exists();
     }
 }

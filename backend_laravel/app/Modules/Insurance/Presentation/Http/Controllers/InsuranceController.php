@@ -38,9 +38,17 @@ class InsuranceController extends Controller
     /**
      * Llistar tots els seguros actius (amb relació usuari).
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $insurances = $this->getInsurancesQuery->execute();
+        $authUserId = $this->resolveAuthUserId($request);
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat',
+            ], 401);
+        }
+
+        $insurances = $this->getInsurancesByUserQuery->execute($authUserId);
 
         return response()->json([
             'success' => true,
@@ -51,10 +59,25 @@ class InsuranceController extends Controller
     /**
      * Obtenir un segur per ID.
      */
-    public function show(string $id): JsonResponse
+    public function show(Request $request, string $id): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthUserId($request);
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat',
+                ], 401);
+            }
+
             $insurance = $this->getInsuranceQuery->execute($id);
+
+            if ($insurance->usuariId !== $authUserId && !$this->isAdminWeb($authUserId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tens permisos per consultar aquest segur',
+                ], 403);
+            }
 
             return response()->json([
                 'success' => true,
@@ -71,8 +94,23 @@ class InsuranceController extends Controller
     /**
      * Llistar seguros d'un usuari.
      */
-    public function byUser(string $usuariId): JsonResponse
+    public function byUser(Request $request, string $usuariId): JsonResponse
     {
+        $authUserId = $this->resolveAuthUserId($request);
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat',
+            ], 401);
+        }
+
+        if ($authUserId !== $usuariId && !$this->isAdminWeb($authUserId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tens permisos per consultar els seguros d\'aquest usuari',
+            ], 403);
+        }
+
         $insurances = $this->getInsurancesByUserQuery->execute($usuariId);
 
         return response()->json([
@@ -279,5 +317,31 @@ class InsuranceController extends Controller
             ->where('rol', 'JUGADOR')
             ->where('isActive', true)
             ->exists();
+    }
+
+    private function isAdminWeb(string $usuariId): bool
+    {
+        return UsuariRol::query()
+            ->where('usuariId', $usuariId)
+            ->where('rol', 'ADMIN_WEB')
+            ->where('isActive', true)
+            ->exists();
+    }
+
+    private function resolveAuthUserId(Request $request): ?string
+    {
+        $userIdFromRequest = trim((string) $request->input('auth_user_id', ''));
+        if ($userIdFromRequest !== '') {
+            return $userIdFromRequest;
+        }
+
+        try {
+            $userIdFromToken = JWTAuth::parseToken()->getPayload()->get('sub');
+            $userIdFromToken = trim((string) $userIdFromToken);
+
+            return $userIdFromToken !== '' ? $userIdFromToken : null;
+        } catch (\Throwable) {
+            return null;
+        }
     }
 }

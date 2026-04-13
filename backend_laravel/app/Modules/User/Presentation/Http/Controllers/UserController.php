@@ -36,6 +36,7 @@ use App\Modules\User\Presentation\Http\Resources\UserRolResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -208,6 +209,163 @@ class UserController extends Controller
             'data' => [
                 'equips' => array_values($equipsById),
             ],
+        ]);
+    }
+
+    public function showMeEquipMembres(Request $request, string $equipId): JsonResponse
+    {
+        $authUserId = (string) $request->input('auth_user_id', '');
+
+        if ($authUserId === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat'
+            ], 401);
+        }
+
+        $isMember = EquipUsuari::query()
+            ->where('equipId', $equipId)
+            ->where('usuariId', $authUserId)
+            ->where('isActive', true)
+            ->exists();
+
+        if (!$isMember) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tens permisos per veure els membres d\'aquest equip'
+            ], 403);
+        }
+
+        $membres = EquipUsuari::query()
+            ->where('equipId', $equipId)
+            ->where('isActive', true)
+            ->with([
+                'usuari' => fn($query) => $query->where('isActive', true),
+            ])
+            ->get()
+            ->map(function (EquipUsuari $membre) {
+                return [
+                    'id' => $membre->id,
+                    'equipId' => $membre->equipId,
+                    'usuariId' => $membre->usuariId,
+                    'rolEquip' => $membre->rolEquip,
+                    'isActive' => (bool) $membre->isActive,
+                    'nom' => $membre->usuari?->nom,
+                    'email' => $membre->usuari?->email,
+                ];
+            })
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'membres' => $membres,
+            ],
+        ]);
+    }
+
+    public function leaveMeEquip(Request $request, string $equipId): JsonResponse
+    {
+        $authUserId = (string) $request->input('auth_user_id', '');
+
+        if ($authUserId === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat'
+            ], 401);
+        }
+
+        $membre = EquipUsuari::query()
+            ->where('equipId', $equipId)
+            ->where('usuariId', $authUserId)
+            ->where('isActive', true)
+            ->first(['id', 'equipId', 'usuariId', 'rolEquip']);
+
+        if (!$membre) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No formes part d\'aquest equip'
+            ], 404);
+        }
+
+        $otherMembers = EquipUsuari::query()
+            ->where('equipId', $equipId)
+            ->where('isActive', true)
+            ->where('id', '!=', $membre->id)
+            ->get(['id', 'usuariId', 'rolEquip']);
+
+        if ($otherMembers->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No pots sortir de l\'equip perquè ets l\'únic membre actiu'
+            ], 422);
+        }
+
+        $normalizedRole = strtolower(trim((string) $membre->rolEquip));
+        $hasDelegatInEquip = EquipUsuari::query()
+            ->where('equipId', $equipId)
+            ->where('isActive', true)
+            ->whereRaw('LOWER("rolEquip") = ?', ['delegat'])
+            ->exists();
+
+        $hasOtherDelegat = $otherMembers->contains(function (EquipUsuari $otherMember): bool {
+            return strtolower(trim((string) $otherMember->rolEquip)) === 'delegat';
+        });
+
+        $otherTrainerCount = $otherMembers
+            ->filter(function (EquipUsuari $otherMember): bool {
+                return strtolower(trim((string) $otherMember->rolEquip)) === 'entrenador';
+            })
+            ->count();
+
+        $isLastManager = ($normalizedRole === 'delegat' && !$hasOtherDelegat)
+            || ($normalizedRole === 'entrenador' && !$hasDelegatInEquip && $otherTrainerCount === 0);
+
+        if ($isLastManager) {
+            $successorMembreId = trim((string) $request->input('successorMembreId', ''));
+
+            if ($successorMembreId === '') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Has de seleccionar un successor abans de sortir de l\'equip'
+                ], 422);
+            }
+
+            /** @var EquipUsuari|null $successor */
+            $successor = $otherMembers->firstWhere('id', $successorMembreId);
+            if (!$successor) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El successor seleccionat no és vàlid per aquest equip'
+                ], 422);
+            }
+
+            DB::transaction(function () use ($successor, $membre): void {
+                EquipUsuari::query()
+                    ->where('id', $successor->id)
+                    ->update(['rolEquip' => 'delegat']);
+
+                EquipUsuari::query()
+                    ->where('id', $membre->id)
+                    ->delete();
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Has sortit de l\'equip i s\'ha assignat un nou administrador',
+                'data' => [
+                    'successorMembreId' => $successor->id,
+                ],
+            ]);
+        }
+
+        EquipUsuari::query()
+            ->where('id', $membre->id)
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Has sortit de l\'equip correctament',
         ]);
     }
 

@@ -67,17 +67,17 @@ function PlayerSlot({
         <div
             onClick={() => onClick(index)}
             className={`
-                relative w-44 h-36 rounded-xl border-2 transition-all duration-150 flex flex-col items-center justify-center gap-2
+                relative w-40 h-32 sm:w-44 sm:h-36 rounded-2xl border-2 transition-all duration-150 flex flex-col items-center justify-center gap-1.5
                 ${isOver
-                    ? 'border-blue-500 bg-blue-50 shadow-lg scale-105'
+                    ? 'border-cyan-400 bg-cyan-50 shadow-xl scale-105'
                     : slot
-                        ? 'border-green-400 bg-white shadow-md'
-                        : 'border-dashed border-slate-300 bg-white/60'}
+                        ? 'border-emerald-400 bg-white/95 shadow-lg'
+                        : 'border-dashed border-white/60 bg-white/15 backdrop-blur-sm'}
             `}
         >
             {slot ? (
                 <>
-                    <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-xl font-bold text-blue-700">
+                    <div className="w-11 h-11 rounded-full bg-gradient-to-br from-cyan-100 to-emerald-100 flex items-center justify-center text-lg font-bold text-cyan-800">
                         {slot.nom?.[0]?.toUpperCase() ?? '?'}
                     </div>
                     <p className="text-sm font-semibold text-slate-800 text-center px-2 truncate w-full text-center">
@@ -105,11 +105,11 @@ function PlayerSlot({
                 </>
             ) : (
                 <>
-                    <div className="w-10 h-10 rounded-full border-2 border-dashed border-slate-300 flex items-center justify-center text-slate-300">
+                    <div className="w-10 h-10 rounded-full border-2 border-dashed border-white/70 flex items-center justify-center text-white/70">
                         <Users className="w-5 h-5" />
                     </div>
-                    <p className="text-xs text-slate-400 text-center px-2">
-                        Arrossega un jugador aquí
+                    <p className="text-xs text-white/85 text-center px-2 font-medium">
+                        Arrossega o toca per assignar
                     </p>
                 </>
             )}
@@ -393,41 +393,53 @@ export default function AlineacioPage() {
 
                 {/* Right: Padel court */}
                 <div className="flex-1 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 flex flex-col">
-                    <h2 className="font-semibold text-slate-800 dark:text-white text-center mb-4 text-lg">
+                    <h2 className="font-semibold text-slate-800 dark:text-white text-center mb-1 text-lg">
                         🏸 Pista de Pàdel 2vs2
                     </h2>
+                    <p className="text-center text-xs text-slate-500 mb-4">Col·loca la teva parella al mateix camp</p>
 
                     {/* Court visual */}
                     <div
-                        className="relative mx-auto rounded-xl overflow-hidden border-4 border-slate-800 dark:border-slate-400 shadow-xl"
-                        style={{ width: '100%', maxWidth: 520, height: 320, background: 'linear-gradient(to bottom, #2e7d32, #388e3c, #2e7d32)' }}
+                        className="relative mx-auto rounded-2xl overflow-hidden border-4 border-emerald-950/90 dark:border-emerald-200/70 shadow-xl"
+                        style={{
+                            width: '100%',
+                            maxWidth: 620,
+                            height: 360,
+                            background: 'linear-gradient(180deg, #0f766e 0%, #0d9488 40%, #10b981 100%)',
+                        }}
                     >
+                        <div className="absolute inset-0 opacity-25" style={{
+                            backgroundImage: 'radial-gradient(circle at 25% 20%, rgba(255,255,255,0.55) 0, rgba(255,255,255,0) 35%), radial-gradient(circle at 75% 85%, rgba(255,255,255,0.4) 0, rgba(255,255,255,0) 45%)',
+                        }} />
+
                         {/* Court lines */}
                         <div className="absolute inset-0 flex flex-col">
-                            {/* Top service line */}
-                            <div className="absolute top-8 left-0 right-0 h-0.5 bg-white/60" />
-                            {/* Bottom service line */}
-                            <div className="absolute bottom-8 left-0 right-0 h-0.5 bg-white/60" />
-                            {/* Center divider */}
-                            <div className="absolute top-0 bottom-0 left-1/2 w-0.5 -ml-px bg-white/60" />
+                            <div className="absolute inset-3 border-2 border-white/70 rounded-xl" />
+                            <div className="absolute top-10 left-3 right-3 h-0.5 bg-white/70" />
+                            <div className="absolute bottom-10 left-3 right-3 h-0.5 bg-white/70" />
+                            <div className="absolute top-10 bottom-10 left-1/2 w-0.5 -ml-px bg-white/65" />
                             {/* Net */}
-                            <div className="absolute top-1/2 left-0 right-0 -my-1 h-2 bg-white/80" />
+                            <div className="absolute top-1/2 left-3 right-3 -my-1 h-2 bg-white/90 rounded-full" />
                             {/* Net posts */}
-                            <div className="absolute top-1/2 left-3 w-2 h-10 -mt-5 bg-white/40 rounded" />
-                            <div className="absolute top-1/2 right-3 w-2 h-10 -mt-5 bg-white/40 rounded" />
+                            <div className="absolute top-1/2 left-3 w-2 h-10 -mt-5 bg-white/55 rounded" />
+                            <div className="absolute top-1/2 right-3 w-2 h-10 -mt-5 bg-white/55 rounded" />
                             {/* Center T line */}
-                            <div className="absolute top-8 bottom-8 left-1/2 w-0.5 bg-white/40" />
+                            <div className="absolute top-10 bottom-10 left-1/2 w-0.5 bg-white/40" />
                         </div>
 
                         {/* NET label */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                            <span className="text-xs font-bold text-slate-700 bg-white/90 rounded px-2 py-0.5">RED</span>
+                            <span className="text-[11px] font-bold text-slate-700 bg-white/90 rounded px-2 py-0.5">XARXA</span>
+                        </div>
+
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10">
+                            <span className="text-[11px] font-semibold text-white bg-emerald-900/55 rounded-full px-3 py-1">CAMP DEL TEU EQUIP</span>
                         </div>
 
                         {/* Slot 1 (left side) */}
                         <div
                             className="absolute"
-                            style={{ left: '10%', top: '50%', transform: 'translateY(-50%)' }}
+                            style={{ left: '18%', top: '70%', transform: 'translateY(-50%)' }}
                             onDragOver={(e) => handleDragOver(e, 0)}
                             onDragLeave={handleDragLeave}
                             onDrop={(e) => handleDrop(e, 0)}
@@ -445,7 +457,7 @@ export default function AlineacioPage() {
                         {/* Slot 2 (right side) */}
                         <div
                             className="absolute"
-                            style={{ right: '10%', top: '50%', transform: 'translateY(-50%)' }}
+                            style={{ right: '18%', top: '70%', transform: 'translateY(-50%)' }}
                             onDragOver={(e) => handleDragOver(e, 1)}
                             onDragLeave={handleDragLeave}
                             onDrop={(e) => handleDrop(e, 1)}

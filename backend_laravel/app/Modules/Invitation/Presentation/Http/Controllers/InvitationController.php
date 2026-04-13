@@ -2,6 +2,10 @@
 
 namespace App\Modules\Invitation\Presentation\Http\Controllers;
 
+use App\Models\Club;
+use App\Models\Equip;
+use App\Models\EquipUsuari;
+use App\Models\UsuariRol;
 use App\Modules\Invitation\Application\Commands\CreateInvitacioEquipCommand;
 use App\Modules\Invitation\Application\Commands\UpdateInvitacioEquipCommand;
 use App\Modules\Invitation\Application\Commands\DestroyInvitacioEquipCommand;
@@ -21,7 +25,9 @@ use App\Modules\Invitation\Presentation\Http\Requests\UpdateInvitacioEquipReques
 use App\Modules\Invitation\Presentation\Http\Requests\RespondreInvitacioRequest;
 use App\Modules\Invitation\Presentation\Http\Resources\InvitacioEquipResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class InvitationController extends Controller
 {
@@ -37,8 +43,23 @@ class InvitationController extends Controller
         private GetPendentsByUsuariQuery $getPendentsQuery,
     ) {}
 
-    public function indexInvitacions(): JsonResponse
+    public function indexInvitacions(Request $request): JsonResponse
     {
+        $authUserId = $this->resolveAuthUserId($request);
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat'
+            ], 401);
+        }
+
+        if (!$this->isAdminWeb($authUserId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tens permisos per consultar totes les invitacions'
+            ], 403);
+        }
+
         $invitacions = $this->getInvitacionsQuery->execute();
 
         return response()->json([
@@ -47,10 +68,26 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function showInvitacio(string $id): JsonResponse
+    public function showInvitacio(Request $request, string $id): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthUserId($request);
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat'
+                ], 401);
+            }
+
             $invitacio = $this->getInvitacioQuery->execute($id);
+
+            $isOwnInvitation = (string) $invitacio->usuariId === $authUserId;
+            if (!$isOwnInvitation && !$this->canManageEquip($authUserId, (string) $invitacio->equipId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tens permisos per consultar aquesta invitació'
+                ], 403);
+            }
 
             return response()->json([
                 'success' => true,
@@ -64,8 +101,23 @@ class InvitationController extends Controller
         }
     }
 
-    public function invitacionsByEquip(string $equipId): JsonResponse
+    public function invitacionsByEquip(Request $request, string $equipId): JsonResponse
     {
+        $authUserId = $this->resolveAuthUserId($request);
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat'
+            ], 401);
+        }
+
+        if (!$this->canManageEquip($authUserId, $equipId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tens permisos per consultar invitacions d\'aquest equip'
+            ], 403);
+        }
+
         $invitacions = $this->getByEquipQuery->execute($equipId);
 
         return response()->json([
@@ -74,8 +126,23 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function invitacionsByUsuari(string $usuariId): JsonResponse
+    public function invitacionsByUsuari(Request $request, string $usuariId): JsonResponse
     {
+        $authUserId = $this->resolveAuthUserId($request);
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat'
+            ], 401);
+        }
+
+        if ($authUserId !== $usuariId && !$this->isAdminWeb($authUserId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tens permisos per consultar les invitacions d\'aquest usuari'
+            ], 403);
+        }
+
         $invitacions = $this->getByUsuariQuery->execute($usuariId);
 
         return response()->json([
@@ -84,8 +151,23 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function pendentsByUsuari(string $usuariId): JsonResponse
+    public function pendentsByUsuari(Request $request, string $usuariId): JsonResponse
     {
+        $authUserId = $this->resolveAuthUserId($request);
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autenticat'
+            ], 401);
+        }
+
+        if ($authUserId !== $usuariId && !$this->isAdminWeb($authUserId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tens permisos per consultar les invitacions pendents d\'aquest usuari'
+            ], 403);
+        }
+
         $invitacions = $this->getPendentsQuery->execute($usuariId);
 
         return response()->json([
@@ -97,7 +179,23 @@ class InvitationController extends Controller
     public function storeInvitacio(CreateInvitacioEquipRequest $request): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthUserId($request);
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat'
+                ], 401);
+            }
+
             $dto = CreateInvitacioEquipDTO::fromArray($request->validated());
+
+            if (!$this->canManageEquip($authUserId, $dto->equipId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tens permisos per enviar invitacions a aquest equip'
+                ], 403);
+            }
+
             $invitacioId = $this->createInvitacioCommand->execute($dto);
 
             return response()->json([
@@ -111,16 +209,33 @@ class InvitationController extends Controller
                 'message' => $e->getMessage()
             ], $e->getCode());
         } catch (\Exception $e) {
+            $status = ($e->getCode() >= 400 && $e->getCode() < 600) ? $e->getCode() : 400;
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], 400);
+            ], $status);
         }
     }
 
     public function updateInvitacio(UpdateInvitacioEquipRequest $request, string $id): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthUserId($request);
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat'
+                ], 401);
+            }
+
+            $invitacio = $this->getInvitacioQuery->execute($id);
+            if (!$this->canManageEquip($authUserId, (string) $invitacio->equipId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tens permisos per actualitzar aquesta invitació'
+                ], 403);
+            }
+
             $dto = UpdateInvitacioEquipDTO::fromArray($request->validated());
             $this->updateInvitacioCommand->execute($id, $dto);
 
@@ -149,6 +264,23 @@ class InvitationController extends Controller
     public function respondreInvitacio(RespondreInvitacioRequest $request, string $id): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthUserId($request);
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat'
+                ], 401);
+            }
+
+            $invitacio = $this->getInvitacioQuery->execute($id);
+            $isOwnInvitation = (string) $invitacio->usuariId === $authUserId;
+            if (!$isOwnInvitation && !$this->isAdminWeb($authUserId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tens permisos per respondre aquesta invitació'
+                ], 403);
+            }
+
             $resposta = $request->validated()['estat'];
             $this->respondreInvitacioCommand->execute($id, $resposta);
 
@@ -166,12 +298,34 @@ class InvitationController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ], $e->getCode());
+        } catch (\Exception $e) {
+            $status = ($e->getCode() >= 400 && $e->getCode() < 600) ? $e->getCode() : 400;
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $status);
         }
     }
 
-    public function destroyInvitacio(string $id): JsonResponse
+    public function destroyInvitacio(Request $request, string $id): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthUserId($request);
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autenticat'
+                ], 401);
+            }
+
+            $invitacio = $this->getInvitacioQuery->execute($id);
+            if (!$this->canManageEquip($authUserId, (string) $invitacio->equipId)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No tens permisos per eliminar aquesta invitació'
+                ], 403);
+            }
+
             $this->destroyInvitacioCommand->execute($id);
 
             return response()->json([
@@ -184,5 +338,77 @@ class InvitationController extends Controller
                 'message' => $e->getMessage()
             ], $e->getCode());
         }
+    }
+
+    private function resolveAuthUserId(Request $request): ?string
+    {
+        $userIdFromRequest = trim((string) $request->input('auth_user_id', ''));
+        if ($userIdFromRequest !== '') {
+            return $userIdFromRequest;
+        }
+
+        try {
+            $userIdFromToken = JWTAuth::parseToken()->getPayload()->get('sub');
+            $userIdFromToken = trim((string) $userIdFromToken);
+
+            return $userIdFromToken !== '' ? $userIdFromToken : null;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    private function isAdminWeb(string $usuariId): bool
+    {
+        return UsuariRol::query()
+            ->where('usuariId', $usuariId)
+            ->where('rol', 'ADMIN_WEB')
+            ->where('isActive', true)
+            ->exists();
+    }
+
+    private function canManageEquip(string $usuariId, string $equipId): bool
+    {
+        if ($this->isAdminWeb($usuariId)) {
+            return true;
+        }
+
+        $roles = UsuariRol::query()
+            ->where('usuariId', $usuariId)
+            ->where('isActive', true)
+            ->pluck('rol')
+            ->map(fn($rol) => strtoupper((string) $rol))
+            ->values()
+            ->all();
+
+        $equip = Equip::query()
+            ->where('id', $equipId)
+            ->where('isActive', true)
+            ->first(['id', 'clubId']);
+
+        if (!$equip) {
+            return false;
+        }
+
+        $ownsClub = false;
+        if (!empty($equip->clubId)) {
+            $ownsClub = Club::query()
+                ->where('id', $equip->clubId)
+                ->where('isActive', true)
+                ->where('creadorId', $usuariId)
+                ->exists();
+        }
+
+        $isTrainerInEquip = EquipUsuari::query()
+            ->where('equipId', $equipId)
+            ->where('usuariId', $usuariId)
+            ->where('isActive', true)
+            ->whereRaw('UPPER("rolEquip") = ?', ['ENTRENADOR'])
+            ->exists();
+
+        $isAdminClub = in_array('ADMIN_CLUB', $roles, true);
+        $isEntrenador = in_array('ENTRENADOR', $roles, true);
+
+        return ($isAdminClub && $ownsClub)
+            || ($isEntrenador && ($ownsClub || $isTrainerInEquip));
     }
 }

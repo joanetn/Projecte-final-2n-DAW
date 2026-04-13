@@ -9,6 +9,8 @@ Route::prefix('usuaris')->group(function () {
     Route::get('/nivells', [UserController::class, 'getLevels']);
     Route::get('/me/detail', [UserController::class, 'showMeDetail'])->middleware('jwt.auth');
     Route::get('/me/equips', [UserController::class, 'showMeEquips'])->middleware('jwt.auth');
+    Route::get('/me/equips/{equipId}/membres', [UserController::class, 'showMeEquipMembres'])->middleware('jwt.auth');
+    Route::post('/me/equips/{equipId}/sortir', [UserController::class, 'leaveMeEquip'])->middleware('jwt.auth');
     Route::get('/{usuariId}', [UserController::class, 'show'])->middleware('jwt.auth');
     Route::get('/{usuariId}/detail', [UserController::class, 'showDetail'])->middleware('jwt.auth');
     Route::post('/', [UserController::class, 'store']);

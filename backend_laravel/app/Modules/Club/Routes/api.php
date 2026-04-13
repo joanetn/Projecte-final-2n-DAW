@@ -10,7 +10,7 @@ use App\Modules\Club\Presentation\Http\Controllers\AdminClubController;
  */
 Route::prefix('clubs')->group(function () {
     // --- CRUD de clubs ---
-    Route::get('/', [ClubController::class, 'index']);           // Llistar tots els clubs
+    Route::get('/', [ClubController::class, 'index'])->middleware('jwt.auth');           // Llistar clubs visibles per l'usuari autenticat
     Route::get('/{id}', [ClubController::class, 'show']);        // Obtenir un club per ID
     Route::post('/', [ClubController::class, 'store'])->middleware('jwt.auth');          // Crear un club
     Route::put('/{id}', [ClubController::class, 'update']);      // Actualitzar un club
@@ -52,5 +52,7 @@ Route::prefix('admin/equips')->group(function () {
     Route::get('/{equipId}/membres', [AdminClubController::class, 'indexMembres'])
         ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
     Route::get('/{equipId}/candidats-invitacio', [AdminClubController::class, 'candidatsInvitacio'])
+        ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
+    Route::delete('/{equipId}/membres/{membreId}', [AdminClubController::class, 'destroyMembre'])
         ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
 });

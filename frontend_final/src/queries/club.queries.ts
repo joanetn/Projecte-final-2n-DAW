@@ -5,6 +5,7 @@ import {
     getEquipsClub,
     getMeusEquips,
     getEquipMembres,
+    getMeEquipMembres,
     getLeagueCategories,
     getLliguesDisponibles,
     getLligaDetail,
@@ -15,6 +16,7 @@ export const CLUB_KEYS = {
     detail: (id: string) => ['clubs', id] as const,
     equips: (clubId: string) => ['clubs', clubId, 'equips'] as const,
     meusEquips: () => ['equips', 'me'] as const,
+    meEquipMembres: (equipId: string) => ['equips', 'me', equipId, 'membres'] as const,
     categories: () => ['clubs', 'league-categories'] as const,
     lligues: () => ['lligues', 'all'] as const,
     lligaDetail: (lligaId: string) => ['lligues', lligaId, 'detail'] as const,
@@ -51,6 +53,13 @@ export const useGetEquipMembres = (equipId: string | null) =>
     useQuery({
         queryKey: ['equips', equipId, 'membres'],
         queryFn: () => getEquipMembres(equipId!),
+        enabled: !!equipId,
+    });
+
+export const useGetMeEquipMembres = (equipId: string | null) =>
+    useQuery({
+        queryKey: CLUB_KEYS.meEquipMembres(equipId ?? ''),
+        queryFn: () => getMeEquipMembres(equipId!),
         enabled: !!equipId,
     });
 

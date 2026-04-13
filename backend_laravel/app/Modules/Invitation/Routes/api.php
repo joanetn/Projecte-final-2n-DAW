@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Modules\Invitation\Presentation\Http\Controllers\InvitationController;
 
-Route::prefix('invitacions')->group(function () {
-    Route::get('/', [InvitationController::class, 'indexInvitacions']);
+Route::prefix('invitacions')->middleware(['jwt.auth'])->group(function () {
+    Route::get('/', [InvitationController::class, 'indexInvitacions'])->middleware('checkRole:ADMIN_WEB');
     Route::post('/', [InvitationController::class, 'storeInvitacio']);
     Route::get('/equip/{equipId}', [InvitationController::class, 'invitacionsByEquip']);
     Route::get('/usuari/{usuariId}', [InvitationController::class, 'invitacionsByUsuari']);

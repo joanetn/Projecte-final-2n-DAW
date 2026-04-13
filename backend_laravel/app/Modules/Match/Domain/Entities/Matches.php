@@ -4,7 +4,7 @@ namespace App\Modules\Match\Domain\Entities;
 
 class Matches
 {
-    private function __construct(
+    public function __construct(
         public readonly string $id,
         public readonly ?string $jornadaId,
         public readonly string $localId,

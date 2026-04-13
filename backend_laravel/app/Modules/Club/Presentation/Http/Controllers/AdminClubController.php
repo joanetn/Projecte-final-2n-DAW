@@ -270,7 +270,14 @@ class AdminClubController extends Controller
                     'usuari' => function ($query) {
                         $query->where('isActive', true)
                             ->with([
-                                'seguros' => fn($seguroQuery) => $seguroQuery->where('isActive', true),
+                                'seguros' => fn($seguroQuery) => $seguroQuery
+                                    ->where('isActive', true)
+                                    ->where('pagat', true)
+                                    ->where(function ($dateQuery) {
+                                        $dateQuery
+                                            ->whereNull('dataExpiracio')
+                                            ->orWhere('dataExpiracio', '>=', now());
+                                    }),
                             ]);
                     },
                 ])
@@ -300,6 +307,62 @@ class AdminClubController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function destroyMembre(Request $request, string $equipId, string $membreId): JsonResponse
+    {
+        try {
+            [, $authError] = $this->resolveAuthorizedEquip($request, $equipId);
+            if ($authError instanceof JsonResponse) {
+                return $authError;
+            }
+
+            $authUserId = (string) $request->input('auth_user_id', '');
+            $membre = EquipUsuari::query()
+                ->where('id', $membreId)
+                ->where('equipId', $equipId)
+                ->where('isActive', true)
+                ->first(['id', 'equipId', 'usuariId', 'rolEquip']);
+
+            if (!$membre) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Membre no trobat per aquest equip',
+                ], 404);
+            }
+
+            if ((string) $membre->usuariId === $authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No et pots donar de baixa des d\'aquesta acció. Utilitza l\'opció de sortir de l\'equip.',
+                ], 422);
+            }
+
+            $rolEquip = strtoupper(trim((string) $membre->rolEquip));
+            if (!in_array($rolEquip, ['JUGADOR', 'ENTRENADOR'], true)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Només es poden donar de baixa jugadors o entrenadors',
+                ], 422);
+            }
+
+            $this->destroyEquipUsuariCommand->execute($membreId, $equipId);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Membre eliminat correctament',
+            ]);
+        } catch (EquipUsuariNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
             ], 400);
         }
     }
@@ -338,6 +401,16 @@ class AdminClubController extends Controller
             $candidats = Usuari::query()
                 ->where('isActive', true)
                 ->whereNotIn('id', $excludedUserIds)
+                ->whereHas('seguros', function ($insuranceQuery) {
+                    $insuranceQuery
+                        ->where('isActive', true)
+                        ->where('pagat', true)
+                        ->where(function ($dateQuery) {
+                            $dateQuery
+                                ->whereNull('dataExpiracio')
+                                ->orWhere('dataExpiracio', '>=', now());
+                        });
+                })
                 ->whereHas('rols', function ($roleQuery) {
                     $roleQuery
                         ->where('isActive', true)

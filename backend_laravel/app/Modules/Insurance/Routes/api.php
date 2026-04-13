@@ -14,27 +14,20 @@ use App\Modules\Insurance\Presentation\Http\Controllers\InsuranceController;
 */
 
 Route::prefix('seguros')->group(function () {
-
-    // ─── Rutes públiques ─────────────────────────────────────────
-    Route::get('/', [InsuranceController::class, 'index']);
-
-    // ─── Rutes amb autenticació JWT ──────────────────────────────
     Route::middleware(['jwt.auth'])->group(function () {
+        Route::get('/', [InsuranceController::class, 'index']);
+        Route::get('/usuari/{usuariId}', [InsuranceController::class, 'byUser']);
+        Route::get('/{id}', [InsuranceController::class, 'show']);
         Route::post('/create-payment-intent', [InsuranceController::class, 'createPaymentIntent']);
         Route::post('/confirm-payment', [InsuranceController::class, 'confirmPayment']);
     });
 
-    Route::get('/usuari/{usuariId}', [InsuranceController::class, 'byUser']);
-
     // ─── Webhook de Stripe (sense auth) ──────────────────────────
     Route::post('/webhook', [InsuranceController::class, 'webhook']);
-
-    // ─── Wildcard al final ───────────────────────────────────────
-    Route::get('/{id}', [InsuranceController::class, 'show']);
 });
 
 // ─── Rutes admin ────────────────────────────────────────────────────
-Route::prefix('admin/seguros')->group(function () {
+Route::prefix('admin/seguros')->middleware(['jwt.auth', 'checkRole:ADMIN_WEB'])->group(function () {
     Route::get('/', [InsuranceController::class, 'indexAdmin']);
     Route::get('/search', [InsuranceController::class, 'searchAdmin']);
 });

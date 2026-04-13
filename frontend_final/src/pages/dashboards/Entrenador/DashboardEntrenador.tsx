@@ -13,9 +13,18 @@ import {
     useGetInvitacioCandidates,
     useGetInvitacionsEquip,
 } from '@/queries/alineacio.queries'
-import { useInscriureEquipALliga } from '@/mutations/club.mutations'
+import { useInscriureEquipALliga, useLeaveMeEquip, useRemoveEquipMembre } from '@/mutations/club.mutations'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog'
 import {
     Trophy,
     Users,
@@ -29,6 +38,8 @@ import {
     ChevronDown,
     Bell,
     UserPlus,
+    Trash2,
+    LogOut,
 } from 'lucide-react'
 import type { Invitacio } from '@/services/dto/invitacio.dto'
 import type { Partit } from '@/types/partit'
@@ -76,10 +87,82 @@ function InvitationStatusBadge({ estat }: { estat: Invitacio['estat'] }) {
     )
 }
 
+const normalizeEquipRole = (rol?: string | null) => String(rol ?? '').trim().toLowerCase()
+const canBeRemovedByManager = (rol?: string | null) => {
+    const normalized = normalizeEquipRole(rol)
+    return normalized === 'jugador' || normalized === 'entrenador'
+}
+
 // ─── Tab: Plantilla ───────────────────────────────────────────────────────────
-function PlantillaTab({ equip }: { equip: Equip | null }) {
+function PlantillaTab({ equip, currentUserId }: { equip: Equip | null; currentUserId: string }) {
     const { data: membresData, isLoading } = useGetEquipMembres(equip?.id ?? null)
     const membres = membresData?.membres ?? []
+    const removeMembreMutation = useRemoveEquipMembre()
+    const leaveEquipMutation = useLeaveMeEquip()
+    const [removeTarget, setRemoveTarget] = useState<{ id: string; nom: string } | null>(null)
+    const [leaveOpen, setLeaveOpen] = useState(false)
+    const [successorMembreId, setSuccessorMembreId] = useState('')
+    const [actionError, setActionError] = useState<string | null>(null)
+
+    const myMembre = membres.find((membre) => membre.usuariId === currentUserId)
+    const myRole = normalizeEquipRole(myMembre?.rolEquip)
+    const hasDelegatInEquip = membres.some((membre) => normalizeEquipRole(membre.rolEquip) === 'delegat')
+    const hasOtherDelegat = membres.some(
+        (membre) => membre.usuariId !== currentUserId && normalizeEquipRole(membre.rolEquip) === 'delegat',
+    )
+    const otherTrainerCount = membres.filter(
+        (membre) => membre.usuariId !== currentUserId && normalizeEquipRole(membre.rolEquip) === 'entrenador',
+    ).length
+    const requiresSuccessor = (myRole === 'delegat' && !hasOtherDelegat)
+        || (myRole === 'entrenador' && !hasDelegatInEquip && otherTrainerCount === 0)
+    const successorCandidates = membres.filter((membre) => membre.usuariId !== currentUserId && membre.isActive !== false)
+
+    useEffect(() => {
+        if (!leaveOpen) return
+
+        const firstCandidate = successorCandidates[0]
+        setSuccessorMembreId(firstCandidate?.id ?? '')
+    }, [leaveOpen, successorCandidates])
+
+    const confirmRemoveMembre = () => {
+        if (!equip || !removeTarget) return
+
+        setActionError(null)
+        removeMembreMutation.mutate(
+            { equipId: equip.id, membreId: removeTarget.id },
+            {
+                onSuccess: () => {
+                    setRemoveTarget(null)
+                },
+                onError: (error) => {
+                    const message = error instanceof Error ? error.message : 'No s\'ha pogut donar de baixa el membre.'
+                    setActionError(message)
+                },
+            },
+        )
+    }
+
+    const confirmLeaveEquip = () => {
+        if (!equip) return
+
+        setActionError(null)
+        leaveEquipMutation.mutate(
+            {
+                equipId: equip.id,
+                successorMembreId: requiresSuccessor ? successorMembreId || null : null,
+            },
+            {
+                onSuccess: () => {
+                    setLeaveOpen(false)
+                    setSuccessorMembreId('')
+                },
+                onError: (error) => {
+                    const message = error instanceof Error ? error.message : 'No s\'ha pogut sortir de l\'equip.'
+                    setActionError(message)
+                },
+            },
+        )
+    }
 
     if (!equip) return (
         <div className="text-center py-12 text-slate-500">
@@ -104,9 +187,31 @@ function PlantillaTab({ equip }: { equip: Equip | null }) {
                 </div>
             </div>
 
-            <p className="text-xs text-slate-500">
-                Les altes de jugadors i entrenadors es gestionen des del tab d&apos;invitacions.
-            </p>
+            {actionError && (
+                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-300">
+                    {actionError}
+                </div>
+            )}
+
+            <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-xs text-slate-500">
+                    Les altes de jugadors i entrenadors es gestionen des del tab d&apos;invitacions.
+                </p>
+
+                {myMembre && (
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                            setActionError(null)
+                            setLeaveOpen(true)
+                        }}
+                    >
+                        <LogOut className="w-4 h-4 mr-1" />
+                        Sortir de l&apos;equip
+                    </Button>
+                )}
+            </div>
 
             <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
                 <table className="w-full text-sm">
@@ -118,12 +223,13 @@ function PlantillaTab({ equip }: { equip: Equip | null }) {
                             <th className="text-left p-4 font-medium">Posició</th>
                             <th className="text-left p-4 font-medium">Segur</th>
                             <th className="text-left p-4 font-medium">Estat</th>
+                            <th className="text-left p-4 font-medium">Accions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {!membres.length ? (
                             <tr>
-                                <td colSpan={6} className="p-8 text-center text-slate-400">
+                                <td colSpan={7} className="p-8 text-center text-slate-400">
                                     Encara no hi ha membres en la plantilla de {equip.nom}.
                                 </td>
                             </tr>
@@ -145,12 +251,110 @@ function PlantillaTab({ equip }: { equip: Equip | null }) {
                                             {membre.isActive === false ? 'Inactiu' : 'Actiu'}
                                         </span>
                                     </td>
+                                    <td className="p-4">
+                                        {membre.usuariId === currentUserId ? (
+                                            <Badge variant="secondary" className="text-xs">Tu</Badge>
+                                        ) : canBeRemovedByManager(membre.rolEquip) ? (
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="text-red-600 border-red-200 hover:bg-red-50"
+                                                disabled={removeMembreMutation.isPending}
+                                                onClick={() => {
+                                                    setActionError(null)
+                                                    setRemoveTarget({
+                                                        id: membre.id,
+                                                        nom: membre.nom ?? 'Membre',
+                                                    })
+                                                }}
+                                            >
+                                                <Trash2 className="w-3.5 h-3.5 mr-1" />
+                                                Donar de baixa
+                                            </Button>
+                                        ) : (
+                                            <span className="text-xs text-slate-400">Sense accions</span>
+                                        )}
+                                    </td>
                                 </tr>
                             ))
                         )}
                     </tbody>
                 </table>
             </div>
+
+            <Dialog open={!!removeTarget} onOpenChange={(open) => !open && setRemoveTarget(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Donar de baixa membre</DialogTitle>
+                        <DialogDescription>
+                            Estàs segur que vols donar de baixa a {removeTarget?.nom ?? 'aquest membre'} de l&apos;equip?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setRemoveTarget(null)} disabled={removeMembreMutation.isPending}>
+                            Cancel·lar
+                        </Button>
+                        <Button
+                            className="bg-red-600 hover:bg-red-700 text-white"
+                            onClick={confirmRemoveMembre}
+                            disabled={removeMembreMutation.isPending}
+                        >
+                            {removeMembreMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                            Confirmar baixa
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={leaveOpen} onOpenChange={(open) => !open && setLeaveOpen(false)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Sortir de l&apos;equip</DialogTitle>
+                        <DialogDescription>
+                            Confirma que vols sortir de {equip.nom}. Aquesta acció eliminarà la teva vinculació amb l&apos;equip.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    {requiresSuccessor && (
+                        <div className="space-y-2">
+                            <p className="text-sm text-slate-700 dark:text-slate-300">
+                                Com a administrador del equip, has d&apos;escollir un successor abans de sortir.
+                            </p>
+                            <select
+                                value={successorMembreId}
+                                onChange={(event) => setSuccessorMembreId(event.target.value)}
+                                className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
+                            >
+                                <option value="">Selecciona successor</option>
+                                {successorCandidates.map((membre) => (
+                                    <option key={membre.id} value={membre.id}>
+                                        {membre.nom ?? 'Membre sense nom'} · {membre.rolEquip ?? 'sense rol'}
+                                    </option>
+                                ))}
+                            </select>
+                            {successorCandidates.length === 0 && (
+                                <p className="text-xs text-red-600">
+                                    No hi ha cap altre membre actiu per assignar com a successor.
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setLeaveOpen(false)} disabled={leaveEquipMutation.isPending}>
+                            Cancel·lar
+                        </Button>
+                        <Button
+                            onClick={confirmLeaveEquip}
+                            disabled={leaveEquipMutation.isPending || (requiresSuccessor && !successorMembreId)}
+                            className="bg-red-600 hover:bg-red-700 text-white"
+                        >
+                            {leaveEquipMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                            Sortir de l&apos;equip
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
@@ -763,7 +967,7 @@ export default function DashboardEntrenador() {
                         </TabsList>
 
                         <TabsContent value="plantilla">
-                            <PlantillaTab equip={selectedEquip} />
+                            <PlantillaTab equip={selectedEquip} currentUserId={user.id} />
                         </TabsContent>
                         <TabsContent value="lligues">
                             <LliguesTab equip={selectedEquip} />

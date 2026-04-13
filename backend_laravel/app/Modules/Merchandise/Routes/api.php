@@ -14,7 +14,7 @@ Route::prefix('merchs')->group(function () {
     Route::delete('/{id}', [MerchandiseController::class, 'destroyMerch']);
 });
 
-Route::prefix('compras')->group(function () {
+Route::middleware(['jwt.auth'])->prefix('compras')->group(function () {
     Route::get('/', [MerchandiseController::class, 'indexCompras']);
     Route::post('/', [MerchandiseController::class, 'storeCompra']);
     Route::get('/usuari/{usuariId}', [MerchandiseController::class, 'comprasByUsuari']);

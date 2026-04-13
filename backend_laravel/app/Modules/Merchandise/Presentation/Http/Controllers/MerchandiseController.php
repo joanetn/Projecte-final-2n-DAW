@@ -2,6 +2,7 @@
 
 namespace App\Modules\Merchandise\Presentation\Http\Controllers;
 
+use App\Models\UsuariRol;
 use App\Modules\Merchandise\Application\Commands\CreateMerchCommand;
 use App\Modules\Merchandise\Application\Commands\UpdateMerchCommand;
 use App\Modules\Merchandise\Application\Commands\DestroyMerchCommand;
@@ -162,9 +163,20 @@ class MerchandiseController extends Controller
         }
     }
 
-    public function indexCompras(): JsonResponse
+    public function indexCompras(Request $request): JsonResponse
     {
-        $compras = $this->getComprasQuery->execute();
+        $authUserId = $this->resolveAuthenticatedUserId($request);
+
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autoritzat',
+            ], 401);
+        }
+
+        $compras = $this->isAdminUser($authUserId)
+            ? $this->getComprasQuery->execute()
+            : $this->getComprasByUsuariQuery->execute($authUserId);
 
         return response()->json([
             'success' => true,
@@ -172,10 +184,26 @@ class MerchandiseController extends Controller
         ]);
     }
 
-    public function showCompra(string $id): JsonResponse
+    public function showCompra(Request $request, string $id): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthenticatedUserId($request);
+
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autoritzat',
+                ], 401);
+            }
+
             $compra = $this->getCompraQuery->execute($id);
+
+            if (!$this->isAdminUser($authUserId) && $compra->usuariId !== $authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autoritzat per consultar aquesta compra',
+                ], 403);
+            }
 
             return response()->json([
                 'success' => true,
@@ -189,8 +217,24 @@ class MerchandiseController extends Controller
         }
     }
 
-    public function comprasByUsuari(string $usuariId): JsonResponse
+    public function comprasByUsuari(Request $request, string $usuariId): JsonResponse
     {
+        $authUserId = $this->resolveAuthenticatedUserId($request);
+
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autoritzat',
+            ], 401);
+        }
+
+        if (!$this->isAdminUser($authUserId) && $authUserId !== $usuariId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autoritzat per consultar compres d\'aquest usuari',
+            ], 403);
+        }
+
         $compras = $this->getComprasByUsuariQuery->execute($usuariId);
 
         return response()->json([
@@ -199,8 +243,24 @@ class MerchandiseController extends Controller
         ]);
     }
 
-    public function comprasByMerch(string $merchId): JsonResponse
+    public function comprasByMerch(Request $request, string $merchId): JsonResponse
     {
+        $authUserId = $this->resolveAuthenticatedUserId($request);
+
+        if (!$authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autoritzat',
+            ], 401);
+        }
+
+        if (!$this->isAdminUser($authUserId)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autoritzat per consultar compres d\'aquest producte',
+            ], 403);
+        }
+
         $compras = $this->getComprasByMerchQuery->execute($merchId);
 
         return response()->json([
@@ -212,7 +272,29 @@ class MerchandiseController extends Controller
     public function storeCompra(CreateCompraRequest $request): JsonResponse
     {
         try {
-            $dto = CreateCompraDTO::fromArray($request->validated());
+            $authUserId = $this->resolveAuthenticatedUserId($request);
+
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autoritzat',
+                ], 401);
+            }
+
+            $validated = $request->validated();
+
+            if (!$this->isAdminUser($authUserId) && ($validated['usuariId'] ?? null) !== $authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autoritzat per crear compres d\'altres usuaris',
+                ], 403);
+            }
+
+            if (!$this->isAdminUser($authUserId)) {
+                $validated['usuariId'] = $authUserId;
+            }
+
+            $dto = CreateCompraDTO::fromArray($validated);
             $compraId = $this->createCompraCommand->execute($dto);
 
             return response()->json([
@@ -260,6 +342,24 @@ class MerchandiseController extends Controller
     public function updateCompra(UpdateCompraRequest $request, string $id): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthenticatedUserId($request);
+
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autoritzat',
+                ], 401);
+            }
+
+            $existingCompra = $this->getCompraQuery->execute($id);
+
+            if (!$this->isAdminUser($authUserId) && $existingCompra->usuariId !== $authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autoritzat per actualitzar aquesta compra',
+                ], 403);
+            }
+
             $dto = UpdateCompraDTO::fromArray($request->validated());
             $this->updateCompraCommand->execute($id, $dto);
 
@@ -280,9 +380,27 @@ class MerchandiseController extends Controller
         }
     }
 
-    public function destroyCompra(string $id): JsonResponse
+    public function destroyCompra(Request $request, string $id): JsonResponse
     {
         try {
+            $authUserId = $this->resolveAuthenticatedUserId($request);
+
+            if (!$authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autoritzat',
+                ], 401);
+            }
+
+            $existingCompra = $this->getCompraQuery->execute($id);
+
+            if (!$this->isAdminUser($authUserId) && $existingCompra->usuariId !== $authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No autoritzat per eliminar aquesta compra',
+                ], 403);
+            }
+
             $this->destroyCompraCommand->execute($id);
 
             return response()->json([
@@ -305,5 +423,37 @@ class MerchandiseController extends Controller
             'success' => true,
             'data' => $brands
         ]);
+    }
+
+    private function resolveAuthenticatedUserId(Request $request): ?string
+    {
+        $requestUserId = $request->attributes->get('auth_user_id')
+            ?? $request->attributes->get('userId');
+
+        if (is_string($requestUserId) && $requestUserId !== '') {
+            return $requestUserId;
+        }
+
+        $tokenUserId = $request->user()?->id
+            ?? $request->attributes->get('sub');
+
+        if (is_string($tokenUserId) && $tokenUserId !== '') {
+            return $tokenUserId;
+        }
+
+        return null;
+    }
+
+    private function isAdminUser(?string $userId): bool
+    {
+        if (!$userId) {
+            return false;
+        }
+
+        return UsuariRol::query()
+            ->where('usuariId', $userId)
+            ->where('isActive', true)
+            ->whereIn('rol', ['ADMIN_WEB', 'ADMIN_CLUB'])
+            ->exists();
     }
 }
