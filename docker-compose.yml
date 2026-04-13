@@ -41,6 +41,12 @@ services:
       JWT_SECRET: "${JWT_SECRET}"
       STRIPE_SECRET_KEY: "${STRIPE_SECRET_KEY}"
       STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET}"
+      GROQ_API_KEY: "${GROQ_API_KEY}"
+      CEREBRAS_API_KEY: "${CEREBRAS_API_KEY}"
+      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      MISTRAL_API_KEY: "${MISTRAL_API_KEY}"
+      COHERE_API_KEY: "${COHERE_API_KEY}"
       CACHE_STORE: array
       CACHE_DRIVER: array
       SESSION_DRIVER: cookie
@@ -69,6 +75,8 @@ services:
       SERVICE_LINEUP_URL: http://svc_lineup:8006
       SERVICE_INVITATION_URL: http://svc_invitation:8007
       SERVICE_MERCHANDISE_URL: http://svc_merchandise:8008
+      SERVICE_INSURANCE_URL: http://svc_insurance:8009
+      SERVICE_NOTIFICATIONS_URL: http://svc_notifications:8010
     command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
 
   # ── User Service (puerto 8001) ────────────────────────────────────
@@ -177,6 +185,18 @@ services:
       APP_URL: http://localhost:8009
       GATEWAY_ENABLED: "false"
     command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8009"]
+
+  # ── Notifications Service (puerto 8010) ───────────────────────────
+  svc_notifications:
+    <<: *laravel-common
+    container_name: pf_svc_notifications
+    ports:
+      - "8010:8010"
+    environment:
+      <<: *laravel-env
+      APP_URL: http://localhost:8010
+      GATEWAY_ENABLED: "false"
+    command: ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8010"]
 
   # ── Backend FastAPI (Microservicio Leagues alternativo) ────────────
   backend_fastapi:

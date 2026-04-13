@@ -11,6 +11,7 @@ return [
     App\Modules\Invitation\Providers\InvitationServiceProvider::class,
     App\Modules\Merchandise\Providers\MerchandiseServiceProvider::class,
     App\Modules\Insurance\Providers\InsuranceServiceProvider::class,
+    App\Modules\Notifications\Providers\NotificationServiceProvider::class,
     App\Modules\Auth\Providers\AuthServiceProvider::class,
     App\Modules\AdminWeb\Providers\AdminWebServiceProvider::class,
 ];

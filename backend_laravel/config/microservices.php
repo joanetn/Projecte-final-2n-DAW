@@ -92,6 +92,14 @@ return [
             'retries'   => env('SERVICE_MERCHANDISE_RETRIES', 2),
         ],
 
+        'notifications' => [
+            'name'      => 'Notifications Service',
+            'base_url'  => env('SERVICE_NOTIFICATIONS_URL', 'http://localhost:8010'),
+            'prefixes'  => ['notifications'],
+            'timeout'   => env('SERVICE_NOTIFICATIONS_TIMEOUT', 10),
+            'retries'   => env('SERVICE_NOTIFICATIONS_RETRIES', 2),
+        ],
+
     ],
 
     /*

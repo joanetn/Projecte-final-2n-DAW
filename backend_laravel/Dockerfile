@@ -26,7 +26,7 @@ RUN composer dump-autoload --optimize
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-EXPOSE 8000 8001 8002 8003 8004 8005 8006 8007 8008
+EXPOSE 8000 8001 8002 8003 8004 8005 8006 8007 8008 8009 8010
 
 # Por defecto arranca el gateway, pero docker-compose sobreescribe con command
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
