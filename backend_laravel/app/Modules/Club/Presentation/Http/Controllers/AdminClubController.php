@@ -311,6 +311,90 @@ class AdminClubController extends Controller
         }
     }
 
+    public function updateMembre(UpdateEquipUsuariRequest $request, string $equipId, string $membreId): JsonResponse
+    {
+        try {
+            [, $authError] = $this->resolveAuthorizedEquip($request, $equipId);
+            if ($authError instanceof JsonResponse) {
+                return $authError;
+            }
+
+            $authUserId = (string) $request->input('auth_user_id', '');
+
+            $membre = EquipUsuari::query()
+                ->where('id', $membreId)
+                ->where('equipId', $equipId)
+                ->where('isActive', true)
+                ->first(['id', 'equipId', 'usuariId', 'rolEquip']);
+
+            if (!$membre) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Membre no trobat per aquest equip',
+                ], 404);
+            }
+
+            if ((string) $membre->usuariId === $authUserId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No et pots canviar el rol a tu mateix des d\'aquesta acció',
+                ], 422);
+            }
+
+            $rolActual = strtolower(trim((string) $membre->rolEquip));
+            if (!in_array($rolActual, ['jugador', 'entrenador'], true)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Només es pot canviar el rol de jugadors o entrenadors',
+                ], 422);
+            }
+
+            $validated = $request->validated();
+            $rolNou = strtolower(trim((string) ($validated['rolEquip'] ?? '')));
+
+            if (!in_array($rolNou, ['jugador', 'entrenador'], true)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El nou rol ha de ser jugador o entrenador',
+                ], 422);
+            }
+
+            if ($rolNou === $rolActual) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'El membre ja té aquest rol',
+                    'data' => [
+                        'rolEquip' => $rolActual,
+                    ],
+                ]);
+            }
+
+            $dto = UpdateEquipUsuariDTO::fromArray([
+                'rolEquip' => $rolNou,
+            ]);
+
+            $this->updateEquipUsuariCommand->execute($membreId, $equipId, $dto);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Rol del membre actualitzat correctament',
+                'data' => [
+                    'rolEquip' => $rolNou,
+                ],
+            ]);
+        } catch (EquipUsuariNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], $e->getCode());
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
     public function destroyMembre(Request $request, string $equipId, string $membreId): JsonResponse
     {
         try {
@@ -398,7 +482,7 @@ class AdminClubController extends Controller
                 ->unique()
                 ->values();
 
-            $candidats = Usuari::query()
+            $candidatsCollection = Usuari::query()
                 ->where('isActive', true)
                 ->whereNotIn('id', $excludedUserIds)
                 ->whereHas('seguros', function ($insuranceQuery) {
@@ -423,6 +507,18 @@ class AdminClubController extends Controller
                             ->whereIn('rol', ['JUGADOR', 'ENTRENADOR']);
                     },
                 ])
+                ->withCount([
+                    'seguros as seguros_actius_count' => function ($insuranceQuery) {
+                        $insuranceQuery
+                            ->where('isActive', true)
+                            ->where('pagat', true)
+                            ->where(function ($dateQuery) {
+                                $dateQuery
+                                    ->whereNull('dataExpiracio')
+                                    ->orWhere('dataExpiracio', '>=', now());
+                            });
+                    },
+                ])
                 ->when($query !== '', function ($userQuery) use ($query) {
                     $userQuery->where(function ($searchQuery) use ($query) {
                         $searchQuery
@@ -432,17 +528,55 @@ class AdminClubController extends Controller
                 })
                 ->orderBy('nom')
                 ->limit($limit)
-                ->get()
-                ->map(function (Usuari $usuari) {
+                ->get();
+
+            $equipsActiusByUsuari = EquipUsuari::query()
+                ->where('isActive', true)
+                ->whereIn('usuariId', $candidatsCollection->pluck('id')->all())
+                ->whereHas('equip', function ($equipQuery) {
+                    $equipQuery
+                        ->where('isActive', true)
+                        ->whereHas('club', function ($clubQuery) {
+                            $clubQuery->where('isActive', true);
+                        });
+                })
+                ->get(['usuariId', 'equipId'])
+                ->groupBy('usuariId')
+                ->map(fn($rows) => $rows->pluck('equipId')->filter()->unique()->count());
+
+            $candidats = $candidatsCollection
+                ->map(function (Usuari $usuari) use ($equipsActiusByUsuari) {
                     $roles = $usuari->rols
                         ->pluck('rol')
                         ->map(fn($rol) => strtoupper((string) $rol))
                         ->all();
 
+                    $edat = null;
+                    if (!empty($usuari->dataNaixement)) {
+                        try {
+                            $birthDate = \Carbon\Carbon::parse($usuari->dataNaixement);
+
+                            if ($birthDate->lessThanOrEqualTo(now())) {
+                                $computedAge = $birthDate->diffInYears(now());
+
+                                if ($computedAge >= 0 && $computedAge <= 120) {
+                                    $edat = $computedAge;
+                                }
+                            }
+                        } catch (\Throwable) {
+                            $edat = null;
+                        }
+                    }
+
                     return [
                         'id' => $usuari->id,
                         'nom' => $usuari->nom,
                         'email' => $usuari->email,
+                        'avatar' => $usuari->avatar,
+                        'nivell' => $usuari->nivell,
+                        'edat' => $edat,
+                        'teSegur' => ((int) ($usuari->seguros_actius_count ?? 0)) > 0,
+                        'equipsActius' => (int) ($equipsActiusByUsuari->get((string) $usuari->id, 0)),
                         'tipus' => in_array('ENTRENADOR', $roles, true) ? 'ENTRENADOR' : 'JUGADOR',
                     ];
                 })

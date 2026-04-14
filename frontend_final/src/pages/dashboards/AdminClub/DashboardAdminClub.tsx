@@ -1,7 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useGetClubs, useGetEquipsClub, useGetEquipMembres, useGetLeagueCategories } from '@/queries/club.queries'
 import { useGetPartits } from '@/queries/partit.queries'
-import { useCrearEquip, useActualitzarClub, useLeaveMeEquip, useRemoveEquipMembre } from '@/mutations/club.mutations'
+import { useCrearInvitacioEquip, useGetInvitacioCandidates, useGetInvitacionsEquip } from '@/queries/alineacio.queries'
+import {
+    useCrearEquip,
+    useActualitzarClub,
+    useLeaveMeEquip,
+    useRemoveEquipMembre,
+    useUpdateEquipMembreRole,
+} from '@/mutations/club.mutations'
 import { useAuth } from '@/context/AuthContext'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
@@ -31,12 +38,77 @@ import {
     Check,
     Trash2,
     LogOut,
+    Bell,
+    UserPlus,
+    RefreshCw,
 } from 'lucide-react'
 
 const normalizeEquipRole = (rol?: string | null) => String(rol ?? '').trim().toLowerCase()
 const canBeRemovedByManager = (rol?: string | null) => {
     const normalized = normalizeEquipRole(rol)
     return normalized === 'jugador' || normalized === 'entrenador'
+}
+
+const getEquipRoleLabel = (rol?: string | null) => {
+    const normalized = normalizeEquipRole(rol)
+
+    if (normalized === 'jugador') return 'Jugador'
+    if (normalized === 'entrenador') return 'Entrenador'
+    if (normalized === 'delegat') return 'Delegat'
+
+    return rol ?? 'Sense rol'
+}
+
+const getEquipRoleBadgeClass = (rol?: string | null) => {
+    const normalized = normalizeEquipRole(rol)
+
+    if (normalized === 'entrenador') {
+        return 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+    }
+
+    if (normalized === 'jugador') {
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+    }
+
+    if (normalized === 'delegat') {
+        return 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300'
+    }
+
+    return 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200'
+}
+
+function InvitationStatusBadge({ estat }: { estat: string }) {
+    const map: Record<string, { label: string; cls: string }> = {
+        pendent: { label: 'Pendent', cls: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300' },
+        acceptada: { label: 'Acceptada', cls: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
+        rebutjada: { label: 'Rebutjada', cls: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' },
+        cancelada: { label: 'Cancelada', cls: 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200' },
+    }
+
+    const status = map[estat] ?? map.pendent
+
+    return (
+        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${status.cls}`}>
+            {status.label}
+        </span>
+    )
+}
+
+const formatNivellLabel = (nivell?: string) => {
+    if (!nivell) return 'Nivell no indicat'
+    return `${nivell.charAt(0).toUpperCase()}${nivell.slice(1)}`
+}
+
+const getAvatarInitials = (nom?: string) => {
+    const trimmed = (nom ?? '').trim()
+    if (!trimmed) return 'U'
+
+    const words = trimmed.split(/\s+/).filter(Boolean)
+    if (words.length === 1) {
+        return words[0].slice(0, 2).toUpperCase()
+    }
+
+    return `${words[0][0] ?? ''}${words[1][0] ?? ''}`.toUpperCase()
 }
 
 // ── Tab: Informació del Club ──────────────────────────────────────────────────
@@ -391,10 +463,17 @@ function MembresTab({ clubId, currentUserId }: { clubId: string; currentUserId: 
     const { data: equipsData, isLoading: loadingEquips } = useGetEquipsClub(clubId)
     const equips = equipsData?.equips ?? []
     const removeMembreMutation = useRemoveEquipMembre()
+    const updateMembreRoleMutation = useUpdateEquipMembreRole()
     const leaveEquipMutation = useLeaveMeEquip()
 
     const [selectedEquipId, setSelectedEquipId] = useState<string>('')
     const [removeTarget, setRemoveTarget] = useState<{ id: string; nom: string } | null>(null)
+    const [roleTarget, setRoleTarget] = useState<{
+        id: string
+        nom: string
+        currentRole: 'jugador' | 'entrenador'
+    } | null>(null)
+    const [nextRole, setNextRole] = useState<'jugador' | 'entrenador'>('jugador')
     const [leaveOpen, setLeaveOpen] = useState(false)
     const [successorMembreId, setSuccessorMembreId] = useState('')
     const [actionError, setActionError] = useState<string | null>(null)
@@ -453,6 +532,45 @@ function MembresTab({ clubId, currentUserId }: { clubId: string; currentUserId: 
                 },
                 onError: (error) => {
                     const message = error instanceof Error ? error.message : 'No s\'ha pogut donar de baixa el membre.'
+                    setActionError(message)
+                },
+            },
+        )
+    }
+
+    const openRoleDialog = (membreId: string, nom?: string, rolEquip?: string | null) => {
+        const currentRole = normalizeEquipRole(rolEquip) === 'entrenador' ? 'entrenador' : 'jugador'
+
+        setRoleTarget({
+            id: membreId,
+            nom: nom ?? 'Membre',
+            currentRole,
+        })
+        setNextRole(currentRole)
+        setActionError(null)
+    }
+
+    const confirmRoleChange = () => {
+        if (!currentEquip || !roleTarget) return
+
+        if (nextRole === roleTarget.currentRole) {
+            setActionError('Selecciona un rol diferent abans de guardar.')
+            return
+        }
+
+        setActionError(null)
+        updateMembreRoleMutation.mutate(
+            {
+                equipId: currentEquip.id,
+                membreId: roleTarget.id,
+                rolEquip: nextRole,
+            },
+            {
+                onSuccess: () => {
+                    setRoleTarget(null)
+                },
+                onError: (error) => {
+                    const message = error instanceof Error ? error.message : 'No s\'ha pogut canviar el rol del membre.'
                     setActionError(message)
                 },
             },
@@ -574,8 +692,8 @@ function MembresTab({ clubId, currentUserId }: { clubId: string; currentUserId: 
                                             )}
                                         </td>
                                         <td className="p-3">
-                                            <Badge variant="secondary" className="text-xs">
-                                                {membre.rolEquip ?? 'Sense rol'}
+                                            <Badge className={`text-xs ${getEquipRoleBadgeClass(membre.rolEquip)}`}>
+                                                {getEquipRoleLabel(membre.rolEquip)}
                                             </Badge>
                                         </td>
                                         <td className="p-3">
@@ -593,19 +711,31 @@ function MembresTab({ clubId, currentUserId }: { clubId: string; currentUserId: 
                                             {membre.usuariId === currentUserId ? (
                                                 <Badge variant="secondary" className="text-xs">Tu</Badge>
                                             ) : canBeRemovedByManager(membre.rolEquip) ? (
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    className="text-red-600 border-red-200 hover:bg-red-50"
-                                                    disabled={removeMembreMutation.isPending}
-                                                    onClick={() => {
-                                                        setActionError(null)
-                                                        setRemoveTarget({ id: membre.id, nom: membre.nom ?? 'Membre' })
-                                                    }}
-                                                >
-                                                    <Trash2 className="w-3.5 h-3.5 mr-1" />
-                                                    Donar de baixa
-                                                </Button>
+                                                <div className="flex flex-wrap gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="text-warm-700 border-warm-200 hover:bg-warm-50"
+                                                        disabled={updateMembreRoleMutation.isPending || removeMembreMutation.isPending}
+                                                        onClick={() => openRoleDialog(membre.id, membre.nom, membre.rolEquip)}
+                                                    >
+                                                        <RefreshCw className="w-3.5 h-3.5 mr-1" />
+                                                        Canviar rol
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="text-red-600 border-red-200 hover:bg-red-50"
+                                                        disabled={removeMembreMutation.isPending || updateMembreRoleMutation.isPending}
+                                                        onClick={() => {
+                                                            setActionError(null)
+                                                            setRemoveTarget({ id: membre.id, nom: membre.nom ?? 'Membre' })
+                                                        }}
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5 mr-1" />
+                                                        Donar de baixa
+                                                    </Button>
+                                                </div>
                                             ) : (
                                                 <span className="text-xs text-slate-400">Sense accions</span>
                                             )}
@@ -617,6 +747,82 @@ function MembresTab({ clubId, currentUserId }: { clubId: string; currentUserId: 
                     </table>
                 </div>
             )}
+
+            <Dialog
+                open={!!roleTarget}
+                onOpenChange={(open) => {
+                    if (!open) {
+                        setRoleTarget(null)
+                    }
+                }}
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Canviar rol de membre</DialogTitle>
+                        <DialogDescription>
+                            Tria el nou rol de {roleTarget?.nom ?? 'aquest membre'} dins de l&apos;equip.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-3">
+                        <div className="grid sm:grid-cols-2 gap-2">
+                            {([
+                                {
+                                    id: 'jugador',
+                                    title: 'Jugador',
+                                    description: 'Participa en partits i convocatòries de plantilla.',
+                                },
+                                {
+                                    id: 'entrenador',
+                                    title: 'Entrenador',
+                                    description: 'Gestiona alineacions i direcció esportiva de l\'equip.',
+                                },
+                            ] as const).map((option) => {
+                                const isSelected = nextRole === option.id
+
+                                return (
+                                    <button
+                                        key={option.id}
+                                        type="button"
+                                        onClick={() => setNextRole(option.id)}
+                                        className={`text-left rounded-xl border-2 px-3 py-3 transition-all ${isSelected
+                                            ? 'border-warm-500 bg-warm-50 dark:bg-warm-900/20'
+                                            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-warm-300 dark:hover:border-warm-700'
+                                            }`}
+                                    >
+                                        <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{option.title}</p>
+                                        <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{option.description}</p>
+                                    </button>
+                                )
+                            })}
+                        </div>
+
+                        {roleTarget && nextRole === roleTarget.currentRole && (
+                            <p className="text-xs text-amber-700 dark:text-amber-300">
+                                Aquest membre ja té seleccionat aquest rol.
+                            </p>
+                        )}
+                    </div>
+
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setRoleTarget(null)} disabled={updateMembreRoleMutation.isPending}>
+                            Cancel·lar
+                        </Button>
+                        <Button
+                            onClick={confirmRoleChange}
+                            disabled={
+                                updateMembreRoleMutation.isPending
+                                || !roleTarget
+                                || nextRole === roleTarget.currentRole
+                            }
+                            className="bg-warm-600 hover:bg-warm-700 text-white"
+                        >
+                            {updateMembreRoleMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                            Guardar nou rol
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             <Dialog open={!!removeTarget} onOpenChange={(open) => !open && setRemoveTarget(null)}>
                 <DialogContent>
@@ -695,6 +901,274 @@ function MembresTab({ clubId, currentUserId }: { clubId: string; currentUserId: 
     )
 }
 
+// ── Tab: Invitacions ─────────────────────────────────────────────────────────
+function InvitacionsTab({ clubId }: { clubId: string }) {
+    const { data: equipsData, isLoading: loadingEquips } = useGetEquipsClub(clubId)
+    const equips = equipsData?.equips ?? []
+
+    const [selectedEquipId, setSelectedEquipId] = useState('')
+    const [query, setQuery] = useState('')
+    const [selectedUserId, setSelectedUserId] = useState('')
+    const [missatge, setMissatge] = useState('')
+    const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+    useEffect(() => {
+        if (equips.length === 0) {
+            if (selectedEquipId) {
+                setSelectedEquipId('')
+            }
+            return
+        }
+
+        const selectedIsValid = equips.some((equip) => equip.id === selectedEquipId)
+        if (!selectedEquipId || !selectedIsValid) {
+            setSelectedEquipId(equips[0].id)
+        }
+    }, [equips, selectedEquipId])
+
+    const { data: candidates = [], isLoading: candidatesLoading } = useGetInvitacioCandidates(selectedEquipId || null, query)
+    const { data: invitacions = [], isLoading: invitacionsLoading } = useGetInvitacionsEquip(selectedEquipId || null)
+    const crearInvitacio = useCrearInvitacioEquip(selectedEquipId || '')
+
+    useEffect(() => {
+        if (selectedUserId && !candidates.some((candidate) => candidate.id === selectedUserId)) {
+            setSelectedUserId('')
+        }
+    }, [candidates, selectedUserId])
+
+    const sortedInvitacions = useMemo(() => {
+        return [...invitacions].sort((a, b) => {
+            if (a.estat === 'pendent' && b.estat !== 'pendent') return -1
+            if (a.estat !== 'pendent' && b.estat === 'pendent') return 1
+            return new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()
+        })
+    }, [invitacions])
+
+    const selectedCandidate = candidates.find((candidate) => candidate.id === selectedUserId) ?? null
+
+    const handleSendInvitation = async () => {
+        if (!selectedEquipId || !selectedUserId) {
+            setFeedback({ type: 'error', text: 'Selecciona un destinatari per enviar la invitació.' })
+            return
+        }
+
+        try {
+            await crearInvitacio.mutateAsync({
+                usuariId: selectedUserId,
+                missatge: missatge.trim() || undefined,
+            })
+
+            setFeedback({ type: 'success', text: 'Invitació enviada correctament.' })
+            setSelectedUserId('')
+            setMissatge('')
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'No s\'ha pogut enviar la invitació.'
+            setFeedback({ type: 'error', text: message })
+        }
+    }
+
+    if (loadingEquips) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <Loader2 className="w-6 h-6 animate-spin text-warm-600" />
+            </div>
+        )
+    }
+
+    if (equips.length === 0) {
+        return (
+            <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+                <Bell className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                <p>No hi ha equips per gestionar invitacions.</p>
+            </div>
+        )
+    }
+
+    return (
+        <div className="space-y-4">
+            <div className="bg-warm-50 dark:bg-slate-700 rounded-xl border border-warm-100 dark:border-slate-600 p-4">
+                <label className="text-xs text-slate-500 dark:text-slate-300 mb-1 block">Selecciona equipo</label>
+                <select
+                    value={selectedEquipId}
+                    onChange={(event) => {
+                        setSelectedEquipId(event.target.value)
+                        setFeedback(null)
+                    }}
+                    className="w-full text-sm rounded-md border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white px-3 py-2"
+                >
+                    {equips.map((equip) => (
+                        <option key={equip.id} value={equip.id}>{equip.nom}</option>
+                    ))}
+                </select>
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-warm-100 dark:border-slate-700 p-4 space-y-3">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-sm">Enviar invitació</h3>
+
+                {feedback && (
+                    <div
+                        className={`rounded-lg px-3 py-2 text-xs ${feedback.type === 'success'
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                            : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
+                            }`}
+                    >
+                        {feedback.text}
+                    </div>
+                )}
+
+                <input
+                    type="text"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Cerca per nom o email"
+                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
+                />
+
+                {selectedCandidate && (
+                    <div className="rounded-lg border border-warm-200 bg-warm-50/80 dark:border-warm-700/50 dark:bg-warm-900/20 px-3 py-2 text-xs text-warm-800 dark:text-warm-200">
+                        Destinatari seleccionat: <span className="font-semibold">{selectedCandidate.nom}</span> ({selectedCandidate.tipus === 'ENTRENADOR' ? 'Entrenador' : 'Jugador'})
+                    </div>
+                )}
+
+                <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-900/40 p-2">
+                    {candidatesLoading ? (
+                        <div className="flex items-center justify-center py-5 text-slate-500">
+                            <Loader2 className="w-4 h-4 animate-spin mr-2" /> Cercant candidats disponibles...
+                        </div>
+                    ) : candidates.length === 0 ? (
+                        <p className="text-xs text-slate-500 p-2">No hi ha jugadors o entrenadors disponibles amb aquest filtre.</p>
+                    ) : (
+                        <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                            {candidates.map((candidate) => {
+                                const isSelected = selectedUserId === candidate.id
+
+                                return (
+                                    <button
+                                        key={candidate.id}
+                                        type="button"
+                                        onClick={() => setSelectedUserId(candidate.id)}
+                                        className={`w-full text-left rounded-lg border px-3 py-2 transition-all ${isSelected
+                                            ? 'border-warm-500 bg-warm-50 dark:bg-warm-900/20'
+                                            : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-warm-300 dark:hover:border-warm-700'
+                                            }`}
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            {candidate.avatar ? (
+                                                <img
+                                                    src={candidate.avatar}
+                                                    alt={`Avatar de ${candidate.nom}`}
+                                                    className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                                                />
+                                            ) : (
+                                                <div className="w-10 h-10 rounded-full bg-warm-100 dark:bg-warm-900/30 text-warm-700 dark:text-warm-300 flex items-center justify-center text-xs font-semibold">
+                                                    {getAvatarInitials(candidate.nom)}
+                                                </div>
+                                            )}
+
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 flex-wrap">
+                                                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{candidate.nom}</p>
+                                                    <Badge className="text-[10px] bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+                                                        {candidate.tipus === 'ENTRENADOR' ? 'Entrenador' : 'Jugador'}
+                                                    </Badge>
+                                                    {candidate.nivell && (
+                                                        <Badge className="text-[10px] bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                                            {formatNivellLabel(candidate.nivell)}
+                                                        </Badge>
+                                                    )}
+                                                </div>
+
+                                                <p className="text-xs text-slate-500 truncate">{candidate.email}</p>
+
+                                                <div className="mt-1 flex flex-wrap gap-2 text-[11px] text-slate-600 dark:text-slate-300">
+                                                    <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-2 py-0.5">
+                                                        Equips actius: {candidate.equipsActius ?? 0}
+                                                    </span>
+                                                    {typeof candidate.edat === 'number' && candidate.edat > 0 && (
+                                                        <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-2 py-0.5">
+                                                            {candidate.edat} anys
+                                                        </span>
+                                                    )}
+                                                    <span className={`rounded-full px-2 py-0.5 ${candidate.teSegur
+                                                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                                                        : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+                                                        }`}>
+                                                        {candidate.teSegur ? 'Segur actiu' : 'Sense segur actiu'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                )
+                            })}
+                        </div>
+                    )}
+                </div>
+
+                <textarea
+                    value={missatge}
+                    onChange={(event) => setMissatge(event.target.value)}
+                    placeholder="Missatge opcional per a la invitació"
+                    rows={2}
+                    className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm"
+                />
+
+                <div className="flex justify-end">
+                    <Button
+                        size="sm"
+                        className="bg-warm-600 hover:bg-warm-700 text-white text-xs"
+                        disabled={candidatesLoading || crearInvitacio.isPending || !selectedUserId}
+                        onClick={handleSendInvitation}
+                    >
+                        {crearInvitacio.isPending ? (
+                            <Loader2 className="w-3.5 h-3.5 mr-1 animate-spin" />
+                        ) : (
+                            <UserPlus className="w-3.5 h-3.5 mr-1" />
+                        )}
+                        Enviar invitació
+                    </Button>
+                </div>
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-warm-100 dark:border-slate-700 p-4 space-y-3">
+                <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-sm">Historial d&apos;invitacions de l&apos;equip</h3>
+
+                {invitacionsLoading ? (
+                    <div className="flex items-center justify-center h-24">
+                        <Loader2 className="w-6 h-6 animate-spin text-warm-600" />
+                    </div>
+                ) : sortedInvitacions.length === 0 ? (
+                    <p className="text-sm text-slate-500">Aquest equip encara no té invitacions registrades.</p>
+                ) : (
+                    <div className="space-y-2">
+                        {sortedInvitacions.map((invitation) => (
+                            <div
+                                key={invitation.id}
+                                className="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 flex items-center justify-between gap-2"
+                            >
+                                <div>
+                                    <p className="text-sm font-medium text-slate-800 dark:text-slate-100">
+                                        {invitation.usuariNom ?? 'Usuari sense nom'}
+                                    </p>
+                                    {invitation.missatge && (
+                                        <p className="text-xs text-slate-500 mt-0.5">{invitation.missatge}</p>
+                                    )}
+                                    {invitation.createdAt && (
+                                        <p className="text-xs text-slate-400 mt-0.5">
+                                            {new Date(invitation.createdAt).toLocaleDateString('ca-ES')}
+                                        </p>
+                                    )}
+                                </div>
+                                <InvitationStatusBadge estat={invitation.estat} />
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}
+
 // ── Dashboard Admin Club (main) ───────────────────────────────────────────────
 export default function DashboardAdminClub() {
     const { user } = useAuth()
@@ -750,7 +1224,7 @@ export default function DashboardAdminClub() {
             </div>
 
             <Tabs defaultValue="info">
-                <TabsList className="grid grid-cols-4 mb-6 bg-warm-50 dark:bg-slate-800 p-1 rounded-lg">
+                <TabsList className="grid grid-cols-5 mb-6 bg-warm-50 dark:bg-slate-800 p-1 rounded-lg">
                     <TabsTrigger value="info" className="text-xs sm:text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-warm-700">
                         <Building2 className="w-4 h-4 mr-1 hidden sm:inline" />
                         Información
@@ -767,12 +1241,17 @@ export default function DashboardAdminClub() {
                         <UserCog className="w-4 h-4 mr-1 hidden sm:inline" />
                         Miembros
                     </TabsTrigger>
+                    <TabsTrigger value="invitacions" className="text-xs sm:text-sm data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 data-[state=active]:text-warm-700">
+                        <Bell className="w-4 h-4 mr-1 hidden sm:inline" />
+                        Invitaciones
+                    </TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="info"><InfoClubTab clubId={club.id} /></TabsContent>
                 <TabsContent value="equips"><EquipsTab clubId={club.id} /></TabsContent>
                 <TabsContent value="estadistiques"><EstadistiquesTab clubId={club.id} /></TabsContent>
                 <TabsContent value="membres"><MembresTab clubId={club.id} currentUserId={user.id} /></TabsContent>
+                <TabsContent value="invitacions"><InvitacionsTab clubId={club.id} /></TabsContent>
             </Tabs>
         </div>
     )

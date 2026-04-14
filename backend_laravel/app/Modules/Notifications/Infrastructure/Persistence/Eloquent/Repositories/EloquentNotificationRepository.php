@@ -53,7 +53,7 @@ class EloquentNotificationRepository implements NotificationsRespositoryInterfac
     public function findByStatus(string $status): array
     {
         $models = $this->model
-            ->where('status', $status)
+            ->whereRaw('UPPER(status) = ?', [strtoupper($status)])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -63,7 +63,7 @@ class EloquentNotificationRepository implements NotificationsRespositoryInterfac
     public function findByUserId(string $userId): array
     {
         $models = $this->model
-            ->where('userId', $userId)
+            ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -79,15 +79,32 @@ class EloquentNotificationRepository implements NotificationsRespositoryInterfac
 
     public function updateStatus(string $id, NotifStatus $status): bool
     {
-        return $this->model
+        return (bool) $this->model
             ->where('id', $id)
-            ->update(['status' => $status]);
+            ->update(['status' => $status->value]);
     }
 
     public function readed(string $id): bool
     {
-        return $this->model
+        return (bool) $this->model
             ->where('id', $id)
             ->update(['llegit' => true]);
+    }
+
+    public function findMostAncient(): ?Notification
+    {
+        $model = $this->model
+            ->whereIn('status', [NotifStatus::PENDENT->value, 'Pendent'])
+            ->orderBy('created_at', 'asc')
+            ->first();
+
+        return $model ? $this->mapper->toEntity($model) : null;
+    }
+
+    public function update(string $id, array $data): bool
+    {
+        return (bool) $this->model
+            ->where('id', $id)
+            ->update($data);
     }
 }

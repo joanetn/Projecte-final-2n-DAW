@@ -17,6 +17,11 @@ class CompraMapper
                 'id' => $model->usuari->id,
                 'nom' => $model->usuari->nom,
                 'email' => $model->usuari->email,
+                'dataNaixement' => $model->usuari->dataNaixement,
+                'avatar' => $model->usuari->avatar,
+                'dni' => $model->usuari->dni,
+                'nivell' => $model->usuari->nivell,
+                'isActive' => $model->usuari->isActive,
             ];
         }
 
@@ -24,7 +29,11 @@ class CompraMapper
             $merch = [
                 'id' => $model->merch->id,
                 'nom' => $model->merch->nom,
+                'marca' => $model->merch->marca,
+                'imageUrl' => $model->merch->imageUrl,
                 'preu' => $model->merch->preu,
+                'stock' => $model->merch->stock,
+                'isActive' => $model->merch->isActive,
             ];
         }
 

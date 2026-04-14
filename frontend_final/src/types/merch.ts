@@ -61,19 +61,41 @@ export interface Compra {
     status?: string;
     isActive: boolean;
     createdAt?: string;
+    usuari?: {
+        id: string;
+        nom?: string;
+        email?: string;
+        avatar?: string;
+        nivell?: string;
+    };
+    merch?: {
+        id: string;
+        nom?: string;
+        marca?: string;
+        imageUrl?: string;
+        preu?: number;
+        stock?: number;
+        isActive?: boolean;
+    };
 }
 
 // ========== COMPRA CON RELACIONES ==========
 export interface CompraDetail extends Compra {
     usuari?: {
         id: string;
-        nom: string;
-        email: string;
+        nom?: string;
+        email?: string;
+        avatar?: string;
+        nivell?: string;
     };
     merch?: {
         id: string;
-        nom: string;
-        preu: number;
+        nom?: string;
+        marca?: string;
+        imageUrl?: string;
+        preu?: number;
+        stock?: number;
+        isActive?: boolean;
     };
 }
 

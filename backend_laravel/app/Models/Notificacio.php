@@ -11,32 +11,29 @@ class Notificacio extends Model
     use HasUuids;
 
     protected $table = 'notificacions';
-    public $timestamps = false;
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = null;
 
     protected $fillable = [
         'id',
-        'usuariId',
-        'titol',
-        'missatge',
-        'tipus',
-        'read',
+        'user_id',
+        'suceso',
+        'channels',
+        'tone',
+        'urgencia',
+        'data',
+        'status',
         'llegit',
-        'extra',
-        'isActive',
     ];
 
     protected $casts = [
-        'read' => 'boolean',
         'llegit' => 'boolean',
-        'isActive' => 'boolean',
+        'channels' => 'array',
+        'data' => 'array',
         'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function usuari(): BelongsTo
     {
-        return $this->belongsTo(Usuari::class, 'usuariId');
+        return $this->belongsTo(Usuari::class, 'user_id');
     }
 }

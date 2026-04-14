@@ -187,7 +187,10 @@ class InvitationController extends Controller
                 ], 401);
             }
 
-            $dto = CreateInvitacioEquipDTO::fromArray($request->validated());
+            $dto = CreateInvitacioEquipDTO::fromArray([
+                ...$request->validated(),
+                'remitentId' => $authUserId,
+            ]);
 
             if (!$this->canManageEquip($authUserId, $dto->equipId)) {
                 return response()->json([

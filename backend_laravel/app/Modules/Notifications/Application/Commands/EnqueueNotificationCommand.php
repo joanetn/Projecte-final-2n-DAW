@@ -6,6 +6,7 @@ use App\Modules\Notifications\Application\DTOs\EnqueueNotificationDTO;
 use App\Modules\Notifications\Domain\Entities\Notification;
 use App\Services\IA\GroqService;
 use App\Enums\NotifStatus;
+use App\Modules\Notifications\Domain\Events\NotificationBroadcastedEvent;
 use App\Modules\Notifications\Domain\Repositories\NotificationsRespositoryInterface;
 use Illuminate\Support\Facades\Log;
 
@@ -24,7 +25,6 @@ class EnqueueNotificationCommand
 
         $urgency = 'NORMAL';
 
-        // Analyze urgency using Groq
         try {
             $urgencyMessages = [
                 [
@@ -38,7 +38,6 @@ class EnqueueNotificationCommand
 
             Log::info('Groq urgency response', ['response' => $response, 'clean' => $cleanResponse]);
 
-            // Validate the response is one of the allowed values
             if (in_array($cleanResponse, ['BAJA', 'NORMAL', 'ALTA', 'CRITICA'])) {
                 $urgency = $cleanResponse;
             }
@@ -48,7 +47,7 @@ class EnqueueNotificationCommand
         }
 
         $notification = $this->repo->create([
-            'user_id' => $dto->userId ?? '',
+            'user_id' => $dto->userId !== '' ? $dto->userId : null,
             'status' => NotifStatus::PENDENT->value,
             'tone' => $dto->tone ?? 'PROFESIONAL',
             'urgencia' => $urgency,
@@ -57,6 +56,8 @@ class EnqueueNotificationCommand
             'channels' => $dto->channels,
             'data' => $dto->data ?? [],
         ]);
+
+        event(new NotificationBroadcastedEvent($notification, 'queued'));
 
         return $notification;
     }

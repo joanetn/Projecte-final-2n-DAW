@@ -62,7 +62,7 @@ class Usuari extends Model
 
     public function notificacions(): HasMany
     {
-        return $this->hasMany(Notificacio::class, 'usuariId');
+        return $this->hasMany(Notificacio::class, 'user_id');
     }
 
     public function compras(): HasMany

@@ -14,8 +14,7 @@ class UserRolResource extends JsonResource
             'usuariId' => $this->usuariId,
             'rol' => $this->rol,
             'isActive' => $this->isActive,
-            'createdAt' => $this->createdAt,
-            'updatedAt' => $this->updatedAt,
+            'createdAt' => $this->createdAt
         ];
     }
 }

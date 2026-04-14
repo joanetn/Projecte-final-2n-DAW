@@ -7,6 +7,7 @@ class CreateInvitacioEquipDTO
     public function __construct(
         public readonly string $equipId,
         public readonly string $usuariId,
+        public readonly ?string $remitentId = null,
         public readonly ?string $missatge = null,
     ) {}
 
@@ -15,6 +16,7 @@ class CreateInvitacioEquipDTO
         return new self(
             equipId: $data['equipId'],
             usuariId: $data['usuariId'],
+            remitentId: $data['remitentId'] ?? null,
             missatge: $data['missatge'] ?? null,
         );
     }

@@ -2,17 +2,25 @@
 
 namespace App\Modules\Invitation\Application\Commands;
 
+use App\Modules\Notifications\Application\Commands\EnqueueNotificationCommand;
+use App\Modules\Notifications\Application\Commands\ProcessNextCommand;
+use App\Modules\Notifications\Application\DTOs\EnqueueNotificationDTO;
+use App\Models\Equip;
 use App\Models\Seguro;
+use App\Models\Usuari;
 use App\Modules\Invitation\Application\DTOs\CreateInvitacioEquipDTO;
 use App\Modules\Invitation\Domain\Repositories\InvitacioEquipRepositoryInterface;
 use App\Modules\Invitation\Domain\Services\InvitationDomainService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class CreateInvitacioEquipCommand
 {
     public function __construct(
         private InvitacioEquipRepositoryInterface $invitacioRepo,
-        private InvitationDomainService $domainService
+        private InvitationDomainService $domainService,
+        private EnqueueNotificationCommand $enqueueNotificationCommand,
+        private ProcessNextCommand $processNextCommand,
     ) {}
 
     public function execute(CreateInvitacioEquipDTO $dto): string
@@ -33,7 +41,57 @@ class CreateInvitacioEquipCommand
             'isActive' => true,
         ]);
 
+        $this->dispatchInvitationNotification($dto);
+
         return $invitacio->id;
+    }
+
+    private function dispatchInvitationNotification(CreateInvitacioEquipDTO $dto): void
+    {
+        try {
+            $equipName = Equip::query()
+                ->where('id', $dto->equipId)
+                ->value('nom') ?? 'l\'equip';
+
+            $inviterName = $dto->remitentId
+                ? (Usuari::query()->where('id', $dto->remitentId)->value('nom') ?? 'Algú del club')
+                : 'Algú del club';
+
+            $customMessage = trim((string) ($dto->missatge ?? ''));
+
+            $suceso = $customMessage !== ''
+                ? "{$inviterName} t'ha convidat a unir-te a {$equipName}. Missatge: {$customMessage}"
+                : "{$inviterName} t'ha convidat a unir-te a {$equipName}.";
+
+            $enqueueDto = EnqueueNotificationDTO::fromArray([
+                'userId' => $dto->usuariId,
+                'suceso' => $suceso,
+                'channels' => ['Push'],
+                'tone' => 'PROFESIONAL',
+                'data' => [
+                    'type' => 'invitacio_equip',
+                    'equipId' => $dto->equipId,
+                    'equipNom' => $equipName,
+                    'usuariId' => $dto->usuariId,
+                    'remitentId' => $dto->remitentId,
+                    'remitentNom' => $inviterName,
+                    'missatgeOriginal' => $customMessage !== '' ? $customMessage : null,
+                ],
+            ]);
+
+            $this->enqueueNotificationCommand->execute($enqueueDto);
+
+            // Process immediately so the frontend can show meaningful generated copy right away.
+            $this->processNextCommand->execute();
+        } catch (\Throwable $e) {
+            // Invitation should not fail if notification generation/delivery fails.
+            Log::error('Error enviando notificación de invitación de equipo', [
+                'equipId' => $dto->equipId,
+                'usuariId' => $dto->usuariId,
+                'remitentId' => $dto->remitentId,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     private function hasPaidActiveInsurance(string $usuariId): bool

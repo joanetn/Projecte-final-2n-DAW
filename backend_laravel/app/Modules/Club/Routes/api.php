@@ -53,6 +53,8 @@ Route::prefix('admin/equips')->group(function () {
         ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
     Route::get('/{equipId}/candidats-invitacio', [AdminClubController::class, 'candidatsInvitacio'])
         ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
+    Route::put('/{equipId}/membres/{membreId}', [AdminClubController::class, 'updateMembre'])
+        ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
     Route::delete('/{equipId}/membres/{membreId}', [AdminClubController::class, 'destroyMembre'])
         ->middleware(['jwt.auth', 'checkRole:ADMIN_CLUB,ENTRENADOR,ADMIN_WEB']);
 });

@@ -27,4 +27,9 @@ export interface InvitacioCandidate {
     nom: string;
     email: string;
     tipus: 'JUGADOR' | 'ENTRENADOR';
+    avatar?: string;
+    nivell?: string;
+    edat?: number;
+    teSegur?: boolean;
+    equipsActius?: number;
 }

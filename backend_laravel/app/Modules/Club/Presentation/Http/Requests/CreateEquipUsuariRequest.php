@@ -19,7 +19,7 @@ class CreateEquipUsuariRequest extends FormRequest
     {
         return [
             'usuariId' => 'required|string|exists:usuaris,id',
-            'rolEquip' => 'required|string|in:jugador,entrenador,delegat,preparador_fisic',
+            'rolEquip' => 'required|string|in:jugador,entrenador,delegat',
         ];
     }
 
@@ -29,7 +29,7 @@ class CreateEquipUsuariRequest extends FormRequest
             'usuariId.required' => "L'ID de l'usuari és obligatori",
             'usuariId.exists' => "L'usuari indicat no existeix",
             'rolEquip.required' => "El rol dins l'equip és obligatori",
-            'rolEquip.in' => "El rol no és vàlid. Valors permesos: jugador, entrenador, delegat, preparador_fisic",
+            'rolEquip.in' => "El rol no és vàlid. Valors permesos: jugador, entrenador, delegat",
         ];
     }
 }

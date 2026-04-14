@@ -9,7 +9,7 @@ class OpenRouterService
 {
     protected string $baseUrl = 'https://openrouter.ai/api/v1';
 
-    public function chat(array $messages): string
+    public function chat(array|string $messages): string
     {
         /** @var \Illuminate\Http\Client\Response $response */
         $response = Http::withHeaders([

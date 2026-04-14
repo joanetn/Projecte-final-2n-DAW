@@ -91,6 +91,7 @@ class AuthController extends Controller
                 deviceType: $request->input('deviceType'),
                 browser: $request->input('browser'),
                 os: $request->input('os'),
+                nivell: $request->input('nivell'),
                 rols: $request->input('rols'),
             );
 

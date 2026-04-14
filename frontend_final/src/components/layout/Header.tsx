@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/ui/button'
 import { ThemeSwitcher } from '@/components/ThemeSwitcher'
+import { NotificationBell } from '@/components/layout/NotificationBell'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Menu, X, LogOut } from 'lucide-react'
 
@@ -113,6 +114,9 @@ export function Header() {
                         ) : isAuthenticated && user ? (
                             <>
                                 <div className="flex items-center gap-2 pl-3 border-l border-slate-200 dark:border-slate-700">
+                                    <NotificationBell />
+                                </div>
+                                <div className="flex items-center gap-2 pl-3 border-l border-slate-200 dark:border-slate-700">
                                     <Button
                                         onClick={handleProfileClick}
                                         variant="outline"
@@ -218,6 +222,16 @@ export function Header() {
                                 <>
                                     <div className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300">
                                         {user.nom}
+                                    </div>
+                                    <div className="flex items-center justify-between px-4">
+                                        <Button
+                                            onClick={handleProfileClick}
+                                            variant="outline"
+                                            size="sm"
+                                        >
+                                            Profile
+                                        </Button>
+                                        <NotificationBell />
                                     </div>
                                     <button
                                         onClick={handleLogout}

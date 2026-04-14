@@ -26,6 +26,7 @@ class RegisterRequest extends FormRequest
             // Rols (opcionales pero si vienen, deben ser válidos)
             'rols'           => 'nullable|array|min:1',
             'rols.*'         => 'string|in:JUGADOR,ENTRENADOR,ARBITRE',
+            'nivell'         => 'nullable|string|in:principant,intermedi,avançat',
 
             // Dades del dispositiu (igual que login)
             'deviceId'       => 'required|string|max:255',
@@ -49,6 +50,7 @@ class RegisterRequest extends FormRequest
             'dataNaixement.date'     => 'La data de naixement ha de ser una data vàlida',
             'dataNaixement.before_or_equal' => 'La data de naixement no pot ser posterior a avui',
             'deviceId.required'      => 'El deviceId és obligatori',
+            'nivell.in'              => 'El nivell seleccionat no és vàlid',
         ];
     }
 
@@ -57,20 +59,24 @@ class RegisterRequest extends FormRequest
         $validator->after(function ($validator) {
             $roles = $this->input('rols');
 
-            if (!is_array($roles) || empty($roles)) {
-                return;
+            $normalizedRoles = ['JUGADOR'];
+            if (is_array($roles) && !empty($roles)) {
+                $normalizedRoles = array_values(array_unique(array_filter(
+                    array_map(
+                        static fn($role) => is_string($role) ? strtoupper(trim($role)) : '',
+                        $roles
+                    ),
+                    static fn($role) => $role !== ''
+                )));
             }
-
-            $normalizedRoles = array_values(array_unique(array_filter(
-                array_map(
-                    static fn($role) => is_string($role) ? strtoupper(trim($role)) : '',
-                    $roles
-                ),
-                static fn($role) => $role !== ''
-            )));
 
             if (in_array('ARBITRE', $normalizedRoles, true) && count($normalizedRoles) > 1) {
                 $validator->errors()->add('rols', 'Si selecciones ARBITRE, no pots seleccionar altres rols.');
+            }
+
+            $nivell = trim((string) $this->input('nivell', ''));
+            if (in_array('JUGADOR', $normalizedRoles, true) && $nivell === '') {
+                $validator->errors()->add('nivell', 'Si selecciones JUGADOR, has d\'indicar el nivell.');
             }
         });
     }

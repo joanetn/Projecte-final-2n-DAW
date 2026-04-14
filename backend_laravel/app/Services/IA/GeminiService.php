@@ -8,7 +8,7 @@ class GeminiService
 {
     protected string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
 
-    public function chat(array $messages): string
+    public function chat(array|string $messages): string
     {
         $prompt = $messages[count($messages) - 1]['content'] ?? '';
 

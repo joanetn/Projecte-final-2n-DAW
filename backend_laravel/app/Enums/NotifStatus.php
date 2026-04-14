@@ -4,9 +4,27 @@ namespace App\Enums;
 
 enum NotifStatus: string
 {
-    case PENDENT = 'Pendent';
+    case PENDENT = 'PENDENT';
 
-    case COMPLETADA = 'Completada';
+    case COMPLETADA = 'COMPLETADA';
+
+    case ERROR = 'ERROR';
+
+    public static function fromString(?string $value): self
+    {
+        if ($value === null || trim($value) === '') {
+            return self::PENDENT;
+        }
+
+        $normalized = strtoupper(trim($value));
+
+        return match ($normalized) {
+            'PENDENT', 'PENDENTE' => self::PENDENT,
+            'COMPLETADA', 'COMPLETED' => self::COMPLETADA,
+            'ERROR', 'FAILED', 'FALLIDA' => self::ERROR,
+            default => self::tryFrom($normalized) ?? self::PENDENT,
+        };
+    }
 
     public static function values(): array
     {

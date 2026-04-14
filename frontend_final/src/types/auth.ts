@@ -28,5 +28,6 @@ export interface RegisterRequest {
     deviceType?: string | null;
     browser?: string | null;
     os?: string | null;
+    nivell?: string | null;
     rols?: string[];
 }

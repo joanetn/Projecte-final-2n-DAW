@@ -13,12 +13,11 @@ class NotificationMapper
         $channels = is_array($model->channels) ? $model->channels : [];
         $data = is_array($model->data) ? $model->data : [];
 
-        // Handle status - it could be a string or already an enum
-        if ($model->status instanceof NotifStatus) {
-            $status = $model->status;
-        } else {
-            $status = NotifStatus::tryFrom($model->status) ?? NotifStatus::PENDENT;
-        }
+        $rawStatus = $model->status instanceof NotifStatus
+            ? $model->status->value
+            : (is_string($model->status) ? $model->status : null);
+
+        $status = NotifStatus::fromString($rawStatus);
 
         return new Notification(
             id: $model->id,
@@ -30,6 +29,8 @@ class NotificationMapper
             llegit: (bool) $model->llegit,
             channels: $channels,
             data: $data,
+            createdAt: $model->created_at?->toIso8601String(),
+            updatedAt: $model->updated_at?->toIso8601String(),
         );
     }
 
@@ -41,10 +42,12 @@ class NotificationMapper
             'suceso' => $notification->suceso,
             'channels' => $notification->channels,
             'tone' => $notification->tone,
-            'urgency' => $notification->urgencia,
+            'urgencia' => $notification->urgencia,
             'data' => $notification->data,
             'status' => $notification->status->value ?? (string) $notification->status,
             'llegit' => $notification->llegit,
+            'created_at' => $notification->createdAt,
+            'updated_at' => $notification->updatedAt,
         ];
     }
 
@@ -56,7 +59,7 @@ class NotificationMapper
             'suceso' => $notification->suceso,
             'channels' => $notification->channels,
             'tone' => $notification->tone,
-            'urgency' => $notification->urgencia,
+            'urgencia' => $notification->urgencia,
             'data' => $notification->data,
             'status' => $notification->status->value ?? (string) $notification->status,
             'llegit' => $notification->llegit ? true : false,

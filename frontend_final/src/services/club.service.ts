@@ -104,6 +104,18 @@ export const removeEquipMembre = async (equipId: string, membreId: string): Prom
     await laravel.delete(`/api/admin/equips/${equipId}/membres/${membreId}`, { headers: authHeader() });
 };
 
+export const updateEquipMembreRole = async (
+    equipId: string,
+    membreId: string,
+    rolEquip: 'jugador' | 'entrenador',
+): Promise<void> => {
+    await laravel.put(
+        `/api/admin/equips/${equipId}/membres/${membreId}`,
+        { rolEquip },
+        { headers: authHeader() },
+    );
+};
+
 export const getMeEquipMembres = async (equipId: string): Promise<{ membres: MembreEquip[] }> => {
     const res = await laravel.get(`/api/usuaris/me/equips/${equipId}/membres`, { headers: authHeader() });
     const raw = unwrapApiData<unknown>(res.data);

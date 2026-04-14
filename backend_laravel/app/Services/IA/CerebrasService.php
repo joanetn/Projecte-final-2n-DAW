@@ -9,7 +9,7 @@ class CerebrasService
 {
     protected string $baseUrl = 'https://api.cerebras.ai/v1';
 
-    public function chat(array $messages): string
+    public function chat(array|string $messages): string
     {
         /** @var \Illuminate\Http\Client\Response $response */
         $response = Http::withHeaders([

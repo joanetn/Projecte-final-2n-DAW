@@ -5,7 +5,7 @@ namespace App\Modules\Notifications\Presentation\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EnqueueNotificationResource extends JsonResource
+class NotificationResource extends JsonResource
 {
     /**
      * @param Request $request
@@ -15,11 +15,16 @@ class EnqueueNotificationResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'userId' => $this->userId,
             'suceso' => $this->suceso,
             'status' => $this->status->value ?? (string) $this->status,
-            'urgencia' => $this->urgencia,
             'tone' => $this->tone,
+            'urgencia' => $this->urgencia,
+            'llegit' => $this->llegit,
             'channels' => $this->channels,
+            'data' => $this->data,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }

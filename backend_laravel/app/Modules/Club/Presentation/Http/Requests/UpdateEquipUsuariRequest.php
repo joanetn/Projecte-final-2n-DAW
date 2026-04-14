@@ -18,7 +18,7 @@ class UpdateEquipUsuariRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rolEquip' => 'nullable|string|in:jugador,entrenador,delegat,preparador_fisic',
+            'rolEquip' => 'nullable|string|in:jugador,entrenador,delegat',
             'isActive' => 'nullable|boolean',
         ];
     }
@@ -26,7 +26,7 @@ class UpdateEquipUsuariRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'rolEquip.in' => "El rol no és vàlid. Valors permesos: jugador, entrenador, delegat, preparador_fisic",
+            'rolEquip.in' => "El rol no és vàlid. Valors permesos: jugador, entrenador, delegat",
             'isActive.boolean' => "El camp isActive ha de ser un valor booleà",
         ];
     }

@@ -6,6 +6,7 @@ import {
     crearEquip,
     inscriureEquipALliga,
     removeEquipMembre,
+    updateEquipMembreRole,
     leaveMeEquip,
 } from '@/services/club.service';
 import { CLUB_KEYS } from '@/queries/club.queries';
@@ -81,6 +82,26 @@ export const useRemoveEquipMembre = () => {
             qc.invalidateQueries({ queryKey: ['equips', variables.equipId, 'membres'] });
             qc.invalidateQueries({ queryKey: CLUB_KEYS.meusEquips() });
             qc.invalidateQueries({ queryKey: CLUB_KEYS.meEquipMembres(variables.equipId) });
+        },
+    });
+};
+
+export const useUpdateEquipMembreRole = () => {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            equipId,
+            membreId,
+            rolEquip,
+        }: {
+            equipId: string;
+            membreId: string;
+            rolEquip: 'jugador' | 'entrenador';
+        }) => updateEquipMembreRole(equipId, membreId, rolEquip),
+        onSuccess: (_result, variables) => {
+            qc.invalidateQueries({ queryKey: ['equips', variables.equipId, 'membres'] });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.meEquipMembres(variables.equipId) });
+            qc.invalidateQueries({ queryKey: CLUB_KEYS.meusEquips() });
         },
     });
 };

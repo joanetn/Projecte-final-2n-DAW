@@ -9,7 +9,7 @@ class GroqService
 {
     protected string $baseUrl = 'https://api.groq.com/openai/v1';
 
-    public function chat(array $messages): string
+    public function chat(array|string $messages): string
     {
         /** @var \Illuminate\Http\Client\Response $response */
         $response = Http::withHeaders([

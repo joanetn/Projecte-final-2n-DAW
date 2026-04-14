@@ -18,8 +18,8 @@ class NotificationServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Cargar rutas
-        $this->loadRoutesFrom(__DIR__ . '/../Routes/api.php');
+        // Las rutas del módulo se cargan desde routes/api.php (glob de módulos).
+        // Evitamos registrarlas aquí para no duplicar endpoints.
 
         // Cargar migraciones
         $this->loadMigrationsFrom(__DIR__ . '/../../../../database/migrations');

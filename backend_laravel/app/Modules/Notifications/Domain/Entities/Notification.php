@@ -16,5 +16,7 @@ class Notification
         public readonly bool $llegit = false,
         public readonly array $channels,
         public readonly array $data,
+        public readonly ?string $createdAt = null,
+        public readonly ?string $updatedAt = null,
     ) {}
 }

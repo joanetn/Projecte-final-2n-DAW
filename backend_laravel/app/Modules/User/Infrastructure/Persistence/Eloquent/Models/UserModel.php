@@ -66,7 +66,7 @@ class UserModel extends Authenticatable implements JWTSubject
 
     public function notificacions(): HasMany
     {
-        return $this->hasMany(\App\Models\Notificacio::class, 'usuariId');
+        return $this->hasMany(\App\Models\Notificacio::class, 'user_id');
     }
 
     public function scopeSearch(Builder $query, ?string $q): Builder

@@ -31,8 +31,16 @@ class RegisterCommand
         ?string $deviceType = null,
         ?string $browser = null,
         ?string $os = null,
+        ?string $nivell = null,
         ?array $rols = null,
     ): array {
+
+        // Assignar rols seleccionats (o per defecte JUGADOR)
+        $selectedRoles = $this->normalizeRoles($rols);
+
+        $userLevel = in_array('JUGADOR', $selectedRoles, true)
+            ? $this->normalizeLevel($nivell)
+            : UserLevel::PRINCIPANT->value;
 
         $avatarDEFAULT = $avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($nom) . '&background=random&size=128';
         $dto = new CreateUserDTO(
@@ -43,13 +51,10 @@ class RegisterCommand
             dataNaixement: $dataNaixement,
             avatar: $avatarDEFAULT,
             dni: $dni,
-            nivell: UserLevel::PRINCIPANT->value,
+            nivell: $userLevel,
         );
 
         $userId = $this->createUserCommand->execute($dto);
-
-        // Assignar rols seleccionats (o per defecte JUGADOR)
-        $selectedRoles = $this->normalizeRoles($rols);
 
         foreach ($selectedRoles as $rol) {
             UsuariRol::updateOrCreate(
@@ -129,5 +134,20 @@ class RegisterCommand
         }
 
         return $selectedRoles;
+    }
+
+    private function normalizeLevel(?string $nivell): string
+    {
+        $value = trim((string) $nivell);
+
+        if ($value === '') {
+            return UserLevel::PRINCIPANT->value;
+        }
+
+        if (in_array($value, UserLevel::values(), true)) {
+            return $value;
+        }
+
+        return UserLevel::PRINCIPANT->value;
     }
 }

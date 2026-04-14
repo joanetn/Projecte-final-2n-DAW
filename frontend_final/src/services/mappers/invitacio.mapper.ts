@@ -56,6 +56,7 @@ export const normalizeInvitacioCandidatesPayload = (payload: unknown): Invitacio
     return raw
         .map((item): InvitacioCandidate => {
             const candidate = (item ?? {}) as Dictionary;
+            const edatParsed = Number(candidate.edat);
             const tipus = String(candidate.tipus ?? 'JUGADOR').toUpperCase() === 'ENTRENADOR'
                 ? 'ENTRENADOR'
                 : 'JUGADOR';
@@ -65,6 +66,15 @@ export const normalizeInvitacioCandidatesPayload = (payload: unknown): Invitacio
                 nom: String(candidate.nom ?? ''),
                 email: String(candidate.email ?? ''),
                 tipus,
+                avatar: (candidate.avatar ?? undefined) as string | undefined,
+                nivell: (candidate.nivell ?? undefined) as string | undefined,
+                edat: Number.isFinite(edatParsed) && edatParsed > 0 && edatParsed <= 120
+                    ? Math.floor(edatParsed)
+                    : undefined,
+                teSegur: candidate.teSegur as boolean | undefined,
+                equipsActius: Number.isFinite(Number(candidate.equipsActius))
+                    ? Number(candidate.equipsActius)
+                    : undefined,
             };
         })
         .filter((candidate) => candidate.id.length > 0);

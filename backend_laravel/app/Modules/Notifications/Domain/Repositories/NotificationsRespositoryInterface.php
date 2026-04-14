@@ -17,6 +17,8 @@ interface NotificationsRespositoryInterface
 
     public function create(array $data): Notification;
 
+    public function update(string $id, array $data): bool;
+
     public function updateStatus(string $id, NotifStatus $status): bool;
 
     public function readed(string $id): bool;
@@ -24,4 +26,6 @@ interface NotificationsRespositoryInterface
     public function findByUserId(string $userId): array;
 
     public function findByStatus(string $status): array;
+
+    public function findMostAncient(): ?Notification;
 }

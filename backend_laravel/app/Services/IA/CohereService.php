@@ -9,7 +9,7 @@ class CohereService
 {
     protected string $baseUrl = 'https://api.cohere.com/v2';
 
-    public function chat(array $messages): string
+    public function chat(array|string $messages): string
     {
         /** @var \Illuminate\Http\Client\Response $response */
         $response = Http::withHeaders([

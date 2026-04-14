@@ -67,6 +67,24 @@ const ROLES = [
     },
 ]
 
+const PLAYER_LEVELS = [
+    {
+        id: 'principant',
+        title: 'Principiante',
+        description: 'Estoy empezando y quiero aprender desde base.',
+    },
+    {
+        id: 'intermedi',
+        title: 'Intermedio',
+        description: 'Ya compito con regularidad y tengo experiencia.',
+    },
+    {
+        id: 'avançat',
+        title: 'Avanzado',
+        description: 'Busco un nivel alto de exigencia y rendimiento.',
+    },
+]
+
 // ─── Step 1: Datos básicos ────────────────────────────────────────────────────
 interface Step1Data {
     nom: string
@@ -312,13 +330,17 @@ function Step1Form({
 // ─── Step 2: Selecció de Rols ─────────────────────────────────────────────────
 function Step2Form({
     selectedRoles,
+    playerLevel,
     onToggleRole,
+    onPlayerLevelChange,
     onBack,
     onSubmit,
     isLoading,
 }: {
     selectedRoles: string[]
+    playerLevel: string
     onToggleRole: (roleId: string) => void
+    onPlayerLevelChange: (levelId: string) => void
     onBack: () => void
     onSubmit: () => void
     isLoading: boolean
@@ -330,6 +352,12 @@ function Step2Form({
             setError('Debes seleccionar al menos un rol')
             return
         }
+
+        if (selectedRoles.includes('JUGADOR') && !playerLevel) {
+            setError('Si seleccionas Jugador, debes indicar tu nivel.')
+            return
+        }
+
         setError('')
         onSubmit()
     }
@@ -393,6 +421,37 @@ function Step2Form({
                 })}
             </div>
 
+            {selectedRoles.includes('JUGADOR') && (
+                <div className="rounded-xl border border-warm-200 dark:border-warm-800/50 bg-warm-50/70 dark:bg-warm-900/20 p-4 space-y-3">
+                    <div className="flex items-center justify-between gap-2">
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Nivel de jugador</p>
+                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/80 dark:bg-slate-800 text-warm-700 dark:text-warm-300 border border-warm-200 dark:border-warm-700">
+                            Obligatorio
+                        </span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        {PLAYER_LEVELS.map((level) => {
+                            const isSelected = playerLevel === level.id
+
+                            return (
+                                <button
+                                    key={level.id}
+                                    type="button"
+                                    onClick={() => onPlayerLevelChange(level.id)}
+                                    className={`text-left rounded-xl border-2 px-3 py-3 transition-all ${isSelected
+                                        ? 'border-warm-500 bg-white dark:bg-slate-800 shadow-sm'
+                                        : 'border-warm-200 dark:border-warm-800/40 bg-white/60 dark:bg-slate-900/40 hover:border-warm-400 dark:hover:border-warm-600'
+                                        }`}
+                                >
+                                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{level.title}</p>
+                                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{level.description}</p>
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
+            )}
+
             {error && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
 
             <div className="flex gap-3">
@@ -444,6 +503,7 @@ export function RegisterForm() {
         acceptedTerms: false,
     })
     const [selectedRoles, setSelectedRoles] = useState<string[]>(['JUGADOR'])
+    const [playerLevel, setPlayerLevel] = useState('')
 
     const toggleRole = (roleId: string) => {
         setSelectedRoles((prev) => {
@@ -479,6 +539,7 @@ export function RegisterForm() {
                 deviceType: getDeviceType(),
                 browser: getBrowser(),
                 os: getOS(),
+                nivell: selectedRoles.includes('JUGADOR') ? playerLevel : null,
                 rols: selectedRoles,
             })
             await login(step1Data.email, step1Data.contrasenya)
@@ -520,7 +581,9 @@ export function RegisterForm() {
             ) : (
                 <Step2Form
                     selectedRoles={selectedRoles}
+                    playerLevel={playerLevel}
                     onToggleRole={toggleRole}
+                    onPlayerLevelChange={setPlayerLevel}
                     onBack={() => setStep(1)}
                     onSubmit={handleSubmit}
                     isLoading={isLoading}
