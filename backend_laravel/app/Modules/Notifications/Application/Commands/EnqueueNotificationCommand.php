@@ -2,11 +2,11 @@
 
 namespace App\Modules\Notifications\Application\Commands;
 
+use App\Events\AINotificationGenerated;
 use App\Modules\Notifications\Application\DTOs\EnqueueNotificationDTO;
 use App\Modules\Notifications\Domain\Entities\Notification;
 use App\Services\IA\GroqService;
 use App\Enums\NotifStatus;
-use App\Modules\Notifications\Domain\Events\NotificationBroadcastedEvent;
 use App\Modules\Notifications\Domain\Repositories\NotificationsRespositoryInterface;
 use Illuminate\Support\Facades\Log;
 
@@ -57,8 +57,30 @@ class EnqueueNotificationCommand
             'data' => $dto->data ?? [],
         ]);
 
-        event(new NotificationBroadcastedEvent($notification, 'queued'));
+        if ($notification->userId !== null && $notification->userId !== '') {
+            event(new AINotificationGenerated($this->toRealtimePayload($notification, 'queued')));
+        }
 
         return $notification;
+    }
+
+    private function toRealtimePayload(Notification $notification, string $action): array
+    {
+        return [
+            'action' => $action,
+            'id' => $notification->id,
+            'user_id' => $notification->userId,
+            'userId' => $notification->userId,
+            'suceso' => $notification->suceso,
+            'status' => $notification->status->value,
+            'tone' => $notification->tone,
+            'urgencia' => $notification->urgencia,
+            'llegit' => $notification->llegit,
+            'channels' => $notification->channels,
+            'data' => $notification->data,
+            'createdAt' => $notification->createdAt,
+            'updatedAt' => $notification->updatedAt,
+            'broadcastedAt' => now()->toIso8601String(),
+        ];
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Modules\Notifications\Application\Commands;
 
+use App\Events\AINotificationGenerated;
 use App\Enums\NotifStatus;
 use App\Modules\Notifications\Application\DTOs\ProcessNotificationResponseDTO;
-use App\Modules\Notifications\Domain\Events\NotificationBroadcastedEvent;
+use App\Modules\Notifications\Application\Services\NotificationEmailSender;
+use App\Modules\Notifications\Domain\Entities\Notification;
 use App\Modules\Notifications\Domain\Repositories\NotificationsRespositoryInterface;
 use App\Services\IA\CerebrasService;
 use App\Services\IA\CohereService;
@@ -20,10 +22,11 @@ class ProcessNextCommand
         private NotificationsRespositoryInterface $repo,
         private GroqService $groq,
         private CerebrasService $cerebras,
-        private CohereService $cohere,
+        // private CohereService $cohere,
         private OpenRouterService $open_router,
         private GeminiService $gemini,
         private MistralService $mistral,
+        private NotificationEmailSender $notificationEmailSender,
     ) {}
 
     public function execute(): ProcessNotificationResponseDTO
@@ -34,7 +37,7 @@ class ProcessNextCommand
             throw new \RuntimeException('No hay notificaciones pendientes');
         }
 
-        $services = [$this->groq, $this->cerebras, $this->cohere, $this->open_router, $this->gemini, $this->mistral];
+        $services = [$this->groq, $this->cerebras, $this->open_router, $this->gemini, $this->mistral];
 
         $deliveries = [];
         $context = json_encode(
@@ -43,6 +46,8 @@ class ProcessNextCommand
         ) ?: '{}';
 
         foreach ($notification->channels as $channel) {
+            $normalizedChannel = mb_strtolower(trim((string) $channel));
+
             $prompt = "
                 Eres un asistente experto en comunicación para una plataforma que gestiona ligas de pádel en España.
 
@@ -60,6 +65,8 @@ class ProcessNextCommand
                 - Alta: directo y prioritario
                 - NO expliques nada, SOLO devuelve la notificación final.
                 - NO añadas texto fuera del formato solicitado.
+                - LA MÁS IMPORTANTE ES QUE QUIERO QUE SEAS DESCRIPTIVO CON LO QUE TE LLEGA DE MENSAJE DE EL USUARIO PARA QUE VEA LO QUE QUIERE EL QUE RECIBE LA NOTIFICACION
+                - Cuando vayas a poner cosas de Tu nombre cosas asi pon Joan Nácher (Administrador de Padel Play)
 
                 📢 REGLAS POR CANAL:
 
@@ -82,7 +89,6 @@ class ProcessNextCommand
 
                 👉 Push:
                 - Formato EXACTO:
-                Título: <texto>
                 Mensaje: <texto>
                 - Muy breve y llamativo.
 
@@ -92,48 +98,106 @@ class ProcessNextCommand
                 Genera la notificación ahora.
                 ";
 
-            $service = $services[array_rand($services)];
-            $provider = class_basename($service);
+            $providerPool = $services;
+            shuffle($providerPool);
 
-            try {
-                $response = $service->chat([
-                    [
-                        'role' => 'system',
-                        'content' => 'Eres un asistente experto en comunicación multicanal y devuelves solo el mensaje final solicitado.',
-                    ],
-                    [
-                        'role' => 'user',
-                        'content' => $prompt,
-                    ],
-                ]);
+            $attemptedProviders = [];
+            $lastError = null;
+            $generatedMessage = null;
+            $providerUsed = null;
 
-                $cleanResponse = trim($response);
+            foreach ($providerPool as $service) {
+                $provider = class_basename($service);
+                $attemptedProviders[] = $provider;
 
+                try {
+                    $response = $service->chat([
+                        [
+                            'role' => 'system',
+                            'content' => 'Eres un asistente experto en comunicación multicanal y devuelves solo el mensaje final solicitado.',
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $prompt,
+                        ],
+                    ]);
+
+                    $cleanResponse = trim((string) $response);
+
+                    if ($cleanResponse === '') {
+                        throw new \RuntimeException('Respuesta vacía del modelo');
+                    }
+
+                    $generatedMessage = $cleanResponse;
+                    $providerUsed = $provider;
+                    break;
+                } catch (\Throwable $e) {
+                    $lastError = $e->getMessage();
+
+                    Log::warning('Error procesando canal de notificación; se probará otro modelo', [
+                        'notification_id' => $notification->id,
+                        'channel' => $channel,
+                        'provider' => $provider,
+                        'error' => $lastError,
+                    ]);
+                }
+            }
+
+            if ($generatedMessage === null) {
                 $deliveries[] = [
                     'channel' => $channel,
-                    'provider' => $provider,
-                    'message' => $cleanResponse,
+                    'provider' => end($attemptedProviders) ?: null,
+                    'message' => '',
+                    'error' => $lastError ?? 'No se pudo generar la notificación con los modelos disponibles',
+                    'attemptedProviders' => $attemptedProviders,
                 ];
-            } catch (\Throwable $e) {
-                Log::error('Error procesando canal de notificación', [
+
+                Log::error('Todos los modelos fallaron para este canal de notificación', [
                     'notification_id' => $notification->id,
                     'channel' => $channel,
-                    'provider' => $provider,
-                    'error' => $e->getMessage(),
+                    'attemptedProviders' => $attemptedProviders,
+                    'error' => $lastError,
                 ]);
 
-                $deliveries[] = [
-                    'channel' => $channel,
-                    'provider' => $provider,
-                    'message' => '',
-                    'error' => $e->getMessage(),
-                ];
+                continue;
             }
+
+            $delivery = [
+                'channel' => $channel,
+                'provider' => $providerUsed,
+                'message' => $generatedMessage,
+                'attemptedProviders' => $attemptedProviders,
+            ];
+
+            if ($normalizedChannel === 'email') {
+                try {
+                    $mailMeta = $this->notificationEmailSender->send($notification, $generatedMessage);
+                    $delivery['email'] = [
+                        'sent' => true,
+                        ...$mailMeta,
+                    ];
+                } catch (\Throwable $mailError) {
+                    $delivery['email'] = [
+                        'sent' => false,
+                        'recipient' => (string) env('NOTIFICATIONS_EMAIL_RECIPIENT', 'jnacherparra@gmail.com'),
+                    ];
+                    $delivery['error'] = $mailError->getMessage();
+
+                    Log::error('Error enviando email de notificación', [
+                        'notification_id' => $notification->id,
+                        'channel' => $channel,
+                        'provider' => $providerUsed,
+                        'error' => $mailError->getMessage(),
+                    ]);
+                }
+            }
+
+            $deliveries[] = $delivery;
         }
 
         $hasAnySuccess = count(array_filter(
             $deliveries,
-            static fn(array $delivery): bool => ($delivery['message'] ?? '') !== ''
+            static fn(array $delivery): bool => ($delivery['message'] ?? '') !== '' && !isset($delivery['error'])
         )) > 0;
 
         $status = $hasAnySuccess ? NotifStatus::COMPLETADA : NotifStatus::ERROR;
@@ -150,9 +214,11 @@ class ProcessNextCommand
 
         $updatedNotification = $this->repo->findById($notification->id) ?? $notification;
 
-        event(new NotificationBroadcastedEvent($updatedNotification, 'processed', [
-            'deliveries' => $deliveries,
-        ]));
+        if ($updatedNotification->userId !== null && $updatedNotification->userId !== '') {
+            event(new AINotificationGenerated($this->toRealtimePayload($updatedNotification, 'processed', [
+                'deliveries' => $deliveries,
+            ])));
+        }
 
         return ProcessNotificationResponseDTO::fromArray([
             'message' => 'Notificación procesada correctamente',
@@ -160,5 +226,26 @@ class ProcessNextCommand
             'urgencia' => $updatedNotification->urgencia,
             'details' => $deliveries,
         ]);
+    }
+
+    private function toRealtimePayload(Notification $notification, string $action, array $meta = []): array
+    {
+        return [
+            'action' => $action,
+            'id' => $notification->id,
+            'user_id' => $notification->userId,
+            'userId' => $notification->userId,
+            'suceso' => $notification->suceso,
+            'status' => $notification->status->value,
+            'tone' => $notification->tone,
+            'urgencia' => $notification->urgencia,
+            'llegit' => $notification->llegit,
+            'channels' => $notification->channels,
+            'data' => $notification->data,
+            'meta' => $meta,
+            'createdAt' => $notification->createdAt,
+            'updatedAt' => $notification->updatedAt,
+            'broadcastedAt' => now()->toIso8601String(),
+        ];
     }
 }

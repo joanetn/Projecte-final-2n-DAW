@@ -596,7 +596,7 @@ function InvitacionsTab({ equip }: { equip: Equip | null }) {
                                                         ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
                                                         : 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
                                                         }`}>
-                                                        {candidate.teSegur ? 'Assegurança activa' : 'Sense assegurança activa'}
+                                                        {candidate.teSegur ? 'Segur actiu' : 'Sense segur actiu'}
                                                     </span>
                                                 </div>
                                             </div>

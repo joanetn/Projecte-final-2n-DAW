@@ -2,11 +2,12 @@
 
 namespace App\Modules\Notifications\Presentation\Http\Controllers;
 
+use App\Events\AINotificationGenerated;
 use App\Http\Controllers\Controller;
 use App\Modules\Notifications\Application\Commands\EnqueueNotificationCommand;
 use App\Modules\Notifications\Application\Commands\ProcessNextCommand;
 use App\Modules\Notifications\Application\DTOs\EnqueueNotificationDTO;
-use App\Modules\Notifications\Domain\Events\NotificationBroadcastedEvent;
+use App\Modules\Notifications\Domain\Entities\Notification;
 use App\Modules\Notifications\Domain\Repositories\NotificationsRespositoryInterface;
 use App\Modules\Notifications\Presentation\Http\Requests\EnqueueNotificationRequest;
 use App\Modules\Notifications\Presentation\Http\Resources\EnqueueNotificationResource;
@@ -147,11 +148,89 @@ class NotificationController extends Controller
         $this->repo->readed($id);
         $updated = $this->repo->findById($id) ?? $notification;
 
-        event(new NotificationBroadcastedEvent($updated, 'read'));
+        if ($updated->userId !== null && $updated->userId !== '') {
+            event(new AINotificationGenerated($this->toRealtimePayload($updated, 'read')));
+        }
 
         return response()->json([
             'success' => true,
             'data' => (new NotificationResource($updated))->toArray($request),
         ]);
+    }
+
+    public function broadcastAuth(Request $request): JsonResponse
+    {
+        $authUserId = trim((string) $request->get('auth_user_id', ''));
+
+        if ($authUserId === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autorizado',
+            ], 401);
+        }
+
+        $socketId = trim((string) $request->input('socket_id', ''));
+        $channelName = trim((string) $request->input('channel_name', ''));
+
+        if ($socketId === '' || $channelName === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parámetros de broadcast inválidos',
+            ], 422);
+        }
+
+        if (!str_starts_with($channelName, 'private-user.')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Canal no permitido',
+            ], 403);
+        }
+
+        $channelUserId = substr($channelName, strlen('private-user.'));
+
+        if ($channelUserId !== $authUserId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No autorizado para este canal',
+            ], 403);
+        }
+
+        $pusherKey = (string) config('broadcasting.connections.pusher.key', '');
+        $pusherSecret = (string) config('broadcasting.connections.pusher.secret', '');
+
+        if ($pusherKey === '' || $pusherSecret === '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Broadcast no configurado',
+            ], 500);
+        }
+
+        $signature = hash_hmac('sha256', $socketId . ':' . $channelName, $pusherSecret);
+
+        return response()->json([
+            'success' => true,
+            'auth' => $pusherKey . ':' . $signature,
+        ]);
+    }
+
+    private function toRealtimePayload(Notification $notification, string $action, array $meta = []): array
+    {
+        return [
+            'action' => $action,
+            'id' => $notification->id,
+            'user_id' => $notification->userId,
+            'userId' => $notification->userId,
+            'suceso' => $notification->suceso,
+            'status' => $notification->status->value,
+            'tone' => $notification->tone,
+            'urgencia' => $notification->urgencia,
+            'llegit' => $notification->llegit,
+            'channels' => $notification->channels,
+            'data' => $notification->data,
+            'meta' => $meta,
+            'createdAt' => $notification->createdAt,
+            'updatedAt' => $notification->updatedAt,
+            'broadcastedAt' => now()->toIso8601String(),
+        ];
     }
 }

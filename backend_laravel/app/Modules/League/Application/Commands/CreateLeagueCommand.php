@@ -5,7 +5,9 @@ namespace App\Modules\League\Application\Commands;
 use App\Modules\League\Application\DTOs\CreateLeagueDTO;
 use App\Modules\League\Domain\Repositories\LeagueRepositoryInterface;
 use App\Modules\League\Domain\Services\LeagueDomainService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Modules\Notifications\Application\DTOs\EnqueueNotificationDTO;
 
 class CreateLeagueCommand
 {
@@ -30,5 +32,18 @@ class CreateLeagueCommand
         ]);
 
         return $league->id;
+    }
+
+    public function dispatchLeagueNotification(CreateLeagueDTO $dto): void
+    {
+        try {
+            $suceso = "Se ha creado una lliga nueva con el nombre: {$dto->nom} de la categoria: {$dto->categoria} que inicia el: {$dto->dataInici}";
+
+            $enqueueDto = EnqueueNotificationDTO::fromArray([]);
+        } catch (\Throwable $e) {
+            Log::error('Error enviando notificación de creación de liga', [
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

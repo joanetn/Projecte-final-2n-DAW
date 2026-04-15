@@ -35,10 +35,11 @@ El sistema no representa un únic club: és una plataforma on poden participar d
 └─────────────┘                ┌──────▼───────────────────────────────────────────┐
                                │  Microserveis Laravel (un procés per mòdul)      │
                                │                                                  │
-                               │  :8001 User       :8005 Venue                    │
-                               │  :8002 Club       :8006 Lineup                   │
-                               │  :8003 League     :8007 Invitation               │
-                               │  :8004 Match      :8008 Merchandise              │
+                               │  :8001 User       :8006 Lineup                   │
+                               │  :8002 Club       :8007 Invitation               │
+                               │  :8003 League     :8008 Merchandise              │
+                               │  :8004 Match      :8009 Insurance                │
+                               │  :8005 Venue      :8010 Notifications            │
                                └──────────────────────────────────────────────────┘
                                        │
                        ┌───────────────┴─────────────────┐
@@ -68,7 +69,8 @@ Codi únic Laravel 12 (PHP 8.2) que s'executa com a múltiples processos indepen
 | **Lineup** | 8006 | Alineacions i convocatòries per partit. |
 | **Invitation** | 8007 | Invitacions d'equip entre usuaris. |
 | **Merchandise** | 8008 | Productes i compres amb Stripe. |
-| **Insurance** | — | Segurs obligatoris de jugadors amb Stripe. |
+| **Insurance** | 8009 | Segurs obligatoris de jugadors amb Stripe. |
+| **Notifications** | 8010 | Cua, processat IA i consulta de notificacions per usuari. |
 | **AdminWeb** | — | Gestió administrativa de lligues, equips, rondes i propostes de canvi de data. |
 
 ### Tecnologies Laravel
@@ -189,11 +191,80 @@ Usuari → Frontend → Gateway (8000) → svc_merchandise / svc_insurance
 
 ---
 
-## 10. Notificacions
+## 10. Notificacions (actual + flux realtime preferit)
 
-- Notificacions internes associades a cada usuari (sense correu electrònic).
-- Mostrades en una campaneta al frontend.
-- Exemples: invitació d'equip, convocatòria, resultat publicat, confirmació de pagament.
+### 10.1 Base de dades de notificacions
+
+La taula `notificacions` guarda, com a mínim:
+
+- `id` (uuid)
+- `user_id` (usuari destinatari)
+- `status` (`PENDENT`, `COMPLETADA`, `ERROR`)
+- `tone` (`PROFESIONAL`, `INFORMAL`, `URGENTE`)
+- `urgencia` (`BAJA`, `NORMAL`, `ALTA`, `CRITICA`)
+- `suceso` (resum de l'event)
+- `llegit` (`true`/`false`)
+- `channels` (array: `Email`, `WhatsApp`, `SMS`, `Push`)
+- `data` (context extra + resultats de processat IA)
+
+### 10.2 Endpoints del mòdul (JWT obligatori)
+
+- `GET /api/notifications/me`: notificacions de l'usuari autenticat.
+- `GET /api/notifications/user/{userId}`: només permès si `auth_user_id === userId`.
+- `POST /api/notifications/enqueue`: encolar notificació manual.
+- `POST /api/notifications/process-next`: processar la pendent més antiga.
+- `PATCH /api/notifications/{id}/read`: marcar com llegida.
+
+### 10.3 Flux ACTUAL implementat (el que està en producció local)
+
+1. Es crea invitació amb `POST /api/invitacions`.
+2. `InvitationController::storeInvitacio()` valida permisos i construeix `CreateInvitacioEquipDTO`.
+3. `CreateInvitacioEquipCommand::execute()` valida segur, evita duplicats, crea invitació i crida `dispatchInvitationNotification()`.
+4. `dispatchInvitationNotification()` prepara `suceso`, `channels=['Push']`, `tone` i `data` contextual.
+5. `EnqueueNotificationCommand::execute()`:
+   - calcula urgència amb IA (Groq),
+   - guarda registre `PENDENT` en BD,
+   - emet event de broadcast (`queued`).
+6. En el mateix flux es crida `ProcessNextCommand::execute()` immediatament.
+7. `ProcessNextCommand` processa canals amb un provider IA (Groq/Cerebras/Cohere/OpenRouter/Gemini/Mistral), guarda `deliveries` en `data` i actualitza a `COMPLETADA` o `ERROR`.
+8. Emet event de broadcast (`processed`).
+9. Frontend (`NotificationBell`) refresca amb polling (`GET /api/notifications/me` cada 3s) i pinta comptador + llista.
+
+### 10.4 Flux REALTIME preferit (el que proposes, estil event-driven pur)
+
+Este disseny és el recomanat per a temps real estricte:
+
+1. Endpoint de generació (`POST /generate` o equivalent al mòdul).
+2. `NotificationService`:
+   - resol provider IA via `AIManager`,
+   - genera text final,
+   - guarda notificació en BD,
+   - emet event `AINotificationGenerated`.
+3. Event `AINotificationGenerated implements ShouldBroadcast`:
+   - canal privat `user.{user_id}`,
+   - nom d'event `ai.notification`.
+4. Frontend amb Echo:
+   - subscripció a `private(user.{id})`,
+   - `listen('.ai.notification')`,
+   - pinta la notificació en UI sense esperar polling.
+
+Flux resumit:
+
+`POST /generate` → `NotificationService` → IA → guarda BD → `AINotificationGenerated` → WebSocket → campaneta.
+
+### 10.5 Opcions PRO recomanades
+
+- Emetre event només en canals realtime (`push`, `in_app`).
+- Guardar en BD abans d'emetre sempre (font de veritat consistent).
+- Mantindre fallback per polling per si falla WebSocket.
+- Si usuari offline: integrar FCM/APNs per push mòbil real.
+
+### 10.6 Diferència clau entre els dos enfocaments
+
+- Estat actual: backend sí emet events, però frontend actualitza principalment per polling (cada 3s).
+- Estat objectiu: frontend subscrit a Echo/Pusher i recepció immediata real sense dependre del polling.
+
+Això permet una transició segura: primer estabilitat (polling), després realtime complet (Echo + canal privat + push offline).
 
 ---
 
@@ -228,7 +299,7 @@ Notes:
 |---|---|---|
 | pf_postgres | postgres:16-alpine | 5433 |
 | pf_gateway | laravel custom | 8000 |
-| pf_svc_user … pf_svc_merchandise | laravel custom | 8001–8008 |
+| pf_svc_user … pf_svc_notifications | laravel custom | 8001–8010 |
 | pf_fastapi | python 3.12 custom | 5005 |
 | pf_frontend | nginx:alpine (build React) | 3000 |
 

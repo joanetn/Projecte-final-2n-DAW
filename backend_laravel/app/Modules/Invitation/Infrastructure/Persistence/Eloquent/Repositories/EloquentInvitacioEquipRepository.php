@@ -116,4 +116,17 @@ class EloquentInvitacioEquipRepository implements InvitacioEquipRepositoryInterf
 
         return $models->map([$this->mapper, 'toDomain'])->toArray();
     }
+
+    public function findPendingByEquipAndUsuari(string $equipId, string $usuariId): ?InvitacioEquip
+    {
+        $model = $this->model
+            ->where('equipId', $equipId)
+            ->where('usuariId', $usuariId)
+            ->where('estat', 'pendent')
+            ->where('isActive', true)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return $model ? $this->mapper->toDomain($model) : null;
+    }
 }

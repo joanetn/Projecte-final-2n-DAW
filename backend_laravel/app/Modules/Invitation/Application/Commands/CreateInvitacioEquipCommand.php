@@ -29,8 +29,10 @@ class CreateInvitacioEquipCommand
             throw new \RuntimeException("L'usuari convidat ha de tenir el segur pagat i actiu", 422);
         }
 
-        $existing = $this->invitacioRepo->findByEquip($dto->equipId);
-        $this->domainService->validateNoDuplicate($existing, $dto->usuariId);
+        $existingInvitation = $this->invitacioRepo->findPendingByEquipAndUsuari($dto->equipId, $dto->usuariId);
+        if ($existingInvitation !== null) {
+            return $existingInvitation->id;
+        }
 
         $invitacio = $this->invitacioRepo->create([
             'id' => Str::uuid()->toString(),
@@ -66,14 +68,11 @@ class CreateInvitacioEquipCommand
             $enqueueDto = EnqueueNotificationDTO::fromArray([
                 'userId' => $dto->usuariId,
                 'suceso' => $suceso,
-                'channels' => ['Push'],
+                'channels' => ['Push', 'Email'],
                 'tone' => 'PROFESIONAL',
                 'data' => [
                     'type' => 'invitacio_equip',
-                    'equipId' => $dto->equipId,
                     'equipNom' => $equipName,
-                    'usuariId' => $dto->usuariId,
-                    'remitentId' => $dto->remitentId,
                     'remitentNom' => $inviterName,
                     'missatgeOriginal' => $customMessage !== '' ? $customMessage : null,
                 ],
@@ -81,10 +80,8 @@ class CreateInvitacioEquipCommand
 
             $this->enqueueNotificationCommand->execute($enqueueDto);
 
-            // Process immediately so the frontend can show meaningful generated copy right away.
             $this->processNextCommand->execute();
         } catch (\Throwable $e) {
-            // Invitation should not fail if notification generation/delivery fails.
             Log::error('Error enviando notificación de invitación de equipo', [
                 'equipId' => $dto->equipId,
                 'usuariId' => $dto->usuariId,

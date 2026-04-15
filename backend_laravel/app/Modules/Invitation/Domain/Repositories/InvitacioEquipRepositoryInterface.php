@@ -27,4 +27,6 @@ interface InvitacioEquipRepositoryInterface
     public function findByEstat(string $estat): array;
 
     public function findPendentsByUsuari(string $usuariId): array;
+
+    public function findPendingByEquipAndUsuari(string $equipId, string $usuariId): ?InvitacioEquip;
 }
