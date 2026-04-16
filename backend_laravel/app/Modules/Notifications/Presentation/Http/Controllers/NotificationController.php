@@ -27,15 +27,25 @@ class NotificationController extends Controller
     public function enqueue(EnqueueNotificationRequest $request): JsonResponse
     {
         try {
+            $validated = $request->validated();
             $authUserId = (string) $request->get('auth_user_id', '');
-            $payloadUserId = $request->validated('userId');
+            $payloadUserId = trim((string) ($validated['userId'] ?? ''));
+            $payloadUserIds = is_array($validated['userIds'] ?? null)
+                ? $validated['userIds']
+                : [];
+
+            if ($payloadUserId === '' && empty($payloadUserIds) && $authUserId !== '') {
+                $payloadUserId = $authUserId;
+            }
 
             $dto = EnqueueNotificationDTO::fromArray([
-                'userId' => $payloadUserId ?: $authUserId,
-                'suceso' => $request->validated('suceso'),
-                'channels' => $request->validated('channels'),
-                'tone' => $request->validated('tone', 'PROFESIONAL'),
-                'data' => $request->validated('data', []),
+                'userId' => $payloadUserId,
+                'userIds' => $payloadUserIds,
+                'suceso' => $validated['suceso'],
+                'channels' => $validated['channels'],
+                'tone' => $validated['tone'] ?? 'PROFESIONAL',
+                'data' => $validated['data'] ?? [],
+                'batchKey' => $validated['batchKey'] ?? null,
             ]);
 
             $notification = $this->enqueueNotificationCommand->execute($dto);

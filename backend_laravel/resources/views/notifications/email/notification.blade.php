@@ -43,16 +43,6 @@ $urgency = strtoupper((string) ($urgencia ?? 'NORMAL'));
                             @endif
                         </td>
                     </tr>
-
-                    <tr>
-                        <td style="padding:10px 24px 0 24px;">
-                            <div style="font-size:13px;color:#64748b;text-transform:uppercase;letter-spacing:.06em;font-weight:700;">Suceso</div>
-                            <div style="margin-top:8px;font-size:16px;line-height:1.5;color:#0f172a;font-weight:600;">
-                                {{ $suceso }}
-                            </div>
-                        </td>
-                    </tr>
-
                     <tr>
                         <td style="padding:16px 24px 24px 24px;">
                             <div style="border:1px solid #e2e8f0;border-radius:10px;background:#ffffff;padding:16px;">

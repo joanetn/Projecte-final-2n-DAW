@@ -2,6 +2,7 @@
 
 namespace App\Modules\Notifications\Application\Services;
 
+use App\Models\Usuari;
 use App\Modules\Notifications\Domain\Entities\Notification;
 use App\Modules\Notifications\Infrastructure\Mail\NotificationChannelMail;
 use Illuminate\Support\Facades\Mail;
@@ -14,10 +15,7 @@ class NotificationEmailSender
     {
         [$subjectLine, $body] = $this->extractSubjectAndBody($generatedMessage, $notification->suceso);
 
-        $recipient = trim((string) env('NOTIFICATIONS_EMAIL_RECIPIENT', self::DEFAULT_RECIPIENT));
-        if ($recipient === '') {
-            $recipient = self::DEFAULT_RECIPIENT;
-        }
+        $recipient = $this->resolveRecipient($notification);
 
         $messageHtml = $this->formatMessageHtml($body);
 
@@ -34,6 +32,21 @@ class NotificationEmailSender
             'subject' => $subjectLine,
             'sentAt' => now()->toIso8601String(),
         ];
+    }
+
+    private function resolveRecipient(Notification $notification): string
+    {
+        $userId = trim((string) ($notification->userId ?? ''));
+
+        if ($userId !== '') {
+            $userEmail = trim((string) (Usuari::query()->where('id', $userId)->value('email') ?? ''));
+            if ($userEmail !== '') {
+                return $userEmail;
+            }
+        }
+
+        $fallback = trim((string) env('NOTIFICATIONS_EMAIL_RECIPIENT', self::DEFAULT_RECIPIENT));
+        return $fallback !== '' ? $fallback : self::DEFAULT_RECIPIENT;
     }
 
     private function extractSubjectAndBody(string $generatedMessage, string $fallbackSubject): array

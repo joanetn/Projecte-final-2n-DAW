@@ -6,6 +6,7 @@ use App\Modules\League\Domain\Entities\League;
 use App\Modules\League\Domain\Repositories\LeagueRepositoryInterface;
 use App\Modules\League\Infrastructure\Peristence\Eloquent\Models\LeagueModel;
 use App\Modules\League\Infrastructure\Peristence\Mappers\LeagueMapper;
+use Carbon\Carbon;
 
 class EloquentLeagueRepository implements LeagueRepositoryInterface
 {
@@ -66,6 +67,21 @@ class EloquentLeagueRepository implements LeagueRepositoryInterface
             ->get();
 
         return $models->map([$this->leagueMapper, 'toDomain'])->toArray();
+    }
+
+    public function findActiveByNomCategoriaAndStartDate(string $nom, string $categoria, string $dataInici): ?League
+    {
+        $normalizedDate = Carbon::parse($dataInici)->toDateString();
+
+        $model = $this->leagueModel
+            ->where('nom', $nom)
+            ->where('categoria', $categoria)
+            ->where('isActive', true)
+            ->whereDate('dataInici', $normalizedDate)
+            ->orderBy('created_at', 'asc')
+            ->first();
+
+        return $model ? $this->leagueMapper->toDomain($model) : null;
     }
 
     public function findByIdIncludingInactive(string $id): ?League

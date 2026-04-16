@@ -19,6 +19,7 @@ interface LeagueRepositoryInterface
     public function delete(string $id): bool;
 
     public function findByCategoria(string $categoria): array;
+    public function findActiveByNomCategoriaAndStartDate(string $nom, string $categoria, string $dataInici): ?League;
     public function findByIdIncludingInactive(string $id): ?League;
     public function findAllIncludingInactive(): array;
     public function findByIdIncludingInactiveWithRelations(string $id, array $relations): ?League;
