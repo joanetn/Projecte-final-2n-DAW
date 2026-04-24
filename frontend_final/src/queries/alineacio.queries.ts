@@ -5,7 +5,7 @@ import {
     updateAlineacio,
     deleteAlineacio,
 } from '@/services/alineacio.service';
-import type { Alineacio } from '@/types/alineacio';
+import type { Alineacio, GuardarAlineacioPayload } from '@/types/alineacio';
 import {
     crearInvitacioEquip,
     getInvitacioCandidates,
@@ -31,7 +31,7 @@ export const useGetAlineacioByPartit = (partitId: string | null) =>
 export const useCrearAlineacio = (partitId: string) => {
     const qc = useQueryClient();
     return useMutation({
-        mutationFn: (data: Alineacio) => crearAlineacio(data),
+        mutationFn: (data: GuardarAlineacioPayload) => crearAlineacio(data),
         onSuccess: () => qc.invalidateQueries({ queryKey: ALINEACIO_KEYS.byPartit(partitId) }),
     });
 };

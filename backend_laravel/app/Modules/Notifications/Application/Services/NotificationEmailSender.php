@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Mail;
 
 class NotificationEmailSender
 {
-    private const DEFAULT_RECIPIENT = 'jnacherparra@gmail.com';
+    private const DEFAULT_RECIPIENT = 'notifications@example.com';
 
     public function send(Notification $notification, string $generatedMessage): array
     {

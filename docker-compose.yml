@@ -26,6 +26,8 @@ services:
       context: ./backend_laravel
       dockerfile: Dockerfile
     restart: unless-stopped
+    env_file:
+      - ./backend_laravel/.env
     environment: &laravel-env
       APP_NAME: Laravel
       APP_ENV: local
@@ -55,7 +57,7 @@ services:
       MAIL_ENCRYPTION: "${MAIL_ENCRYPTION}"
       MAIL_FROM_ADDRESS: "${MAIL_FROM_ADDRESS}"
       MAIL_FROM_NAME: "${MAIL_FROM_NAME}"
-      NOTIFICATIONS_EMAIL_RECIPIENT: "${NOTIFICATIONS_EMAIL_RECIPIENT:-jnacherparra@gmail.com}"
+      NOTIFICATIONS_EMAIL_RECIPIENT: "${NOTIFICATIONS_EMAIL_RECIPIENT:-notifications@example.com}"
       CACHE_STORE: array
       CACHE_DRIVER: array
       SESSION_DRIVER: cookie

@@ -93,7 +93,7 @@ export interface MembreEquip {
     isActive?: boolean;
     nom?: string;
     email?: string;
-    teSeguir?: boolean;
+    teSegur?: boolean;
     lesionat?: boolean;
     dataLesio?: string;
 }

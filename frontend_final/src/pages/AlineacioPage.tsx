@@ -1,8 +1,8 @@
-import { useState, useRef, type DragEvent } from 'react'
+import { useEffect, useRef, useState, type DragEvent } from 'react'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { useGetPartit } from '@/queries/partit.queries'
 import { useGetEquipMembres } from '@/queries/club.queries'
-import { useCrearAlineacio } from '@/queries/alineacio.queries'
+import { useCrearAlineacio, useGetAlineacioByPartit } from '@/queries/alineacio.queries'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -24,7 +24,7 @@ type DragPayload = { membre: MembreEquip; fromSlotIndex: number | null }
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function jugadorStatus(m: MembreEquip): 'ok' | 'sin-segur' | 'lesionat' {
     if (m.lesionat) return 'lesionat'
-    if (m.teSeguir === false) return 'sin-segur'
+    if (m.teSegur === false) return 'sin-segur'
     return 'ok'
 }
 
@@ -32,7 +32,7 @@ function StatusBadge({ membre }: { membre: MembreEquip }) {
     const s = jugadorStatus(membre)
     if (s === 'sin-segur') return (
         <span className="inline-flex items-center gap-1 text-xs bg-red-100 text-red-700 rounded-full px-2 py-0.5 font-medium">
-            <Ban className="w-3 h-3" />Sin segur
+            <Ban className="w-3 h-3" />Sense segur
         </span>
     )
     if (s === 'lesionat') return (
@@ -45,6 +45,20 @@ function StatusBadge({ membre }: { membre: MembreEquip }) {
             <ShieldCheck className="w-3 h-3" />OK
         </span>
     )
+}
+
+function slotIndexFromPosicio(posicio?: string): number | null {
+    const normalized = (posicio ?? '').trim().toLowerCase()
+
+    if (normalized === 'esquerra' || normalized === 'izquierda' || normalized === 'left') {
+        return 0
+    }
+
+    if (normalized === 'dreta' || normalized === 'derecha' || normalized === 'right') {
+        return 1
+    }
+
+    return null
 }
 
 // ─── Slot Component ───────────────────────────────────────────────────────────
@@ -126,6 +140,7 @@ export default function AlineacioPage() {
 
     const { data: partit, isLoading: loadingPartit } = useGetPartit(partitId ?? null)
     const { data: membresData, isLoading: loadingMembres } = useGetEquipMembres(equipId)
+    const { data: alineacions, isLoading: loadingAlineacions } = useGetAlineacioByPartit(partitId ?? null)
     const crearAlineacio = useCrearAlineacio(partitId ?? '')
 
     const [slots, setSlots] = useState<[Slot, Slot]>([null, null])
@@ -133,6 +148,7 @@ export default function AlineacioPage() {
     const [saved, setSaved] = useState(false)
     const [saveError, setSaveError] = useState<string | null>(null)
     const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null)
+    const [hasHydratedSlots, setHasHydratedSlots] = useState(false)
     const dragRef = useRef<DragPayload | null>(null)
 
     const allMembres: MembreEquip[] = membresData?.membres ?? []
@@ -142,7 +158,61 @@ export default function AlineacioPage() {
     const selectedPlayer = available.find((m) => m.usuariId === selectedPlayerId) ?? null
 
     const filledCount = slots.filter(Boolean).length
-    const canSave = filledCount === 2 && !!equipId && !!partitId
+    const canSave = filledCount === 2 && !!equipId && !!partitId && !loadingAlineacions
+
+    useEffect(() => {
+        setSlots([null, null])
+        setSelectedPlayerId(null)
+        setSaved(false)
+        setSaveError(null)
+        setHasHydratedSlots(false)
+    }, [equipId, partitId])
+
+    useEffect(() => {
+        if (hasHydratedSlots) return
+        if (!equipId || !partitId) {
+            setHasHydratedSlots(true)
+            return
+        }
+        if (loadingAlineacions || loadingMembres) return
+
+        const alineacioEquip = (alineacions ?? []).find((alineacio) => alineacio.equipId === equipId)
+        if (!alineacioEquip) {
+            setHasHydratedSlots(true)
+            return
+        }
+
+        const membresByUsuariId = new Map(allMembres.map((membre) => [membre.usuariId, membre]))
+        const nextSlots: [Slot, Slot] = [null, null]
+
+        for (const jugador of alineacioEquip.jugadors) {
+            const membre = membresByUsuariId.get(jugador.usuariId)
+            if (!membre) continue
+
+            const slotIndex = slotIndexFromPosicio(jugador.posicio)
+            if (slotIndex === null) {
+                if (!nextSlots[0]) {
+                    nextSlots[0] = membre
+                } else if (!nextSlots[1]) {
+                    nextSlots[1] = membre
+                }
+                continue
+            }
+
+            nextSlots[slotIndex] = membre
+        }
+
+        setSlots(nextSlots)
+        setHasHydratedSlots(true)
+    }, [
+        hasHydratedSlots,
+        equipId,
+        partitId,
+        loadingAlineacions,
+        loadingMembres,
+        alineacions,
+        allMembres,
+    ])
 
     // Drag handlers
     const handleDragStartFromList = (e: DragEvent, membre: MembreEquip) => {
@@ -180,6 +250,8 @@ export default function AlineacioPage() {
         if (!payload) return
         dragRef.current = null
         const { membre, fromSlotIndex } = payload
+        setSaved(false)
+        setSaveError(null)
 
         setSlots((prev) => {
             const next: [Slot, Slot] = [...prev] as [Slot, Slot]
@@ -214,6 +286,8 @@ export default function AlineacioPage() {
     }
 
     const handleRemove = (slotIndex: number) => {
+        setSaved(false)
+        setSaveError(null)
         setSlots((prev) => {
             const next: [Slot, Slot] = [...prev] as [Slot, Slot]
             next[slotIndex] = null
@@ -231,6 +305,8 @@ export default function AlineacioPage() {
 
     const placeSelectedPlayerInSlot = (slotIndex: number) => {
         if (!selectedPlayer) return
+        setSaved(false)
+        setSaveError(null)
 
         setSlots((prev) => {
             const next: [Slot, Slot] = [...prev] as [Slot, Slot]
@@ -253,14 +329,17 @@ export default function AlineacioPage() {
     const handleSave = async () => {
         if (!canSave) return
         setSaveError(null)
-        const jugadors = slots.filter(Boolean).map((s, i) => ({
-            usuariId: s!.usuariId,
-            nom: s!.nom,
-            posicio: i === 0 ? 'Esquerra' : 'Dreta',
-            titular: true,
-            teSeguir: s!.teSeguir ?? true,
-            lesionat: s!.lesionat ?? false,
-        }))
+        const jugadors = slots
+            .map((slot, index) => {
+                if (!slot) return null
+
+                return {
+                    jugadorId: slot.usuariId,
+                    posicio: index === 0 ? 'Esquerra' : 'Dreta',
+                }
+            })
+            .filter((jugador): jugador is { jugadorId: string; posicio: string } => jugador !== null)
+
         try {
             await crearAlineacio.mutateAsync({
                 partitId: partitId!,
@@ -273,7 +352,7 @@ export default function AlineacioPage() {
         }
     }
 
-    if (loadingPartit) return (
+    if (loadingPartit || (!!equipId && loadingAlineacions)) return (
         <div className="flex items-center justify-center min-h-screen">
             <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
@@ -429,7 +508,7 @@ export default function AlineacioPage() {
 
                         {/* NET label */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                            <span className="text-[11px] font-bold text-slate-700 bg-white/90 rounded px-2 py-0.5">XARXA</span>
+                            <span className="text-[11px] font-bold text-slate-700 bg-white/90 rounded px-2 py-0.5">RED</span>
                         </div>
 
                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10">

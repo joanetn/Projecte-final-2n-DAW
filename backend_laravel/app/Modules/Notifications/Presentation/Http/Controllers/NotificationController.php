@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Notifications\Application\Commands\EnqueueNotificationCommand;
 use App\Modules\Notifications\Application\Commands\ProcessNextCommand;
 use App\Modules\Notifications\Application\DTOs\EnqueueNotificationDTO;
+use App\Modules\Notifications\Application\Services\NotificationSmsSender;
 use App\Modules\Notifications\Domain\Entities\Notification;
 use App\Modules\Notifications\Domain\Repositories\NotificationsRespositoryInterface;
 use App\Modules\Notifications\Presentation\Http\Requests\EnqueueNotificationRequest;
@@ -14,7 +15,9 @@ use App\Modules\Notifications\Presentation\Http\Resources\EnqueueNotificationRes
 use App\Modules\Notifications\Presentation\Http\Resources\NotificationResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use Twilio\TwiML\MessagingResponse;
 
 class NotificationController extends Controller
 {
@@ -22,7 +25,67 @@ class NotificationController extends Controller
         private EnqueueNotificationCommand $enqueueNotificationCommand,
         private ProcessNextCommand $processNextCommand,
         private NotificationsRespositoryInterface $repo,
+        private NotificationSmsSender $notificationSmsSender,
     ) {}
+
+    public function whatsappResponse()
+    {
+        $response = new MessagingResponse();
+        $message = $response->message('');
+        $message->body('Yepa ya estoy por aqui');
+        $response->redirect('https://demo.twilio.com/welcome/sms/');
+
+        echo $response;
+    }
+
+    public function sendSms(Request $request): JsonResponse
+    {
+        try {
+            $validated = $request->validate([
+                'phone' => ['required', 'string', 'max:30'],
+                'message' => ['nullable', 'string', 'max:5000', 'required_without:contentSid'],
+                'contentSid' => ['sometimes', 'nullable', 'string', 'max:120'],
+                'contentVariables' => ['sometimes', 'array'],
+                'referenceId' => ['sometimes', 'nullable', 'string', 'max:191'],
+                'channel' => ['sometimes', 'nullable', 'string', 'in:sms,whatsapp'],
+            ]);
+
+            $channelOverride = isset($validated['channel'])
+                ? strtolower(trim((string) $validated['channel']))
+                : null;
+
+            if ($channelOverride === null && str_contains(strtolower((string) $request->path()), 'whatsapp/send')) {
+                $channelOverride = 'whatsapp';
+            }
+
+            $result = $this->notificationSmsSender->sendDirect(
+                (string) $validated['phone'],
+                isset($validated['message']) ? (string) $validated['message'] : '',
+                isset($validated['referenceId']) ? trim((string) $validated['referenceId']) : null,
+                isset($validated['contentSid']) ? trim((string) $validated['contentSid']) : null,
+                is_array($validated['contentVariables'] ?? null) ? $validated['contentVariables'] : [],
+                $channelOverride,
+            );
+
+            return response()->json([
+                'success' => true,
+                'data' => $result,
+            ], 201);
+        } catch (ValidationException $validationException) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Payload inválido para envío Twilio',
+                'errors' => $validationException->errors(),
+            ], 422);
+        } catch (\Throwable $e) {
+            Log::error('Direct Twilio send error: ' . $e->getMessage(), ['exception' => $e]);
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
     public function enqueue(EnqueueNotificationRequest $request): JsonResponse
     {

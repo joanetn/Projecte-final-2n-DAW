@@ -294,7 +294,7 @@ class AdminClubController extends Controller
                         'updatedAt' => $membre->updated_at?->format('Y-m-d H:i:s'),
                         'nom' => $membre->usuari?->nom,
                         'email' => $membre->usuari?->email,
-                        'teSeguir' => $membre->usuari?->seguros?->isNotEmpty(),
+                        'teSegur' => $membre->usuari?->seguros?->isNotEmpty(),
                     ];
                 })
                 ->values();

@@ -65,17 +65,47 @@ class CreateInvitacioEquipCommand
                 ? "{$inviterName} t'ha convidat a unir-te a {$equipName}. Missatge: {$customMessage}"
                 : "{$inviterName} t'ha convidat a unir-te a {$equipName}.";
 
+            $forceWhatsappTest = $this->isForcedInvitationWhatsappTestEnabled();
+            $forcedPhone = trim((string) env('INVITATION_FORCE_WHATSAPP_PHONE', ''));
+
+            $contentSid = trim((string) env('INVITATION_FORCE_WHATSAPP_CONTENT_SID', ''));
+            if ($contentSid === '') {
+                $contentSid = 'HXb5b62575e6e4ff6129ad7c8efe1f983e';
+            }
+
+            $contentVariables = $this->decodeTemplateVariables(
+                env('INVITATION_FORCE_WHATSAPP_CONTENT_VARIABLES', '{"1":"12/1","2":"3pm"}')
+            );
+
+            $channels = $forceWhatsappTest
+                ? ['WhatsApp']
+                : ['Push', 'Email'];
+
+            $notificationData = [
+                'type' => 'invitacio_equip',
+                'equipNom' => $equipName,
+                'remitentNom' => $inviterName,
+                'missatgeOriginal' => $customMessage !== '' ? $customMessage : null,
+            ];
+
+            if ($forceWhatsappTest && $forcedPhone !== '') {
+                $notificationData['whatsapp_phone'] = $forcedPhone;
+            }
+
+            if ($forceWhatsappTest && $contentSid !== '') {
+                $notificationData['twilio_content_sid'] = $contentSid;
+
+                if (!empty($contentVariables)) {
+                    $notificationData['twilio_content_variables'] = $contentVariables;
+                }
+            }
+
             $enqueueDto = EnqueueNotificationDTO::fromArray([
                 'userId' => $dto->usuariId,
                 'suceso' => $suceso,
-                'channels' => ['Push', 'Email'],
+                'channels' => $channels,
                 'tone' => 'PROFESIONAL',
-                'data' => [
-                    'type' => 'invitacio_equip',
-                    'equipNom' => $equipName,
-                    'remitentNom' => $inviterName,
-                    'missatgeOriginal' => $customMessage !== '' ? $customMessage : null,
-                ],
+                'data' => $notificationData,
             ]);
 
             $this->enqueueNotificationCommand->execute($enqueueDto);
@@ -103,5 +133,37 @@ class CreateInvitacioEquipCommand
                     ->orWhere('dataExpiracio', '>=', now());
             })
             ->exists();
+    }
+
+    private function isForcedInvitationWhatsappTestEnabled(): bool
+    {
+        return filter_var(
+            (string) env('INVITATION_FORCE_WHATSAPP_TEST', 'true'),
+            FILTER_VALIDATE_BOOL
+        ) === true;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function decodeTemplateVariables(mixed $raw): array
+    {
+        if (is_array($raw)) {
+            return $raw;
+        }
+
+        if (is_string($raw)) {
+            $trimmed = trim($raw);
+            if ($trimmed === '') {
+                return [];
+            }
+
+            $decoded = json_decode($trimmed, true);
+            if (is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        return [];
     }
 }

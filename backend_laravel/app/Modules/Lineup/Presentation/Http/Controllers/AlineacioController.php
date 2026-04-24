@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Modules\Lineup\Presentation\Http\Controllers;
+
 use App\Modules\Lineup\Application\Commands\CreateAlineacioCommand;
 use App\Modules\Lineup\Application\Commands\UpdateAlineacioCommand;
 use App\Modules\Lineup\Application\Commands\DestroyAlineacioCommand;
@@ -15,6 +17,7 @@ use App\Modules\Lineup\Presentation\Http\Requests\UpdateAlineacioRequest;
 use App\Modules\Lineup\Presentation\Http\Resources\AlineacioResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+
 class AlineacioController extends Controller
 {
     public function __construct(
@@ -25,7 +28,7 @@ class AlineacioController extends Controller
         private GetAlineacioQuery $getAlineacioQuery,
         private GetAlineacionsByPartitQuery $getByPartitQuery
     ) {}
-    
+
     public function index(): JsonResponse
     {
         $alineacions = $this->getAlineacionsQuery->execute();
@@ -34,7 +37,7 @@ class AlineacioController extends Controller
             'data' => AlineacioResource::collection($alineacions)
         ]);
     }
-    
+
     public function show(string $id): JsonResponse
     {
         try {
@@ -50,7 +53,7 @@ class AlineacioController extends Controller
             ], $e->getCode());
         }
     }
-    
+
     public function byPartit(string $partitId): JsonResponse
     {
         $alineacions = $this->getByPartitQuery->execute($partitId);
@@ -59,11 +62,81 @@ class AlineacioController extends Controller
             'data' => AlineacioResource::collection($alineacions)
         ]);
     }
-    
+
     public function store(CreateAlineacioRequest $request): JsonResponse
     {
         try {
-            $dto = CreateAlineacioDTO::fromArray($request->validated());
+            $validated = $request->validated();
+
+            if (!empty($validated['jugadors']) && is_array($validated['jugadors'])) {
+                $partitId = $validated['partitId'];
+                $equipId = $validated['equipId'];
+                $jugadorsPayload = collect($validated['jugadors'])
+                    ->map(fn(array $jugador) => [
+                        'jugadorId' => $jugador['jugadorId'] ?? $jugador['id'] ?? null,
+                        'posicio' => $jugador['posicio'] ?? null,
+                    ])
+                    ->filter(fn(array $jugador) => !empty($jugador['jugadorId']))
+                    ->values()
+                    ->all();
+
+                $existingAlineacions = array_filter(
+                    $this->getByPartitQuery->execute($partitId),
+                    fn($alineacio) => $alineacio->equipId === $equipId && $alineacio->isActive()
+                );
+
+                $existingByJugador = [];
+                foreach ($existingAlineacions as $alineacio) {
+                    $existingByJugador[$alineacio->jugadorId] = $alineacio;
+                }
+
+                $incomingJugadorIds = [];
+                $savedIds = [];
+
+                foreach ($jugadorsPayload as $jugadorData) {
+                    $jugadorId = $jugadorData['jugadorId'];
+                    if (in_array($jugadorId, $incomingJugadorIds, true)) {
+                        continue;
+                    }
+
+                    $incomingJugadorIds[] = $jugadorId;
+                    $posicio = $jugadorData['posicio'] ?? null;
+
+                    if (isset($existingByJugador[$jugadorId])) {
+                        $alineacio = $existingByJugador[$jugadorId];
+                        if ($alineacio->posicio !== $posicio) {
+                            $updateDto = UpdateAlineacioDTO::fromArray(['posicio' => $posicio]);
+                            $this->updateCommand->execute($alineacio->id, $updateDto);
+                        }
+
+                        $savedIds[] = $alineacio->id;
+                        continue;
+                    }
+
+                    $createDto = CreateAlineacioDTO::fromArray([
+                        'partitId' => $partitId,
+                        'equipId' => $equipId,
+                        'jugadorId' => $jugadorId,
+                        'posicio' => $posicio,
+                    ]);
+
+                    $savedIds[] = $this->createCommand->execute($createDto);
+                }
+
+                foreach ($existingAlineacions as $alineacio) {
+                    if (!in_array($alineacio->jugadorId, $incomingJugadorIds, true)) {
+                        $this->destroyCommand->execute($alineacio->id);
+                    }
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Alineació guardada correctament',
+                    'data' => ['ids' => $savedIds]
+                ]);
+            }
+
+            $dto = CreateAlineacioDTO::fromArray($validated);
             $alineacioId = $this->createCommand->execute($dto);
             return response()->json([
                 'success' => true,
@@ -82,7 +155,7 @@ class AlineacioController extends Controller
             ], 500);
         }
     }
-    
+
     public function update(UpdateAlineacioRequest $request, string $id): JsonResponse
     {
         try {
@@ -104,7 +177,7 @@ class AlineacioController extends Controller
             ], 500);
         }
     }
-    
+
     public function destroy(string $id): JsonResponse
     {
         try {

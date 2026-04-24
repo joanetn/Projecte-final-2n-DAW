@@ -25,14 +25,14 @@ interface RawMembre {
     isActive?: unknown;
     nom?: unknown;
     email?: unknown;
-    teSeguir?: unknown;
+    teSegur?: unknown;
     lesionat?: unknown;
     dataLesio?: unknown;
     usuari?: {
         id?: unknown;
         nom?: unknown;
         email?: unknown;
-        teSeguir?: unknown;
+        teSegur?: unknown;
         lesionat?: unknown;
         dataLesio?: unknown;
     };
@@ -69,7 +69,7 @@ export const normalizeMembres = (raw: unknown[]): Array<{
     isActive?: boolean;
     nom?: string;
     email?: string;
-    teSeguir?: boolean;
+    teSegur?: boolean;
     lesionat?: boolean;
     dataLesio?: string;
 }> => {
@@ -85,7 +85,7 @@ export const normalizeMembres = (raw: unknown[]): Array<{
             isActive: item.isActive as boolean | undefined,
             nom: (item.nom ?? user?.nom) as string | undefined,
             email: (item.email ?? user?.email) as string | undefined,
-            teSeguir: (item.teSeguir ?? user?.teSeguir) as boolean | undefined,
+            teSegur: (item.teSegur ?? user?.teSegur) as boolean | undefined,
             lesionat: (item.lesionat ?? user?.lesionat) as boolean | undefined,
             dataLesio: (item.dataLesio ?? user?.dataLesio) as string | undefined,
         };

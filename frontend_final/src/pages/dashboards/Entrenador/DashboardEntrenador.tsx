@@ -258,7 +258,7 @@ function PlantillaTab({ equip, currentUserId }: { equip: Equip | null; currentUs
                                     <td className="p-4 text-slate-600 dark:text-slate-300">{membre.email ?? '—'}</td>
                                     <td className="p-4 capitalize text-slate-600 dark:text-slate-300">{membre.rolEquip ?? '—'}</td>
                                     <td className="p-4 text-slate-600 dark:text-slate-300">
-                                        {membre.teSeguir === true ? 'Sí' : membre.teSeguir === false ? 'No' : '—'}
+                                        {membre.teSegur === true ? 'Sí' : membre.teSegur === false ? 'No' : '—'}
                                     </td>
                                     <td className="p-4">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${membre.isActive === false

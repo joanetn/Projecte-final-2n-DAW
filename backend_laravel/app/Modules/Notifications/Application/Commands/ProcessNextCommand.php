@@ -6,6 +6,7 @@ use App\Events\AINotificationGenerated;
 use App\Enums\NotifStatus;
 use App\Modules\Notifications\Application\DTOs\ProcessNotificationResponseDTO;
 use App\Modules\Notifications\Application\Services\NotificationEmailSender;
+use App\Modules\Notifications\Application\Services\NotificationSmsSender;
 use App\Modules\Notifications\Domain\Entities\Notification;
 use App\Modules\Notifications\Domain\Repositories\NotificationsRespositoryInterface;
 use App\Services\IA\CerebrasService;
@@ -25,6 +26,7 @@ class ProcessNextCommand
         private GeminiService $gemini,
         private MistralService $mistral,
         private NotificationEmailSender $notificationEmailSender,
+        private NotificationSmsSender $notificationSmsSender,
     ) {}
 
     public function execute(): ProcessNotificationResponseDTO
@@ -223,7 +225,7 @@ class ProcessNextCommand
                 } catch (\Throwable $mailError) {
                     $delivery['email'] = [
                         'sent' => false,
-                        'recipient' => (string) env('NOTIFICATIONS_EMAIL_RECIPIENT', 'jnacherparra@gmail.com'),
+                        'recipient' => (string) env('NOTIFICATIONS_EMAIL_RECIPIENT', 'notifications@example.com'),
                     ];
                     $delivery['error'] = $mailError->getMessage();
 
@@ -232,6 +234,31 @@ class ProcessNextCommand
                         'channel' => $channel,
                         'provider' => $providerUsed,
                         'error' => $mailError->getMessage(),
+                    ]);
+                }
+            }
+
+            if ($normalizedChannel === 'sms' || $normalizedChannel === 'whatsapp') {
+                $twilioDeliveryKey = $normalizedChannel === 'whatsapp' ? 'whatsapp' : 'sms';
+
+                try {
+                    $smsMeta = $this->notificationSmsSender->send($notification, $generatedMessage, $twilioDeliveryKey);
+                    $delivery[$twilioDeliveryKey] = [
+                        'sent' => true,
+                        ...$smsMeta,
+                    ];
+                } catch (\Throwable $smsError) {
+                    $delivery[$twilioDeliveryKey] = [
+                        'sent' => false,
+                    ];
+                    $delivery['error'] = $smsError->getMessage();
+
+                    Log::error('Error enviando notificación Twilio', [
+                        'notification_id' => $notification->id,
+                        'channel' => $channel,
+                        'twilio_channel' => $twilioDeliveryKey,
+                        'provider' => $providerUsed,
+                        'error' => $smsError->getMessage(),
                     ]);
                 }
             }
@@ -402,14 +429,11 @@ class ProcessNextCommand
                 - NO expliques nada, SOLO devuelve la notificación final.
                 - NO añadas texto fuera del formato solicitado.
                 - LA MÁS IMPORTANTE ES QUE QUIERO QUE SEAS DESCRIPTIVO CON LO QUE TE LLEGA DE MENSAJE DE EL USUARIO PARA QUE VEA LO QUE QUIERE EL QUE RECIBE LA NOTIFICACION
-                - Cuando vayas a poner cosas de Tu nombre cosas asi pon Joan Nácher (Administrador de Padel Play)
+                - Si el mensaje requiere firma o remitente, usa 'Administrador de la plataforma'.
+                - Para el email y todos en general pero sobre todo el email NO PUEDES PONER COSAS COMO PARA RELLENAR. Ejemplos: [Tu Nombre]. 
+                ¿Porque? Porque esto es lo que va a ver el usuario final, ni mostrar id ni cosas sensibles ni poner cosas genéricas.
 
                 📢 REGLAS POR CANAL:
-
-                👉 WhatsApp:
-                - Usa emojis de forma natural (no spam).
-                - Usa negritas con *texto* para destacar.
-                - Mensaje cercano y dinámico.
 
                 👉 Email:
                 - Formato EXACTO:
@@ -422,6 +446,11 @@ class ProcessNextCommand
                 - Máximo 160 caracteres.
                 - Mensaje directo, sin relleno.
                 - Sin emojis innecesarios.
+
+                👉 Whatsapp:
+                - Mensaje descriptivo.
+                - Tono amable.
+                - Con muchos emotes pero que tengan que ver con el mensaje.
 
                 👉 Push:
                 - Formato EXACTO:

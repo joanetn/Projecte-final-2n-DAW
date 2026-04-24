@@ -76,6 +76,21 @@ return [
 
     'cohere' => [
         'api_key' => env('COHERE_API_KEY'),
-    ]
+    ],
+
+    'sms_twilio' => [
+        'enabled' => env('SMS_TWILIO_ENABLED', false),
+        'channel' => env('SMS_TWILIO_CHANNEL', 'sms'),
+        'base_url' => env('SMS_TWILIO_BASE_URL', 'https://api.twilio.com'),
+        'account_sid' => env('SMS_TWILIO_ACCOUNT_SID'),
+        'auth_token' => env('SMS_TWILIO_AUTH_TOKEN'),
+        'from_number' => env('SMS_TWILIO_FROM_NUMBER'),
+        'messaging_service_sid' => env('SMS_TWILIO_MESSAGING_SERVICE_SID'),
+        'default_country_code' => env('SMS_DEFAULT_COUNTRY_CODE', '34'),
+        'fallback_recipient' => env('NOTIFICATIONS_SMS_RECIPIENT'),
+        'timeout' => env('SMS_TIMEOUT', 15),
+        'retries' => env('SMS_RETRIES', 1),
+        'retry_sleep_ms' => env('SMS_RETRY_SLEEP_MS', 200),
+    ],
 
 ];

@@ -1,11 +1,7 @@
 export interface JugadorAlineacio {
     usuariId: string;
     nom?: string;
-    dorsal?: number;
     posicio?: string;
-    titular: boolean;
-    teSeguir?: boolean;
-    lesionat?: boolean;
 }
 
 export interface Alineacio {
@@ -14,4 +10,15 @@ export interface Alineacio {
     equipId: string;
     jugadors: JugadorAlineacio[];
     dataCreacio?: string;
+}
+
+export interface GuardarJugadorAlineacio {
+    jugadorId: string;
+    posicio: string;
+}
+
+export interface GuardarAlineacioPayload {
+    partitId: string;
+    equipId: string;
+    jugadors: GuardarJugadorAlineacio[];
 }

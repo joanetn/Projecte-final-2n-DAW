@@ -1,6 +1,6 @@
 # Plataforma de Gestió de Lligues de Pàdel
 
-**Alumne:** Joan Nácher  
+**Alumne:** Equip del projecte  
 **Curs:** 2n DAW – IES L'Estació d'Ontinyent
 
 ---
@@ -204,16 +204,40 @@ La taula `notificacions` guarda, com a mínim:
 - `urgencia` (`BAJA`, `NORMAL`, `ALTA`, `CRITICA`)
 - `suceso` (resum de l'event)
 - `llegit` (`true`/`false`)
-- `channels` (array: `Email`, `WhatsApp`, `SMS`, `Push`)
+- `channels` (array: `Email`, `SMS`, `Push`)
 - `data` (context extra + resultats de processat IA)
 
 ### 10.2 Endpoints del mòdul (JWT obligatori)
 
 - `GET /api/notifications/me`: notificacions de l'usuari autenticat.
 - `GET /api/notifications/user/{userId}`: només permès si `auth_user_id === userId`.
+- `POST /api/notifications/sms/send`: enviament directe Twilio (SMS o WhatsApp segons configuració) (JWT).
+- `POST /api/notifications/whatsapp/send`: àlies directe per WhatsApp via Twilio (JWT).
 - `POST /api/notifications/enqueue`: encolar notificació manual.
 - `POST /api/notifications/process-next`: processar la pendent més antiga.
 - `PATCH /api/notifications/{id}/read`: marcar com llegida.
+
+### 10.2.1 Configuració Twilio (SMS o WhatsApp)
+
+Per no dependre de Meta/Facebook, el backend està preparat per Twilio tant en SMS com en WhatsApp.
+
+Variables necessàries a `backend_laravel/.env`:
+
+- `SMS_TWILIO_ENABLED=true`
+- `SMS_TWILIO_CHANNEL=sms` (o `whatsapp`)
+- `SMS_TWILIO_ACCOUNT_SID=<account_sid>`
+- `SMS_TWILIO_AUTH_TOKEN=<auth_token>`
+- `SMS_TWILIO_FROM_NUMBER=<numero_twilio_en_formato_e164>`
+- `SMS_DEFAULT_COUNTRY_CODE=34`
+
+Opcionalment pots usar `SMS_TWILIO_MESSAGING_SERVICE_SID` en lloc de `SMS_TWILIO_FROM_NUMBER`.
+
+En mode `whatsapp`:
+
+- `SMS_TWILIO_FROM_NUMBER` ha de ser tipus `whatsapp:+14155238886` (sandbox) o el teu número WhatsApp sender aprovat.
+- Si uses `SMS_TWILIO_MESSAGING_SERVICE_SID`, és el SID de Messaging Service de Twilio (format `MG...`) a **Messaging > Services**.
+
+Si no arribes telèfon en el payload, es busca per usuari (`usuaris.telefon`) i, com a últim recurs, `NOTIFICATIONS_SMS_RECIPIENT`.
 
 ### 10.3 Flux ACTUAL implementat (el que està en producció local)
 
